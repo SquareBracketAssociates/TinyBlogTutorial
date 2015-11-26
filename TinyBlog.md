@@ -998,9 +998,14 @@ TBauthenticationComponent >> validate
 
 > Rechercher une autre méthode pour réaliser l'authentification de l'utilisateur (utilisation d'un backend de type base de données, LDAP ou fichier texte). En tout cas, ce n'est pas à la boite de login de faire ce travail, il faut le déléguer à un objet métier qui saura consulter le backend et authentifier l'utilisateur.
 
+La méthode `validate` appelle la méthode gotoAdministration définie dans `TBPublicPostsListComponent`:
 
+```
+TBPublicPostsListComponent >> gotoAdministrationScreen
+	self call: TBAdminComponent new
+```
 
-###Intégration 
+###Intégration de l'authentification
 
 Il faut maintenant intégrer le lien qui déclenchera l'affichage de la boite modale d'authentification. Au tout début de la méthode `renderContentOn:` du composant `TBPublicPostsListComponent`, on ajoute le rendu du composant d'authentification. Ce composant reçoit en paramètre la référence vers l'écran affichant les posts (`self`).
 
@@ -1019,8 +1024,112 @@ TBPublicPostsListComponent >> renderSignInOn: html
 	html html: '<a data-toggle="modal" href="#myAuthDialog" class="link">SignIn</a>'.
 ```
 
+###Création de la liste des posts
+
+La liste des posts est affiché à l'aide d'un rapport généré dynamiquement par le framework Magritte. Ce framework va être utilisé pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
+
+Ajoutons l'écran d'administration et définissons la variable d'instance `report` qui contiendra une référence vers le composant rapport construit à l'aide de Magritte.
+
+```
+TBScreenComponent subclass: #TBAdminComponent
+	instanceVariableNames: ''
+	classVariableNames: 'report'
+	category: 'TinyBlog-Screen'
+
+TBAdminComponent >> report
+	^ report
+
+TBAdminComponent >> report: anObject
+	report := anObject
+
+TBAdminComponent >> children
+	^ OrderedCollection with: self report
+```
+
+La méthode initialize permet d'initialiser la définition du rapport. La structure de celui-ci est défini à l'aide des descriptions des variables d'instance que nous avons spécifié précédemment.
+
+```
+TBAdminComponent >> initialize
+	super initialize.
+	self report: (TBSMagritteReport 
+            rows: (self repository allBlogPosts) 
+            description: (self repository allBlogPosts first magritteDescription))
+```
+
+Nous pouvons maintenant afficher le rapport sur l'écran.
+
+```
+TBAdminComponent >> renderContentOn: html
+	super renderContentOn: html.
+	html tbsContainer: [ 
+		html heading: 'Blog Manager'.
+		html render: self report
+	]
+```
+
+Par défaut, le rapport affiche l'intégralité des données présentes dans chaque posts mais certaines colonnes ne sont pas utiles. Il faut donc filtrer les colonnes. Nous ne retiendrons ici que le titre, la catégorie et la date de rédaction.
+
+Il faut ajouter une méthode pour la sélection des colonnes et modifier ensuite la méthode `initialize`.
+
+```
+TBAdminComponent >> filteredDescriptionsFrom: aBlogPost
+	^ aBlogPost magritteDescription select: [ :each | #(title category date) includes: each accessor selector ]
+
+TBAdminComponent >> initialize
+	super initialize.
+	self report: (TBSMagritteReport 
+            rows: (self repository allBlogPosts) 
+            description: (self filteredDescriptionsFrom: (self repository allBlogPosts first)))
+```
+
+Le rapport généré est brut. Il n'y a pas de titres sur les colonnes et l'ordre d'affichage des colonnes n'est pas fixé (il peut varier d'une instance à une autre). Pour gérer cela, il suffit de modifier les descriptions Magritte pour chaque variable d'instance. 
+
+```
+TBPost >> descriptionTitle
+	<magritteDescription>
+	^ MAStringDescription new
+		label: 'Title';
+		priority: 100;
+		accessor: #title;
+		beRequired;
+		yourself
+
+TBPost >> descriptionText
+	<magritteDescription>
+	^ MAMemoDescription new
+		label: 'Text';
+		priority: 200;
+		accessor: #text;
+		beRequired;
+		yourself
+
+TBPost >> descriptionCategory
+	<magritteDescription>
+	^ MAStringDescription new
+		label: 'Category';
+		priority: 300;
+		accessor: #category;
+		yourself
+
+TBPost >> descriptionDate
+	<magritteDescription>
+	^ MADateDescription new
+		label: 'Date';
+		priority: 400;
+		accessor: #date;
+		beRequired; 
+		yourself
 
 
+TBPost >> descriptionVisible
+	<magritteDescription>
+	^ MABooleanDescription new
+		label: 'Visible';
+		priority: 500;
+		accessor: #visible;
+		beRequired; 
+		yourself
+```
 
 ##Localisation de l'interface
 
