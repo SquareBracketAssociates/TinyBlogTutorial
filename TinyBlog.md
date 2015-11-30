@@ -1028,6 +1028,32 @@ TBPublicPostsListComponent >> renderSignInOn: html
 
 La liste des posts est affiché à l'aide d'un rapport généré dynamiquement par le framework Magritte. Ce framework va être utilisé pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
 
+Pour rester modulaire, nous allons créer un composant Seaside pour cette tâche. Nous lui transmettrons uniquement la liste des posts devant être affichés dans le rapport.
+
+```
+TBSMagritteReport subclass: #TBPostsReport
+	instanceVariableNames: ''
+	classVariableNames: ''
+	category: 'TinyBlog-Components'
+
+TBPostsReport class >> with: aPostsList
+	^self rows: aPostsList description: (aPostsList first)
+```
+
+Par défaut, le rapport affiche l'intégralité des données présentes dans chaque posts mais certaines colonnes ne sont pas utiles. Il faut donc filtrer les colonnes. Nous ne retiendrons ici que le titre, la catégorie et la date de rédaction.
+
+Il faut ajouter une méthode de classe pour la sélection des colonnes et modifier ensuite la méthode `with`.
+
+```
+TBPostsReport class >> filteredDescriptionsFrom: aBlogPost
+	^ aBlogPost magritteDescription select: [ :each | #(title category date) includes: each accessor selector ]
+
+TBPostsReport class >> with: aPostsList
+	^self rows: aPostsList description: (self filteredDescriptionsFrom: (aPostsList first))
+```
+
+###Création d'un écran d'administration
+
 Ajoutons l'écran d'administration et définissons la variable d'instance `report` qui contiendra une référence vers le composant rapport construit à l'aide de Magritte.
 
 ```
@@ -1051,9 +1077,7 @@ La méthode initialize permet d'initialiser la définition du rapport. La struct
 ```
 TBAdminComponent >> initialize
 	super initialize.
-	self report: (TBSMagritteReport 
-            rows: (self repository allBlogPosts) 
-            description: (self repository allBlogPosts first magritteDescription))
+	self report: (TBPostsReport with: (self repository allBlogPosts)).
 ```
 
 Nous pouvons maintenant afficher le rapport sur l'écran.
@@ -1065,21 +1089,6 @@ TBAdminComponent >> renderContentOn: html
 		html heading: 'Blog Manager'.
 		html render: self report
 	]
-```
-
-Par défaut, le rapport affiche l'intégralité des données présentes dans chaque posts mais certaines colonnes ne sont pas utiles. Il faut donc filtrer les colonnes. Nous ne retiendrons ici que le titre, la catégorie et la date de rédaction.
-
-Il faut ajouter une méthode pour la sélection des colonnes et modifier ensuite la méthode `initialize`.
-
-```
-TBAdminComponent >> filteredDescriptionsFrom: aBlogPost
-	^ aBlogPost magritteDescription select: [ :each | #(title category date) includes: each accessor selector ]
-
-TBAdminComponent >> initialize
-	super initialize.
-	self report: (TBSMagritteReport 
-            rows: (self repository allBlogPosts) 
-            description: (self filteredDescriptionsFrom: (self repository allBlogPosts first)))
 ```
 
 Le rapport généré est brut. Il n'y a pas de titres sur les colonnes et l'ordre d'affichage des colonnes n'est pas fixé (il peut varier d'une instance à une autre). Pour gérer cela, il suffit de modifier les descriptions Magritte pour chaque variable d'instance. 
@@ -1130,6 +1139,34 @@ TBPost >> descriptionVisible
 		beRequired; 
 		yourself
 ```
+
+###Gestion des posts
+
+Il faut maintenant mettre en place un CRUD (Create Read Update Delete) permettant de gérer les posts. Pour cela, nous allons ajouter une colonne au rapport qui regroupera les différentes opérations. (à l'exception de l'ajout d'un post qui est une opération dissociée des posts).
+
+```
+TBPostsReport >> initialize
+	super initialize.
+	self addColumn: (MACommandColumn new
+		addCommandOn: self selector: #viewPost: text: 'View'; yourself;
+		addCommandOn: self selector: #editPost: text: 'Edit'; yourself;
+		addCommandOn: self selector: #deletePost: text: 'Delete'; yourself)
+```
+
+L'ajout (add) est dissocié des posts et se trouvera donc juste avant le rapport.
+
+```
+TBAdminComponent >> renderContentOn: html
+	super renderContentOn: html.
+	html tbsContainer: [ 
+		html heading: 'Blog Manager'.
+		html anchor 
+			callback: [ self addPost ];
+			with: 'Add post'.
+		html render: self report
+	]
+```
+
 
 ##Localisation de l'interface
 
