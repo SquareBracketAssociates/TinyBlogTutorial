@@ -930,7 +930,7 @@ TBPublicPostsListComponent >> renderContentOn: html
 
 !!! Categories 
 
-Création du composant TBCategoriesListComponent
+Nous allons créer un composant pour gérer une liste de catégories nommée: ==TBCategoriesListComponent==.
 
 Les posts sont classés par catégorie. Par défaut, si aucune catégorie n'a été précisée, ils sont rangés dans une catégorie spéciale dénommée "Unclassified".
 
@@ -962,7 +962,7 @@ TBCategoriesListComponent class >> categories: aCollectionOfCategories postsList
 	^self new categories: aCollectionOfCategories; postsListScreen: aTBScreen 
 ]]]
 
-La méthode ==selectCategory== (protocole `action`) communique au composant ==TBPublicPostsListComponent== la nouvelle catégorie courante.
+La méthode ==selectCategory== (protocole 'action') communique au composant ==TBPublicPostsListComponent== la nouvelle catégorie courante.
 
 [[[
 TBCategoriesListComponent >> selectCategory: aCategory
@@ -1157,9 +1157,10 @@ TBauthenticationComponent >> renderContentOn: html
 	      ] ] ] ] ]
 ]]]
 
-> Quelle critique peut on faire sur cette méthode ? Proposer une refactorisation à l'aide de plusieurs méthodes pour placer les différents éléments du formulaire.
+!!!! Améliorations possibles
+ Quelle critique peut on faire sur cette méthode ? Proposer une refactorisation à l'aide de plusieurs méthodes pour placer les différents éléments du formulaire.
 
-Lorsque l'utilisateur clique sur le bouton 'SignIn', la méthode validate est appelée et vérifie que l'utilisateur a bien le compte "admin" et a saisi le mot de passe "password".
+Lorsque l'utilisateur clique sur le bouton 'SignIn', la méthode ==validate== est appelée et vérifie que l'utilisateur a bien le compte "admin" et a saisi le mot de passe "password".
 
 [[[
 TBauthenticationComponent >> validate
@@ -1168,47 +1169,51 @@ TBauthenticationComponent >> validate
 	]
 ]]]
 
+!!!! Améliorations possibles
 
-> Rechercher une autre méthode pour réaliser l'authentification de l'utilisateur (utilisation d'un backend de type base de données, LDAP ou fichier texte). En tout cas, ce n'est pas à la boite de login de faire ce travail, il faut le déléguer à un objet métier qui saura consulter le backend et authentifier l'utilisateur.
+Rechercher une autre méthode pour réaliser l'authentification de l'utilisateur (utilisation d'un backend de type base de données, LDAP ou fichier texte). En tout cas, ce n'est pas à la boite de login de faire ce travail, il faut le déléguer à un objet métier qui saura consulter le backend et authentifier l'utilisateur.
 
-La méthode `validate` appelle la méthode gotoAdministration définie dans `TBPublicPostsListComponent`:
+La méthode ==validate== appelle la méthode gotoAdministration définie dans ==TBPublicPostsListComponent==:
 
-```
+[[[
 TBPublicPostsListComponent >> gotoAdministrationScreen
 	self call: TBAdminComponent new
-```
+]]]
 
 ###Intégration de l'authentification
 
-Il faut maintenant intégrer le lien qui déclenchera l'affichage de la boite modale d'authentification. Au tout début de la méthode `renderContentOn:` du composant `TBPublicPostsListComponent`, on ajoute le rendu du composant d'authentification. Ce composant reçoit en paramètre la référence vers l'écran affichant les posts (`self`).
+Il faut maintenant intégrer le lien qui déclenchera l'affichage de la boite modale d'authentification. Au tout début de la méthode ==renderContentOn:== du composant ==TBPublicPostsListComponent==, on ajoute le rendu du composant d'authentification. Ce composant reçoit en paramètre la référence vers l'écran affichant les posts (==self==).
 
-```
+[[[
 TBPublicPostsListComponent >> renderContentOn: html
 	super renderContentOn: html.
 	html render: (TBauthenticationComponent from: self).
         ...
-```
+]]]
 
 On définit maintenant une méthode qui affiche un pictogramme clé et un lien 'SignIn'.
 
-```
+[[[
 TBPublicPostsListComponent >> renderSignInOn: html
 	html tbsGlyphIcon perform: #iconLock.
 	html html: '<a data-toggle="modal" href="#myAuthDialog" class="link">SignIn</a>'.
-```
+]]]
 
-###Création de la liste des posts
+??? qui appelle renderSignInOn?
 
-La liste des posts est affiché à l'aide d'un rapport généré dynamiquement par le framework Magritte. Ce framework va être utilisé pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
+!!! Création de la liste des posts
 
-Ajoutons l'écran d'administration et définissons la variable d'instance `report` qui contiendra une référence vers le composant rapport construit à l'aide de Magritte.
+La liste des posts est affichée à l'aide d'un rapport généré dynamiquement par le framework Magritte. Ce framework va être utilisé pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
 
-```
+Ajoutons le composant d'administration et définissons la variable d'instance ==report== qui contiendra une référence vers le composant rapport construit à l'aide de Magritte.
+
+[[[
 TBScreenComponent subclass: #TBAdminComponent
 	instanceVariableNames: ''
 	classVariableNames: 'report'
-	category: 'TinyBlog-Screen'
-
+	package: 'TinyBlog-Component'
+]]]
+[[[
 TBAdminComponent >> report
 	^ report
 
@@ -1217,47 +1222,49 @@ TBAdminComponent >> report: anObject
 
 TBAdminComponent >> children
 	^ OrderedCollection with: self report
-```
+]]]
 
-La méthode initialize permet d'initialiser la définition du rapport. La structure de celui-ci est défini à l'aide des descriptions des variables d'instance que nous avons spécifié précédemment.
+La méthode ==initialize== permet d'initialiser la définition du rapport. La structure de celui-ci est défini à l'aide des descriptions des variables d'instance que nous avons spécifié précédemment.
 
-```
+[[[
 TBAdminComponent >> initialize
 	super initialize.
 	self report: (TBSMagritteReport 
             rows: (self repository allBlogPosts) 
             description: (self repository allBlogPosts first magritteDescription))
-```
+]]]
 
-Nous pouvons maintenant afficher le rapport sur l'écran.
+Nous pouvons maintenant afficher le rapport.
 
-```
+[[[
 TBAdminComponent >> renderContentOn: html
 	super renderContentOn: html.
 	html tbsContainer: [ 
 		html heading: 'Blog Manager'.
 		html render: self report
 	]
-```
+]]]
 
 Par défaut, le rapport affiche l'intégralité des données présentes dans chaque posts mais certaines colonnes ne sont pas utiles. Il faut donc filtrer les colonnes. Nous ne retiendrons ici que le titre, la catégorie et la date de rédaction.
 
-Il faut ajouter une méthode pour la sélection des colonnes et modifier ensuite la méthode `initialize`.
+Il faut ajouter une méthode pour la sélection des colonnes et modifier ensuite la méthode ==initialize==.
 
-```
+[[[
 TBAdminComponent >> filteredDescriptionsFrom: aBlogPost
 	^ aBlogPost magritteDescription select: [ :each | #(title category date) includes: each accessor selector ]
+]]]
 
+[[[
 TBAdminComponent >> initialize
 	super initialize.
 	self report: (TBSMagritteReport 
             rows: (self repository allBlogPosts) 
             description: (self filteredDescriptionsFrom: (self repository allBlogPosts first)))
-```
+]]]
 
 Le rapport généré est brut. Il n'y a pas de titres sur les colonnes et l'ordre d'affichage des colonnes n'est pas fixé (il peut varier d'une instance à une autre). Pour gérer cela, il suffit de modifier les descriptions Magritte pour chaque variable d'instance. 
 
-```
+[[[
 TBPost >> descriptionTitle
 	<magritteDescription>
 	^ MAStringDescription new
@@ -1266,7 +1273,8 @@ TBPost >> descriptionTitle
 		accessor: #title;
 		beRequired;
 		yourself
-
+]]]
+[[[
 TBPost >> descriptionText
 	<magritteDescription>
 	^ MAMemoDescription new
@@ -1275,7 +1283,8 @@ TBPost >> descriptionText
 		accessor: #text;
 		beRequired;
 		yourself
-
+]]]
+[[[
 TBPost >> descriptionCategory
 	<magritteDescription>
 	^ MAStringDescription new
@@ -1283,7 +1292,8 @@ TBPost >> descriptionCategory
 		priority: 300;
 		accessor: #category;
 		yourself
-
+]]]
+[[[
 TBPost >> descriptionDate
 	<magritteDescription>
 	^ MADateDescription new
@@ -1292,8 +1302,9 @@ TBPost >> descriptionDate
 		accessor: #date;
 		beRequired; 
 		yourself
+]]]
 
-
+[[[
 TBPost >> descriptionVisible
 	<magritteDescription>
 	^ MABooleanDescription new
@@ -1302,14 +1313,9 @@ TBPost >> descriptionVisible
 		accessor: #visible;
 		beRequired; 
 		yourself
-```
+]]]
 
 
-!! Todo
-
-- bouger mongo apres le model 
-- bouger mongo install juste avant. 
-- flot: pharo install, modele, mongo install, mongo
 
 
 ##Localisation de l'interface
