@@ -1043,26 +1043,24 @@ TBPublicPostsListComponent >> renderSignInOn: html
 
 La liste des posts est affiché à l'aide d'un rapport généré dynamiquement par le framework Magritte. Ce framework va être utilisé pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
 
-Pour rester modulaire, nous allons créer un composant Seaside pour cette tâche. Nous lui transmettrons la liste des posts devant être affichés dans le rapport ainsi que l'instance de l'écran d'administration auquel il aura besoin ensuite de communiquer l'action de l'utilisateur.
+Pour rester modulaire, nous allons créer un composant Seaside pour cette tâche. Nous lui transmettrons un moyen d'accéder au données (référence vers l'objet `TBRepository`) afin qu'il accède aux posts devant être affichés dans le rapport.
+
+> Au sein du composant `TBPostReport`, nous aurions pu aussi utiliser la variable de session `repository` mais le code qui produira un peu plus tard une instance de `TBPostReport` sera plus lisible ainsi. 
 
 ```
 TBSMagritteReport subclass: #TBPostsReport
-	instanceVariableNames: 'adminScreen'
+	instanceVariableNames: 'repository'
 	classVariableNames: ''
 	category: 'TinyBlog-Components'
 
-TBPostsReport >> adminScreen
-	^ adminScreen
+repository
+	^ repository
 
-TBPostsReport >> adminScreen: anObject
-	adminScreen := anObject
+repository: anObject
+	repository := anObject
 
-TBPostsReport class >> with: aPostsList from: aScreen
-	| report |
-	
-	report := self rows: aPostsList description: (aPostsList first).
-	report adminScreen: aScreen.
-	^report
+TBPostsReport class >> from: aRepository	
+	^self rows: (aRepository allBlogPosts) description: (aRepository allBlogPosts first)
 ```
 
 Par défaut, le rapport affiche l'intégralité des données présentes dans chaque posts mais certaines colonnes ne sont pas utiles. Il faut donc filtrer les colonnes. Nous ne retiendrons ici que le titre, la catégorie et la date de rédaction.
@@ -1073,11 +1071,8 @@ Il faut ajouter une méthode de classe pour la sélection des colonnes et modifi
 TBPostsReport class >> filteredDescriptionsFrom: aBlogPost
 	^ aBlogPost magritteDescription select: [ :each | #(title category date) includes: each accessor selector ]
 
-with: aPostsList from: aScreen
-	^ (self
-		rows: aPostsList description: (self filteredDescriptionsFrom: aPostsList first))
-		adminScreen: aScreen
-	        ^report
+TBPostsReport class >> from: aRepository	
+	^self rows: (aRepository allBlogPosts) description: (self filteredDescriptionsFrom: aRepository allBlogPosts first)
 ```
 
 ###Création d'un écran d'administration
@@ -1100,22 +1095,22 @@ TBAdminComponent >> children
 	^ OrderedCollection with: self report
 ```
 
-La méthode initialize permet d'initialiser la définition du rapport. La structure de celui-ci est défini à l'aide des descriptions des variables d'instance que nous avons spécifié précédemment.
+La méthode initialize permet d'initialiser la définition du rapport. Nous fournissons au composant `TBPostReport` l'accès aux données.
 
 ```
 TBAdminComponent >> initialize
 	super initialize.
-	self report: (TBPostsReport with: (self repository allBlogPosts) from: self)
+	self report: (TBPostsReport from: self repository) 
 ```
 
 Nous pouvons maintenant afficher le rapport sur l'écran.
 
 ```
-TBAdminComponent >> renderContentOn: html
+TBAdminComponent >>  renderContentOn: html
 	super renderContentOn: html.
 	html tbsContainer: [ 
 		html heading: 'Blog Manager'.
-		html render: self report
+		html render: self report.
 	]
 ```
 
@@ -1157,7 +1152,6 @@ TBPost >> descriptionDate
 		beRequired; 
 		yourself
 
-
 TBPost >> descriptionVisible
 	<magritteDescription>
 	^ MABooleanDescription new
@@ -1173,47 +1167,169 @@ TBPost >> descriptionVisible
 Il faut maintenant mettre en place un CRUD (Create Read Update Delete) permettant de gérer les posts. Pour cela, nous allons ajouter une colonne au rapport qui regroupera les différentes opérations. Ceci se fait lors de la création du rapport.
 
 ```
-TBPostsReport class >> with: aPostsList from: aScreen
+TBPostsReport class >> from: aRepository
 	| report |
 	
-	report := self rows: aPostsList description: (self filteredDescriptionsFrom: aPostsList first).
-	report adminScreen: aScreen.
+	report := self rows: (aRepository allBlogPosts) description: (self filteredDescriptionsFrom: aRepository allBlogPosts first).
+	report repository: aRepository.
 	report addColumn: (MACommandColumn new
-		addCommandOn: aScreen selector: #viewPost: text: 'View'; yourself;
-		addCommandOn: aScreen selector: #editPost: text: 'Edit'; yourself;
-		addCommandOn: aScreen selector: #deletePost: text: 'Delete'; yourself).
+		addCommandOn: report  selector: #viewPost: text: 'View'; yourself;
+		addCommandOn: report selector: #editPost: text: 'Edit'; yourself;
+		addCommandOn: report selector: #deletePost: text: 'Delete'; yourself).
 	 ^report
 ```
 
 L'ajout (add) est dissocié des posts et se trouvera donc juste avant le rapport. Etant donné qu'il fait parti du composant TBPostsReport, nous devons surcharger la méthode renderContentOn: de l'objet TBPostsReport pour insérer le lien `add`:
 
+
 ```
 TBPostsReport >> renderContentOn: html
-	html tbsGlyphIcon perform: #iconPencil.
+        html tbsGlyphIcon perform: #iconPencil.
 	html anchor 
-		callback: [ self adminScreen addPost ];
+		callback: [ self "adminScreen" addPost ];
 		with: 'Add post'.
 	super renderContentOn: html
+
 ```
 
 ###Implémentation des actions du CRUD
 
-A chaque action (Create-Read-Update-Delete) correspond une méthode de l'objet `TBAdminComponent`. Nous allons maintenant les implémenter.
+A chaque action (Create/Read/Update/Delete) correspond une méthode de l'objet `TBPostsReport`. Nous allons maintenant les implémenter. Un formulaire personnalisé est construit en fonction de l'opération demandé (il n'est pas utile par exemple d'avoir un bouton "Sauver" alors que l'utilisateur veut simplement lire le post).
 
-####Delete
+####Ajouter un post
+
+```
+TBPostsReport >> renderAddPostForm: aPost
+	^ aPost asComponent
+		addDecoration: (TBSMagritteFormDecoration buttons: (Array with: #save -> 'Add post' with: #cancel -> 'Cancel'));
+		yourself
+
+TBPostsReport >> addPost
+	| post |
+	post := self call: (self renderAddPostForm: TBPost new).
+	post ifNotNil: [ self repository writeBlogPost: post ]
+```
+####Editer un post
+
+```
+TBPostsReport >> renderEditPostForm: aPost
+	^ aPost asComponent
+		addDecoration: (TBSMagritteFormDecoration buttons: (Array with: #save -> 'Save post' with: #cancel -> 'Cancel'));
+		yourself
+
+TBPostsReport >> editPost: aPost
+	| post |
+	post := self call: (self renderEditPostForm: aPost).
+	post ifNotNil: [  "save the modified post" ]
+```
+####Consulter un post
+
+```
+TBPostsReport >> viewPost: aPost
+	self call: (self renderViewPostForm: aPost)
+
+TBPostsReport >> renderViewPostForm: aPost
+	^ aPost asComponent
+		addDecoration: (TBSMagritteFormDecoration buttons: (Array with: #cancel -> 'Back'));
+		yourself
+```
+####Effacer un post
 
 C'est le plus simple puisqu'il efface simplement le post indiqué. Pour éviter une opération accidentelle, nous utilisons une boite modale pour que l'utilisateur confirme la suppression du post. Une fois le post effacé, la liste des posts gérés par le composant TBPostsReport est actualisé et le rapport est raffraîchi.
 
 ```
-TBAdminComponent >> deletePost: aPost
+TBPostsReport >> deletePost: aPost
 	(self confirm: 'Do you want remove this post ?') ifTrue: [  
 		self repository removeBlogPost: aPost.
-		self report rows: (self repository allBlogPosts).
-		self report refresh.
 	]
 ```
 
+###Gérer le problème du raffraichissement des données
 
+Les méthodes `TBPostsReport >> addPost:` et `TBPostsReport >> deletePost:` font bien leur travail mais les données à l'écran ne sont pas à jour. Il faut donc raffraichir la liste des posts car il y a un décalage entre les données en mémoire et celles stockées dans la base de données.
+
+```
+TBPostsReport >> refreshReport
+	self rows: (self repository allBlogPosts).
+	self refresh.
+
+TBPostsReport >> addPost
+	| post |
+	post := self call: (self renderAddPostForm: TBPost new).
+	post ifNotNil: [ 
+		self repository writeBlogPost: post.
+ 		self refreshReport
+	]
+
+TBPostsReport >> deletePost: aPost
+	(self confirm: 'Do you want remove this post ?') ifTrue: [  
+		self repository removeBlogPost: aPost.
+		self refreshReport
+	]
+
+```
+
+> Le formulaire est fonctionnel maintenant et gère même les contraintes de saisie.
+
+###Améliorer l'apparence du formulaire
+
+Pour tirer partie de Bootstrap, nous allons modifier les définitions Magritte. Tout d'abord, spécifions que le rendu du formulaire doit se baser sur Bootstrap.
+
+```
+TBPost >> descriptionContainer
+	<magritteContainer>
+	^ super descriptionContainer
+		componentRenderer: TBSMagritteFormRenderer;
+		yourself
+```
+
+Nous pouvons maintenant nous occuper des différents champs de saisie et améliorer leur apparence.
+
+````
+TBPost >> descriptionTitle
+	<magritteDescription>
+	^ MAStringDescription new
+		label: 'Title';
+		priority: 100;
+		accessor: #title;
+		requiredErrorMessage: 'A blog post must have a title.';
+		comment: 'Please enter a title';
+		componentClass: TBSMagritteTextInputComponent;
+		beRequired;
+		yourself
+
+TBPost >> descriptionText
+	<magritteDescription>
+	^ MAMemoDescription new
+		label: 'Text';
+		priority: 200;
+		accessor: #text;
+		beRequired;
+		requiredErrorMessage: 'A blog post must contain a text.';
+		comment: 'Please enter a text';
+		componentClass: TBSMagritteTextAreaComponent;
+		yourself
+
+TBPost >> descriptionCategory
+	<magritteDescription>
+	^ MAStringDescription new
+		label: 'Category';
+		priority: 300;
+		accessor: #category;
+		comment: 'Unclassified if empty';
+		componentClass: TBSMagritteTextInputComponent;
+		yourself
+
+TBPost >> descriptionVisible
+	<magritteDescription>
+	^ MABooleanDescription new
+		checkboxLabel: 'Visible';
+		priority: 500;
+		accessor: #visible;
+		componentClass: TBSMagritteCheckboxComponent;
+		beRequired; 
+		yourself
+```
 ##Localisation de l'interface
 
 ##Exposer le modèle de TinyBlog avec REST
