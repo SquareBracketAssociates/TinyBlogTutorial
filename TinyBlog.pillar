@@ -568,7 +568,7 @@ TBRootComponent >> updateRoot: anHtmlRoot
    anHtmlRoot title: 'TinyBlog'.
 ]]]
 
-@@todoa je suis confus si ils sont tous root et tous update alors c'est pas le basard? esteban
+@@todo je suis confus si ils sont tous root et tous update alors c'est pas le basard? esteban
 
 Dans le cadre du développement, automatisons la création d'un ensemble de posts à l'aide de la méthode ==createDemoPosts== dans la classe ==TBBlog==.
 
@@ -578,7 +578,7 @@ TBBlog class >> createDemoPosts
 
    self uniqueInstance
       writeBlogPost: ((TBPost title: 'Welcome in TinyBlog' text: 'TinyBlog is a small blog engine made with Pharo.' category: 'TinyBlog') visible: true).
-      writeBlogPost: ((TBPost title: 'Report Pharo Sprint' text: 'Friday, June 12 there was a Pharo sprint / Moose dojo. It was a nice event with more than 15 motivated sprinters. With the help of candies, cakes and chocolate, huge work has been done' category: 'Pharo')visible: true).
+      writeBlogPost: ((TBPost title: 'Report Pharo Sprint' text: 'Friday, June 12 there was a Pharo sprint / Moose dojo. It was a nice event with more than 15 motivated sprinters. With the help of candies, cakes and chocolate, huge work has been done' category: 'Pharo') visible: true).
       writeBlogPost: ((TBPost title: 'Brick on top of Bloc - Preview' text: 'We are happy to announce the first preview version of Brick, a new widget set created from scratch on top of Bloc. Brick is being developed primarily by Alex Syrel (together with Alain Plantec, Andrei Chis and myself), and the work is sponsored by ESUG. Brick is part of the Glamorous Toolkit effort and will provide the basis for the new versions of the development tools.' category: 'Pharo') visible: true).
       writeBlogPost: ((TBPost title: 'The sad story of unclassified blog posts' text: 'So sad that I can read this.') visible: true).
       writeBlogPost: ((TBPost title: 'Working with Pharo on the Raspberry Pi' text: 'Hardware is getting cheaper and many new small devices like the famous Raspberry Pi provide new computation power that was one once only available on regular desktop computers. This capable little device called Pi enables people of all ages to explore computing and combined with powerful software environments like Pharo the Pi can be used for interesting projects.' category: 'Pharo') visible: true).
@@ -586,7 +586,8 @@ TBBlog class >> createDemoPosts
 
 !! Gestion de Session
 
-Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations. Nous allons voir comment nous l'utilisons pour gérer une connexion.
+Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations. 
+Nous allons voir comment nous l'utilisons pour gérer une connexion.
 
 [[[
 WASession subclass: #TBSession
@@ -631,15 +632,16 @@ TBRootComponent >> initialize
    self repository size = 0 ifTrue: [ self repository createDemoPosts ]
 ]]]
 
-Il vous faut maintenant spécifier à Seaside qu'il doit utiliser l'objet ==TBSession== comme objet de session courant pour l'application TinyBlog. Pour cela, on utilise l'outil d'administration de Seaside.
+Il vous faut maintenant spécifier à Seaside qu'il doit utiliser l'objet ==TBSession== comme objet de session courant pour l'application TinyBlog. 
+Pour cela, on utilise l'outil d'administration de Seaside.
 
-- connexion sur `http://localhost:8080/config`,
+- connexion sur *http://localhost:8080/config*,
 - on clique sur "TinyBlog",
 - Dans "General", cliquez sur le bouton "Override" de "Session Class",
-- Choisir 'TBSession'' dans la liste déroulante,
+- Choisir 'TBSession' dans la liste déroulante,
 - Cliquez sur le bouton "Apply" en bas du formulaire.
 
-@@todo ça serait bien d'automatiser cette étape à l'initialisation de l'application. esteban
+@@todo ca serait bien d'automatiser cette étape à l'initialisation de l'application. esteban
 
 
 
