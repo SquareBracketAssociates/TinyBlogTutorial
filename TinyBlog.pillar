@@ -502,98 +502,21 @@ TBBlog >> allVisibleBlogPostsFromCategory: aCategory
    ^(repository selectMany: TBPost where: [ :p | p category = aCategory ]) select: [ :p | p isVisible ]
 ]]]
 
-!!! Futures Evolutions
+!! Futures Evolutions
 
 Plusieurs évolutions peuvent être apportées telles que obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts contenus, renommer un catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons à les développer.
 
 
 
-!! Décrire les données avec Magritte
-
-> Pourquoi utiliser Magritte ?
-
-> Il évite d'écrire à la main les formulaires, de valider les données, permet de générer des rapports.
-
-> reference au booklet
-
-Dans ce chapitre, les cinq variables d'instance de l'objet ==TBPost== sont décrites à l'aide de Magritte. Ici, nous ne nous intéressons qu'aux données (les informations sur l'apparence des données dans l'application seront renseignées plus tard).
 
 
-Les cinq méthodes sont dans le protocole 'descriptions' de la classe ==TBPost==.
-
-Le titre d'un post est une chaine de caractères devant être obligatoirement complétée.
-
-[[[
-TBPost >> descriptionTitle
-   <magritteDescription>
-   ^ MAStringDescription new
-      accessor: #title;
-      beRequired;
-      yourself
-]]]
-
-Le texte d'un post est une chaine de caractères multi-lignes devant être obligatoirement complétée.
-
-[[[
-TBPost >> descriptionText
-   <magritteDescription>
-   ^ MAMemoDescription new
-      accessor: #text;
-      beRequired;
-      yourself
-]]]
-
-La catégorie d'un post est une chaine de caractères qui peut ne pas être renseignée. Dans ce cas, le post sera de toute manière rangé dans la catégorie "Unclassified".
-
-[[[
-TBPost >> descriptionCategory
-   <magritteDescription>
-   ^ MAStringDescription new
-      accessor: #category;
-      yourself
-]]]
-
-La date de création d'un post est importante car elle permet de définir l'ordre de tri pour l'affichage des posts. C'est donc une variable d'instance contenant obligatoirement une date.
-
-[[[
-TBPost >> descriptionDate
-   <magritteDescription>
-   ^ MADateDescription new
-      accessor: #date;
-      beRequired;
-      yourself
-]]]
-
-
-
-La variable d'instance 'visible'' doit obligatoirement contenir une valeur booléenne.
-
-[[[
-descriptionVisible
-   <magritteDescription>
-   ^ MABooleanDescription new
-      accessor: #visible;
-      beRequired;
-      yourself
-]]]
-   
-!!! Ameliorations possibles
-
-Voici quelques améliorations
-
-Nous pourrions améliorer cette description pour qu'il ne soit pas possible de poster un post ayant une date antèrieure celle d'ajourd'hui.
-
-Nous pourrions changer la description d'une categorie pour en definir un enumere parmi les categories existantes. Ceci permettrait de faire une interface plus simplement.
-
-
-
-!! Interface web publique
+! Infrastructure Web
 
 Nous commençons par définir une interface telle que celle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera.
 Nous allons définir des composants Seaside *http://www.seaside.st*. L'ouvrage de référence est disponible en ligne à *http://book.seaside.st*
 
 
-!!! Initialisation de l'application
+!! Initialisation de l'application
 
 Création d'une classe ==TBRootComponent== qui est le point d'entrée de l'application. Il sert à l'initialisation de l'application.
 
@@ -616,13 +539,13 @@ Les méthodes de classe ==initialize== sont invoquées automatiquement lors du c
 
 Une connexion sur le serveur Seaside ("Browse the applications installed in your image") permet de vérifier que l'application est bien enregistrée.
 
-??? add Screenshot
+@todo  add Screenshot
 
 Ajoutons également la méthode ==canBeRoot== afin de préciser que la classe ==TBRootComponent== est la première instanciée lors qu'un utilisateur se connecte sur l'application et représente une application et pas seulement un composant.
 
 [[[
 TBRootComponent >> canBeRoot
-   ^true
+   ^ true
 ]]]
 
 Ajoutons maintenant une méthode ==renderContentOn:== afin de vérifier que notre application répond bien. La méthode est une méthode d'instance dans le protocole rendering.
@@ -634,7 +557,7 @@ TBRootComponent >> renderContentOn: html
 
 Connexion avec un navigateur sur *http://localhost:8080/TinyBlog*. La page doit apparaître.
 
-??? add Screenshot
+@@todo ??? add Screenshot
 
 Ajoutons maintenant des informations dans l'entête de la page HTML afin que TinyBlog ait un titre et soit une application HTML5. L'ensemble des composants visuels de l'application hériteront de ==TBRootComponent== et il ne sera donc pas nécessaire de reproduire cette opération.
 
@@ -645,11 +568,10 @@ TBRootComponent >> updateRoot: anHtmlRoot
    anHtmlRoot title: 'TinyBlog'.
 ]]]
 
-??? je suis confus si ils sont tous root et tous update alors c'est pas le basard?
+@@todoa je suis confus si ils sont tous root et tous update alors c'est pas le basard? esteban
 
 Dans le cadre du développement, automatisons la création d'un ensemble de posts à l'aide de la méthode ==createDemoPosts== dans la classe ==TBBlog==.
 
-> à déplacer coté classe
 
 [[[
 TBBlog class >> createDemoPosts
@@ -659,13 +581,12 @@ TBBlog class >> createDemoPosts
       writeBlogPost: ((TBPost title: 'Report Pharo Sprint' text: 'Friday, June 12 there was a Pharo sprint / Moose dojo. It was a nice event with more than 15 motivated sprinters. With the help of candies, cakes and chocolate, huge work has been done' category: 'Pharo')visible: true).
       writeBlogPost: ((TBPost title: 'Brick on top of Bloc - Preview' text: 'We are happy to announce the first preview version of Brick, a new widget set created from scratch on top of Bloc. Brick is being developed primarily by Alex Syrel (together with Alain Plantec, Andrei Chis and myself), and the work is sponsored by ESUG. Brick is part of the Glamorous Toolkit effort and will provide the basis for the new versions of the development tools.' category: 'Pharo') visible: true).
       writeBlogPost: ((TBPost title: 'The sad story of unclassified blog posts' text: 'So sad that I can read this.') visible: true).
-      writeBlogPost: ((TBPost title: 'Working with Pharo on the Raspberry Pi' text: 'Hardware is getting cheaper and many new small devices like the famous Raspberry Pi provide new computation power that was one once only available on regular desktop computers. This capable little device called “Pi” enables people of all ages to explore computing and combined with powerful software environments like Pharo the Pi can be used for interesting projects.' category: 'Pharo') visible: true).
+      writeBlogPost: ((TBPost title: 'Working with Pharo on the Raspberry Pi' text: 'Hardware is getting cheaper and many new small devices like the famous Raspberry Pi provide new computation power that was one once only available on regular desktop computers. This capable little device called Pi enables people of all ages to explore computing and combined with powerful software environments like Pharo the Pi can be used for interesting projects.' category: 'Pharo') visible: true).
 ]]]
 
-!!! Gestion de Session
+!! Gestion de Session
 
-Un objet session est attribué à chaque utilisateur de l'application (??? pas clair
-   c'est quoi un administration un possesseur du blog je pense). Il permet de conserver principalement des informations. Nous allons voir comment nous l'utilisons pour gérer une connexion.
+Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations. Nous allons voir comment nous l'utilisons pour gérer une connexion.
 
 [[[
 WASession subclass: #TBSession
@@ -718,16 +639,24 @@ Il vous faut maintenant spécifier à Seaside qu'il doit utiliser l'objet ==TBSe
 - Choisir 'TBSession'' dans la liste déroulante,
 - Cliquez sur le bouton "Apply" en bas du formulaire.
 
-> ça serait bien d'automatiser cette étape à l'initialisation de l'application.
-??? esteban
+@@todo ça serait bien d'automatiser cette étape à l'initialisation de l'application. esteban
 
-!! Composants Visuels de TinyBlog
+
+
+
+
+
+
+
+
+
+! Composants Visuels de TinyBlog
 
 Nous sommes prets à définir les composants visuels de notre petite application.
 Les premiers chapitre de *http://book.seaside.st* peuvent vous aider.
 
 
-!!! Le composant TBScreenComponent
+!! Le composant TBScreenComponent
 
 [[[
 WAComponent subclass: #TBScreenComponent
@@ -745,7 +674,7 @@ TBScreenComponent >> repository
 
 Profitons également de ce composant pour insérer dans la partie supérieure de chaque composant, l'instance d'un composant représentant l'entête de l'application.
 
-!!! Définition du composant TBHeaderComponent
+!! Définition du composant TBHeaderComponent
 
 [[[
 WAComponent subclass: #TBHeaderComponent
@@ -770,7 +699,7 @@ L'entête est affichée à l'aide d'une barre de navigation Bootstrap.
 Le nom du blog devrait être paramêtrable à l'aide d'une variable d'instance dans un objet ==TBConfiguration== ou à l'aide d'un document dans la base Mongo.
 
 
-!!! Ajout d'un Header
+!! Ajout d'un Header
 
 Il n'est pas souhaitable d'instancier systématiquement le composant à chaque fois qu'un composant est appelé. Créons une variable d'instance ==header== dans ==TBScreenComponent== qui sera initialisés une seule fois pour chaque utilisateur de l'application (gain de ressources).
 
@@ -778,7 +707,7 @@ Il n'est pas souhaitable d'instancier systématiquement le composant à chaque f
 WAComponent subclass: #TBScreenComponent
    instanceVariableNames: 'header'
    classVariableNames: ''
-   category: 'TinyBlog'
+   package: 'TinyBlog'
 ]]]
 
 Créons une méthode ==initialize== dans le protocole `initialize-release`:
@@ -789,7 +718,7 @@ TBScreenComponent >> initialize
    header := TBHeaderComponent new.
 ]]]
 
-!!!! Relation Composite-Composant
+!!! Relation Composite-Composant
 Définissons que l'instance du composant ==TBHeaderComponent== est un enfant de ==TBScreenComponent== dans la hiérarchie de composants Seaside (en non entre classes Pharo). En effet en Seaside les sous-composants d'un composant doivent être retournés par le composite par le message ==children==.
 
 [[[
@@ -871,7 +800,7 @@ TBRootComponent >> renderContentOn: html
    html render: self publicPostsList
 ]]]
 
-!!! Composant Post
+!! Le composant Post
 
 Nous allons maintenant définir le composant ==TBPostContentComponent== qui affiche le contenu d'un post.
 
@@ -908,7 +837,7 @@ Créons une méthode de classe pour initialiser chaque post:
 
 [[[
 TBPostContentComponent class >> title: aTitle text: aText date: aDate
-   ^self new
+   ^ self new
       title: aTitle;
       text: aText;
       date: aDate
@@ -923,15 +852,17 @@ TBPostContentComponent >> renderContentOn: html
    html text: self text
 ]]]
 
-??? ici Magritte aussi
-??? est ce que cela marche?
+Nous montrerons dans le chapitre décrivant Magritte puis les interfaces d'administration, qu'il est rare
+de définir un composant de manière aussi manuelle. En effet Magritte en décrivant les données manipuler
+permet de générer automatiquement des composantes Seaside. Le code équivalent serait comme suit: 
+
 [[[
 TBPostContentComponent >> renderContentOn: html
    html render: self asComponent
 ]]]
 
 
-!!! Afficher les posts
+!! Afficher les posts
 
 Maintenant nous pouvons afficher des posts présents dans la base.
 
@@ -1029,7 +960,7 @@ Reste maintenant à écrire la méthode de rendu du composant:
    ]
 ]]]
 
-!!! Mise à jour des Posts
+!! Mise à jour des Posts
 Nous devons aussi mettre à jour la liste des posts.
 
 Il faut gérer le raffraîchissement de la liste des posts en fonction de la catégorie choisie et donc modifier la méthode de rendu du composant ==TBPublicPostsListComponent==.
@@ -1042,6 +973,8 @@ TBPublicPostsListComponent >> readSelectedPosts
       ifNil: [ self repository allVisibleBlogPosts ]
       ifNotNil: [ self repository allVisibleBlogPostsFromCategory: self currentCategory  ].
 ]]]
+
+@@todo Olivier maintenant on ne doit plus avoir besoin de faire un test car la caetgory est definie tout le temps
 
 Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des posts:
 
@@ -1064,7 +997,7 @@ TBPublicPostsListComponent >> renderContentOn: html
 Une instance du composant ==TBCategoriesListComponent== est ajoutée sur la page et permet de sélectionner la catégorie courante.
 
 
-!!! Look et Agencement
+!! Look et Agencement
 
 Nous allons maintenant agencer le composant ==TBPublicPostsListComponent==.
 
@@ -1096,6 +1029,86 @@ TBPublicPostsListComponent >> renderContentOn: html
                      text: p text
                      date: p date asDate) ] ] ] ]
 ]]]
+
+
+
+! Décrire les données avec Magritte
+
+@@todo Pourquoi utiliser Magritte ? Il évite d'écrire à la main les formulaires, de valider les données, permet de générer des rapports. add reference au booklet
+
+Dans ce chapitre, les cinq variables d'instance de l'objet ==TBPost== sont décrites à l'aide de Magritte. Ici, nous ne nous intéressons qu'aux données (les informations sur l'apparence des données dans l'application seront renseignées plus tard).
+
+!! Descriptions 
+Les cinq méthodes sont dans le protocole 'descriptions' de la classe ==TBPost==.
+
+Le titre d'un post est une chaine de caractères devant être obligatoirement complétée.
+
+[[[
+TBPost >> descriptionTitle
+   <magritteDescription>
+   ^ MAStringDescription new
+      accessor: #title;
+      beRequired;
+      yourself
+]]]
+
+Le texte d'un post est une chaine de caractères multi-lignes devant être obligatoirement complétée.
+
+[[[
+TBPost >> descriptionText
+   <magritteDescription>
+   ^ MAMemoDescription new
+      accessor: #text;
+      beRequired;
+      yourself
+]]]
+
+La catégorie d'un post est une chaine de caractères qui peut ne pas être renseignée. Dans ce cas, le post sera de toute manière rangé dans la catégorie "Unclassified".
+
+[[[
+TBPost >> descriptionCategory
+   <magritteDescription>
+   ^ MAStringDescription new
+      accessor: #category;
+      yourself
+]]]
+
+La date de création d'un post est importante car elle permet de définir l'ordre de tri pour l'affichage des posts. C'est donc une variable d'instance contenant obligatoirement une date.
+
+[[[
+TBPost >> descriptionDate
+   <magritteDescription>
+   ^ MADateDescription new
+      accessor: #date;
+      beRequired;
+      yourself
+]]]
+
+
+
+La variable d'instance 'visible'' doit obligatoirement contenir une valeur booléenne.
+
+[[[
+descriptionVisible
+   <magritteDescription>
+   ^ MABooleanDescription new
+      accessor: #visible;
+      beRequired;
+      yourself
+]]]
+   
+!!! Ameliorations possibles
+
+Voici quelques améliorations
+
+Nous pourrions améliorer cette description pour qu'il ne soit pas possible de poster un post ayant une date antèrieure celle d'ajourd'hui.
+
+Nous pourrions changer la description d'une categorie pour en definir un enumere parmi les categories existantes. Ceci permettrait de faire une interface plus simplement.
+
+
+
+
+
 
 !! Administration de TinyBlog
 
