@@ -902,6 +902,8 @@ Une instance du composant `TBCategoriesListComponent`est ajouté sur la page et 
 
 Mise en place d'un responsive design pour la liste des posts. Les composants sont placés dans un container Bootstrap puis agencés sur une ligne avec deux colonnes. La dimension des colonnes est déterminée en fonction de la résolution (viewport) du terminal utilisé. Les 12 colonnes de Bootstrap sont réparties entre la liste des catégories et la liste des posts. Dans le cas d'une résolution faible, la liste des catégories est placée au dessus de la liste des posts (chaque élément occupant 100% de la largeur du container).
 
+Tant que nous sommes dans les finitions, profitons en également pour afficher la date de chaque post dans un format compréhensible (sans l'heure).
+
 ```
 TBPublicPostsListComponent >> renderContentOn: html
 
@@ -923,7 +925,7 @@ TBPublicPostsListComponent >> renderContentOn: html
 						html render: (TBPostContentComponent 
 							title: p title 
 							text: p text 
-							date: p date) ] ] ] ]
+							date: p date asDate) ] ] ] ]
 ```
 
 ##Administration de TinyBlog
