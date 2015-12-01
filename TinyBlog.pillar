@@ -1,16 +1,16 @@
-! TinyBlog
+! TinyBlog: Préparation
 
 Ce tutorial va vous enseigner comment definir et deployer une application en utilisant Pharo/Seaside/Mongo ainsi que des frameworks disponibles en Pharo comme NeoJSON.
 Nous allons définir un mini moteur de blogs. Les solutions proposées dans le tutorial sont parfois non optimale afin de vous faire réagir et que vous puissiez proposer d'autres solutions et améliorations. 
 
 D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une facon de faire cependant nous invitons le lecteur à lire les références sur les autres chapitres, livres et tutoriaux afin d'approfondir son exp\'ertise.
 
-
 !! Stef Questions
 - TBRepo = TBBlog je renommerais bien TBRepo en TBBlog
 - Magritte n'est pas utilise pour le rendu?
 - screen => component
 - on pourrait avoir mongo dans un second temps?
+- probleme encodage (pourquoi cela plante dans le sessions de code è)
 
 !! Installation et préparation de Pharo
 
@@ -18,7 +18,8 @@ D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une faco
  
 - Depuis votre compte créer un projet sur http://smalltalkhub.com
 -- Nommez le "TinyBlog",
--- Récupérer l'URL du projet: `http://smalltalkhub.com/mc/XXX/TinyBlog/main`
+-- Récupérer l'URL du projet: 'http://smalltalkhub.com/mc/XXX/TinyBlog/main'
+
 
 !!! Mettre en place Pharo
 
@@ -41,7 +42,7 @@ D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une faco
 --- BootstrapMagritte,
 --- Mustache
 -- Dans Packages, ajoutez le paquet TinyBlog,
---- Définissez le repository: 'http://smalltalkhub.com/mc/olivierauverlot/TinyBlog/main'
+--- Définissez son repository: 'http://smalltalkhub.com/mc/XXX/TinyBlog/main'
 --- Cliquer sur le bouton "Save to development"
 
 !!! Démarrer le serveur HTTP
@@ -52,13 +53,16 @@ D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une faco
 - Cliquer sur le serveur pour le sélectionner et cliquez sur le bouton "Start".
 
 
+
+
 !! Mongo et sa configuration
+??? Une idee est de le mettre apres modele.
 
 !!! Obtenir une base de données MongoDB
 
 !!!! Dans le cloud avec MongoLab
 
-- Se connecter sur https://mongolab.com
+- Se connecter sur *https://mongolab.com*
 - Cliquer sur signup, 
 - Créer un compte utilisateur (un mail de vérification de l'adresse mail est envoyé. Il faut confirmer le compte).
 - Cliquer sur "Create New"
@@ -85,7 +89,7 @@ Pensez à changer les valeurs!
 !!!! Paramètres du serveur
 
 [[[
-|Paramètre      |Valeur                |
+|Parametre      |Valeur                |
 |---------------|----------------------|
 |Serveur        |ds045064.mongolab.com |
 |Port           |45064                 |
@@ -105,23 +109,22 @@ Pensez à changer les valeurs!
 
 !!!! Mac OS X
 
-Installer Brew (http://brew.sh)
-
-Dans le terminal, mettre à jour les paquets et installer MongoDB:
+- Installer Brew (*http://brew.sh*)
+- Dans le terminal, mettre à jour les paquets et installer MongoDB:
 
 [[[
 brew update
 brew install mongodb
 ]]]
 
-Créer un répertoire pour le stockage des données et attribution des droits
+- Créer un répertoire pour le stockage des données et attribution des droits
 
 [[[
 mkdir -p /data/db
 chmod -R /data/db
 ]]]
 
-Lancement de mongo: `sudo mongod`
+Lancement de mongo: ==`sudo mongod`==
 
 !!!! Linux Debian
 A venir
@@ -131,20 +134,36 @@ Google pour le moment. A venir
 
 
 
-!! Le modèle de TinyBlog
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+! Le modèle de TinyBlog
 
 Le modèle de tinyblog est extremement simple: deux classes. La class ==TBPost== et la class ==TBRepository==.
 
-!!! La classe TBPost
+!! La classe TBPost
 
 [[[
 Object subclass: #TBPost
-	instanceVariableNames: 'title text date category visible'
-	classVariableNames: ''
-	package: 'TinyBlog'
+   instanceVariableNames: 'title text date category visible'
+   classVariableNames: ''
+   package: 'TinyBlog'
 ]]]
 
-!!!! Description d'un post
+!!! Description d'un post
 
 Cinq variables d'instance pour décrire un post sur le blog.
 
@@ -153,7 +172,7 @@ Cinq variables d'instance pour décrire un post sur le blog.
 |--------------|-----------------------------|
 |title         |Titre du post                |
 |text          |Texte du post                |
-|date          |Date de rédaction            |
+|date          |Date de redaction            |
 |category      |Rubrique contenant le post   |
 |visible       |Post visible ou pas ?        |
 ]]]
@@ -162,50 +181,50 @@ Ces variables ont des setters et getters dans le protocole accessing.
 
 [[[
 TBPost >> title
-	^ title
+   ^ title
 
 TBPost >> title: anObject
-	title := anObject
+   title := anObject
 
 TBPost >> text
-	^ text
+   ^ text
 
 TBPost >> text: anObject
-	text := anObject
+   text := anObject
 
 TBPost >> date
-	^ date
+   ^ date
 
 TBPost >> date: anObject
-	date := anObject
+   date := anObject
 
 TBPost >> visible
-	^ visible
+   ^ visible
 
 TBPost >> visible: anObject
-	visible := anObject
+   visible := anObject
 ]]]
 
 La variable d'instance ==category== un traitement particulier car si elle n'est pas initialisée, le post est automatiquement placé dans la catégorie =='Unclassified'==. La méthode de classe ==unclassifiedTag== retourne la valeur par défaut d'une catégorie.
 
 [[[
 TBPost class >> unclassifiedTag
-	^ 'Unclassified'
+   ^ 'Unclassified'
 
 TBPost >> category
-	^ category
+   ^ category
 
 TBPost >> category: anObject
-	anObject 
-		ifNil: [ category := TBPost unclassifiedTag ] 
-		ifNotNil: [ category := anObject ]
+   anObject 
+      ifNil: [ category := TBPost unclassifiedTag ] 
+      ifNotNil: [ category := anObject ]
 ]]]
 
-!!!! Amélioration
+!!! Amélioration
 Il serait préférable de ne pas faire une référence en dur à la class ==TBPost==. 
 Proposer une solution.
 
-La méthode 'initialize' (protocole ==initialize-release==) fixe par défaut la date et fixe par défaut la visibilité à false (l'utilisateur devra par la suite activer la visibilité ce qui permet de rédiger des brouillons et de publier lors que le post est terminé).
+La méthode ==initialize== (protocole 'initialize-release') fixe par défaut la date et fixe par défaut la visibilité à false (l'utilisateur devra par la suite activer la visibilité ce qui permet de rédiger des brouillons et de publier lors que le post est terminé).
 
 [[[
 TBPost >> initialize
@@ -223,42 +242,42 @@ TBPost >> initialize
 ]]]
 
 
-!!!! Test
+!!! Test
 
 Savoir si un post est classé dans une catégorie
 
 [[[
 TBPost >> isUnclassified
-	^ self category = TBPost unclassifiedTag
+   ^ self category = TBPost unclassifiedTag
 ]]]
 
 Il serait préférable de ne pas faire une référence en dur à la class TBPost. 
 Proposer une solution.
 
-!!!! Gérer la visibilité d'un post
+!!! Gérer la visibilité d'un post
 
 Il faut avoir la possibilité d'indiquer qu'un post est visible ou pas. Il faut également pouvoir demandé à un post s'il est visible. Les méthodes sont définies dans la protocole 'action'.
 
 [[[
 TBPost >> beVisible
-	self visible: true
+   self visible: true
 
 TBPost >> notVisible
-	self visible: false
+   self visible: false
 
 TBPost >isVisible
-	^ self visible
+   ^ self visible
 ]]]
 
-!!! La classe TBRepository 
+!! La classe TBRepository 
 
 La classe ==TBRepository== a la responsabilité de la communication entre l'application et la base MongoDB. Elle regroupe les règles métiers telle que le nombre de posts, 
 
 [[[
 Object subclass: #TBRepository
-	instanceVariableNames: 'repository host port database username password'
-	classVariableNames: ''
-	package: 'TinyBlog'
+   instanceVariableNames: 'repository host port database username password'
+   classVariableNames: ''
+   package: 'TinyBlog'
 ]]]
 
 ??? Un repository a un repository? un Blog a un repository. 
@@ -268,17 +287,17 @@ Il y a une seule instance de la classe (singleton) et celle ci est construite co
 
 [[[
 TBRepository class
-	instanceVariableNames: 'uniqueInstance'
+   instanceVariableNames: 'uniqueInstance'
 
 TBRepository class >> initialize
-	^ uniqueInstance ifNil: [ uniqueInstance := self new ]
+   ^ uniqueInstance ifNil: [ uniqueInstance := self new ]
 
 TBRepository class >> current
-	^ uniqueInstance
+   ^ uniqueInstance
 
 TBRepository class >> reset
-	VORepository setRepository: nil.
-	uniqueInstance := nil
+   VORepository setRepository: nil.
+   uniqueInstance := nil
 ]]]
 
 L'expression ==VORepository setRepository: nil.== est une expression Voyage qui initialize la connexion avec la base de données Mongo. 
@@ -287,48 +306,48 @@ Coté instance, les méthodes ==initializeConnectionParameters== et ==initialize
 
 [[[
 TBRepository >> initializeConnectionParameters
-	host := 'localhost'.
-	database := 'tinyblog'
+   host := 'localhost'.
+   database := 'tinyblog'
 
 TBRepository >> initialize
-	super initialize.
-	self initializeConnectionParameters.
-	
-	repository := VOMongoRepository
-		host: host
-		"port: port"
-		database: database.
-		"username: username
-		password: password"
-	
-	repository enableSingleton.
+   super initialize.
+   self initializeConnectionParameters.
+   
+   repository := VOMongoRepository
+      host: host
+      "port: port"
+      database: database.
+      "username: username
+      password: password"
+   
+   repository enableSingleton.
 ]]]
 
 > Pas d'authentification utilisée car impossible de le faire avec MongoDB 3.0 (nouvelle méthode de chiffrement SCRAM pas encore supportée avec Pharo ?)
 
-!!! Tester les règles métiers
+!! Tester les règles métiers
 Nous allons écrire les tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premiers puis en définissant les fonctionalités jsuqu'à ce que les tests passent. 
 
 Les tests unitaires sont regroupés dans le paquet ==TinyBlog-tests== qui contient la classe ==TBRepositoryTest==.
 
 [[[
 TestCase subclass: #TBRepositoryTest
-	instanceVariableNames: 'blog post repository'
-	classVariableNames: ''
-	package: 'TinyBlog-tests'
+   instanceVariableNames: 'blog post repository'
+   classVariableNames: ''
+   package: 'TinyBlog-tests'
 ]]]
 
 Avant le lancement des tests, la méthode ==setUp== initialise la connexion vers la base, efface son contenu, ajoute un post et en crée un autre qui provisoirement n'est pas enregistré.
 
 [[[
 TBRepositoryTest >> setUp
-	repository := TBRepository initialize.
-	blog := TBRepository current.
+   repository := TBRepository initialize.
+   blog := TBRepository current.
 
-	blog removeAll.
+   blog removeAll.
 
-	TBRepository current writeBlogPost: (TBPost title: 'A title' text: 'A text' category: 'First Category').
- 	post := (TBPost title: 'Another title' text: 'Another text' category: 'Second Category') beVisible
+   TBRepository current writeBlogPost: (TBPost title: 'A title' text: 'A text' category: 'First Category').
+    post := (TBPost title: 'Another title' text: 'Another text' category: 'Second Category') beVisible
 ]]]
 
 On en profite pour tester différentes configuration. Les posts ne sont pas dans la même catégorie, l'un est visible, l'autre pas.
@@ -337,7 +356,7 @@ La méthode ==tearDown== exécutée au terme des tests remet à zéro la connexi
 
 [[[
 TBRepositoryTest >> tearDown
-	TBRepository reset
+   TBRepository reset
 ]]]
 
 ??? why not repository reset since repository points to TBRepository initialize which returns the class
@@ -346,73 +365,73 @@ Nous allons développer les tests d'abord puis ensuite passer à l'implémentati
 des fonctionalités.
 
 !!!! Obtenir le nombre de posts dans la base
-
+??? probablement mettre un (test method)\* au lieu de test\* method\*
 [[[
 TBRepositoryTest >> testSize
-	self assert: blog size equals: 1
+   self assert: blog size equals: 1
 ]]]
 
 !!!! Ajouter un post
 
 [[[
 TBRepositoryTest >> testAddBlogPost
-	blog writeBlogPost: post.
-	self assert: blog size equals: 2
+   blog writeBlogPost: post.
+   self assert: blog size equals: 2
 ]]]
 
 !!!! Obtenir l'ensemble des posts (visibles et invisibles)
 
 [[[
 TBRepositoryTest >> testAllBlogPosts
-	blog writeBlogPost: post.
-	self assert: (blog allBlogPosts) size equals: 2.
+   blog writeBlogPost: post.
+   self assert: (blog allBlogPosts) size equals: 2.
 ]]]
 
 !!!! Obtenir tous les posts visibles
 
 [[[
 TBRepositoryTest >> testAllVisibleBlogPosts
-	blog writeBlogPost: post.
-	self assert: (blog allVisibleBlogPosts) size equals: 1.
+   blog writeBlogPost: post.
+   self assert: (blog allVisibleBlogPosts) size equals: 1.
 ]]]
 
 !!!! Obtenir tous les posts d'une catégorie
 
 [[[
 TBRepositoryTest >> testAllBlogPostsFromCategory
-	self assert: (blog allBlogPostsFromCategory: 'First Category') size equals: 1
+   self assert: (blog allBlogPostsFromCategory: 'First Category') size equals: 1
 ]]]
 
 !!!! Obtenir tous les posts visibles d'une catégorie
 
 [[[
 TBRepositoryTest >> testAllVisibleBlogPostsFromCategory
-	blog writeBlogPost: post.
-	self assert: (blog allVisibleBlogPostsFromCategory: 'First Category') size equals: 0.
-	self assert: (blog allVisibleBlogPostsFromCategory: 'Second Category') size equals: 1.
+   blog writeBlogPost: post.
+   self assert: (blog allVisibleBlogPostsFromCategory: 'First Category') size equals: 0.
+   self assert: (blog allVisibleBlogPostsFromCategory: 'Second Category') size equals: 1.
 ]]]
 
 !!!! Vérifier la gestion des posts non classés
 
 [[[
 TBRepositoryTest >> testUnclassifiedBlogPosts
-	self assert: (blog allBlogPosts select: [ :p | p isUnclassified ]) size equals: 0.
+   self assert: (blog allBlogPosts select: [ :p | p isUnclassified ]) size equals: 0.
 ]]]
 
 !!!! Obtenir la liste des catégories
 
 [[[
 TBRepositoryTest >> testAllCategories
-	blog writeBlogPost: post.
-	self assert: (blog allCategories) size equals: 2.
+   blog writeBlogPost: post.
+   self assert: (blog allCategories) size equals: 2.
 ]]]
 
 !!!! Effacer l'intégralité des posts
 
 [[[
 TBRepositoryTest >> testRemoveAllBlogPosts
-	blog removeAll.
-	self assert: blog size equals: 0.
+   blog removeAll.
+   self assert: blog size equals: 0.
 ]]]
 
 !!! Implémentation des règles métiers
@@ -423,7 +442,7 @@ Les règles métiers sont regroupées dans le protocole 'action' de la classe ==
 
 [[[
 TBRepository >> size
-	^ repository count: TBPost
+   ^ repository count: TBPost
 ]]]
 
 !!!! Enregistrer le contenu d'un post
@@ -434,58 +453,63 @@ Enregistrer le contenu d'un post est assez simple. On le sauve.
 
 [[[
 TBRepository >> writeBlogPost: aPost
-	aPost save.
+   aPost save.
 ]]]
 
 !!!! Effacer l'ensemble des posts
 
 [[[
 TBRepository >> removeAll
-	repository removeAll: TBPost
+   repository removeAll: TBPost
 ]]]
 
 !!!! Obtenir l'ensemble des posts
 
 [[[
 TBRepository >> allBlogPosts
-	^ repository selectAll: TBPost
+   ^ repository selectAll: TBPost
 ]]]
 
 !!!! Obtenir l'ensemble des posts visibles
 
 [[[
 TBRepository >> allVisibleBlogPosts
-	^ (repository selectAll: TBPost) select: [ :p | p isVisible ]
+   ^ (repository selectAll: TBPost) select: [ :p | p isVisible ]
 ]]]
 
 !!!! Obtenir la liste des catégories
 
 [[[
 TBRepository >> allCategories
-	^(self allBlogPosts collect: [ :p | p category ]) asSet
+   ^(self allBlogPosts collect: [ :p | p category ]) asSet
 ]]]
 
 !!!! Obtenir l'ensemble des posts d'une catégorie
 
 [[[
 TBRepository >> allBlogPostsFromCategory: aCategory
-	^repository selectMany: TBPost where: [ :p | p category = aCategory ]
+   ^repository selectMany: TBPost where: [ :p | p category = aCategory ]
 ]]]
 
 !!!! Obtenir l'ensemble des posts visibles d'une catégorie
 
 [[[
 TBRepository >> allVisibleBlogPostsFromCategory: aCategory
-	^(repository selectMany: TBPost where: [ :p | p category = aCategory ]) select: [ :p | p isVisible ]
+   ^(repository selectMany: TBPost where: [ :p | p category = aCategory ]) select: [ :p | p isVisible ]
 ]]]
 
-!!! Futures Evolutions
+!! Futures Evolutions
 
 Plusieurs évolutions peuvent être apportées telles que obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts contenus, renommer un catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons à les développer. 
 
 
 
-!! Décrire les données avec Magritte
+
+
+
+
+
+! Décrire les données avec Magritte
 
 > Pourquoi utiliser Magritte ? 
 
@@ -495,6 +519,7 @@ Plusieurs évolutions peuvent être apportées telles que obtenir uniquement la 
 
 Dans ce chapitre, les cinq variables d'instance de l'objet ==TBPost== sont décrites à l'aide de Magritte. Ici, nous ne nous intéressons qu'aux données (les informations sur l'apparence des données dans l'application seront renseignées plus tard).
 
+!! Descriptions
 
 Les cinq méthodes sont dans le protocole 'descriptions' de la classe ==TBPost==.
 
@@ -502,59 +527,59 @@ Le titre d'un post est une chaine de caractères devant être obligatoirement co
 
 [[[
 TBPost >> descriptionTitle
-	<magritteDescription>
-	^ MAStringDescription new
-		accessor: #title;
-		beRequired;
-		yourself
+   <magritteDescription>
+   ^ MAStringDescription new
+      accessor: #title;
+      beRequired;
+      yourself
 ]]]
 
 Le texte d'un post est une chaine de caractères multi-lignes devant être obligatoirement complétée.
 
 [[[
 TBPost >> descriptionText
-	<magritteDescription>
-	^ MAMemoDescription new
-		accessor: #text;
-		beRequired;
-		yourself
+   <magritteDescription>
+   ^ MAMemoDescription new
+      accessor: #text;
+      beRequired;
+      yourself
 ]]]
 
 La catégorie d'un post est une chaine de caractères qui peut ne pas être renseignée. Dans ce cas, le post sera de toute manière rangé dans la catégorie "Unclassified".
 
 [[[
 TBPost >> descriptionCategory
-	<magritteDescription>
-	^ MAStringDescription new
-		accessor: #category;
-		yourself
+   <magritteDescription>
+   ^ MAStringDescription new
+      accessor: #category;
+      yourself
 ]]]
 
 La date de création d'un post est importante car elle permet de définir l'ordre de tri pour l'affichage des posts. C'est donc une variable d'instance contenant obligatoirement une date.
 
 [[[
 TBPost >> descriptionDate
-	<magritteDescription>
-	^ MADateDescription new
-		accessor: #date;
-		beRequired; 
-		yourself
+   <magritteDescription>
+   ^ MADateDescription new
+      accessor: #date;
+      beRequired; 
+      yourself
 ]]]
 
 
 
-La variable d'instance 'visible'' doit obligatoirement contenir une valeur booléenne. 
+La variable d'instance 'visible' doit obligatoirement contenir une valeur booléenne. 
 
 [[[
 descriptionVisible
-	<magritteDescription>
-	^ MABooleanDescription new
-		accessor: #visible;
-		beRequired; 
-		yourself
+   <magritteDescription>
+   ^ MABooleanDescription new
+      accessor: #visible;
+      beRequired; 
+      yourself
 ]]]
-	
-!!! Ameliorations possibles	
+   
+!! Améliorations possibles   
 
 Voici quelques améliorations
 
@@ -564,13 +589,26 @@ Nous pourrions changer la description d'une categorie pour en definir un enumere
 
 
 
-!! Interface web publique
+
+
+
+
+
+
+
+
+
+
+
+
+
+! Interface web publique
 
 Nous commençons par définir une interface telle que celle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera. 
 Nous allons définir des composants Seaside *http://www.seaside.st*. L'ouvrage de référence est disponible en ligne à *http://book.seaside.st*
 
 
-!!! Initialisation de l'application 
+!! Initialisation de l'application 
 
 Création d'une classe ==TBRootComponent== qui est le point d'entrée de l'application. Il sert à l'initialisation de l'application. 
 
@@ -578,13 +616,13 @@ On déclare l'application au serveur Seaside, coté classe, dans le protocole 'i
 
 [[[
 TBRootComponent class >> initialize
-	"self initialize"
-	| app |
-	app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
-	app 
-		addLibrary: JQDeploymentLibrary;
-		addLibrary: JQUiDeploymentLibrary;
-		addLibrary: TBSDeploymentLibrary
+   "self initialize"
+   | app |
+   app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
+   app 
+      addLibrary: JQDeploymentLibrary;
+      addLibrary: JQUiDeploymentLibrary;
+      addLibrary: TBSDeploymentLibrary
 ]]]
 
 Dans un Playground, on peut exécuter ==TBRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. Notez que nous venons de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices. 
@@ -599,14 +637,14 @@ Ajoutons également la méthode ==canBeRoot== afin de préciser que la classe ==
 
 [[[
 TBRootComponent >> canBeRoot
-	^true
+   ^true
 ]]]
 
 Ajoutons maintenant une méthode ==renderContentOn:== afin de vérifier que notre application répond bien. La méthode est une méthode d'instance dans le protocole rendering.
 
 [[[
 TBRootComponent >> renderContentOn: html
-	html text: 'TinyBlog'
+   html text: 'TinyBlog'
 ]]]
 
 Connexion avec un navigateur sur *http://localhost:8080/TinyBlog*. La page doit apparaître.
@@ -617,9 +655,9 @@ Ajoutons maintenant des informations dans l'entête de la page HTML afin que Tin
 
 [[[
 TBRootComponent >> updateRoot: anHtmlRoot
-	super updateRoot: anHtmlRoot.
-	anHtmlRoot beHtml5.
-	anHtmlRoot title: 'TinyBlog'.
+   super updateRoot: anHtmlRoot.
+   anHtmlRoot beHtml5.
+   anHtmlRoot title: 'TinyBlog'.
 ]]]
 
 ??? je suis confus si ils sont tous root et tous update alors c'est pas le basard?
@@ -631,60 +669,60 @@ Dans le cadre du développement, automatisons la création d'un ensemble de post
 [[[
 TBRepository class >> createDemoPosts
 
-	self uniqueInstance
-		writeBlogPost: ((TBPost title: 'Welcome in TinyBlog' text: 'TinyBlog is a small blog engine made with Pharo.' category: 'TinyBlog') visible: true).
-		writeBlogPost: ((TBPost title: 'Report Pharo Sprint' text: 'Friday, June 12 there was a Pharo sprint / Moose dojo. It was a nice event with more than 15 motivated sprinters. With the help of candies, cakes and chocolate, huge work has been done' category: 'Pharo')visible: true).
-		writeBlogPost: ((TBPost title: 'Brick on top of Bloc - Preview' text: 'We are happy to announce the first preview version of Brick, a new widget set created from scratch on top of Bloc. Brick is being developed primarily by Alex Syrel (together with Alain Plantec, Andrei Chis and myself), and the work is sponsored by ESUG. Brick is part of the Glamorous Toolkit effort and will provide the basis for the new versions of the development tools.' category: 'Pharo') visible: true).
-		writeBlogPost: ((TBPost title: 'The sad story of unclassified blog posts' text: 'So sad that I can read this.' category: nil) visible: true).
-		writeBlogPost: ((TBPost title: 'Working with Pharo on the Raspberry Pi' text: 'Hardware is getting cheaper and many new small devices like the famous Raspberry Pi provide new computation power that was one once only available on regular desktop computers. This capable little device called “Pi” enables people of all ages to explore computing and combined with powerful software environments like Pharo the Pi can be used for interesting projects.' category: 'Pharo') visible: true).
+   self uniqueInstance
+      writeBlogPost: ((TBPost title: 'Welcome in TinyBlog' text: 'TinyBlog is a small blog engine made with Pharo.' category: 'TinyBlog') visible: true).
+      writeBlogPost: ((TBPost title: 'Report Pharo Sprint' text: 'Friday, June 12 there was a Pharo sprint / Moose dojo. It was a nice event with more than 15 motivated sprinters. With the help of candies, cakes and chocolate, huge work has been done' category: 'Pharo')visible: true).
+      writeBlogPost: ((TBPost title: 'Brick on top of Bloc - Preview' text: 'We are happy to announce the first preview version of Brick, a new widget set created from scratch on top of Bloc. Brick is being developed primarily by Alex Syrel (together with Alain Plantec, Andrei Chis and myself), and the work is sponsored by ESUG. Brick is part of the Glamorous Toolkit effort and will provide the basis for the new versions of the development tools.' category: 'Pharo') visible: true).
+      writeBlogPost: ((TBPost title: 'The sad story of unclassified blog posts' text: 'So sad that I can read this.' category: nil) visible: true).
+      writeBlogPost: ((TBPost title: 'Working with Pharo on the Raspberry Pi' text: 'Hardware is getting cheaper and many new small devices like the famous Raspberry Pi provide new computation power that was one once only available on regular desktop computers. This capable little device called Pi enables people of all ages to explore computing and combined with powerful software environments like Pharo the Pi can be used for interesting projects.' category: 'Pharo') visible: true).
 ]]]
 
-!!! Gestion de Session
+!! Gestion de Session
 
 Un objet session est attribué à chaque utilisateur de l'application (??? pas clair
-	c'est quoi un administration un possesseur du blog je pense). Il permet de conserver principalement des informations. Nous allons voir comment nous l'utilisons pour gérer une connexion. 
+   c'est quoi un administrateur un possesseur du blog je pense). Il permet de conserver principalement des informations. Nous allons voir comment nous l'utilisons pour gérer une connexion. 
 
 [[[
 WASession subclass: #TBSession
-	instanceVariableNames: 'repository'
-	classVariableNames: ''
-	package: 'TinyBlog'
+   instanceVariableNames: 'repository'
+   classVariableNames: ''
+   package: 'TinyBlog'
 ]]]
 
 Nous allons l'utiliser pour fournir à chaque utilisateur la référence vers l'instance uniquement de ==TBRepository==. 
 
 [[[
 TBSession >> repository
-	^ repository
+   ^ repository
 ]]]
 
 [[[
 TBSession >> repository: anObject
-	repository := anObject
+   repository := anObject
 ]]]
 
-Le protocole 'initialize-release'' contient les méthodes ==initialize== et ==initializeRepository==. Celle-ci est appelée à chaque fois qu'un nouvel utilisateur se connecte à l'application (??? c'est quoi un nouvel utilisateur). Elle demande la création d'une instance de ==TBRepository== et celui-ci ne contient aucun posts, elle déclenche la création des posts de démonstration.
+Le protocole 'initialize-release' contient les méthodes ==initialize== et ==initializeRepository==. Celle-ci est appelée à chaque fois qu'un nouvel utilisateur se connecte à l'application (??? c'est quoi un nouvel utilisateur). Elle demande la création d'une instance de ==TBRepository== et celui-ci ne contient aucun posts, elle déclenche la création des posts de démonstration.
 
 [[[
 TBSession >> initializeRepository
-	TBRepository initialize.
-	self repository: TBRepository current.
-	self repository size = 0 ifTrue: [ self repository createDemoPosts ]
+   TBRepository initialize.
+   self repository: TBRepository current.
+   self repository size = 0 ifTrue: [ self repository createDemoPosts ]
 ]]]
 
 [[[
 TBSession >> initialize
-	super initialize.
-	self initializeRepository
+   super initialize.
+   self initializeRepository
 ]]]
 
 Ajoutons maintenant une méthode ==initialize== dans le protocole 'initialize-release' de la classe ==TBRootComponent==.
 
 [[[
 TBRootComponent >> initialize
-	super initialize.
-	TBRepository initialize.
-	self repository size = 0 ifTrue: [ self repository createDemoPosts ]
+   super initialize.
+   TBRepository initialize.
+   self repository size = 0 ifTrue: [ self repository createDemoPosts ]
 ]]]
 
 Il vous faut maintenant spécifier à Seaside qu'il doit utiliser l'objet ==TBSession== comme objet de session courant pour l'application TinyBlog. Pour cela, on utilise l'outil d'administration de Seaside.
@@ -692,19 +730,21 @@ Il vous faut maintenant spécifier à Seaside qu'il doit utiliser l'objet ==TBSe
 - connexion sur `http://localhost:8080/config`,
 - on clique sur "TinyBlog",
 - Dans "General", cliquez sur le bouton "Override" de "Session Class",
-- Choisir 'TBSession'' dans la liste déroulante,
+- Choisir 'TBSession' dans la liste déroulante,
 - Cliquez sur le bouton "Apply" en bas du formulaire.
 
 > ça serait bien d'automatiser cette étape à l'initialisation de l'application.
 ??? esteban
 
-!! Composants Visuels de TinyBlog
+
+
+! Composants Visuels de TinyBlog
 
 Nous sommes prets à définir les composants visuels de notre petite application. 
 Les premiers chapitre de *http://book.seaside.st* peuvent vous aider. 
 
 
-!!! Le composant TBScreenComponent
+!! Le composant TBScreenComponent
 
 [[[
 WAComponent subclass: #TBScreenComponent
@@ -722,7 +762,7 @@ TBScreenComponent >> repository
 
 Profitons également de ce composant pour insérer dans la partie supérieure de chaque composant, l'instance d'un composant représentant l'entête de l'application.
 
-!!! Définition du composant TBHeaderComponent
+!! Définition du composant TBHeaderComponent
 
 [[[
 WAComponent subclass: #TBHeaderComponent
@@ -747,7 +787,7 @@ L'entête est affichée à l'aide d'une barre de navigation Bootstrap.
 Le nom du blog devrait être paramêtrable à l'aide d'une variable d'instance dans un objet ==TBConfiguration== ou à l'aide d'un document dans la base Mongo.
 
 
-!!! Ajout d'un Header
+!! Ajout d'un Header
 
 Il n'est pas souhaitable d'instancier systématiquement le composant à chaque fois qu'un composant est appelé. Créons une variable d'instance ==header== dans ==TBScreenComponent== qui sera initialisés une seule fois pour chaque utilisateur de l'application (gain de ressources). 
 
@@ -766,7 +806,7 @@ TBScreenComponent >> initialize
 	header := TBHeaderComponent new. 
 ]]]
 
-!!!! Relation Composite-Composant
+!!! Relation Composite-Composant
 Définissons que l'instance du composant ==TBHeaderComponent== est un enfant de ==TBScreenComponent== dans la hiérarchie de composants Seaside (en non entre classes Pharo). En effet en Seaside les sous-composants d'un composant doivent être retournés par le composite par le message ==children==.
 
 [[[
@@ -781,7 +821,7 @@ TBScreenComponent >> renderContentOn: html
 	self render: header
 ]]]
 
-!!! Liste des Posts
+!! Liste des Posts
 
 Nous allons afficher la liste des posts (acces public). Dans le future, nous  proposerons une interface administrative des posts.
 
@@ -848,7 +888,7 @@ TBRootComponent >> renderContentOn: html
 	html render: self publicPostsList 
 ]]]
 
-!!! Composant Post 
+!! Le Composant Post 
 
 Nous allons maintenant définir le composant ==TBPostContentComponent== qui affiche le contenu d'un post.
 
@@ -908,7 +948,7 @@ TBPostContentComponent >> renderContentOn: html
 ]]]
 
 
-!!! Afficher les posts
+!! Afficher les posts
 
 Maintenant nous pouvons afficher des posts présents dans la base.
 
@@ -925,7 +965,7 @@ TBPublicPostsListComponent >> renderContentOn: html
 	]
 ]]] 
 
-!!! Affichage des posts par catégorie 
+!! Affichage des posts par catégorie 
 
 
 !!! Categories 
@@ -1006,7 +1046,7 @@ Reste maintenant à écrire la méthode de rendu du composant:
 	]
 ]]]
 
-!!! Mise à jour des Posts 
+!! Mise à jour des Posts 
 Nous devons aussi mettre à jour la liste des posts.
 
 Il faut gérer le raffraîchissement de la liste des posts en fonction de la catégorie choisie et donc modifier la méthode de rendu du composant ==TBPublicPostsListComponent==.
@@ -1041,7 +1081,7 @@ TBPublicPostsListComponent >> renderContentOn: html
 Une instance du composant ==TBCategoriesListComponent== est ajoutée sur la page et permet de sélectionner la catégorie courante.
 
 
-!!! Look et Agencement 
+!! Look et Agencement 
 
 Nous allons maintenant agencer le composant ==TBPublicPostsListComponent==.
 
@@ -1076,7 +1116,19 @@ TBPublicPostsListComponent >> renderContentOn: html
 
 
 
-!! Administration de TinyBlog
+
+
+
+
+
+
+
+
+
+
+
+
+! Administration de TinyBlog
 
 L'utilisateur doit s'authentifier pour accéder à la partie administration de TinyBlog. Il le fait à l'aide d'un compte et d'un mot de passe. Le lien permettant d'afficher le composant d'authentification sera placé sous la liste des catégories.
 
@@ -1111,7 +1163,7 @@ TBauthenticationComponent >> screen: anObject
 	screen := anObject
 ]]]
 
-!!! 
+!!! Composite
 
 > Nous avons besoin d'une variable d'instance screen qui contiendra la référence vers l'instance du composant le contenant. En effet, c'est le composant ==TBPublicPostsListComponent== qui va appeler le composant affichant le composant d'administration (et non pas la boite de login). Il faut donc que le composant de login connaisse le componsant qui l'a appelé afin de lui signifier que l'utilisateur est authentifier et qu'il peut accéder à ce composant d'administration.
 
@@ -1180,7 +1232,7 @@ TBPublicPostsListComponent >> gotoAdministrationScreen
 	self call: TBAdminComponent new
 ]]]
 
-###Intégration de l'authentification
+!! Intégration de l'authentification
 
 Il faut maintenant intégrer le lien qui déclenchera l'affichage de la boite modale d'authentification. Au tout début de la méthode ==renderContentOn:== du composant ==TBPublicPostsListComponent==, on ajoute le rendu du composant d'authentification. Ce composant reçoit en paramètre la référence vers l'écran affichant les posts (==self==).
 
@@ -1201,7 +1253,7 @@ TBPublicPostsListComponent >> renderSignInOn: html
 
 ??? qui appelle renderSignInOn?
 
-!!! Création de la liste des posts
+!! Création de la liste des posts
 
 La liste des posts est affichée à l'aide d'un rapport généré dynamiquement par le framework Magritte. Ce framework va être utilisé pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
 
@@ -1316,10 +1368,13 @@ TBPost >> descriptionVisible
 ]]]
 
 
-
+! To be continued
 
 ##Localisation de l'interface
 
 ##Exposer le modèle de TinyBlog avec REST
 
 ##Exporter le contenu de TinyBlog (CSV,etc.)
+
+
+

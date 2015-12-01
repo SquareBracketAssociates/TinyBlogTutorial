@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
 VM_INSTALL_URL="http://get.pharo.org/vm"
-IMAGE_URL="https://ci.inria.fr/pharo-contribution/job/Pillar/PHARO=40,VERSION=stable,VM=vm/lastSuccessfulBuild/artifact/Pillar.zip"
-PHARO_VM=${PHARO_VM:-./pharo}
-
+IMAGE_URL="https://ci.inria.fr/pharo-contribution/job/Pillar/PHARO=40,VERSION=stable,VM=vm/lastSuccessfulBuild/artifact/Pillar-deployment.zip"
 usage() {
     cat <<HELP
 Usage: $0 [-h|--help] [vm] [image]
@@ -16,9 +14,6 @@ HELP
 }
 
 get_vm() {
-    if [ -d pharo-vm ]; then
-        rm -rf pharo-vm
-    fi
     wget ${CERTCHECK} --output-document - "$VM_INSTALL_URL" | bash
 }
 
@@ -26,7 +21,7 @@ get_image() {
     local tempzip="$(mktemp imageXXXXX.zip)"
     trap "rm '$tempzip'" EXIT
 
-    curl -o "$tempzip" "$IMAGE_URL"
+    wget ${CERTCHECK} --progress=bar:force --output-document="$tempzip" "$IMAGE_URL"
     for f in $(zipinfo -1 "$tempzip"); do
         ext="${f##*.}"
         file=$(basename $f)
@@ -41,8 +36,8 @@ get_image() {
     done
 }
 prepare_image() {
-    ${PHARO_VM} Pharo.image --no-default-preferences eval --save "StartupPreferencesLoader allowStartupScript: false."
-    ${PHARO_VM} Pharo.image eval --save "Deprecation raiseWarning: false; showWarning: false. 'ok'"
+    ./pharo Pharo.image --no-default-preferences eval --save "StartupPreferencesLoader allowStartupScript: false."
+    ./pharo Pharo.image eval --save "Deprecation raiseWarning: false; showWarning: false. 'ok'"
 }
 
 # stop the script if a single command fails
