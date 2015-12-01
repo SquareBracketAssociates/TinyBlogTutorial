@@ -1110,6 +1110,7 @@ TBAdminComponent >>  renderContentOn: html
 	super renderContentOn: html.
 	html tbsContainer: [ 
 		html heading: 'Blog Manager'.
+		html horizontalRule.
 		html render: self report.
 	]
 ```
@@ -1186,7 +1187,7 @@ L'ajout (add) est dissocié des posts et se trouvera donc juste avant le rapport
 TBPostsReport >> renderContentOn: html
         html tbsGlyphIcon perform: #iconPencil.
 	html anchor 
-		callback: [ self "adminScreen" addPost ];
+		callback: [ self addPost ];
 		with: 'Add post'.
 	super renderContentOn: html
 
@@ -1330,6 +1331,79 @@ TBPost >> descriptionVisible
 		beRequired; 
 		yourself
 ```
+
+###Améliorer la gestion de l'authentification
+
+L'administrateur du blog peut vouloir voyager entre la partie privée et la partie publique de TinyBlog. Pour savoir si l'utilisateur s'est authentifier, nous devons modifier l'objet session et ajouter une variable d'instance contenant une valeur booléenne.
+
+```
+WASession subclass: #TBSession
+	instanceVariableNames: 'repository logged'
+	classVariableNames: ''
+	category: 'TinyBlog'
+
+TBSession >> logged
+	^ logged
+
+TBSession >> logged: anObject
+	logged := anObject
+
+TBSession >> isLogged
+	^self logged
+```
+
+Il faut ensuite initialiser à `false` cette variable d'instance à la création d'une session.
+
+```
+TBSession >> initialize
+	super initialize.
+	self initializeRepository.
+	self logged: false.
+```
+
+Dans la partie privée de TinyBlog, ajoutons un lien permettant le retour à la partie publique. Nous utilisons ici la méthode `answer`puis l'écran d'administration a été appelé à l'aide de la méthode `call:`.
+
+```
+TBAdminComponent >> renderContentOn: html
+	super renderContentOn: html.
+	html tbsContainer: [ 
+		html heading: 'Blog Manager'.
+		html tbsGlyphIcon perform: #iconEyeOpen.
+		html anchor 
+			callback: [ self answer ];
+			with: 'Public Area'.
+		html horizontalRule.
+		html render: self report.
+	]
+```
+
+Dans l'espace public, il nous faut modifier le comportement du lien permettant d'accéder à l'écran d'administration. Il doit provoquer l'affichage de la boite d'authentification uniquement si l'utilisateur ne s'est pas encore connecté.
+
+```
+TBPublicPostsListComponent >> renderSignInOn: html
+	(self session isLogged) 
+		ifFalse: [  
+			html tbsGlyphIcon perform: #iconLock.
+			html html: '<a data-toggle="modal" href="#myAuthDialog" class="link">SignIn</a>' 
+		]
+		ifTrue: [
+			html tbsGlyphIcon perform: #iconUser.
+			html anchor callback: [ self gotoAdministrationScreen ]; with: 'Private area'
+		]
+```
+
+Enfin, le composant `TBauthenticationComponent` doit mettre à jour la variable d'instance `logged` de la session si l'utilisateur est bien un administrateur.
+
+```
+TBauthenticationComponent >> validate
+	(self account = 'admin' and: [ self password = 'password' ]) ifTrue: [ 
+		self session logged: true. 
+		screen gotoAdministrationScreen
+	]
+```
+
+> TP: Proposer l'ajout d'un bouton "Déconnexion"
+
 ##Localisation de l'interface
 
 ##Exposer le modèle de TinyBlog avec REST
