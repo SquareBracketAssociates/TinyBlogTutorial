@@ -1,7 +1,7 @@
 % -*- mode: latex; -*-
 \ifx\wholebook\relax\else
 
-	\documentclass[10pt,twoside,english]{root/support/latex/sbabook/sbabook}
+	\documentclass[10pt,twoside,ustradelulu]{root/support/latex/sbabook/sbabook}
   \usepackage{import}
   \subimport{root/support/latex/}{common.tex}
 
@@ -9,10 +9,8 @@
 \fi
 
 {{=« »=}}
-«! the '&' below prevents HTML escaping. »
-\chapter{«& title»}
-\chapterprecis{«& attribution»}
 
+«! the '&' below prevents HTML escaping. »
 «& content»
 
 \ifx\wholebook\relax\else
