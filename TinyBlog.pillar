@@ -489,9 +489,38 @@ Nous pouvons aussi modifier la méthode ==removeAll== afin de sauver le nouvel �
 [[[
 TBBlog >> removeAll
    posts := OrderedCollection new.
-   self save.
+   self remove.
 ]]]
 
+
+!! Utilisation de la Base
+
+Alors même que la base est en mémoire et bien que nous pouvons accèder au blog en utilisant le singleton de la class ==TBBlog==,
+nous allons montrer l'API offerte par Voyage. C'est la même API que nous pourrons utiliser pour accèder à une base mongo.
+
+Nous créons des posts dans 
+[[[
+TBBlog createDemoPosts.
+]]]
+
+Nous pouvons compter le nombre de blog sauvés. Ici nous obtenons ce qui est normal puisque le blog est implémenté comme un singleton. 
+
+[[[
+TBBlog count
+>1
+]]]
+
+De la même manière, nous pouvons sélectionner toutes objets sauvés. 
+[[[
+TBBlog selectAll
+]]]
+
+
+Vous pouvez voir l'API de Voyage en parcourant
+- la classe ==Class==, et 
+- la classe ==VORepository== qui est la racine d'héritage des bases de données en mémoire ou extérieur.
+
+Ces queries sont plus pertinentes quand on a plus d'objets comme les posts d'un blog. 
 
 
 
@@ -518,8 +547,9 @@ TBBlog >> writeBlogPost: aPost
 
 [[[
 TBBlog >> removeAll
+   posts do: [:each | each remove ].
    posts := OrderedCollection new.
-   self save.
+   self remove.
 ]]]
 
 Notez qu'avec le code ci-dessus de la méthode ==removeAll== nous enlevons la relation entre le blog et ses postes mais nous n'enlevons pas les posts effectivement 
@@ -527,6 +557,19 @@ de la base de données. Pour ce faire nous devrions enlever les posts en premier
 Maintenant il faudrait manipuler la base en utilisant l'API proposée par Voyage (voir le chapitre sur Mongo dans Entreprise Pharo).
 
 
+!!! 
+
+[[[
+TBBlog reset.
+TBBlog createDemoPosts.
+
+TBBlog count
+> 1 
+
+TBPost count
+> 5
+TBPost selectAll do: [:ech | Transcript show: each content; cr]
+]]]
 
 
 
