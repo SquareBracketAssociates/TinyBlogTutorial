@@ -1,7 +1,5 @@
 ! TinyBlog: Préparation
 
-+Some caption>file://figures/BrowseApplications.png|width=50+
-
 Ce tutorial va vous enseigner comment definir et deployer une application en utilisant Pharo/Seaside/Mongo ainsi que des frameworks disponibles en Pharo comme NeoJSON.
 Nous allons définir un mini moteur de blogs. Les solutions proposées dans le tutorial sont parfois non optimale afin de vous faire réagir et que vous puissiez proposer d'autres solutions et améliorations.
 
@@ -76,15 +74,14 @@ Object subclass: #TBPost
 
 Cinq variables d'instance pour décrire un post sur le blog.
 
-[[[
-|Variable      |Signification                |
-|--------------|-----------------------------|
+
+|!Variable |!Signification |
 |title         |Titre du post                |
 |text          |Texte du post                |
 |date          |Date de redaction            |
 |category      |Rubrique contenant le post   |
 |visible       |Post visible ou pas ?        |
-]]]
+
 
 Ces variables ont des setters et getters dans le protocole accessing.
 
@@ -191,7 +188,7 @@ TBPost >> isUnclassified
 Il serait préférable de ne pas faire une référence en dur à la class TBPost.
 Proposer une solution.
 
-#001-TinyBlog-BGPost-StephaneDucasse.1
+%001-TinyBlog-BGPost-StephaneDucasse.1
 
 
 
@@ -663,36 +660,29 @@ Dans un premier temps vous pouvez passer cette étape si vous avez une installat
 
 Pensez à changer les valeurs!
 
-[[[
-|Champs       |Valeur                  |
-|-------------|------------------------|
+
+|!Champs       |!Valeur                  |
 |Account name |tinyblog                |
 |Username     |tinyblog                |
 |Email        |olivier.auverlot@free.fr|
 |Password     |tinyblog2015            |
-]]]
 
 !!!! Paramètres du serveur
 
 Lors de votre enregistrement sur mongolab vous obtenez des valeurs que nous pouvons utiliser. 
 
-[[[
-|Parametre      |Valeur                |
-|---------------|----------------------|
+
+|!Paramètre      |!Valeur                |
 |Serveur        |ds045064.mongolab.com |
 |Port           |45064                 |
 |Nom de la base |tinyblog              |
-]]]
 
 !!!! Utilisateur de la base tinyblog
 
-[[[
-|Champs       |Valeur      |
-|-------------|------------|
+Pour le moment Voyage ne fonctionne qu'avec Mongo 2.0 car la version 3.0 a changé son mécanisme de vérification de mots de passe. 
+|!Champs       |!Valeur      |
 |Compte       |tbuser      |
 |Mot de passe |tbpassword  |
-]]]
-
 
 
 
@@ -769,7 +759,7 @@ Nous allons définir des composants Seaside *http://www.seaside.st*. L'ouvrage d
 
 En utilisant le Seaside Control Panel, en utilisant le menu, ajouté un serveur ==ZnZincServerAdaptor==, puis
 
-%+Tourner.>file://figures/RunningSeaside.png|width=75+
++Lancer le serveur.>file://figures/RunningSeaside.png|width=75+
 
 
 
@@ -803,16 +793,16 @@ Dans un Playground ou dans l'éditeur de méthode', exécuter ==TBRootComponent 
 
 Les méthodes de classe ==initialize== sont invoquées automatiquement lors du chargement du package.
 
-%+Tourner>file://figures/SeasideWebStart.png|width=75+
++Vérification que Seaside fonctionne.>file://figures/SeasideWebStart.png|width=75+
 
 Une connexion sur le serveur Seaside ("Browse the applications installed in your image") permet de vérifier que l'application est bien enregistrée.
 
-%+Browsing application lists booTourner>file://figures/BrowseApplications.png|width=75+
++TinyBlog est bien enregistrée>file://figures/BrowseApplications.png|width=75+
 
 Ajoutons également la méthode ==canBeRoot== afin de préciser que la classe ==TBRootComponent== est la première instanciée lors qu'un utilisateur se connecte sur l'application et représente une application et pas seulement un composant.
 
 [[[
-TBRootComponent >> canBeRoot
+TBRootComponent class >> canBeRoot
    ^ true
 ]]]
 
