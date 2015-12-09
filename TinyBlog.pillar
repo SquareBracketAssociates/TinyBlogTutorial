@@ -402,7 +402,7 @@ TBBlog >> allCategories
    ^(self allBlogPosts collect: [ :p | p category ]) asSet
 ]]]
 
-!! Futures Evolutions
+!! Futures évolutions
 
 Plusieurs évolutions peuvent être apportées telles que obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts contenus, renommer un catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons à les développer.
 
@@ -421,7 +421,7 @@ TBBlog class >> createDemoPosts
 ]]]
 
 
-! Préparation de Sauvegarde Exterieure avec Voyage
+! Préparation de sauvegarde exterieure avec Voyage
 
 Alors qu'avoir un modèle d'objets en mémoire fonctionne bien, et que des sauvegardes de l'image Pharo sauve aussi de tels objets, il est préférable 
 de pouvoir sauver les objets dans une base de données exterieure. Voyage permet de sauver les objets dans une base de donnée Mongo. 
@@ -495,7 +495,7 @@ TBBlog >> removeAll
 ]]]
 
 
-!! Utilisation de la Base
+!! Utilisation de la base
 
 Alors même que la base est en mémoire et bien que nous pouvons accèder au blog en utilisant le singleton de la class ==TBBlog==,
 nous allons montrer l'API offerte par Voyage. C'est la même API que nous pourrons utiliser pour accèder à une base mongo.
@@ -549,7 +549,7 @@ TBBlog >> writeBlogPost: aPost
 
 [[[
 TBBlog >> removeAll
-   posts do: [:each | each remove ].
+   posts do: [ :each | each remove ].
    posts := OrderedCollection new.
    self remove.
 ]]]
@@ -595,12 +595,13 @@ Nous allons maintenant utiliser une base mongo externe à Pharo.
 
 
 ! Mongo
+
 En utilisant Voyage nous pouvons rapidement sauver nos posts sur une base de données Mongo. Ce chapitre explique rapidement la mise en oeuvre et les quelques modifications que nous devons apporter a notre projet pour sauver en Pharo. 
 Nous commencons 
 
 !! Obtenir une base de données MongoDB
 
-!!! Installation Locale
+!!! Installation locale
 
 !!!! Mac OS X
 
@@ -742,15 +743,8 @@ Vous pouvez eviter de passer en mode mémoire donc la seconde ligne de la métho
 TBBlog class >> initialize
       self reset.
       VOMemoryRepository new enableSingleton.
+      uniqueInstance := nil
 ]]]
-
-
-
-
-
-
-
-
 
 
 
@@ -769,12 +763,28 @@ TBBlog class >> initialize
 Nous commençons par définir une interface telle que celle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera.
 Nous allons définir des composants Seaside *http://www.seaside.st*. L'ouvrage de référence est disponible en ligne à *http://book.seaside.st*
 
+!! Démarrer Seaside
+
+En utilisant le Seaside Control Panel, en utilisant le menu, ajouté un serveur ==ZnZincServerAdaptor==, puis
+
+%+Tourner.>file://figures/RunningSeaside.png|width=75+
+
+
 
 !! Initialisation de l'application
 
 Création d'une classe ==TBRootComponent== qui est le point d'entrée de l'application. Il sert à l'initialisation de l'application.
 
-On déclare l'application au serveur Seaside, coté classe, dans le protocole 'initialize'. On en profite pour intégrer les dépendances du framework Bootstrap (les fichiers css et js seront stockés dans l'application).
+[[[
+WAComponent subclass: #TBRootComponent
+	instanceVariableNames: ''
+	classVariableNames: ''
+	category: 'TinyBlog-Components'
+]]]
+
+
+
+On déclare l'application au serveur Seaside, coté classe, dans le protocole =='initialize'==. On en profite pour intégrer les dépendances du framework Bootstrap (les fichiers css et js seront stockés dans l'application).
 
 [[[
 TBRootComponent class >> initialize
@@ -787,13 +797,15 @@ TBRootComponent class >> initialize
       addLibrary: TBSDeploymentLibrary
 ]]]
 
-Dans un Playground, on peut exécuter ==TBRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. Notez que nous venons de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices.
+Dans un Playground ou dans l'éditeur de méthode', exécuter ==TBRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. Notez que nous venons de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices.
 
 Les méthodes de classe ==initialize== sont invoquées automatiquement lors du chargement du package.
 
+%+Tourner>file://figures/SeasideWebStart.png|width=75+
+
 Une connexion sur le serveur Seaside ("Browse the applications installed in your image") permet de vérifier que l'application est bien enregistrée.
 
-@todo  add Screenshot
+%+Browsing application lists booTourner>file://figures/BrowseApplications.png|width=75+
 
 Ajoutons également la méthode ==canBeRoot== afin de préciser que la classe ==TBRootComponent== est la première instanciée lors qu'un utilisateur se connecte sur l'application et représente une application et pas seulement un composant.
 
@@ -1342,7 +1354,7 @@ TBPost >> descriptionDate
 
 
 
-La variable d'instance 'visible'' doit obligatoirement contenir une valeur booléenne.
+La variable d'instance ''visible'' doit obligatoirement contenir une valeur éenne.
 
 [[[
 descriptionVisible
