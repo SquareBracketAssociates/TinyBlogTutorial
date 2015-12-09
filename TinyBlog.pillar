@@ -1,5 +1,7 @@
 ! TinyBlog: Préparation
 
++Some caption>file://figures/BrowseApplications.png|width=50+
+
 Ce tutorial va vous enseigner comment definir et deployer une application en utilisant Pharo/Seaside/Mongo ainsi que des frameworks disponibles en Pharo comme NeoJSON.
 Nous allons définir un mini moteur de blogs. Les solutions proposées dans le tutorial sont parfois non optimale afin de vous faire réagir et que vous puissiez proposer d'autres solutions et améliorations.
 
@@ -1354,7 +1356,9 @@ TBPost >> descriptionDate
 
 
 
-La variable d'instance ''visible'' doit obligatoirement contenir une valeur éenne.
+
+La variable d'instance ==visible== doit obligatoirement contenir une valeur booléenne.
+
 
 [[[
 descriptionVisible
