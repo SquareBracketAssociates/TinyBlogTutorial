@@ -1342,7 +1342,7 @@ TBPost >> descriptionDate
 
 
 
-La variable d'instance 'visible'' doit obligatoirement contenir une valeur booléenne.
+La variable d'instance ==visible== doit obligatoirement contenir une valeur booléenne.
 
 [[[
 descriptionVisible
