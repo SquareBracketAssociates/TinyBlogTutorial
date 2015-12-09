@@ -806,7 +806,7 @@ TBRootComponent class >> canBeRoot
    ^ true
 ]]]
 
-Ajoutons maintenant une méthode ==renderContentOn:== afin de vérifier que notre application répond bien. La méthode est une méthode d'instance dans le protocole rendering.
+Ajoutons maintenant une méthode ==renderContentOn:== afin de vérifier que notre application répond bien. La méthode est une méthode d'instance dans le protocole ==rendering==.
 
 [[[
 TBRootComponent >> renderContentOn: html
@@ -815,7 +815,8 @@ TBRootComponent >> renderContentOn: html
 
 Connexion avec un navigateur sur *http://localhost:8080/TinyBlog*. La page doit apparaître.
 
-@@todo ??? add Screenshot
++Une page quasie vide mais servie par Seaside>file://figures/EmptyPage.png|width=75+
+
 
 Ajoutons maintenant des informations dans l'entête de la page HTML afin que TinyBlog ait un titre et soit une application HTML5. L'ensemble des composants visuels de l'application hériteront de ==TBRootComponent== et il ne sera donc pas nécessaire de reproduire cette opération.
 
@@ -828,33 +829,23 @@ TBRootComponent >> updateRoot: anHtmlRoot
 
 @@todo je suis confus si ils sont tous root et tous update alors c'est pas le basard? esteban
 
-Dans le cadre du développement, automatisons la création d'un ensemble de posts à l'aide de la méthode ==createDemoPosts== dans la classe ==TBBlog==.
-
-
-[[[
-TBBlog class >> createDemoPosts
-
-   self uniqueInstance
-      writeBlogPost: ((TBPost title: 'Welcome in TinyBlog' text: 'TinyBlog is a small blog engine made with Pharo.' category: 'TinyBlog') visible: true).
-      writeBlogPost: ((TBPost title: 'Report Pharo Sprint' text: 'Friday, June 12 there was a Pharo sprint / Moose dojo. It was a nice event with more than 15 motivated sprinters. With the help of candies, cakes and chocolate, huge work has been done' category: 'Pharo') visible: true).
-      writeBlogPost: ((TBPost title: 'Brick on top of Bloc - Preview' text: 'We are happy to announce the first preview version of Brick, a new widget set created from scratch on top of Bloc. Brick is being developed primarily by Alex Syrel (together with Alain Plantec, Andrei Chis and myself), and the work is sponsored by ESUG. Brick is part of the Glamorous Toolkit effort and will provide the basis for the new versions of the development tools.' category: 'Pharo') visible: true).
-      writeBlogPost: ((TBPost title: 'The sad story of unclassified blog posts' text: 'So sad that I can read this.') visible: true).
-      writeBlogPost: ((TBPost title: 'Working with Pharo on the Raspberry Pi' text: 'Hardware is getting cheaper and many new small devices like the famous Raspberry Pi provide new computation power that was one once only available on regular desktop computers. This capable little device called Pi enables people of all ages to explore computing and combined with powerful software environments like Pharo the Pi can be used for interesting projects.' category: 'Pharo') visible: true).
-]]]
+Nous allons maintenant aborder la notion de session.  
 
 !! Gestion de Session
 
-Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations. 
+Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants. Une session est pratique pour gérer les informations de l'utilisateur en cours (loggé). 
 Nous allons voir comment nous l'utilisons pour gérer une connexion.
+
+Nous définissons une nouvelle souclasse de ==WASession==.
 
 [[[
 WASession subclass: #TBSession
    instanceVariableNames: 'repository'
    classVariableNames: ''
-   package: 'TinyBlog'
+   package: 'TinyBlog-Session'
 ]]]
 
-Nous allons l'utiliser pour fournir à chaque utilisateur la référence vers l'instance uniquement de ==TBBlog==.
+Nous allons l'utiliser pour fournir à chaque utilisateur la référence vers l'instance unique de ==TBBlog==.
 
 [[[
 TBSession >> repository
@@ -868,6 +859,8 @@ TBSession >> repository: anObject
 
 Le protocole 'initialize-release'' contient les méthodes ==initialize== et ==initializeRepository==. Celle-ci est appelée à chaque fois qu'un nouvel utilisateur se connecte à l'application (??? c'est quoi un nouvel utilisateur). Elle demande la création d'une instance de ==TBBlog== et celui-ci ne contient aucun posts, elle déclenche la création des posts de démonstration.
 
+
+@@ Ca c'est un blog pas un repo!'
 [[[
 TBSession >> initializeRepository
    TBBlog initialize.
@@ -899,8 +892,20 @@ Pour cela, on utilise l'outil d'administration de Seaside.
 - Choisir 'TBSession' dans la liste déroulante,
 - Cliquez sur le bouton "Apply" en bas du formulaire.
 
-@@todo ca serait bien d'automatiser cette étape à l'initialisation de l'application. esteban
+On peut automatiser cette initialisation en améliorant la méthode initialize de la class ==TBRootComponent==. 
 
+[[[
+TBRootComponent class >> initialize
+	   "self initialize"
+	   | app |
+	   app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
+		app 
+			preferenceAt: #sessionClass put: TBSession.
+	   app
+	      addLibrary: JQDeploymentLibrary;
+	      addLibrary: JQUiDeploymentLibrary;
+	      addLibrary: TBSDeploymentLibrary
+]]]
 
 
 
