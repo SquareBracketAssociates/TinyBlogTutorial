@@ -12,7 +12,7 @@ D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une faco
  
 - Depuis votre compte créer un projet sur http://smalltalkhub.com
 -- Nommez le "TinyBlog",
--- Récupérer l'URL du projet: 'http://smalltalkhub.com/mc/XXX/TinyBlog/main''
+-- Récupérer l'URL du projet: 'http://smalltalkhub.com/mc/XXX/TinyBlog/main'
 
 !!! Mettre en place Pharo
 
@@ -158,7 +158,6 @@ Proposer une solution.
 
 
 !!!! Instance création API
-
 Coté classe, on définit que ==TBPost== est un objet géré par Voyage et on spécifie des méthodes pour faciliter la création de post appartenant ou pas à une catégorie. La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
 
 
@@ -216,7 +215,7 @@ TBBlog >> initialize
 
 !!!! Une seule base
 
-Il y a une seule instance de la classe (singleton) et celle-ci est construite coté classe comme suit.
+Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. Dans le future, nous ajouterons la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant nous utilisons donc un singleton pour la class ==TBBlog==.
 
 [[[
 TBBlog class
@@ -251,7 +250,7 @@ Avant le lancement des tests, la méthode ==setUp== initialise la connexion vers
 [[[
 TBBlogTest >> setUp
    blog := TBBlog current.
-   blog removeAll.
+   blog remove.
    
    first := (TBPost title: 'A title' text: 'A text' category: 'First Category').
    blog writeBlogPost: first.
@@ -281,10 +280,10 @@ TBBlogTest >> testAddBlogPost
    self assert: blog size equals: 2
 ]]]
 
-Ce test ne marche pas car nous n'avons pas défini ==writeBlogPost:== et ==removeAll==.
+Ce test ne marche pas car nous n'avons pas défini ==writeBlogPost:== et ==remove==.
 
 [[[
-TBBlog >> removeAll
+TBBlog >> remove
    posts := OrderedCollection new
 ]]]
 
@@ -315,7 +314,7 @@ TBBlogTest >> testSize
 
 [[[
 TBBlogTest >> testRemoveAllBlogPosts
-   blog removeAll.
+   blog remove.
    self assert: blog size equals: 0.
 ]]]
 
@@ -420,11 +419,22 @@ TBBlog class >> createDemoPosts
 ]]]
 
 
-! Préparation de sauvegarde exterieure avec Voyage
+
+
+
+
+
+
+
+
+
+
+
+! Préparation de sauvegarde extérieure avec Voyage
 
 Alors qu'avoir un modèle d'objets en mémoire fonctionne bien, et que des sauvegardes de l'image Pharo sauve aussi de tels objets, il est préférable 
 de pouvoir sauver les objets dans une base de données exterieure. Voyage permet de sauver les objets dans une base de donnée Mongo. 
-C'est ce que nous allons voir. Dans un premier temps nous allons utiliser la capacité de Voyage à simuler une base exterieure. Ceci est tres pratique en phase de développement. Dans un second nous installerons une base de données Mongo et nous y accéderons via la couche Voyage. 
+C'est ce que nous allons voir. Dans un premier temps nous allons utiliser la capacité de Voyage à simuler une base exterieure. Ceci est très pratique en phase de développement. Dans un second nous installerons une base de données Mongo et nous y accéderons via la couche Voyage. 
 
 
 !! Sauvegarde d'un blog
@@ -456,41 +466,67 @@ TBBlog class >> isVoyageRoot
    ^ true
 ]]]
 
-De plus nous devons soit créer une connexion sur une base de données réelle soit travailler en mémoire. C'est ce que nous faisons 
+De plus nous devons soit créer une connexion sur une base de données réelle soit travailler en mémoire. C'est cette dernière option que nous faisons 
 maintenant en utilisant cette expression. 
 
 [[[
 VOMemoryRepository new enableSingleton. 
 ]]]
 
-Le message ==enableSingleton== indique à Voyage que nous n'utilisons qu'une seule base de donnée ce qui nous permet de ne pas avoir à préciser avec laquelle nous travaillons. 
-
-Nous redéfinissons la méthode ==reset== pour nous assurer que l'endroit où la base est sauvée est réinitialisé lorsque que l'on charge le code. 
-
-[[[
-TBBlog class >> initialize
-      self reset
-      VOMemoryRepository new enableSingleton.
-      
-TBBlog class >> reset
-   VORepository setRepository: nil.
-   uniqueInstance := nil
-
-]]]
-
-L'expression ==VORepository setRepository: nil.== est une expression Voyage qui remet à zero la connexion avec la base de données Mongo qu'elle soit en mémoire ou extèrieure. Noter que ==enableSingleton== met à jour le repository comme le montre la méthode ci-dessous. 
+Le message ==enableSingleton== indique à Voyage que nous n'utilisons qu'une seule base de donnée ce qui nous permet de ne pas avoir à préciser avec laquelle nous travaillons. ==enableSingleton== met à jour le repository comme le montre la méthode ci-dessous (==VORepository== étant la superclasse de ==VOMemoryRepository== et ==VOMongoRepository==).
 
 [[[
 VORepository >> enableSingleton
-      self class setRepository: self
+   self class setRepository: self
 ]]]
 
-Nous pouvons aussi modifier la méthode ==removeAll== afin de sauver le nouvel état d'un blog. 
+
+
+Nous définissons une méthode ==initializeMongo== dont le role est d'initialiser correctement la base. 
+
+
 
 [[[
-TBBlog >> removeAll
+TBBlog class >> initializeMongo
+	| repository |
+	repository := VOMemoryRepository new.
+	repository enableSingleton.
+]]]
+Ici nous n'avons pas besoin de stocker la base car nous n'avons qu'une seule base de donnée (en mode singleton). 
+
+
+
+Nous redéfinissons la méthode ==reset== et la méthode ==initialize== pour nous assurer que l'endroit où la base est sauvée est réinitialisé lorsque que l'on charge le code. 
+
+La méthode ==reset== réinitialize la base. 
+[[[
+TBBlog class >> reset
+		"self reset"
+		self initializeMongo
+		
+TBBlog class >> initialize
+		self initializeMongo
+	
+]]]
+
+Le cas de de la méthode ==current== est plus délicat. Avant l'utilisation de Mongo, nous avions un singleton tout simple. Cependant utiliser un Singleton 
+ne fonctionne plus car imaginons que nous ayons sauvé notre blog et que le serveur s'éteigne par accident ou que nous rechargions une nouvelle version 
+du code. Ceci conduirait à une réinitialisation et création d'une nouvelle instance. Nous pouvons donc nous retrouver avec une instance différente de celle sauvée. 
+
+Nous redéfinissons ==current== de manière à faire une requête dans la base. Comme pour le moment nous ne gérons qu'un blog il nous suffit de faire ==self selectOne: [ :each | true ]== ou ==self selectAll anyOne==. Nous préférons une solution plus rapide qui prend en compte le fait que Voyage est dévelopé au dessus du package MongoDB. Nous nous assurons de créer une nouvelle instance et la sauvegarder si aucune instance n'existe dans la base. 
+
+[[[
+TBBlog class >> current
+	^ (self selectOne: Dictionary new)
+		ifNil: [ self new save ] 
+]]]
+
+Nous pouvons aussi modifier la méthode ==remove== afin de sauver le nouvel état d'un blog. 
+
+[[[
+TBBlog >> remove
    posts := OrderedCollection new.
-   self remove.
+   super remove.
 ]]]
 
 
@@ -504,14 +540,15 @@ Nous créons des posts dans
 TBBlog createDemoPosts.
 ]]]
 
-Nous pouvons compter le nombre de blog sauvés. Ici nous obtenons ce qui est normal puisque le blog est implémenté comme un singleton. 
+Nous pouvons compter le nombre de blog sauvés. ==count== fait partie de l'API directe de Voyage. Ici nous obtenons ce qui est normal puisque le blog est implémenté comme un singleton. 
 
 [[[
 TBBlog count
 >1
 ]]]
 
-De la même manière, nous pouvons sélectionner toutes objets sauvés. 
+De la même manière, nous pouvons sélectionner touts objets sauvés. 
+
 [[[
 TBBlog selectAll
 ]]]
@@ -524,9 +561,7 @@ Vous pouvez voir l'API de Voyage en parcourant
 Ces queries sont plus pertinentes quand on a plus d'objets comme les posts d'un blog. 
 
 
-
-
-!! Sauvegardons les postes [Optionel pour le moment]
+!! Sauvegardons les postes
 
 On peut aussi définir qu'un poste est un élément qui peut être sauvegardé de manière autonome. Cela peut permettre de sauver des postes de manière indépendante d'un blog. Typiquement si nous representions les commentaires d'un post nous ne les declarerions pas comme racine car sauver ou manipuler un commentaire en dehors du context de son post ne fait pas beaucoup de sens.  Pour cela on nous définissons les méthodes suivantes:
 
@@ -547,16 +582,17 @@ TBBlog >> writeBlogPost: aPost
 
 
 [[[
-TBBlog >> removeAll
+TBBlog >> remove
    posts do: [ :each | each remove ].
    posts := OrderedCollection new.
-   self remove.
+   super remove.
 ]]]
 
 
 
 
 !!! D'autres requêtes
+
 
 Nous illustrons maintenant comment nous pouvons faire des requêtes sur la base en mémoire en incluant les posts. 
 
@@ -578,7 +614,7 @@ Nous illustrons maintenant comment nous pouvons faire des requêtes sur la base 
 	TBPost selectAll.
 	TBPost selectAll do: [:each | Transcript show: each text; cr]
 
-	TBBlog removeAll.
+	TBBlog current remove.
 	TBBlog count.
 	>0
 	TBPost count.
@@ -591,6 +627,15 @@ Nous illustrons maintenant comment nous pouvons faire des requêtes sur la base 
 ]]]
 
 Nous allons maintenant utiliser une base mongo externe à Pharo. 
+
+
+
+
+
+
+
+
+
 
 
 ! Mongo
@@ -623,10 +668,9 @@ chmod 770 /data/db
 Lancement de mongo: ==[sudo] mongod==
 
 Attention une fois que votre application utilise Mongo, il est important que Mongo soit lancé avant Pharo. 
-Vous pouvez tester cela 
+Vous pouvez tester cela avec ce script. 
 
 [[[
-
 | server |
 server := Mongo default.
 [ server open ] 
@@ -634,6 +678,8 @@ server := Mongo default.
    do: [ :e | ^ false ].
 ^ server isOpen
 ]]]   
+
+Vous pouvez aussi utiliser la méthode ==VOMongoRepository class >> #validateConectionHost:port:==
 
 !!!! Linux Debian
 Google pour le moment. A venir
@@ -687,60 +733,30 @@ Pour le moment Voyage ne fonctionne qu'avec Mongo 2.0 car la version 3.0 a chang
 
 
 
-!! Revisitons le modèle
+!! Revisitons la connexion à la base
 
-Nous revisitons maintenant le modèle. 
-
-!!! Revisitons TBBlog
-
-Nous améliorons la class ==TBBlog== pour introduire une référence a la base de donnee 
+Nous définissions les méthodes ==initializeMongo== pour établir la connexion vers la base de données.
 
 [[[
-Object subclass: #TBBlog
-   instanceVariableNames: 'repository posts'
-   classVariableNames: ''
-   package: 'TinyBlog'
-]]]
-
-
-
-!!!! Initialisation de la connexion
-
-
-Coté instance, les méthodes ==initializeMongo== et ==initialize== établissent la connexion vers la base de données.
-[[[
-TBBlog >> initialize
-	super initialize.
-	posts := OrderedCollection new. 
-	self initializeMongo
-	
-TBBlog >> initializeMongo
-
+TBBlog class >> initializeMongo
+	| repository |
 	repository := VOMongoRepository
 		host: 'localhost'
 		database: 'tinyblog'.
 	repository enableSingleton.
 ]]]
 
-[[[
-TBBlog reset
-]]]
 
 @@note Pas d'authentification utilisée car impossible de le faire avec MongoDB 3.0 (nouvelle méthode de chiffrement SCRAM pas encore supportée avec Pharo)
 
 
-Vous pouvez eviter de passer en mode mémoire donc la seconde ligne de la méthode ==initialize== suivante (invoquée lors du chargement du package) devient inutile. 
+Notez que si vous avez besoin de réinitialiser la base exterieure completement, vous pouvez utiliser la méthode ==dropDatabase==
 
 [[[
-TBBlog class >> initialize
-      self reset.
-      VOMemoryRepository new enableSingleton.
-      uniqueInstance := nil
+(VOMongoRepository
+	host: 'localhost'
+	database: 'tinyblog') dropDatabase
 ]]]
-
-
-
-
 
 
 
@@ -789,7 +805,7 @@ TBRootComponent class >> initialize
       addLibrary: TBSDeploymentLibrary
 ]]]
 
-Dans un Playground ou dans l'éditeur de méthode', exécuter ==TBRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. Notez que nous venons de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices.
+Dans un Playground ou dans l'éditeur de méthode, exécuter ==TBRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. Notez que nous venons de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices.
 
 Les méthodes de classe ==initialize== sont invoquées automatiquement lors du chargement du package.
 
@@ -815,7 +831,11 @@ TBRootComponent >> renderContentOn: html
 
 Connexion avec un navigateur sur *http://localhost:8080/TinyBlog*. La page doit apparaître.
 
-+Une page quasie vide mais servie par Seaside>file://figures/EmptyPage.png|width=75+
+%+Une page quasi vide mais servie par Seaside.>file://figures/EmptyPage.png|width=75+
+hkjjhkjh jkhkjh jkhjkh kjhkjhjkhkj jkh hkjhjkhkjhjkhkjjkhhjk  hkjhjkh jk khjk
+FUCKFUCKFUCK. BrowseApplications marche mais pas EmptyPage..... in comprehensible
+
++TinyBlog est bien enregistrée>file://figures/BrowseApplications.png|width=75+
 
 
 Ajoutons maintenant des informations dans l'entête de la page HTML afin que TinyBlog ait un titre et soit une application HTML5. L'ensemble des composants visuels de l'application hériteront de ==TBRootComponent== et il ne sera donc pas nécessaire de reproduire cette opération.
@@ -827,7 +847,7 @@ TBRootComponent >> updateRoot: anHtmlRoot
    anHtmlRoot title: 'TinyBlog'.
 ]]]
 
-@@todo je suis confus si ils sont tous root et tous update alors c'est pas le basard? esteban
+% je suis confus si ils sont tous root et tous update alors c'est pas le basard? esteban
 
 Nous allons maintenant aborder la notion de session.  
 
@@ -860,7 +880,7 @@ TBSession >> repository: anObject
 Le protocole 'initialize-release'' contient les méthodes ==initialize== et ==initializeRepository==. Celle-ci est appelée à chaque fois qu'un nouvel utilisateur se connecte à l'application (??? c'est quoi un nouvel utilisateur). Elle demande la création d'une instance de ==TBBlog== et celui-ci ne contient aucun posts, elle déclenche la création des posts de démonstration.
 
 
-@@ Ca c'est un blog pas un repo!'
+@@todo Ca c'est un blog pas un repo!'
 [[[
 TBSession >> initializeRepository
    TBBlog initialize.
@@ -1450,7 +1470,7 @@ Avant le lancement des tests, la méthode ==setUp== initialise la connexion vers
 [[[
 TBBlogTest >> setUp
    blog := TBBlog current.
-   blog removeAll.
+   blog remove.
    
    first := (TBPost title: 'A title' text: 'A text' category: 'First Category').
    blog writeBlogPost: first.
@@ -1479,10 +1499,10 @@ TBBlogTest >> testAddBlogPost
    self assert: blog size equals: 2
 ]]]
 
-Ce test ne marche pas car nous n'avons pas défini ==writeBlogPost:== et ==removeAll==.
+Ce test ne marche pas car nous n'avons pas défini ==writeBlogPost:== et ==remove==.
 
 [[[
-TBBlog >> removeAll
+TBBlog >> remove
    repository removeAll: TBPost
 ]]]
 
@@ -1520,7 +1540,7 @@ TBBlogTest >> testSize
 
 [[[
 TBBlogTest >> testRemoveAllBlogPosts
-   blog removeAll.
+   blog remove.
    self assert: blog size equals: 0.
 ]]]
 
