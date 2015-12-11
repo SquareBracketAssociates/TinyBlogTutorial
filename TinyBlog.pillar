@@ -831,7 +831,7 @@ TBRootComponent >> renderContentOn: html
 
 Connexion avec un navigateur sur *http://localhost:8080/TinyBlog*. La page doit apparaître.
 
-%+Une page quasi vide mais servie par Seaside.>file://figures/EmptyPage.png|width=75+
++Une page quasi vide mais servie par Seaside.>file://figures/EmptyPage.png|width=75+
 hkjjhkjh jkhkjh jkhjkh kjhkjhjkhkj jkh hkjhjkhkjhjkhkjjkhhjk  hkjhjkh jk khjk
 FUCKFUCKFUCK. BrowseApplications marche mais pas EmptyPage..... in comprehensible
 
