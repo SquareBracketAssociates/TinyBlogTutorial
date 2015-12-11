@@ -10,8 +10,12 @@
 
 {{=« »=}}
 «! the '&' below prevents HTML escaping. »
-\chapter{«& title»}
-\chapterprecis{«& attribution»}
+\title{«& title»}
+\author{Olivier Auverlot and St\'ephane Ducasse}
+
+\begin{titlingpage}
+    \maketitle
+\end{titlingpage}
 
 «& content»
 
