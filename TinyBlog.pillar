@@ -1,9 +1,8 @@
 ! TinyBlog: Préparation
 
-Ce tutorial va vous enseigner comment definir et deployer une application en utilisant Pharo/Seaside/Mongo ainsi que des frameworks disponibles en Pharo comme NeoJSON.
-Nous allons définir un mini moteur de blogs. Les solutions proposées dans le tutorial sont parfois non optimale afin de vous faire réagir et que vous puissiez proposer d'autres solutions et améliorations.
+Ce tutoriel va vous enseigner comment définir et déployer une application en utilisant Pharo/Seaside/Mongo ainsi que des frameworks disponibles en Pharo comme NeoJSON. Nous exposerons aussi comment exposer votre application via un serveur REST. Nous allons définir un mini moteur de blogs. Les solutions proposées dans le tutoriel sont parfois non optimales afin de vous faire réagir et que vous puissiez proposer d'autres solutions et améliorations.
 
-D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une facon de faire cependant nous invitons le lecteur à lire les références sur les autres chapitres, livres et tutoriaux afin d'approfondir son exp\'ertise.
+D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une façon de faire cependant nous invitons le lecteur à lire les références sur les autres chapitres, livres et tutoriaux afin d'approfondir son exp\'ertise.
 
 
 !! Installation et préparation de Pharo
@@ -22,10 +21,15 @@ D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une faco
 -- VoyageMongo,
 -- BootstrapMagritte,
 -- Mustache
-- Créez un paquet nommé TinyBlog,
-- Créez un paquet nommé TinyBlog-Tests
+- Créez un paquet nommé TinyBlog
+
+Nous avons préparer une image contenant les projets Seaside, Voyage, Bootstrap et Magritte. Vous pouvez y accéder 
+en utilisant le Pharo Launcher et en cherchant le projet TinyBlogBase dans les contributions Pharo. 
+
 
 !!! Créer la configuration du projet
+
+Dans un premier temps vous pouvez sauter cette étape. 
 
 - Créer un projet avec Versionner
 -- Créer un nouveau projet "TinyBlog",
@@ -52,16 +56,14 @@ D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une faco
 
 
 
-
-
-
 ! Le modèle de TinyBlog
 
-Le modèle de tinyblog est extremement simple: Les deux classes ==TBPost== et  ==TBBlog==.
-Notez que comme nous le verrons plus tard, nous allons utiliser le fait que Voyage offre une base de données en mémoire.
+Le modèle de TinyBlog est extrêmement simple: Les deux classes ==TBPost== et  ==TBBlog==.
+Notez que comme nous le verrons plus tard, nous allons utiliser le fait que Voyage offre une base de données en mémoire pour développer la solution sans avoir besoin de se connecter en permanence à la base. 
 
 
 !!! La classe TBPost
+Définissez la class ==TBPost== comme suit:
 
 [[[
 Object subclass: #TBPost
@@ -74,7 +76,6 @@ Object subclass: #TBPost
 
 Cinq variables d'instance pour décrire un post sur le blog.
 
-
 |!Variable |!Signification |
 |title         |Titre du post                |
 |text          |Texte du post                |
@@ -83,7 +84,7 @@ Cinq variables d'instance pour décrire un post sur le blog.
 |visible       |Post visible ou pas ?        |
 
 
-Ces variables ont des setters et getters dans le protocole accessing.
+Ces variables ont des méthodes accesseurs dans le protocole 'accessing'.
 
 [[[
 TBPost >> title
@@ -119,7 +120,7 @@ TBPost >> category: anObject
 
 !!!! Gérer la visibilité d'un post
 
-Il faut avoir la possibilité d'indiquer qu'un post est visible ou pas. Il faut également pouvoir demandé à un post s'il est visible. Les méthodes sont définies dans la protocole 'action'.
+Il faut avoir la possibilité d'indiquer qu'un post est visible ou pas. Il faut également pouvoir demander à un post s'il est visible. Les méthodes sont définies dans la protocole 'action'.
 
 [[[
 TBPost >> beVisible
@@ -137,8 +138,7 @@ TBPost >> isVisible
 
 !!!! Initialisation
 
-La méthode 'initialize' (protocole ==initialize-release==) fixe par défaut la date et fixe par défaut la visibilité à false (l'utilisateur devra par la suite activer la visibilité ce qui permet de rédiger des brouillons et de publier lors que le post est terminé). Un post est également rangé par défaut dans la catégorie "Unclassified" que l'on définit au niveau classe. 
-
+La méthode ==initialize== (protocole 'initialize-release'') fixe par défaut la date et la visibilité à faux (l'utilisateur devra par la suite activer la visibilité ce qui permet de rédiger des brouillons et de publier lors que le post est terminé). Un post est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe.  La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
 [[[
 TBPost class >> unclassifiedTag
    ^ 'Unclassified'
@@ -157,8 +157,8 @@ Il serait préférable de ne pas faire une référence en dur à la class ==TBPo
 Proposer une solution.
 
 
-!!!! Instance création API
-Coté classe, on définit que ==TBPost== est un objet géré par Voyage et on spécifie des méthodes pour faciliter la création de post appartenant ou pas à une catégorie. La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
+!!!! Méthode de création
+Coté classe, on définit que ==TBPost== est un objet géré par Voyage et on spécifie des méthodes pour faciliter la création de post appartenant ou pas à une catégorie.
 
 
 [[[
@@ -167,7 +167,9 @@ TBPost class >> title: aTitle text: aText
         title: aTitle;
         text: aText;
         yourself
+]]]
 
+[[[
 TBPost class >> title: aTitle text: aText category: aCategory
    ^ (self title: aTitle text: aText)
             category: aCategory;
@@ -184,7 +186,7 @@ TBPost >> isUnclassified
    ^ self category = TBPost unclassifiedTag
 ]]]
 
-Il serait préférable de ne pas faire une référence en dur à la class TBPost.
+Il serait préférable de ne pas faire une référence en dur à la class ==TBPost==.
 Proposer une solution.
 
 %001-TinyBlog-BGPost-StephaneDucasse.1
@@ -193,9 +195,8 @@ Proposer une solution.
 
 
 
-
 !!! La classe TBBlog
-La classe ==TBBlog== collecte les posts. Nous allons développer ==TBBlog== en écrivant des tests puis les implémentant. 
+La classe ==TBBlog== contient des posts. Nous allons développer ==TBBlog== en écrivant des tests puis les implémentant.
 
 [[[
 Object subclass: #TBBlog
@@ -204,7 +205,6 @@ Object subclass: #TBBlog
    package: 'TinyBlog'
 ]]]
 
-Ici nous definissons le fait que la base de donnée fonctionne en mémoire par l'utilisation de ==VOMemoryRepository new==.
 [[[
 TBBlog >> initialize
    super initialize.
@@ -234,9 +234,9 @@ TBBlog class >> initialize
 
 
 !! Tester les règles métiers
-Nous allons écrire les tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premiers puis en définissant les fonctionalités jsuqu'à ce que les tests passent.
+Nous allons écrire des tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premiers puis en définissant les fonctionalités jsuqu'à ce que les tests passent.
 
-Les tests unitaires sont regroupés dans le paquet ==TinyBlog-tests== qui contient la classe ==TBBlogTest==.
+Les tests unitaires sont regroupés dans le paquet ==TinyBlog-Tests== qui contient la classe ==TBBlogTest==.
 
 [[[
 TestCase subclass: #TBBlogTest
@@ -267,12 +267,14 @@ TBBlogTest >> tearDown
    TBBlog reset
 ]]]
 
-Noter que si vous deployer un blog puis executer les tests vous perdrez les postes que vous avez crées car nous les remettons à zéro.
+Noter que si vous déployer un blog puis exécuter les tests vous perdrez les postes que vous avez crées car nous les remettons à zéro.
 
 Nous allons développer les tests d'abord puis ensuite passer à l'implémentation
 des fonctionalités.
 
 !!!! Un premier test
+
+Commençons par écrire un premier test qui ajoute un post.
 
 [[[
 TBBlogTest >> testAddBlogPost
@@ -304,7 +306,6 @@ Ecrivons un test pour couvrir les fonctionalités que nous venons de développer
 
 !!!! Obtenir le nombre de posts dans la base
 
-
 [[[
 TBBlogTest >> testSize
    self assert: blog size equals: 1
@@ -315,7 +316,7 @@ TBBlogTest >> testSize
 [[[
 TBBlogTest >> testRemoveAllBlogPosts
    blog remove.
-   self assert: blog size equals: 0.
+   self assert: blog size equals: 0
 ]]]
 
 
@@ -326,11 +327,10 @@ Les règles métiers sont regroupées dans le protocole 'action' de la classe ==
 
 !!!! Obtenir l'ensemble des posts (visibles et invisibles)
 
-
 [[[
 TBBlogTest >> testAllBlogPosts
    blog writeBlogPost: post.
-   self assert: (blog allBlogPosts) size equals: 2.
+   self assert: (blog allBlogPosts) size equals: 2
 ]]]
 
 [[[
@@ -344,7 +344,7 @@ TBBlog >> allBlogPosts
 [[[
 TBBlogTest >> testAllVisibleBlogPosts
    blog writeBlogPost: post.
-   self assert: (blog allVisibleBlogPosts) size equals: 1.
+   self assert: (blog allVisibleBlogPosts) size equals: 1
 ]]]
 
 [[[
@@ -362,7 +362,7 @@ TBBlogTest >> testAllBlogPostsFromCategory
 
 [[[
 TBBlog >> allVisibleBlogPostsFromCategory: aCategory
-   ^ posts select: [ :p | p category = aCategory and: [ p isVisible ]]
+   ^ posts select: [ :p | p category = aCategory and: [ p isVisible ] ]
 ]]]
 
 
@@ -372,7 +372,7 @@ TBBlog >> allVisibleBlogPostsFromCategory: aCategory
 TBBlogTest >> testAllVisibleBlogPostsFromCategory
    blog writeBlogPost: post.
    self assert: (blog allVisibleBlogPostsFromCategory: 'First Category') size equals: 0.
-   self assert: (blog allVisibleBlogPostsFromCategory: 'Second Category') size equals: 1.
+   self assert: (blog allVisibleBlogPostsFromCategory: 'Second Category') size equals: 1
 ]]]
 
 [[[
@@ -384,7 +384,7 @@ TBBlog >> allBlogPostsFromCategory: aCategory
 
 [[[
 TBBlogTest >> testUnclassifiedBlogPosts
-   self assert: (blog allBlogPosts select: [ :p | p isUnclassified ]) size equals: 0.
+   self assert: (blog allBlogPosts select: [ :p | p isUnclassified ]) size equals: 0
 ]]]
 
 !!!! Obtenir la liste des catégories
@@ -392,12 +392,12 @@ TBBlogTest >> testUnclassifiedBlogPosts
 [[[
 TBBlogTest >> testAllCategories
    blog writeBlogPost: post.
-   self assert: (blog allCategories) size equals: 2.
+   self assert: (blog allCategories) size equals: 2
 ]]]
 
 [[[
 TBBlog >> allCategories
-   ^(self allBlogPosts collect: [ :p | p category ]) asSet
+   ^ (self allBlogPosts collect: [ :p | p category ]) asSet
 ]]]
 
 !! Futures évolutions
@@ -415,7 +415,7 @@ TBBlog class >> createDemoPosts
       writeBlogPost: ((TBPost title: 'Brick on top of Bloc - Preview' text: 'We are happy to announce the first preview version of Brick, a new widget set created from scratch on top of Bloc. Brick is being developed primarily by Alex Syrel (together with Alain Plantec, Andrei Chis and myself), and the work is sponsored by ESUG. 
       Brick is part of the Glamorous Toolkit effort and will provide the basis for the new versions of the development tools.' category: 'Pharo') visible: true);
       writeBlogPost: ((TBPost title: 'The sad story of unclassified blog posts' text: 'So sad that I can read this.') visible: true);
-       writeBlogPost: ((TBPost title: 'Working with Pharo on the Raspberry Pi' text: 'Hardware is getting cheaper and many new small devices like the famous Raspberry Pi provide new computation power that was one once only available on regular desktop computers.' category: 'Pharo') visible: true)
+      writeBlogPost: ((TBPost title: 'Working with Pharo on the Raspberry Pi' text: 'Hardware is getting cheaper and many new small devices like the famous Raspberry Pi provide new computation power that was one once only available on regular desktop computers.' category: 'Pharo') visible: true)
 ]]]
 
 
@@ -432,9 +432,8 @@ TBBlog class >> createDemoPosts
 
 ! Préparation de sauvegarde extérieure avec Voyage
 
-Alors qu'avoir un modèle d'objets en mémoire fonctionne bien, et que des sauvegardes de l'image Pharo sauve aussi de tels objets, il est préférable 
-de pouvoir sauver les objets dans une base de données exterieure. Voyage permet de sauver les objets dans une base de donnée Mongo. 
-C'est ce que nous allons voir. Dans un premier temps nous allons utiliser la capacité de Voyage à simuler une base exterieure. Ceci est très pratique en phase de développement. Dans un second nous installerons une base de données Mongo et nous y accéderons via la couche Voyage. 
+Alors qu'avoir un modèle d'objets en mémoire fonctionne bien, et que des sauvegardes de l'image Pharo sauve aussi de tels objets, il est préférable de pouvoir sauver les objets dans une base de données extérieure. Voyage permet de sauver les objets dans une base de donnée Mongo. 
+C'est ce que nous allons voir. Dans un premier temps nous allons utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second nous installerons une base de données Mongo et nous y accéderons via la couche Voyage. 
 
 
 !! Sauvegarde d'un blog
@@ -558,13 +557,14 @@ Vous pouvez voir l'API de Voyage en parcourant
 - la classe ==Class==, et 
 - la classe ==VORepository== qui est la racine d'héritage des bases de données en mémoire ou extérieur.
 
-Ces queries sont plus pertinentes quand on a plus d'objets comme les posts d'un blog. 
+Ces queries sont plus pertinentes quand on a plus d'objets comme lorsque nous ajouterons plusieurs blogs.
 
 
-!! Sauvegardons les postes
+!! Si nous devions sauvegarder les posts
 
-On peut aussi définir qu'un poste est un élément qui peut être sauvegardé de manière autonome. Cela peut permettre de sauver des postes de manière indépendante d'un blog. Typiquement si nous representions les commentaires d'un post nous ne les declarerions pas comme racine car sauver ou manipuler un commentaire en dehors du context de son post ne fait pas beaucoup de sens.  Pour cela on nous définissons les méthodes suivantes:
+Cette section n'est pas à implémenter et elle est juste donner à titre d'exemple. Nous pourrions aussi définir qu'un post est un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Si nous representions les commentaires d'un post nous ne les declarerions pas non plus comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
 
+Pour cela on nous définissons les méthodes suivantes:
 
 [[[
 TBPost class >> isVoyageRoot
@@ -588,7 +588,7 @@ TBBlog >> remove
    super remove.
 ]]]
 
-
+Ici dans la méthode ==remove== nous enlevons chaque posts puis nous remontons à jour la collection et nous enlevons le blog lui-même.
 
 
 !!! D'autres requêtes
@@ -850,88 +850,6 @@ TBRootComponent >> updateRoot: anHtmlRoot
 % je suis confus si ils sont tous root et tous update alors c'est pas le basard? esteban
 
 Nous allons maintenant aborder la notion de session.  
-
-!! Gestion de Session
-
-Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants. Une session est pratique pour gérer les informations de l'utilisateur en cours (loggé). 
-Nous allons voir comment nous l'utilisons pour gérer une connexion.
-
-Nous définissons une nouvelle souclasse de ==WASession==.
-
-[[[
-WASession subclass: #TBSession
-   instanceVariableNames: 'repository'
-   classVariableNames: ''
-   package: 'TinyBlog-Session'
-]]]
-
-Nous allons l'utiliser pour fournir à chaque utilisateur la référence vers l'instance unique de ==TBBlog==.
-
-[[[
-TBSession >> repository
-   ^ repository
-]]]
-
-[[[
-TBSession >> repository: anObject
-   repository := anObject
-]]]
-
-Le protocole 'initialize-release'' contient les méthodes ==initialize== et ==initializeRepository==. Celle-ci est appelée à chaque fois qu'un nouvel utilisateur se connecte à l'application (??? c'est quoi un nouvel utilisateur). Elle demande la création d'une instance de ==TBBlog== et celui-ci ne contient aucun posts, elle déclenche la création des posts de démonstration.
-
-
-@@todo Ca c'est un blog pas un repo!'
-[[[
-TBSession >> initializeRepository
-   TBBlog initialize.
-   self repository: TBBlog current.
-   self repository size = 0 ifTrue: [ self repository createDemoPosts ]
-]]]
-
-[[[
-TBSession >> initialize
-   super initialize.
-   self initializeRepository
-]]]
-
-Ajoutons maintenant une méthode ==initialize== dans le protocole 'initialize-release' de la classe ==TBRootComponent==.
-
-[[[
-TBRootComponent >> initialize
-   super initialize.
-   TBBlog initialize.
-   self repository size = 0 ifTrue: [ self repository createDemoPosts ]
-]]]
-
-Il vous faut maintenant spécifier à Seaside qu'il doit utiliser l'objet ==TBSession== comme objet de session courant pour l'application TinyBlog. 
-Pour cela, on utilise l'outil d'administration de Seaside.
-
-- connexion sur *http://localhost:8080/config*,
-- on clique sur "TinyBlog",
-- Dans "General", cliquez sur le bouton "Override" de "Session Class",
-- Choisir 'TBSession' dans la liste déroulante,
-- Cliquez sur le bouton "Apply" en bas du formulaire.
-
-On peut automatiser cette initialisation en améliorant la méthode initialize de la class ==TBRootComponent==. 
-
-[[[
-TBRootComponent class >> initialize
-	   "self initialize"
-	   | app |
-	   app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
-		app 
-			preferenceAt: #sessionClass put: TBSession.
-	   app
-	      addLibrary: JQDeploymentLibrary;
-	      addLibrary: JQUiDeploymentLibrary;
-	      addLibrary: TBSDeploymentLibrary
-]]]
-
-
-
-
-
-
 
 
 
@@ -1402,6 +1320,156 @@ Nous pourrions changer la description d'une categorie pour en definir un enumere
 
 
 
+
+
+
+!! Gestion de Session
+
+Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants. Une session est pratique pour gérer les informations de l'utilisateur en cours (loggé). 
+Nous allons voir comment nous l'utilisons pour gérer une connexion.
+
+Nous définissons une nouvelle souclasse de ==WASession==.
+
+[[[
+WASession subclass: #TBSession
+   instanceVariableNames: 'repository'
+   classVariableNames: ''
+   package: 'TinyBlog-Session'
+]]]
+
+Nous allons l'utiliser pour fournir à chaque utilisateur la référence vers l'instance unique de ==TBBlog==.
+
+[[[
+TBSession >> repository
+   ^ repository
+]]]
+
+[[[
+TBSession >> repository: anObject
+   repository := anObject
+]]]
+
+Le protocole 'initialize-release'' contient les méthodes ==initialize== et ==initializeRepository==. Celle-ci est appelée à chaque fois qu'un nouvel utilisateur se connecte à l'application (??? c'est quoi un nouvel utilisateur). Elle demande la création d'une instance de ==TBBlog== et celui-ci ne contient aucun posts, elle déclenche la création des posts de démonstration.
+
+
+@@todo Ca c'est un blog pas un repo!'
+[[[
+TBSession >> initializeRepository
+   TBBlog initialize.
+   self repository: TBBlog current.
+   self repository size = 0 ifTrue: [ self repository createDemoPosts ]
+]]]
+
+[[[
+TBSession >> initialize
+   super initialize.
+   self initializeRepository
+]]]
+
+Ajoutons maintenant une méthode ==initialize== dans le protocole 'initialize-release' de la classe ==TBRootComponent==.
+
+[[[
+TBRootComponent >> initialize
+   super initialize.
+   TBBlog initialize.
+   self repository size = 0 ifTrue: [ self repository createDemoPosts ]
+]]]
+
+Il vous faut maintenant spécifier à Seaside qu'il doit utiliser l'objet ==TBSession== comme objet de session courant pour l'application TinyBlog. 
+Pour cela, on utilise l'outil d'administration de Seaside.
+
+- connexion sur *http://localhost:8080/config*,
+- on clique sur "TinyBlog",
+- Dans "General", cliquez sur le bouton "Override" de "Session Class",
+- Choisir 'TBSession' dans la liste déroulante,
+- Cliquez sur le bouton "Apply" en bas du formulaire.
+
+On peut automatiser cette initialisation en améliorant la méthode initialize de la class ==TBRootComponent==. 
+
+[[[
+TBRootComponent class >> initialize
+	   "self initialize"
+	   | app |
+	   app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
+		app 
+			preferenceAt: #sessionClass put: TBSession.
+	   app
+	      addLibrary: JQDeploymentLibrary;
+	      addLibrary: JQUiDeploymentLibrary;
+	      addLibrary: TBSDeploymentLibrary
+]]]
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ! Design Relationel
 
 Voici une conception qui s'adapte plus a un modele de base de données relationnelle.
@@ -1631,5 +1699,3 @@ TBBlog >> allCategories
 Plusieurs évolutions peuvent être apportées telles que obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts contenus, renommer un catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons à les développer.
 
 
-
- 
