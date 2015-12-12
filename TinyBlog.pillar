@@ -138,7 +138,7 @@ TBPost >> isVisible
 
 !!!! Initialisation
 
-La méthode ==initialize== (protocole 'initialize-release'') fixe par défaut la date et la visibilité à faux (l'utilisateur devra par la suite activer la visibilité ce qui permet de rédiger des brouillons et de publier lors que le post est terminé). Un post est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe.  La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
+La méthode ==initialize== (protocole 'initialize-release') fixe par défaut la date et la visibilité à faux (l'utilisateur devra par la suite activer la visibilité ce qui permet de rédiger des brouillons et de publier lors que le post est terminé). Un post est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe.  La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
 [[[
 TBPost class >> unclassifiedTag
    ^ 'Unclassified'
@@ -781,10 +781,10 @@ En utilisant le Seaside Control Panel, en utilisant le menu, ajouté un serveur 
 
 !! Initialisation de l'application
 
-Création d'une classe ==TBRootComponent== qui est le point d'entrée de l'application. Il sert à l'initialisation de l'application.
+Création d'une classe ==TBApplicationRootComponent== qui est le point d'entrée de l'application. Il sert à l'initialisation de l'application.
 
 [[[
-WAComponent subclass: #TBRootComponent
+WAComponent subclass: #TBApplicationRootComponent
 	instanceVariableNames: ''
 	classVariableNames: ''
 	category: 'TinyBlog-Components'
@@ -795,7 +795,7 @@ WAComponent subclass: #TBRootComponent
 On déclare l'application au serveur Seaside, coté classe, dans le protocole =='initialize'==. On en profite pour intégrer les dépendances du framework Bootstrap (les fichiers css et js seront stockés dans l'application).
 
 [[[
-TBRootComponent class >> initialize
+TBApplicationRootComponent class >> initialize
    "self initialize"
    | app |
    app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
@@ -805,7 +805,7 @@ TBRootComponent class >> initialize
       addLibrary: TBSDeploymentLibrary
 ]]]
 
-Dans un Playground ou dans l'éditeur de méthode, exécuter ==TBRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. Notez que nous venons de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices.
+Dans un Playground ou dans l'éditeur de méthode, exécuter ==TBApplicationRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. Notez que nous venons de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices.
 
 Les méthodes de classe ==initialize== sont invoquées automatiquement lors du chargement du package.
 
@@ -815,41 +815,38 @@ Une connexion sur le serveur Seaside ("Browse the applications installed in your
 
 +TinyBlog est bien enregistrée>file://figures/BrowseApplications.png|width=75+
 
-Ajoutons également la méthode ==canBeRoot== afin de préciser que la classe ==TBRootComponent== est la première instanciée lors qu'un utilisateur se connecte sur l'application et représente une application et pas seulement un composant.
+Ajoutons également la méthode ==canBeRoot== afin de préciser que la classe ==TBApplicationRootComponent== est la première instanciée lors qu'un utilisateur se connecte sur l'application et représente une application et pas seulement un composant.
 
 [[[
-TBRootComponent class >> canBeRoot
+TBApplicationRootComponent class >> canBeRoot
    ^ true
 ]]]
 
 Ajoutons maintenant une méthode ==renderContentOn:== afin de vérifier que notre application répond bien. La méthode est une méthode d'instance dans le protocole ==rendering==.
 
 [[[
-TBRootComponent >> renderContentOn: html
+TBApplicationRootComponent >> renderContentOn: html
    html text: 'TinyBlog'
 ]]]
 
 Connexion avec un navigateur sur *http://localhost:8080/TinyBlog*. La page doit apparaître.
 
 +Une page quasi vide mais servie par Seaside.>file://figures/EmptyPage.png|width=75+
-hkjjhkjh jkhkjh jkhjkh kjhkjhjkhkj jkh hkjhjkhkjhjkhkjjkhhjk  hkjhjkh jk khjk
-FUCKFUCKFUCK. BrowseApplications marche mais pas EmptyPage..... in comprehensible
-
-+TinyBlog est bien enregistrée>file://figures/BrowseApplications.png|width=75+
 
 
-Ajoutons maintenant des informations dans l'entête de la page HTML afin que TinyBlog ait un titre et soit une application HTML5. L'ensemble des composants visuels de l'application hériteront de ==TBRootComponent== et il ne sera donc pas nécessaire de reproduire cette opération.
+Ajoutons maintenant des informations dans l'entête de la page HTML afin que TinyBlog ait un titre et soit une application HTML5. 
 
 [[[
-TBRootComponent >> updateRoot: anHtmlRoot
+TBApplicationRootComponent >> updateRoot: anHtmlRoot
    super updateRoot: anHtmlRoot.
    anHtmlRoot beHtml5.
    anHtmlRoot title: 'TinyBlog'.
 ]]]
 
-% je suis confus si ils sont tous root et tous update alors c'est pas le basard? esteban
 
-Nous allons maintenant aborder la notion de session.  
+Le composant ==TBApplicationRootComponent== est le composant principal de l'application, il ne fait que rendu graphique limité en affichant dans le future le composant principal qu'il contiendra. Il contiendra plus tard soit les composants qu'un lecteur du blog pourra utiliser soit les composants pour administrer le blog et ses postes. 
+
+Nous avons décidé que le composant ==TBApplicationRootComponent== contiendra des composants sousclass de la classe abstraite ==TBScreenComponent== que nous allons définir dans le prochain chapitre. 
 
 
 
@@ -859,25 +856,51 @@ Nous sommes prets à définir les composants visuels de notre petite application
 Les premiers chapitre de *http://book.seaside.st* peuvent vous aider.
 
 
+La figure montre les différents composants que nous allons développer. 
+
++Les composants composant l'application TinyBlog.>file://figures/ComponentOverview.pdf|width=75+
+
 !! Le composant TBScreenComponent
+
+Le composant ==TBApplicationRootComponent== contiendra des composants sousclasses de la classe abstraite ==TBScreenComponent==. Cette classe nous permet de factoriser les comportements que nous souhaitons partager entre tous nos composants. 
 
 [[[
 WAComponent subclass: #TBScreenComponent
    instanceVariableNames: ''
    classVariableNames: ''
-   package: 'TinyBlog'
+   package: 'TinyBlog-Components'
 ]]]
 
-Les différents composants d'interface de TinyBlog auront besoin d'accéder aux règles métier de l'application. Dans le protocole 'accessing', créons un méthode ==repository== qui retourne l'instance de ==TBBlog==. Celle-ci sera stockée dans la session de l'application et donc accessible dans tous les objets héritant de WAComponent (??? vraiment).
+Les différents composants d'interface de TinyBlog auront besoin d'accéder aux règles métier de l'application. Dans le protocole 'accessing', créons un méthode ==blog== qui retourne l'instance de ==TBBlog==. 
 
 [[[
-TBScreenComponent >> repository
-   ^ self session repository
+TBScreenComponent >> blog
+   "Return the current blog in the future we will ask the 
+   session to return the blog of the currently logged user."
+   ^ TBBlog current
 ]]]
 
-Profitons également de ce composant pour insérer dans la partie supérieure de chaque composant, l'instance d'un composant représentant l'entête de l'application.
+Dans le future, lorsque nous gérerons les utilisateurs et le fait qu'un utilisateurs puisse avoir plusieurs blogs nous modifierons cette méthode pour utiliser des informations stockées dans la session active (Voir TBSession plus loin). 
+
+
+!! Bootstrap for Seaside
+
+La bibliotheque Bootstrap est totallement accessible depuis Seaside comme nous allons le montrer.
+Pour parcourir les nombreux exemples, cliquer sur le lien bootstrap dans la liste des applications servies par Seaside ou pointer votre navigateur sur le lien http://localhost:8080/bootstrap. Vous devez obtenir l'écran *@bootstrap*
+
++Acces à la bibliothèque Bootstrap.>file://figures/SeasideBootstrap.png|width=75|label=bootstrap+
+
+Cliquer sur le lien ""Examples"" au bas de la page et vous pouvez ainsi voir les éléments graphiques ainsi que le code pour les obtenir comme montré par la figure *@examplebootstrap*. 
+
+
++Comprendre un élément et son code en Bootstrap.>file://figures/TBSAlert.png|width=75|label=examplebootstrap+
+
+
+
 
 !! Définition du composant TBHeaderComponent
+
+Profitons de ce composant pour insérer dans la partie supérieure de chaque composant, l'instance d'un composant représentant l'entête de l'application.
 
 [[[
 WAComponent subclass: #TBHeaderComponent
@@ -896,15 +919,21 @@ TBHeaderComponent >> renderContentOn: html
          with: 'TinyBlog' ]
 ]]]
 
-L'entête est affichée à l'aide d'une barre de navigation Bootstrap.
+L'entête  (header) est affichée à l'aide d'une barre de navigation Bootstrap (voir la figure *@navbar*)
+
+Par défaut dans une barre de navigation Bootstrap, il y a un lien sur tbsNavbarBrand qui est ici inutile (sur le titre de l'application). Ici nous l'initialisons avec une ancre =='#'== de façon à ce que si l'utilisateur clique sur le titre, il ne se passe rien. En général, cliquer sur le titre de l'application permet de revenir à la page de départ du site. 
+
+
+
 
 !!!! Améliorations possibles
-Le nom du blog devrait être paramêtrable à l'aide d'une variable d'instance dans un objet ==TBConfiguration== ou à l'aide d'un document dans la base Mongo.
+Le nom du blog devrait être paramêtrable à l'aide d'une variable d'instance dans la classe ==TBBlog==
+et le header pourrait représentait ce titre.
 
 
-!! Ajout d'un Header
+!! Utilisation du Header
 
-Il n'est pas souhaitable d'instancier systématiquement le composant à chaque fois qu'un composant est appelé. Créons une variable d'instance ==header== dans ==TBScreenComponent== qui sera initialisés une seule fois pour chaque utilisateur de l'application (gain de ressources).
+Il n'est pas souhaitable d'instancier systématiquement le composant à chaque fois qu'un composant est appelé. Créons une variable d'instance ==header== dans ==TBScreenComponent== qui nous initialisons.
 
 [[[
 WAComponent subclass: #TBScreenComponent
@@ -913,7 +942,7 @@ WAComponent subclass: #TBScreenComponent
    package: 'TinyBlog'
 ]]]
 
-Créons une méthode ==initialize== dans le protocole `initialize-release`:
+Créons une méthode ==initialize== dans le protocole 'initialize-release':
 
 [[[
 TBScreenComponent >> initialize
@@ -921,8 +950,9 @@ TBScreenComponent >> initialize
    header := TBHeaderComponent new.
 ]]]
 
+
 !!! Relation Composite-Composant
-Définissons que l'instance du composant ==TBHeaderComponent== est un enfant de ==TBScreenComponent== dans la hiérarchie de composants Seaside (en non entre classes Pharo). En effet en Seaside les sous-composants d'un composant doivent être retournés par le composite par le message ==children==.
+En Seaside, les sous-composants d'un composant doivent être retournés par le composite en réponse au message ==children==. Définissons que l'instance du composant ==TBHeaderComponent== est un enfant de ==TBScreenComponent== dans la hiérarchie de composants Seaside (en non entre classes Pharo). 
 
 [[[
 TBScreenComponent >> children
@@ -933,134 +963,137 @@ Affichons maintenant le composant dans la méthode ==renderContentOn:== (protoco
 
 [[[
 TBScreenComponent >> renderContentOn: html
-   self render: header
+   html render: header
 ]]]
 
-!!! Liste des Posts
 
-Nous allons afficher la liste des posts (acces public). Dans le future, nous  proposerons une interface administrative des posts.
+!! Utilisation du Composant Screen
 
-A l'aide du jeu de test, nous construisons le composant public de l'application qui affiche les blogs.
+Bien que le composant ==TBScreenComposant== n'est pas vocation à être utilisé directement, nous allons l'utiliser de manière temporaire pendant que nous développons les autres composants. 
 
-Créons un composant ==TBPublicPostsListComponent== qui hérite de ==TBScreenComponent==:
+Ainsi 
 
 [[[
-TBScreenComponent subclass: #TBPublicPostsListComponent
-   instanceVariableNames: 'report'
+TBApplicationRootComponent >> initialize
+
+	super initialize.
+	main := TBScreenComponent new. 
+]]]
+
+[[[
+TBApplicationRootComponent >> renderContentOn: html
+
+	html render: main
+]]]
+
+[[[
+TBApplicationRootComponent >> children
+
+	^ { main }
+]]]
+
+Si vous faites un rafraichissement de l'application vous devez voir la Figure *@navBlog*
++TinyBlog avec une barre de navigation.>file://figures/navBlog.png|width=75|label=navBlog+
+
+
+
+
+!! Liste des Posts
+
+Nous allons afficher la liste des posts - ce qui reste d'ailleurs le but d'un blog. Ici nous parlons de l'acces public au lecteur du blog. Dans le future, nous  proposerons une interface administrative des posts.
+
+
+Créons un composant ==TBPostsListComponent== qui hérite de ==TBScreenComponent==:
+
+[[[
+TBScreenComponent subclass: #TBPostsListComponent
+   instanceVariableNames: ''
    classVariableNames: ''
    package: 'TinyBlog-Components'
 ]]]
 
-Ajoutons une méthode ==renderContentOn:== (protocole rendering) provisoire pour tester l'avancement de notre application.
+Ajoutons une méthode ==renderContentOn:== (protocole rendering) provisoire pour tester l'avancement de notre application (voir Figure *@elementary*).
 
 [[[
-TBPublicPostsListComponent >> renderContentOn: html
-   super renderContentOn: html
+TBPostsListComponent >> renderContentOn: html
+   super renderContentOn: html.
    html text: 'Blog Posts here !!!'
 ]]]
 
-Maintenant, revenons au composant ==TBRootComponent== et ajoutons une variable d'instance ==publicPostsList== qui contiendra (pour chaque utilisateur) l'instance du composant ==TBPublicPostsListComponent== (économie de ressources).
-??? TBRootComponent = TBBlogComponent
+Nous pouvons maintenant dire au composant de l'application d'utiliser ce composant. 
 
 [[[
-WAComponent subclass: #TBRootComponent
-   instanceVariableNames: 'publicPostsList'
-   classVariableNames: ''
-   package: 'TinyBlog'
+TBApplicationRootComponent >> initialize
+
+	super initialize.
+	main := TBPostsListComponent new. 
 ]]]
+
+Editer cette méthode n'est guère propre. Nous ajoutons un setter qui nous permettra
+de changer dynamiquement de composant dans le future tout en gardant le composant actuel pour une initialisation par défaut. 
 
 [[[
-TBRootComponent >> publicPostsList
-   ^ publicPostsList
-]]]
-[[[
-TBRootComponent >> publicPostsList: anObject
-   publicPostsList := anObject
-]]]
-[[[
-TBRootComponent >> registerSubComponents
-   self publicPostsList: TBPublicPostsListComponent new
-]]]
-[[[
-TBRootComponent >> initialize
-   super initialize.
-   self registerSubComponents
+TBApplicationRootComponent >> main: aComponent
+
+	main := aComponent
 ]]]
 
-Children missing ???
-[[[
-TBRootComponent >> children
-   ^ OrderedCollection with: publicPostsList
-]]]
++TinyBlog avec une liste de posts plutot élémentaire.>file://figures/ElementaryListPost.png|width=75|label=elementary+
 
 
 
 
-La méthode ==renderContentOn:== affiche, au démarrage de l'application, la liste des posts dans la base.
-
-[[[
-TBRootComponent >> renderContentOn: html
-   html render: self publicPostsList
-]]]
 
 !! Le composant Post
 
-Nous allons maintenant définir le composant ==TBPostContentComponent== qui affiche le contenu d'un post.
+Nous allons maintenant définir le composant ==TBPostComponent== qui affiche le contenu d'un post.
 
-Chaque post du blog sera représenté visuellement par une instance de  ==TBPostContentComponent== qui affiche le titre, la date et le contenu d'un post.
+Chaque post du blog sera représenté visuellement par une instance de  ==TBPostComponent== qui affiche le titre, la date et le contenu d'un post.
 
 [[[
-WAComponent subclass: #TBPostContentComponent
-   instanceVariableNames: 'title text date'
+WAComponent subclass: #TBPostComponent
+   instanceVariableNames: 'post'
    classVariableNames: ''
    package: 'TinyBlog-Components'
 ]]]
 
 [[[
-TBPostContentComponent >> title
-   ^ title
-
-TBPostContentComponent >> title: anObject
-   title := anObject
-
-TBPostContentComponent >> text
-   ^ text
-
-TBPostContentComponent >> text: anObject
-   text := anObject
-
-TBPostContentComponent >> date
-   ^ date
-
-TBPostContentComponent >> date: anObject
-   date := anObject
+TBPostComponent >> initialize
+   	super initialize.
+   	post := TBPost new.
 ]]]
 
-Créons une méthode de classe pour initialiser chaque post:
+[[[		
+TBPostComponent >> title
+   ^ post title
+]]]
 
 [[[
-TBPostContentComponent class >> title: aTitle text: aText date: aDate
-   ^ self new
-      title: aTitle;
-      text: aText;
-      date: aDate
+TBPostComponent >> text
+   ^ post text
+]]]
+
+[[[
+TBPostComponent >> date
+
+	^ post date
 ]]]
 
 Ajoutons la méthode ==renderContentOn:== qui définie l'affichage du post.
 
 [[[
-TBPostContentComponent >> renderContentOn: html
+TBPostComponent >> renderContentOn: html
    html heading level: 2; with: self title.
    html heading level: 6; with: self date.
    html text: self text
 ]]]
 
-Nous montrerons dans le chapitre décrivant Magritte puis les interfaces d'administration, qu'il est rare
-de définir un composant de manière aussi manuelle. En effet Magritte en décrivant les données manipuler
-permet de générer automatiquement des composantes Seaside. Le code équivalent serait comme suit: 
+
+!!!! A propos de formulaire 
+Nous montrerons dans le chapitre décrivant Magritte puis les interfaces d'administration, qu'il est rare de définir un composant de manière aussi manuelle. En effet Magritte en décrivant les données manipuler permet de générer automatiquement des composantes Seaside. Le code équivalent serait comme suit: 
 
 [[[
-TBPostContentComponent >> renderContentOn: html
+TBPostComponent >> renderContentOn: html
    html render: self asComponent
 ]]]
 
@@ -1069,20 +1102,35 @@ TBPostContentComponent >> renderContentOn: html
 
 Maintenant nous pouvons afficher des posts présents dans la base.
 
-Il ne reste plus qu'à modifier la méthode ==TBPublicPostsListComponent >> renderContentOn:== pour afficher l'ensemble des blogs visibles présents dans la base.
+Il ne reste plus qu'à modifier la méthode ==TBPostsListComponent >> renderContentOn:== pour afficher l'ensemble des blogs visibles présents dans la base.
 
 [[[
-TBPublicPostsListComponent >> renderContentOn: html
+TBPostsListComponent >> renderContentOn: html
    super renderContentOn: html.
-   self repository allVisibleBlogPosts do: [ :p |
-      html render: (TBPostContentComponent
-         title: p title
-         text: p text
-         date: p date).
-   ]
+   self blog allVisibleBlogPosts do: [ :p |
+      html render: (TBPostComponent new post: p) ]
 ]]]
 
-!!! Affichage des posts par catégorie
+Rafraichissez la page et vous devez obtenir la Figure *@better*.
+
++TinyBlog avec une liste de posts.>file://figures/betterListPosts.png|width=75|label=better+
+
+Nous allons utiliser Bootstrap pour rendre la liste un peu plus jolie en utilisant un container. 
+
+[[[
+TBPostsListComponent >> renderContentOn: html
+   super renderContentOn: html.
+   html tbsContainer: [ 
+   self blog allVisibleBlogPosts do: [ :p |
+      html render: (TBPostComponent new post: p) ] ]
+]]]
+
+Rafraichissez la page et vous devez obtenir la Figure *@container*.
++TinyBlog avec une liste de posts élémentaire.>file://figures/betterListPosts.png|width=75|label=container+
+   
+
+
+!! Affichage des posts par catégorie
 
 
 !!! Categories
@@ -1091,7 +1139,7 @@ Nous allons créer un composant pour gérer une liste de catégories nommée: ==
 
 Les posts sont classés par catégorie. Par défaut, si aucune catégorie n'a été précisée, ils sont rangés dans une catégorie spéciale dénommée "Unclassified".
 
-Nous avons besoin d'un composant Seaside qui affiche la liste des catégories présentes dans la base et permet d'en sélectionner une. Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPublicPostsListComponent== afin de lui communiquer la catégorie choisie par l'utilisateur.
+Nous avons besoin d'un composant Seaside qui affiche la liste des catégories présentes dans la base et permet d'en sélectionner une. Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui communiquer la catégorie choisie par l'utilisateur.
 
 [[[
 WAComponent subclass: #TBCategoriesListComponent
@@ -1119,17 +1167,17 @@ TBCategoriesListComponent class >> categories: aCollectionOfCategories postsList
    ^self new categories: aCollectionOfCategories; postsListScreen: aTBScreen
 ]]]
 
-La méthode ==selectCategory== (protocole 'action') communique au composant ==TBPublicPostsListComponent== la nouvelle catégorie courante.
+La méthode ==selectCategory== (protocole 'action') communique au composant ==TBPostsListComponent== la nouvelle catégorie courante.
 
 [[[
 TBCategoriesListComponent >> selectCategory: aCategory
    self postsListScreen currentCategory: aCategory
 ]]]
 
-Nous avons donc besoin d'ajouter une variable d'instance dans ==TBPublicPostsListComponent==.
+Nous avons donc besoin d'ajouter une variable d'instance dans ==TBPostsListComponent==.
 
 [[[
-TBScreenComponent subclass: #TBPublicPostsListComponent
+TBScreenComponent subclass: #TBPostsListComponent
    instanceVariableNames: 'currentCategory'
    classVariableNames: ''
    package: 'TinyBlog-Components'
@@ -1166,12 +1214,12 @@ Reste maintenant à écrire la méthode de rendu du composant:
 !! Mise à jour des Posts
 Nous devons aussi mettre à jour la liste des posts.
 
-Il faut gérer le raffraîchissement de la liste des posts en fonction de la catégorie choisie et donc modifier la méthode de rendu du composant ==TBPublicPostsListComponent==.
+Il faut gérer le raffraîchissement de la liste des posts en fonction de la catégorie choisie et donc modifier la méthode de rendu du composant ==TBPostsListComponent==.
 
 La méthode ==readSelectedPosts== récupère dans la base les posts à afficher. Si elle vaut ==nil==, l'utilisateur n'a pas encore sélectionner une catégorie et l'ensemble des posts visibles de la base est affiché. Si elle contient une valeur autre que ==nil==, l'utilisateur a sélectionné une catégorie et l'application affiche alors la liste des posts attachés à la catégorie.
 
 [[[
-TBPublicPostsListComponent >> readSelectedPosts
+TBPostsListComponent >> readSelectedPosts
    ^ self currentCategory
       ifNil: [ self repository allVisibleBlogPosts ]
       ifNotNil: [ self repository allVisibleBlogPostsFromCategory: self currentCategory  ].
@@ -1182,7 +1230,7 @@ TBPublicPostsListComponent >> readSelectedPosts
 Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des posts:
 
 [[[
-TBPublicPostsListComponent >> renderContentOn: html
+TBPostsListComponent >> renderContentOn: html
    super renderContentOn: html.
 
    html render: (TBCategoriesListComponent
@@ -1190,7 +1238,7 @@ TBPublicPostsListComponent >> renderContentOn: html
                postsListScreen: self).
 
    self readSelectedPosts do: [ :p |
-      html render: (TBPostContentComponent
+      html render: (TBPostComponent
          title: p title
          text: p text
          date: p date).
@@ -1202,13 +1250,13 @@ Une instance du composant ==TBCategoriesListComponent== est ajoutée sur la page
 
 !! Look et Agencement
 
-Nous allons maintenant agencer le composant ==TBPublicPostsListComponent==.
+Nous allons maintenant agencer le composant ==TBPostsListComponent==.
 
 Mise en place d'un responsive design pour la liste des posts. Les composants sont placés dans un container Bootstrap puis agencés sur une ligne avec deux colonnes. La dimension des colonnes est déterminée en fonction de la résolution (viewport) du terminal utilisé. Les 12 colonnes de Bootstrap sont réparties entre la liste des catégories et la liste des posts. Dans le cas d'une résolution faible, la liste des catégories est placée au dessus de la liste des posts (chaque élément occupant 100\% de la largeur du container).
 
 Tant que nous sommes dans les finitions, profitons en également pour afficher la date de chaque post dans un format compréhensible (sans l'heure).
 [[[
-TBPublicPostsListComponent >> renderContentOn: html
+TBPostsListComponent >> renderContentOn: html
 
    super renderContentOn: html.
     html tbsContainer: [
@@ -1227,7 +1275,7 @@ TBPublicPostsListComponent >> renderContentOn: html
                smallSize: 10;
                mediumSize: 8;
                with: [ self readSelectedPosts do: [ :p |
-                  html render: (TBPostContentComponent
+                  html render: (TBPostComponent
                      title: p title
                      text: p text
                      date: p date asDate) ] ] ] ]
@@ -1366,10 +1414,10 @@ TBSession >> initialize
    self initializeRepository
 ]]]
 
-Ajoutons maintenant une méthode ==initialize== dans le protocole 'initialize-release' de la classe ==TBRootComponent==.
+Ajoutons maintenant une méthode ==initialize== dans le protocole 'initialize-release' de la classe ==TBApplicationRootComponent==.
 
 [[[
-TBRootComponent >> initialize
+TBApplicationRootComponent >> initialize
    super initialize.
    TBBlog initialize.
    self repository size = 0 ifTrue: [ self repository createDemoPosts ]
@@ -1384,10 +1432,10 @@ Pour cela, on utilise l'outil d'administration de Seaside.
 - Choisir 'TBSession' dans la liste déroulante,
 - Cliquez sur le bouton "Apply" en bas du formulaire.
 
-On peut automatiser cette initialisation en améliorant la méthode initialize de la class ==TBRootComponent==. 
+On peut automatiser cette initialisation en améliorant la méthode initialize de la class ==TBApplicationRootComponent==. 
 
 [[[
-TBRootComponent class >> initialize
+TBApplicationRootComponent class >> initialize
 	   "self initialize"
 	   | app |
 	   app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
