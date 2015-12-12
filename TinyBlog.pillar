@@ -487,9 +487,9 @@ Nous définissons une méthode ==initializeMongo== dont le role est d'initialise
 
 [[[
 TBBlog class >> initializeMongo
-	| repository |
-	repository := VOMemoryRepository new.
-	repository enableSingleton.
+   | repository |
+   repository := VOMemoryRepository new.
+   repository enableSingleton.
 ]]]
 Ici nous n'avons pas besoin de stocker la base car nous n'avons qu'une seule base de donnée (en mode singleton). 
 
@@ -500,12 +500,12 @@ Nous redéfinissons la méthode ==reset== et la méthode ==initialize== pour nou
 La méthode ==reset== réinitialize la base. 
 [[[
 TBBlog class >> reset
-		"self reset"
-		self initializeMongo
-		
+      "self reset"
+      self initializeMongo
+      
 TBBlog class >> initialize
-		self initializeMongo
-	
+      self initializeMongo
+   
 ]]]
 
 Le cas de de la méthode ==current== est plus délicat. Avant l'utilisation de Mongo, nous avions un singleton tout simple. Cependant utiliser un Singleton 
@@ -516,8 +516,8 @@ Nous redéfinissons ==current== de manière à faire une requête dans la base. 
 
 [[[
 TBBlog class >> current
-	^ (self selectOne: Dictionary new)
-		ifNil: [ self new save ] 
+   ^ (self selectOne: Dictionary new)
+      ifNil: [ self new save ] 
 ]]]
 
 Nous pouvons aussi modifier la méthode ==remove== afin de sauver le nouvel état d'un blog. 
@@ -597,33 +597,33 @@ Ici dans la méthode ==remove== nous enlevons chaque posts puis nous remontons �
 Nous illustrons maintenant comment nous pouvons faire des requêtes sur la base en mémoire en incluant les posts. 
 
 [[[
-	TBBlog reset.
-	TBBlog current allBlogPosts size.
-	> 0
+   TBBlog reset.
+   TBBlog current allBlogPosts size.
+   > 0
 
-	TBBlog createDemoPosts.
-	TBBlog current allBlogPosts size.
-	> 5
+   TBBlog createDemoPosts.
+   TBBlog current allBlogPosts size.
+   > 5
 
-	“Via repository"
-	TBBlog count.
-	> 1 
-	TBPost count.
-	> 5
+   “Via repository"
+   TBBlog count.
+   > 1 
+   TBPost count.
+   > 5
 
-	TBPost selectAll.
-	TBPost selectAll do: [:each | Transcript show: each text; cr]
+   TBPost selectAll.
+   TBPost selectAll do: [:each | Transcript show: each text; cr]
 
-	TBBlog current remove.
-	TBBlog count.
-	>0
-	TBPost count.
-	> 5 
-	??? why the posts are still there
+   TBBlog current remove.
+   TBBlog count.
+   >0
+   TBPost count.
+   > 5 
+   ??? why the posts are still there
 
-	TBPost removeAll.
-	TBPost count.
-	> 0
+   TBPost removeAll.
+   TBPost count.
+   > 0
 ]]]
 
 Nous allons maintenant utiliser une base mongo externe à Pharo. 
@@ -739,11 +739,11 @@ Nous définissions les méthodes ==initializeMongo== pour établir la connexion 
 
 [[[
 TBBlog class >> initializeMongo
-	| repository |
-	repository := VOMongoRepository
-		host: 'localhost'
-		database: 'tinyblog'.
-	repository enableSingleton.
+   | repository |
+   repository := VOMongoRepository
+      host: 'localhost'
+      database: 'tinyblog'.
+   repository enableSingleton.
 ]]]
 
 
@@ -754,8 +754,8 @@ Notez que si vous avez besoin de réinitialiser la base exterieure completement,
 
 [[[
 (VOMongoRepository
-	host: 'localhost'
-	database: 'tinyblog') dropDatabase
+   host: 'localhost'
+   database: 'tinyblog') dropDatabase
 ]]]
 
 
@@ -785,9 +785,9 @@ Création d'une classe ==TBApplicationRootComponent== qui est le point d'entrée
 
 [[[
 WAComponent subclass: #TBApplicationRootComponent
-	instanceVariableNames: ''
-	classVariableNames: ''
-	category: 'TinyBlog-Components'
+   instanceVariableNames: ''
+   classVariableNames: ''
+   category: 'TinyBlog-Components'
 ]]]
 
 
@@ -976,20 +976,20 @@ Ainsi
 [[[
 TBApplicationRootComponent >> initialize
 
-	super initialize.
-	main := TBScreenComponent new. 
+   super initialize.
+   main := TBScreenComponent new. 
 ]]]
 
 [[[
 TBApplicationRootComponent >> renderContentOn: html
 
-	html render: main
+   html render: main
 ]]]
 
 [[[
 TBApplicationRootComponent >> children
 
-	^ { main }
+   ^ { main }
 ]]]
 
 Si vous faites un rafraichissement de l'application vous devez voir la Figure *@navBlog*
@@ -1025,8 +1025,8 @@ Nous pouvons maintenant dire au composant de l'application d'utiliser ce composa
 [[[
 TBApplicationRootComponent >> initialize
 
-	super initialize.
-	main := TBPostsListComponent new. 
+   super initialize.
+   main := TBPostsListComponent new. 
 ]]]
 
 Editer cette méthode n'est guère propre. Nous ajoutons un setter qui nous permettra
@@ -1035,7 +1035,7 @@ de changer dynamiquement de composant dans le future tout en gardant le composan
 [[[
 TBApplicationRootComponent >> main: aComponent
 
-	main := aComponent
+   main := aComponent
 ]]]
 
 +TinyBlog avec une liste de posts plutot élémentaire.>file://figures/ElementaryListPost.png|width=75|label=elementary+
@@ -1059,11 +1059,11 @@ WAComponent subclass: #TBPostComponent
 
 [[[
 TBPostComponent >> initialize
-   	super initialize.
-   	post := TBPost new.
+      super initialize.
+      post := TBPost new.
 ]]]
 
-[[[		
+[[[      
 TBPostComponent >> title
    ^ post title
 ]]]
@@ -1076,7 +1076,7 @@ TBPostComponent >> text
 [[[
 TBPostComponent >> date
 
-	^ post date
+   ^ post date
 ]]]
 
 Ajoutons la méthode ==renderContentOn:== qui définie l'affichage du post.
@@ -1128,50 +1128,58 @@ TBPostsListComponent >> renderContentOn: html
 Rafraichissez la page et vous devez obtenir la Figure *@container*.
 +TinyBlog avec une liste de posts élémentaire.>file://figures/betterListPosts.png|width=75|label=container+
    
+Les dates sont affichées de manière étrange. Ceci est dû au fait que les dates sont en fait des instance de ==DateAndTime== donc nous les convertissons dans date comme suit. 
+
+[[[
+TBPostComponent >> date
+
+   ^ post date asDate
+]]]
 
 
 !! Affichage des posts par catégorie
 
+Les posts sont classés par catégorie. Par défaut, si aucune catégorie n'a été précisée, ils sont rangés dans une catégorie spéciale dénommée "Unclassified".
+
+Nous allons créer un composant pour gérer une liste de catégories nommée: ==TBCategoriesComponent==.
 
 !!! Categories
 
-Nous allons créer un composant pour gérer une liste de catégories nommée: ==TBCategoriesListComponent==.
-
-Les posts sont classés par catégorie. Par défaut, si aucune catégorie n'a été précisée, ils sont rangés dans une catégorie spéciale dénommée "Unclassified".
-
-Nous avons besoin d'un composant Seaside qui affiche la liste des catégories présentes dans la base et permet d'en sélectionner une. Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui communiquer la catégorie choisie par l'utilisateur.
+Nous avons besoin d'un composant qui affiche la liste des catégories présentes dans la base et permet d'en sélectionner une. Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui communiquer la catégorie courante.
 
 [[[
-WAComponent subclass: #TBCategoriesListComponent
-   instanceVariableNames: 'categories postsListScreen'
+WAComponent subclass: #TBCategoriesComponent
+   instanceVariableNames: 'categories postsList'
    classVariableNames: ''
    package: 'TinyBlog-Components'
 ]]]
 
 [[[
-TBCategoriesListComponent >> categories
+TBCategoriesComponent >> categories
    ^ categories
 
-TBCategoriesListComponent >> categories: anObject
-   categories := anObject
+TBCategoriesComponent >> categories: aCollection
+   categories := aCollection
 
-TBCategoriesListComponent >> postsListScreen
-   ^ postsListScreen
+TBCategoriesComponent >> postsList: aComponent
+      postsList := aComponent
 
-TBCategoriesListComponent >> postsListScreen: anObject
-   postsListScreen := anObject
+TBCategoriesComponent >> postsList
+   ^ postsList
 ]]]
 
+Nous définissons aussi une méthode de création au niveau classe.
+
 [[[
-TBCategoriesListComponent class >> categories: aCollectionOfCategories postsListScreen: aTBScreen
-   ^self new categories: aCollectionOfCategories; postsListScreen: aTBScreen
+TBCategoriesComponent class >> categories: aCollectionOfCategories postsList: aTBScreen
+   ^ self new categories: aCollectionOfCategories; postsList: aTBScreen 
 ]]]
 
-La méthode ==selectCategory== (protocole 'action') communique au composant ==TBPostsListComponent== la nouvelle catégorie courante.
+La méthode ==selectCategory:== (protocole 'action') communique au composant ==TBPostsListComponent== la nouvelle catégorie courante.
 
 [[[
-TBCategoriesListComponent >> selectCategory: aCategory
-   self postsListScreen currentCategory: aCategory
+TBCategoriesComponent >> selectCategory: aCategory
+   postsList currentCategory: aCategory
 ]]]
 
 Nous avons donc besoin d'ajouter une variable d'instance dans ==TBPostsListComponent==.
@@ -1191,61 +1199,61 @@ TBScreenComponent >> currentCategory: anObject
    currentCategory := anObject
 ]]]
 
-Nous pouvons ajouter une méthode (protocole 'rendering') pour afficher les catégories sur la page.
+Nous pouvons maintenant ajouter une méthode (protocole 'rendering') pour afficher les catégories sur la page. En particulier pour chaque catégorie nous définissons le fait que cliquer sur la catégorie la sélectionne comme la catégorie courante.
 
 [[[
-??? >> renderCategoryLinkOn: html with: aCategory
+TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
    html tbsLinkifyListGroupItem
       callback: [ self selectCategory: aCategory ];
       with: aCategory
- 
 ]]]
 
 Reste maintenant à écrire la méthode de rendu du composant:
 
 [[[
-??? >> renderContentOn: html
+TBCategoriesComponent >> renderContentOn: html
    html tbsListGroup: [
       html tbsLinkifyListGroupItem beActive; with: 'Categories'.
-      categories do: [ :c | self renderCategoryLinkOn: html with: c ].
+      categories do: [ :cat | self renderCategoryLinkOn: html with: cat ].
    ]
 ]]]
 
-!! Mise à jour des Posts
-Nous devons aussi mettre à jour la liste des posts.
+Nous avons presque fini. En effet l'affichage des posts ne tient pas en compte de la catégorie courante. 
 
-Il faut gérer le raffraîchissement de la liste des posts en fonction de la catégorie choisie et donc modifier la méthode de rendu du composant ==TBPostsListComponent==.
+!!! Mise à jour des Posts
+Nous devons aussi mettre à jour la liste des posts. Il faut gérer le raffraîchissement de la liste des posts en fonction de la catégorie choisie et donc modifier la méthode de rendu du composant ==TBPostsListComponent==.
 
 La méthode ==readSelectedPosts== récupère dans la base les posts à afficher. Si elle vaut ==nil==, l'utilisateur n'a pas encore sélectionner une catégorie et l'ensemble des posts visibles de la base est affiché. Si elle contient une valeur autre que ==nil==, l'utilisateur a sélectionné une catégorie et l'application affiche alors la liste des posts attachés à la catégorie.
 
 [[[
 TBPostsListComponent >> readSelectedPosts
    ^ self currentCategory
-      ifNil: [ self repository allVisibleBlogPosts ]
-      ifNotNil: [ self repository allVisibleBlogPostsFromCategory: self currentCategory  ].
+      ifNil: [ self blog allVisibleBlogPosts ]
+      ifNotNil: [ self blog allVisibleBlogPostsFromCategory: self currentCategory ]
 ]]]
 
-@@todo Olivier maintenant on ne doit plus avoir besoin de faire un test car la caetgory est definie tout le temps
 
 Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des posts:
 
 [[[
 TBPostsListComponent >> renderContentOn: html
    super renderContentOn: html.
-
-   html render: (TBCategoriesListComponent
-               categories: (self repository allCategories)
-               postsListScreen: self).
-
-   self readSelectedPosts do: [ :p |
-      html render: (TBPostComponent
-         title: p title
-         text: p text
-         date: p date).
-   ]
+   html render: (TBCategoriesComponent
+               categories: (self blog allCategories)
+               postsList: self).
+   html tbsContainer: [ 
+      self readSelectedPosts do: [ :p |
+         html render: (TBPostComponent new post: p) ] ]
 ]]]
 
-Une instance du composant ==TBCategoriesListComponent== est ajoutée sur la page et permet de sélectionner la catégorie courante.
+Une instance du composant ==TBCategoriesComponent== est ajoutée sur la page et permet de sélectionner la catégorie courante (voir figure *@ugly*).
+
++Catégories afin de sélectionner les posts.>file://figures/categoriesUgly.png|width=75|label=ugly+
+
+
+
+
+
 
 
 !! Look et Agencement
@@ -1254,12 +1262,10 @@ Nous allons maintenant agencer le composant ==TBPostsListComponent==.
 
 Mise en place d'un responsive design pour la liste des posts. Les composants sont placés dans un container Bootstrap puis agencés sur une ligne avec deux colonnes. La dimension des colonnes est déterminée en fonction de la résolution (viewport) du terminal utilisé. Les 12 colonnes de Bootstrap sont réparties entre la liste des catégories et la liste des posts. Dans le cas d'une résolution faible, la liste des catégories est placée au dessus de la liste des posts (chaque élément occupant 100\% de la largeur du container).
 
-Tant que nous sommes dans les finitions, profitons en également pour afficher la date de chaque post dans un format compréhensible (sans l'heure).
 [[[
 TBPostsListComponent >> renderContentOn: html
-
    super renderContentOn: html.
-    html tbsContainer: [
+   html tbsContainer: [
       html tbsRow showGrid;
          with: [
             html tbsColumn
@@ -1267,30 +1273,86 @@ TBPostsListComponent >> renderContentOn: html
                smallSize: 2;
                mediumSize:  4;
                with: [
-                  html render: (TBCategoriesListComponent
-                     categories: (self repository allCategories)
-                     postsListScreen: self) ].
-            html tbsColumn
+                  html render: (TBCategoriesComponent
+                    categories: (self blog allCategories)
+                    postsList: self) ].
+      html tbsColumn
                extraSmallSize: 12;
                smallSize: 10;
                mediumSize: 8;
-               with: [ self readSelectedPosts do: [ :p |
-                  html render: (TBPostComponent
-                     title: p title
-                     text: p text
-                     date: p date asDate) ] ] ] ]
+               with: [
+         self readSelectedPosts do: [ :p |
+             html render: (TBPostComponent new post: p) ] ] ] ]
 ]]]
+
+Vous devez obtenir une application proche de celle représentée figure *@nicer*.
+
++Avec un meilleur agencement.>file://figures/NicerCategories.png|width=75|label=nicer+
+
+
+Bien que le code fonctionne, on ne doit pas laisser la méthode ==TBPostsListComponent >> renderContentOn: html== dans un tel état. Elle est bien trop longue et difficilement réutilisable. 
+Proposer une solution. 
+
+!!!! Notre solution
+
+[[[
+TBPostsListComponent >> renderContentOn: html
+   super renderContentOn: html.
+   html
+      tbsContainer: [ 
+         html tbsRow
+            showGrid;
+            with: [ self renderCategoryColumnOn: html.
+                  self renderPostColumnOn: html ] ]
+]]]
+
+[[[
+TBPostsListComponent >> renderCategoryColumnOn: html
+
+   html tbsColumn
+      extraSmallSize: 12;
+      smallSize: 2;
+      mediumSize: 4;
+      with: [ self basicRenderCategoriesOn: html ]
+]]]
+
+[[[
+TBPostsListComponent >> basicRenderCategoriesOn: html
+   ^ html render: (TBCategoriesComponent categories: self blog allCategories postsList: self)
+]]]
+
+[[[   
+TBPostsListComponent >> renderPostColumnOn: html
+   html tbsColumn
+         extraSmallSize: 12;
+         smallSize: 10;
+         mediumSize: 8;
+         with: [ self basicRenderPostsOn: html ] 
+]]]
+
+[[[
+basicRenderPostsOn: html
+   ^ self readSelectedPosts do: [ :p | html render: (TBPostComponent new post: p) ]
+]]]
+
+
+Nous voici prêts à définir la partie administrative de l'application.
 
 
 
 ! Décrire les données avec Magritte
 
-@@todo Pourquoi utiliser Magritte ? Il évite d'écrire à la main les formulaires, de valider les données, permet de générer des rapports. add reference au booklet
 
-Dans ce chapitre, les cinq variables d'instance de l'objet ==TBPost== sont décrites à l'aide de Magritte. Ici, nous ne nous intéressons qu'aux données (les informations sur l'apparence des données dans l'application seront renseignées plus tard).
+Magritte est une bibliothèque qui permet une fois les données décrites de générer diverses représentations ou opérations (telles des requêtes). Couplé avec Seaside Magritte permet de générer des formulaires et des rapports.  La sociétés Debris Publishing est un brillant exemple de la puissance de Magritte: tous les tableaux sont automatiquement générés (voir *http://www.pharo.org/success*). La validation des données est aussi définie au niveau de Magritte au lieu d'être dispersée dans le code de l'interface graphique. Ce chapitre ne montre pas cet aspect.
+
+Un chapitre dans le livre sur Seaside (*http://book.seaside.st*) est disponible sur Magritte ainsi qu'un tutorial sur *https://github.com/SquareBracketAssociates/Magritte*.
+
+
+Dans ce chapitre, les cinq variables d'instance de l'objet ==TBPost== sont décrites à l'aide de Magritte. Dans ce chapitre nous décrivons seulement les données et le chapitre suivant en tirera avantage. 
 
 !! Descriptions 
 Les cinq méthodes sont dans le protocole 'descriptions' de la classe ==TBPost==.
+Noter que le nom des méthodes n'est pas important mais que nous suivons une convention. C'est le pragma ==<magritteDescription>== qui permet à Magritte d'identifier les descriptions. 
 
 Le titre d'un post est une chaine de caractères devant être obligatoirement complétée.
 
@@ -1336,13 +1398,10 @@ TBPost >> descriptionDate
 ]]]
 
 
-
-
 La variable d'instance ==visible== doit obligatoirement contenir une valeur booléenne.
 
-
 [[[
-descriptionVisible
+TBPost >> descriptionVisible
    <magritteDescription>
    ^ MABooleanDescription new
       accessor: #visible;
@@ -1352,11 +1411,10 @@ descriptionVisible
    
 !!! Ameliorations possibles
 
-Voici quelques améliorations
+Voici quelques améliorations. Nous pourrions améliorer cette description pour qu'il ne soit pas possible de poster un post ayant une date antèrieure celle d'ajourd'hui. Nous pourrions changer la description d'une categorie pour en definir un enumere parmi les catégories existantes. Ceci permettrait de faire une interface plus simplement.
 
-Nous pourrions améliorer cette description pour qu'il ne soit pas possible de poster un post ayant une date antèrieure celle d'ajourd'hui.
 
-Nous pourrions changer la description d'une categorie pour en definir un enumere parmi les categories existantes. Ceci permettrait de faire une interface plus simplement.
+
 
 
 
@@ -1364,6 +1422,40 @@ Nous pourrions changer la description d'une categorie pour en definir un enumere
 
 
 ! Administration de TinyBlog
+Nous allons aborder maintenant l'administration de TinyBlog. Cet exercice va nous permettre de montrer comment utiliser des informations de session ainsi que Magritte pour la définition de rapport. 
+
+Le scénario assez classiue que nous allons développer est le suivant : L'utilisateur doit s'authentifier pour accéder à la partie administration de TinyBlog. Il le fait à l'aide d'un compte et d'un mot de passe. Le lien permettant d'afficher le composant d'authentification sera placé sous la liste des catégories.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+HERE!!!
+
+
+
 
 
 
@@ -1436,15 +1528,15 @@ On peut automatiser cette initialisation en améliorant la méthode initialize d
 
 [[[
 TBApplicationRootComponent class >> initialize
-	   "self initialize"
-	   | app |
-	   app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
-		app 
-			preferenceAt: #sessionClass put: TBSession.
-	   app
-	      addLibrary: JQDeploymentLibrary;
-	      addLibrary: JQUiDeploymentLibrary;
-	      addLibrary: TBSDeploymentLibrary
+      "self initialize"
+      | app |
+      app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
+      app 
+         preferenceAt: #sessionClass put: TBSession.
+      app
+         addLibrary: JQDeploymentLibrary;
+         addLibrary: JQUiDeploymentLibrary;
+         addLibrary: TBSDeploymentLibrary
 ]]]
 
 
