@@ -1427,6 +1427,326 @@ Nous allons aborder maintenant l'administration de TinyBlog. Cet exercice va nou
 Le scénario assez classiue que nous allons développer est le suivant : L'utilisateur doit s'authentifier pour accéder à la partie administration de TinyBlog. Il le fait à l'aide d'un compte et d'un mot de passe. Le lien permettant d'afficher le composant d'authentification sera placé sous la liste des catégories.
 
 
+!! Composant d'identification
+
+Nous allons commencer par développer un petit composant d'identification qui lorsqu'il sera invoqué ouvrira une petite boite de dialogue pour demander les informations d'identification. Remarquer qu'une telle fonctionnalité devrait faire partie d'une bibliothèque de composants de base en Seaside.
+
+Ce composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances du composant. 
+
+[[[
+WAComponent subclass: #TBAuthentificationComponent
+   instanceVariableNames: 'password account component'
+   classVariableNames: ''
+   category: 'TinyBlog-Components'
+
+TBAuthentificationComponent >> account
+   ^ account
+
+TBAuthentificationComponent >> account: anObject
+   ^ account := anObject
+
+TBAuthentificationComponent >> password
+   ^ password
+
+TBAuthentificationComponent >> password: anObject
+   ^ password := anObject
+
+TBAuthentificationComponent >> component
+   ^ component
+
+TBAuthentificationComponent >> component: anObject
+   component := anObject
+]]]
+
+La variable d'instance 'component' est initialisée par la méthode de classe suivante :
+
+[[[
+TBauthenticationComponent class >> from: aComponent
+   ^ self new component: aComponent
+]]]
+
+La méthode ==renderContentOn:== definit le contenu d'une boite de dialogue modale.
+
+[[[
+TBAuthentificationComponent >> renderContentOn: html
+
+   html tbsModal id: 'myAuthDialog'; with: [
+    html tbsModalDialog: [
+      html tbsModalContent: [
+        html tbsModalHeader: [
+          html tbsModalCloseIcon.
+          html tbsModalTitle level: 4; with: 'Authentification'
+        ].
+        html tbsModalBody: [
+          html form: [
+            html text: 'Account:'.
+            html break.
+    html textInput
+              callback: [ :value | account := value ];
+              value: account.
+    html break.
+    html text: 'Password:'.
+    html break.
+    html passwordInput
+      callback: [ :value | password := value ];
+      value: password.
+    html break.
+    html break.
+    html tbsModalFooter: [
+      html tbsSubmitButton value: 'Cancel'.
+        html tbsSubmitButton
+          bePrimary;
+            callback: [ self validate ];
+          value: 'SignIn'.
+      ] ] ] ] ] ]
+]]]
+
+!!!! Critique
+Quelle critique peut on faire sur cette méthode ? Proposer une refactorisation à l'aide de plusieurs méthodes pour définir les différents éléments du formulaire de manière modulaire.
+
+!!!! Notre solution
+
+[[[
+TBAuthentificationComponent >> renderContentOn: html
+   html tbsModal
+      id: 'myAuthDialog';
+      with: [ html tbsModalDialog: [ 
+                     html tbsModalContent: [ 
+                           self renderHeaderOn: html.
+                           html
+                              tbsModalBody: [ 
+                                 html
+                                    form: [ 
+                                       self renderInputAccountOn: html. 
+                                       html break.
+                                       self renderInputPasswordOn: html. 
+                                       html break.
+                                       html break.
+                                       html tbsModalFooter: [ self renderOkCancelOn: html ] ] ] ] ] ]
+]]]
+
+[[[
+TBAuthentificationComponent >> renderHeaderOn: html
+   html
+      tbsModalHeader: [ 
+         html tbsModalCloseIcon.
+         html tbsModalTitle
+            level: 4;
+            with: 'Authentification' ]
+]]]
+
+[[[
+TBAuthentificationComponent >> renderInputAccountOn: html
+
+   html text: 'Account:'.
+   html break.
+   html textInput
+         callback: [ :value | account := value ];
+         value: account
+]]]
+
+[[[
+TBAuthentificationComponent >> renderInputPasswordOn: html
+
+   html text: 'Password:'.
+   html break.
+   html passwordInput
+      callback: [ :value | password := value ];
+      value: password
+]]]
+
+[[[
+TBAuthentificationComponent >> renderOkCancelOn: html
+   html tbsSubmitButton value: 'Cancel'.
+   html tbsSubmitButton
+      bePrimary;
+      callback: [ self validate ];
+      value: 'SignIn'
+]]]
+
+Lorsque l'utilisateur clique sur le bouton 'SignIn', le message ==validate== est envoyée et vérifie que l'utilisateur a bien le compte "admin" et a saisi le mot de passe "password".
+
+[[[
+TBAuthentificationComponent >> validate
+   (self account = 'admin' and: [ self password = 'password' ]) ifTrue: [
+      self alert: 'Success!'
+   ]
+]]]
+
+!!!! Critique 
+ Rechercher une autre méthode pour réaliser l'authentification de l'utilisateur (utilisation d'un backend de type base de données, LDAP ou fichier texte). En tout cas, ce n'est pas à la boite de login de faire ce travail, il faut le déléguer à un objet métier qui saura consulter le backend et authentifier l'utilisateur.
+
+ De plus le composant ==TBAuthentificationComponent== pourrait afficher l'utilisateur lorsque celui-ci est logué 
+
+!!! Intégration de l'authentification
+
+Il faut maintenant intégrer le lien qui déclenchera l'affichage de la boite modale d'authentification. Au tout début de la méthode ==renderContentOn:== du composant ==TBPostsListComponent==, on ajoute le rendu du composant d'authentification. Ce composant reçoit en paramètre la référence vers le composant affichant les posts.
+
+[[[
+TBPostsListComponent >> renderContentOn: html
+   super renderContentOn: html.
+   html render: (TBAuthentificationComponent from: self).
+   html
+      tbsContainer: [ 
+         html tbsRow
+            showGrid;
+            with: [ self renderCategoryColumnOn: html.
+                  self renderPostColumnOn: html ] ] 
+]]]
+
+ On définit maintenant une méthode qui affiche un pictogramme clé et un lien 'SignIn'.
+
+[[[
+TBPostsListComponent >> renderSignInOn: html
+   html tbsGlyphIcon perform: #iconLock.
+   html html: '<a data-toggle="modal" href="#myAuthDialog" class="link">SignIn</a>'.
+]]]
+
+Nous ajoutons le composant d'authentification dessous la liste de categories.
+[[[
+TBPostsListComponent >> renderCategoryColumnOn: html
+
+   html tbsColumn
+      extraSmallSize: 12;
+      smallSize: 2;
+      mediumSize: 4;
+      with: [ self basicRenderCategoriesOn: html.
+            self renderSignInOn: html.]
+]]]
+
+
+Lorsque nous pressons sur le lien SignIn nous obtenons la figure *@authentification*.
+
++Avec un meilleur agencement.>file://figures/Authentification.png|width=75|label=authentification+
+
+
+
+!! Administration des posts
+
+Nous allons développer deux components l'un deux sera un rapport qui contiendra tous les posts et un autre composant qui contiendra ce rapport. Le rapport bien que générer avec Magritte est un composant Seaside nous aurions pu n'avoir qu'un seul composant mais nous pensons que distinguer le composant d'administration du rapport est une bonne chose pour l'évolution de la partie administration. Commençons donc par le component d'administration. 
+
+
+!!! Création d'un composant d'administration
+
+Le composant admin hérite de TBScreenComponent pour bénéficier du header et de l'acces au blog. Il contiendra en plus le rapport que nous construisons par la suite. 
+
+[[[
+TBScreenComponent subclass: #TBAdminComponent
+   instanceVariableNames: ''
+   classVariableNames: ''
+   category: 'TinyBlog-Components'
+]]]
+
+Nous définissons une première version de la méthode de rendu afin de pourvoir tester. 
+
+[[[
+TBAdminComponent >> renderContentOn: html
+   super renderContentOn: html.
+   html tbsContainer: [
+      html heading: 'Blog Admin'.
+      html horizontalRule.
+   ]
+]]]
+
+
+Nous modifions la méthode ==validate== pour qu'elle invoque la méthode ==gotoAdministration== définie dans le composant ==TBPostsListComponent==. Cette dernière méthode invoque le composant d'administration. 
+
+[[[
+TBPostsListComponent >> gotoAdministration
+   self call: TBAdminComponent new
+]]]
+
+[[[
+TBAuthentificationComponent >> validate
+   (self account = 'admin' and: [ self password = 'password' ])
+      ifTrue: [ self component gotoAdministration ]
+]]]
+
+Enregistrez-vous et vous devez obtenir la situation telle que représentée par la figure *@adminSimple*.
++Un composant d'administration vide.>file://figures/BlogAdminSimple.png|width=75|label=adminSimple+
+
+
+!!! Rapport
+
+La liste des posts est affichée à l'aide d'un rapport généré dynamiquement par le framework Magritte. Nous utilisons ce framework pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
+
+Pour rester modulaire, nous allons créer un composant Seaside pour cette tâche. 
+
+[[[
+TBSMagritteReport subclass: #TBPostsReport
+   instanceVariableNames: ''
+   classVariableNames: ''
+   category: 'TinyBlog-Components'
+]]]
+
+Avec la méthode ==from:== nous disons que nous voulons créer un rapport en prenant les descriptions de n'importe quel blogs. 
+[[[
+TBPostsReport class >> from: aBlog
+   | allBlogs |
+   allBlogs := aBlog allBlogPosts.
+   ^ self rows: allBlogs description: allBlogs anyOne magritteDescription
+]]]
+
+Par défaut, le rapport affiche l'intégralité des données présentes dans chaque posts mais certaines colonnes ne sont pas utiles. Il faut donc filtrer les colonnes. Nous ne retiendrons ici que le titre, la catégorie et la date de rédaction.
+
+Nous ajoutons une méthode de classe pour la sélection des colonnes et modifier ensuite la méthode ==from:== pour en tirer parti.
+
+[[[
+TBPostsReport class >> filteredDescriptionsFrom: aBlogPost
+   ^ aBlogPost magritteDescription select: [ :each | #(title category date) includes: each accessor selector ]
+   
+TBPostsReport class >> from: aBlog
+   | allBlogs |
+   allBlogs := aBlog allBlogPosts.
+   ^ self rows: allBlogs description: (self filteredDescriptionsFrom: allBlogs anyOne magritteDescription)
+]]]
+
+On ajoute un rapport au composant admin ==TBAdminComponent==.
+
+[[[
+TBScreenComponent subclass: #TBAdminComponent
+   instanceVariableNames: 'report'
+   classVariableNames: ''
+   category: 'TinyBlog-Components'
+]]]
+
+[[[
+TBAdminComponent >> report
+   ^ report
+
+TBAdminComponent >> report: aReport
+   report := aReport
+]]]
+
+Comme le rapport est un composant fils du composant admin nous n'oublions pas de redéfinir la méthode ==children== comme suit.
+[[[
+TBAdminComponent >> children
+   ^ OrderedCollection with: self report
+]]]
+
+La méthode ==initialize== permet d'initialiser la définition du rapport. Nous fournissons au composant ==TBPostReport== l'accès aux données.
+
+[[[
+TBAdminComponent >> initialize
+   super initialize.
+   self report: (TBPostsReport from: self blog)
+]]]
+
+Nous pouvons maintenant afficher le rapport.
+
+[[[
+TBAdminComponent >> renderContentOn: html
+   super renderContentOn: html.
+   html tbsContainer: [
+      html heading: 'Blog Admin'.
+      html horizontalRule.
+      html render: self report ]
+]]]
+
+
+
+Enregistrez-vous et vous devez obtenir la situation telle que représentée par la figure *@adminReportDraft*.
++Administration avec un rapport.>file://figures/BlogAdminSimple.png|width=75|label=adminReportDraft+
 
 
 
@@ -1447,12 +1767,6 @@ Le scénario assez classiue que nous allons développer est le suivant : L'utili
 
 
 
-
-
-
-
-
-HERE!!!
 
 
 
