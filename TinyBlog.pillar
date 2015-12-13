@@ -1746,7 +1746,218 @@ TBAdminComponent >> renderContentOn: html
 
 
 Enregistrez-vous et vous devez obtenir la situation telle que représentée par la figure *@adminReportDraft*.
-+Administration avec un rapport.>file://figures/BlogAdminSimple.png|width=75|label=adminReportDraft+
++Administration avec un rapport.>file://figures/ReportDraft.png|width=75|label=adminReportDraft+
+
+
+
+
+!!! Amélioration des rapports
+
+Le rapport généré est brut. Il n'y a pas de titres sur les colonnes et l'ordre d'affichage des colonnes n'est pas fixé (il peut varier d'une instance à une autre). Pour gérer cela, il suffit de modifier les descriptions Magritte pour chaque variable d'instance.
+
+[[[
+TBPost >> descriptionTitle
+   <magritteDescription>
+   ^ MAStringDescription new
+      label: 'Title';
+      priority: 100;
+      accessor: #title;
+      beRequired;
+      yourself
+]]]
+[[[
+TBPost >> descriptionText
+   <magritteDescription>
+   ^ MAMemoDescription new
+      label: 'Text';
+      priority: 200;
+      accessor: #text;
+      beRequired;
+      yourself
+]]]
+[[[
+TBPost >> descriptionCategory
+   <magritteDescription>
+   ^ MAStringDescription new
+      label: 'Category';
+      priority: 300;
+      accessor: #category;
+      yourself
+]]]
+[[[
+TBPost >> descriptionDate
+   <magritteDescription>
+   ^ MADateDescription new
+      label: 'Date';
+      priority: 400;
+      accessor: #date;
+      beRequired;
+      yourself
+]]]
+[[[
+TBPost >> descriptionVisible
+   <magritteDescription>
+   ^ MABooleanDescription new
+      label: 'Visible';
+      priority: 500;
+      accessor: #visible;
+      beRequired;
+      yourself
+]]]
+
+
+
+!!! Gestion des posts
+
+Nous pouvons mettre en place un CRUD (Create Read Update Delete) permettant de gérer les posts. Pour cela, nous allons ajouter une colonne (instance ==MACommandColumn==) au rapport qui regroupera les différentes opérations utilisant ==addCommandOn:==.
+
+Ceci se fait lors de la création du rapport. En particulier nous donnons un acces au blog depuis le rapport. 
+
+[[[
+TBSMagritteReport subclass: #TBPostsReport
+	instanceVariableNames: 'report'
+	classVariableNames: ''
+	category: 'TinyBlog-Components'
+]]]
+
+[[[
+TBPostsReport class >> from: aBlog
+	| report blogPosts |
+	blogPosts := aBlog allBlogPosts.
+	report := self rows: blogPosts description: (self filteredDescriptionsFrom: blogPosts anyOne).
+	report blog: aBlog.
+	report addColumn: (MACommandColumn new
+		addCommandOn: report  selector: #viewPost: text: 'View'; yourself;
+		addCommandOn: report selector: #editPost: text: 'Edit'; yourself;
+		addCommandOn: report selector: #deletePost: text: 'Delete'; yourself).
+	 ^ report
+]]]
+
+L'ajout (add) est dissocié des posts et se trouvera donc juste avant le rapport. Etant donné qu'il fait partie du composant ==TBPostsReport==, nous devons surcharger la méthode ==renderContentOn:== du composant ==TBPostsReport== pour insérer le lien ==add==.
+
+
+[[[
+TBPostsReport >> renderContentOn: html
+   html tbsGlyphIcon perform: #iconPencil.
+   html anchor
+      callback: [ self addPost ];
+      with: 'Add post'.
+   super renderContentOn: html
+]]]
+
+
+
+!!! Implémentation des actions du CRUD
+
+A chaque action (Create/Read/Update/Delete) correspond une méthode de l'objet ==TBPostsReport==. Nous allons maintenant les implémenter. Un formulaire personnalisé est construit en fonction de l'opération demandé (il n'est pas utile par exemple d'avoir un bouton "Sauver" alors que l'utilisateur veut simplement lire le post).
+
+!!!! Ajouter un post
+
+[[[
+TBPostsReport >> renderAddPostForm: aPost
+	^ aPost asComponent
+		addDecoration: (TBSMagritteFormDecoration buttons: { #save -> 'Add post' .  #cancel -> 'Cancel'});
+		yourself
+]]]
+
+La méthode ==renderAddPostForm== illustre la puissance de Magritte pour générer des formulaire. 
+Ici le message ==asComponent== envoyé à un objet de la class ==TBPost== donc du domaine, crée directement un composant Seaside. 
+Nous lui ajoutons une décoration afin de gérer ok/cancel. 
+
+[[[
+TBPostsReport >> addPost
+	| post |
+	post := self call: (self renderAddPostForm: TBPost new).
+	post ifNotNil: [ blog writeBlogPost: post ]
+]]]
+
+La méthode ==addPost== pour sa part, affiche le composant rendu par la méthode ==renderAddPostForm:== et lorsque qu'un nouveau post est créé l'ajoute au blog.
+
+
+Enregistrez-vous et vous devez obtenir la situation telle que représentée par la figure *@addAPost*.
++Ajout d'un post.>file://figures/AddAPost.png|width=75|label=addAPost+
+
+
+!!!! Editer un post
+
+[[[
+TBPostsReport >> renderEditPostForm: aPost
+	^ aPost asComponent
+		addDecoration: (TBSMagritteFormDecoration buttons: { #save -> 'Save post' . #cancel -> 'Cancel'});
+		yourself
+
+TBPostsReport >> editPost: aPost
+	| post |
+	post := self call: (self renderEditPostForm: aPost).
+	post ifNotNil: [ blog save ]
+]]]
+
+
+
+!!!! Consulter un post
+
+[[[
+TBPostsReport >> viewPost: aPost
+	self call: (self renderViewPostForm: aPost)
+
+TBPostsReport >> renderViewPostForm: aPost
+	^ aPost asComponent
+		addDecoration: (TBSMagritteFormDecoration buttons: { #cancel -> 'Back' });
+		yourself
+]]]
+
+@@todo we should edit in readonly!
+
+!!!! Effacer un post
+
+Pour éviter une opération accidentelle, nous utilisons une boite modale pour que l'utilisateur confirme la suppression du post. Une fois le post effacé, la liste des posts gérés par le composant ==TBPostsReport== est actualisé et le rapport est rafraîchi.
+
+[[[
+TBPostsReport >> deletePost: aPost
+	(self confirm: 'Do you want remove this post ?') 
+		ifTrue: [ blog removeBlogPost: aPost ]
+]]]
+
+
+[[[
+TBBlog >> removeBlogPost: aPost
+	posts remove: aPost ifAbsent: [ ].
+	self save.
+]]]
+
+Nous devons ajouter un test. 
+
+
+!!! Gérer le problème du raffraichissement des données
+
+Les méthodes ==TBPostsReport >> addPost:== et ==TBPostsReport >> deletePost:== font bien leur travail mais les données à l'écran ne sont pas à jour. Il faut donc rafraichir la liste des posts car il y a un décalage entre les données en mémoire et celles stockées dans la base de données.
+
+[[[
+TBPostsReport >> refreshReport
+	self rows: (blog allBlogPosts).
+	self refresh.
+]]]
+
+[[[
+TBPostsReport >> addPost
+	| post |
+	post := self call: (self renderAddPostForm: TBPost new).
+	post ifNotNil: [
+		blog writeBlogPost: post.
+ 		self refreshReport
+	]
+
+TBPostsReport >> deletePost: aPost
+	(self confirm: 'Do you want remove this post ?') 
+		ifTrue: [ blog removeBlogPost: aPost.
+				 self refreshReport ]
+]]]
+
+Le formulaire est fonctionnel maintenant et gère même les contraintes de saisie.
+
+
+
+HERE 
 
 
 
@@ -1755,22 +1966,73 @@ Enregistrez-vous et vous devez obtenir la situation telle que représentée par 
 
 
 
+!!! Amélioration de l'apparence du formulaire
+
+Pour tirer partie de Bootstrap, nous allons modifier les définitions Magritte. Tout d'abord, spécifions que le rendu du formulaire doit se baser sur Bootstrap.
+
+[[[
+TBPost >> descriptionContainer
+	<magritteContainer>
+	^ super descriptionContainer
+		componentRenderer: TBSMagritteFormRenderer;
+		yourself
+]]]
+
+Nous pouvons maintenant nous occuper des différents champs de saisie et améliorer leur apparence.
+
+[[[
+TBPost >> descriptionTitle
+	<magritteDescription>
+	^ MAStringDescription new
+		label: 'Title';
+		priority: 100;
+		accessor: #title;
+		requiredErrorMessage: 'A blog post must have a title.';
+		comment: 'Please enter a title';
+		componentClass: TBSMagritteTextInputComponent;
+		beRequired;
+		yourself
+]]]
+
+[[[
+TBPost >> descriptionText
+	<magritteDescription>
+	^ MAMemoDescription new
+		label: 'Text';
+		priority: 200;
+		accessor: #text;
+		beRequired;
+		requiredErrorMessage: 'A blog post must contain a text.';
+		comment: 'Please enter a text';
+		componentClass: TBSMagritteTextAreaComponent;
+		yourself
+]]]
+
+[[[
+TBPost >> descriptionCategory
+	<magritteDescription>
+	^ MAStringDescription new
+		label: 'Category';
+		priority: 300;
+		accessor: #category;
+		comment: 'Unclassified if empty';
+		componentClass: TBSMagritteTextInputComponent;
+		yourself
+]]]
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+[[[
+TBPost >> descriptionVisible
+	<magritteDescription>
+	^ MABooleanDescription new
+		checkboxLabel: 'Visible';
+		priority: 500;
+		accessor: #visible;
+		componentClass: TBSMagritteCheckboxComponent;
+		beRequired;
+		yourself
+]]]
 
 
 
