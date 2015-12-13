@@ -1845,6 +1845,8 @@ TBPostsReport >> renderContentOn: html
    super renderContentOn: html
 ]]]
 
+Enregistrez-vous et vous devez obtenir la situation telle que représentée par la figure *@RapportNewLookActions*.
++Ajout d'un post.>file://figures/RapportNewLookActions.png|width=75|label=RapportNewLookActions+
 
 
 !!! Implémentation des actions du CRUD
