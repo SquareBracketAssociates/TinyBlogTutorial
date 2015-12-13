@@ -2028,101 +2028,18 @@ TBPost >> descriptionVisible
 
 
 
-HERE!!!!!
+
 
 
 !! Gestion de Session
 
-Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants. Une session est pratique pour gérer les informations de l'utilisateur en cours (loggé). 
-Nous allons voir comment nous l'utilisons pour gérer une connexion.
+@@todo Should revisit this part.
 
-Nous définissons une nouvelle souclasse de ==WASession==.
+Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants. Une session est pratique pour gérer les informations de l'utilisateur en cours (loggé).  Nous allons voir comment nous l'utilisons pour gérer une connexion.
 
-[[[
-WASession subclass: #TBSession
-   instanceVariableNames: 'repository'
-   classVariableNames: ''
-   package: 'TinyBlog-Session'
-]]]
+L'administrateur du blog peut vouloir voyager entre la partie privée et la partie publique de TinyBlog. 
 
-Nous allons l'utiliser pour fournir à chaque utilisateur la référence vers l'instance unique de ==TBBlog==.
-
-[[[
-TBSession >> repository
-   ^ repository
-]]]
-
-[[[
-TBSession >> repository: anObject
-   repository := anObject
-]]]
-
-Le protocole 'initialize-release'' contient les méthodes ==initialize== et ==initializeRepository==. Celle-ci est appelée à chaque fois qu'un nouvel utilisateur se connecte à l'application (??? c'est quoi un nouvel utilisateur). Elle demande la création d'une instance de ==TBBlog== et celui-ci ne contient aucun posts, elle déclenche la création des posts de démonstration.
-
-
-@@todo Ca c'est un blog pas un repo!'
-[[[
-TBSession >> initializeRepository
-   TBBlog initialize.
-   self repository: TBBlog current.
-   self repository size = 0 ifTrue: [ self repository createDemoPosts ]
-]]]
-
-[[[
-TBSession >> initialize
-   super initialize.
-   self initializeRepository
-]]]
-
-Ajoutons maintenant une méthode ==initialize== dans le protocole 'initialize-release' de la classe ==TBApplicationRootComponent==.
-
-[[[
-TBApplicationRootComponent >> initialize
-   super initialize.
-   TBBlog initialize.
-   self repository size = 0 ifTrue: [ self repository createDemoPosts ]
-]]]
-
-Il vous faut maintenant spécifier à Seaside qu'il doit utiliser l'objet ==TBSession== comme objet de session courant pour l'application TinyBlog. 
-Pour cela, on utilise l'outil d'administration de Seaside.
-
-- connexion sur *http://localhost:8080/config*,
-- on clique sur "TinyBlog",
-- Dans "General", cliquez sur le bouton "Override" de "Session Class",
-- Choisir 'TBSession' dans la liste déroulante,
-- Cliquez sur le bouton "Apply" en bas du formulaire.
-
-On peut automatiser cette initialisation en améliorant la méthode initialize de la class ==TBApplicationRootComponent==. 
-
-[[[
-TBApplicationRootComponent class >> initialize
-      "self initialize"
-      | app |
-      app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
-      app 
-         preferenceAt: #sessionClass put: TBSession.
-      app
-         addLibrary: JQDeploymentLibrary;
-         addLibrary: JQUiDeploymentLibrary;
-         addLibrary: TBSDeploymentLibrary
-]]]
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-!!! Améliorer la gestion de l'authentification
-
-L'administrateur du blog peut vouloir voyager entre la partie privée et la partie publique de TinyBlog. Pour savoir si l'utilisateur s'est authentifié, nous devons ajouter un objet session et ajouter une variable d'instance contenant une valeur booléenne.
+Nous définissons une nouvelle souclasse de ==WASession== nommée ==TBSession==. Pour savoir si l'utilisateur s'est authentifié, nous devons définir un objet session et ajouter une variable d'instance contenant une valeur booléenne précisant l'état de l'utilisateur. 
 
 [[[
 WASession subclass: #TBSession
@@ -2137,7 +2054,7 @@ TBSession >> logged: anObject
 	logged := anObject
 
 TBSession >> isLogged
-	^self logged
+	^ self logged
 ]]]
 
 Il faut ensuite initialiser à `false` cette variable d'instance à la création d'une session.
@@ -2174,7 +2091,7 @@ TBPublicPostsListComponent >> renderSignInOn: html
 			html html: '<a data-toggle="modal" href="#myAuthDialog" class="link">SignIn</a>' ]
 		ifTrue: [
 			html tbsGlyphIcon perform: #iconUser.
-			html anchor callback: [ self gotoAdministrationScreen ]; with: 'Private area' ]
+			html anchor callback: [ self gotoAdministration ]; with: 'Private area' ]
 ]]]
 
 Enfin, le composant ==TBAuthentificationComponent== doit mettre à jour la variable d'instance ==logged== de la session si l'utilisateur est bien un administrateur.
@@ -2183,8 +2100,36 @@ Enfin, le composant ==TBAuthentificationComponent== doit mettre à jour la varia
 TBauthentificationComponent >> validate
 	(self account = 'admin' and: [ self password = 'password' ]) 
 		ifTrue: [ self session logged: true.
-		screen gotoAdministrationScreen ]
+		component gotoAdministrationScreen ]
 ]]]
+
+
+Il vous faut maintenant spécifier à Seaside qu'il doit utiliser l'objet ==TBSession== comme objet de session courant pour l'application TinyBlog. 
+Pour cela, on utilise l'outil d'administration de Seaside.
+
+- connexion sur *http://localhost:8080/config*,
+- on clique sur "TinyBlog",
+- Dans "General", cliquez sur le bouton "Override" de "Session Class",
+- Choisir 'TBSession' dans la liste déroulante,
+- Cliquez sur le bouton "Apply" en bas du formulaire.
+
+On peut automatiser cette initialisation en améliorant la méthode initialize de la class ==TBApplicationRootComponent==. 
+
+[[[
+TBApplicationRootComponent class >> initialize
+      "self initialize"
+      | app |
+      app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
+      app 
+         preferenceAt: #sessionClass put: TBSession.
+      app
+         addLibrary: JQDeploymentLibrary;
+         addLibrary: JQUiDeploymentLibrary;
+         addLibrary: TBSDeploymentLibrary
+]]]
+
+
+
 
 !!!! Exercices: 
 Proposer l'ajout d'un bouton "Déconnexion"
@@ -2192,9 +2137,9 @@ La gestion de plusieurs blogs pourra aussi passer par une amélioration des sess
 
 
 
-!! Deployement
+! Deployement
 
-!! REST
+! REST
 
 
 
