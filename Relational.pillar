@@ -1,0 +1,229 @@
+! Design Relationel [A REVOIR TOTALEMENT ]
+
+Voici une conception qui s'adapte plus a un modele de base de données relationnelle.
+
+!!! La classe TBBlog
+La classe ==TBBlog== collecte les posts. Cependant comme Voyage nous offre une base de donnees en mémoire que nous pouvons par la suite déportée sur une base Mongo exterieur, la classe ==TBBlog== ne pointe pas directement sur les objets posts mais le fait via l'intermédiaire de la base de données. Nous allons développer ==TBBlog== en écrivant des tests puis les implémentant. 
+
+[[[
+Object subclass: #TBBlog
+   instanceVariableNames: 'repository'
+   classVariableNames: ''
+   package: 'TinyBlog'
+]]]
+
+Ici nous definissons le fait que la base de donnée fonctionne en mémoire par l'utilisation de ==VOMemoryRepository new==.
+[[[
+TBBlog >> iinitializeInMemory
+   super initialize.
+   repository := VOMemoryRepository new.
+   repository enableSingleton.
+
+TBBlog >> initialize
+   super initialize.
+   self initializeInMemory.
+]]]
+
+
+
+!!!! Une seule base
+
+Il y a une seule instance de la classe (singleton) et celle-ci est construite coté classe comme suit.
+
+[[[
+TBBlog class
+   instanceVariableNames: 'uniqueInstance'
+
+TBBlog class >> reset
+   VORepository setRepository: nil.
+   uniqueInstance := nil
+
+TBBlog class >> current
+   "answer the instance of the TBRepository"
+   ^ uniqueInstance ifNil: [ uniqueInstance := self new ]
+
+TBBlog class >> initialize
+   self reset
+]]]
+
+L'expression ==VORepository setRepository: nil.== est une expression Voyage qui détruit la connexion avec la base de données Mongo qu'elle soit en mémoire ou extèrieure.
+
+
+!! Tester les règles métiers
+Nous allons écrire les tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premiers puis en définissant les fonctionalités jsuqu'à ce que les tests passent.
+
+Les tests unitaires sont regroupés dans le paquet ==TinyBlog-tests== qui contient la classe ==TBBlogTest==.
+
+[[[
+TestCase subclass: #TBBlogTest
+   instanceVariableNames: 'blog post first'
+   classVariableNames: ''
+   category: 'TinyBlog-Tests'
+]]]
+
+Avant le lancement des tests, la méthode ==setUp== initialise la connexion vers la base, efface son contenu, ajoute un post et en crée un autre qui provisoirement n'est pas enregistré.
+
+[[[
+TBBlogTest >> setUp
+   blog := TBBlog current.
+   blog remove.
+   
+   first := (TBPost title: 'A title' text: 'A text' category: 'First Category').
+   blog writeBlogPost: first.
+   
+   post := (TBPost title: 'Another title' text: 'Another text' category: 'Second Category') beVisible
+]]]
+
+On en profite pour tester différentes configuration. Les posts ne sont pas dans la même catégorie, l'un est visible, l'autre pas.
+
+La méthode ==tearDown== exécutée au terme des tests remet à zéro la connexion.
+
+[[[
+TBBlogTest >> tearDown
+   TBBlog reset
+]]]
+
+Nous allons développer les tests d'abord puis ensuite passer à l'implémentation
+des fonctionalités.
+
+
+!!!!
+
+[[[
+TBBlogTest >> testAddBlogPost
+   blog writeBlogPost: post.
+   self assert: blog size equals: 2
+]]]
+
+Ce test ne marche pas car nous n'avons pas défini ==writeBlogPost:== et ==remove==.
+
+[[[
+TBBlog >> remove
+   repository removeAll: TBPost
+]]]
+
+[[[
+TBBlog >> writeBlogPost: aPost
+   "Write the blog post in database"
+   aPost save
+]]]
+
+[[[
+TBBlog >> size
+   ^ repository count: TBPost
+]]]
+
+If you run the test, it will fail because the system returns 0 instances of posts instead of 2. 
+Why this is happening? We never told the system that posts are objects that should be saved in the database.
+
+[[[
+TBPost class >> isVoyageRoot
+   "Indicates that instances of this class are top level document in noSQL databases"
+   ^ true
+]]]
+
+Ecrivons un test pour couvrir les fonctionalités que nous venons de développer. 
+
+!!!! Obtenir le nombre de posts dans la base
+
+
+[[[
+TBBlogTest >> testSize
+   self assert: blog size equals: 1
+]]]
+
+!!!! Effacer l'intégralité des posts
+
+[[[
+TBBlogTest >> testRemoveAllBlogPosts
+   blog remove.
+   self assert: blog size equals: 0.
+]]]
+
+
+!!! Quelques autres fonctionalités
+
+Nous définissons les fonctionalités et nous assurons que les tests passent. 
+Les règles métiers sont regroupées dans le protocole 'action' de la classe ==TBBlog==.
+
+!!!! Obtenir l'ensemble des posts (visibles et invisibles)
+
+
+[[[
+TBBlogTest >> testAllBlogPosts
+   blog writeBlogPost: post.
+   self assert: (blog allBlogPosts) size equals: 2.
+]]]
+
+[[[
+TBBlog >> allBlogPosts
+   ^ repository selectAll: TBPost
+]]]
+
+
+!!!! Obtenir tous les posts visibles
+
+[[[
+TBBlogTest >> testAllVisibleBlogPosts
+   blog writeBlogPost: post.
+   self assert: (blog allVisibleBlogPosts) size equals: 1.
+]]]
+
+[[[
+TBBlog >> allVisibleBlogPosts
+   ^ (repository selectAll: TBPost) select: [ :p | p isVisible ]
+]]]
+
+
+!!!! Obtenir tous les posts d'une catégorie
+
+[[[
+TBBlogTest >> testAllBlogPostsFromCategory
+   self assert: (blog allBlogPostsFromCategory: 'First Category') size equals: 1
+]]]
+
+[[[
+TBBlog >> allVisibleBlogPostsFromCategory: aCategory
+   ^(repository selectMany: TBPost where: [ :p | p category = aCategory ]) select: [ :p | p isVisible ]
+]]]
+
+
+!!!! Obtenir tous les posts visibles d'une catégorie
+
+[[[
+TBBlogTest >> testAllVisibleBlogPostsFromCategory
+   blog writeBlogPost: post.
+   self assert: (blog allVisibleBlogPostsFromCategory: 'First Category') size equals: 0.
+   self assert: (blog allVisibleBlogPostsFromCategory: 'Second Category') size equals: 1.
+]]]
+
+[[[
+TBBlog >> allBlogPostsFromCategory: aCategory
+   ^repository selectMany: TBPost where: [ :p | p category = aCategory ]
+]]]
+
+!!!! Vérifier la gestion des posts non classés
+
+[[[
+TBBlogTest >> testUnclassifiedBlogPosts
+   self assert: (blog allBlogPosts select: [ :p | p isUnclassified ]) size equals: 0.
+]]]
+
+!!!! Obtenir la liste des catégories
+
+[[[
+TBBlogTest >> testAllCategories
+   blog writeBlogPost: post.
+   self assert: (blog allCategories) size equals: 2.
+]]]
+
+[[[
+TBBlog >> allCategories
+   ^(self allBlogPosts collect: [ :p | p category ]) asSet
+]]]
+
+!! Futures Evolutions
+
+Plusieurs évolutions peuvent être apportées telles que obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts contenus, renommer un catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons à les développer.
+
+
