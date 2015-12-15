@@ -24,7 +24,8 @@ D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une faç
 - Créez un paquet nommé TinyBlog
 
 Nous avons préparer une image contenant les projets Seaside, Voyage, Bootstrap et Magritte. Vous pouvez y accéder 
-en utilisant le Pharo Launcher et en cherchant le projet TinyBlogBase dans les contributions Pharo. 
+en utilisant le Pharo Launcher et en cherchant le projet TinyBlogBase dans les contributions Pharo.
+Sinon cette image se trouve sur le serveur d'integration http://ci.inria.fr dans les Pharo-Contributions et le projet TinyBlogBase.
 
 
 !!! Créer la configuration du projet
