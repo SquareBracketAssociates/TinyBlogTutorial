@@ -513,12 +513,13 @@ Le cas de de la méthode ==current== est plus délicat. Avant l'utilisation de M
 ne fonctionne plus car imaginons que nous ayons sauvé notre blog et que le serveur s'éteigne par accident ou que nous rechargions une nouvelle version 
 du code. Ceci conduirait à une réinitialisation et création d'une nouvelle instance. Nous pouvons donc nous retrouver avec une instance différente de celle sauvée. 
 
-Nous redéfinissons ==current== de manière à faire une requête dans la base. Comme pour le moment nous ne gérons qu'un blog il nous suffit de faire ==self selectOne: [ :each | true ]== ou ==self selectAll anyOne==. Nous préférons une solution plus rapide qui prend en compte le fait que Voyage est dévelopé au dessus du package MongoDB. Nous nous assurons de créer une nouvelle instance et la sauvegarder si aucune instance n'existe dans la base. 
+Nous redéfinissons ==current== de manière à faire une requête dans la base. Comme pour le moment nous ne gérons qu'un blog il nous suffit de faire ==self selectOne: [ :each | true ]== ou ==self selectAll anyOne==. Nous nous assurons de créer une nouvelle instance et la sauvegarder si aucune instance n'existe dans la base. 
 
 [[[
 TBBlog class >> current
-   ^ (self selectOne: Dictionary new)
-      ifNil: [ self new save ] 
+   ^ self selectAll 
+			ifNotEmpty: [ :x | x anyOne ]
+			ifEmpty: [ self new save ]
 ]]]
 
 Nous pouvons aussi modifier la méthode ==remove== afin de sauver le nouvel état d'un blog. 
