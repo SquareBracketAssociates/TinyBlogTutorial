@@ -473,13 +473,7 @@ maintenant en utilisant cette expression.
 VOMemoryRepository new enableSingleton. 
 ]]]
 
-Le message ==enableSingleton== indique à Voyage que nous n'utilisons qu'une seule base de donnée ce qui nous permet de ne pas avoir à préciser avec laquelle nous travaillons. ==enableSingleton== met à jour le repository comme le montre la méthode ci-dessous (==VORepository== étant la superclasse de ==VOMemoryRepository== et ==VOMongoRepository==).
-
-[[[
-VORepository >> enableSingleton
-   self class setRepository: self
-]]]
-
+Le message ==enableSingleton== indique à Voyage que nous n'utilisons qu'une seule base de donnée ce qui nous permet de ne pas avoir à préciser avec laquelle nous travaillons. ==enableSingleton== met à jour le repository.
 
 
 Nous définissons une méthode ==initializeMongo== dont le role est d'initialiser correctement la base. 
@@ -492,7 +486,7 @@ TBBlog class >> initializeMongo
    repository := VOMemoryRepository new.
    repository enableSingleton.
 ]]]
-Ici nous n'avons pas besoin de stocker la base car nous n'avons qu'une seule base de donnée (en mode singleton). 
+Ici nous n'avons pas besoin de stocker la base dans une variable d'instance car nous n'avons qu'une seule base de donnée (en mode singleton). 
 
 
 
@@ -561,12 +555,28 @@ Vous pouvez voir l'API de Voyage en parcourant
 
 Ces queries sont plus pertinentes quand on a plus d'objets comme lorsque nous ajouterons plusieurs blogs.
 
+!! Changement de TBBlog
+
+Notez qu'à chaque fois que vous décidez de changer soit en ajoutant une nouvelle racine d'objets ou soit lors d'une modification de la définition d'une classe racine (ajout, retrait, modification d'attribut) il est capital de réinitializer Voyage car Voyage maintient un cache. 
+
+La réinitialisation se fait comme suit:
+
+[[[
+	VOMongoRepository current reset
+]]]
+
 
 !! Si nous devions sauvegarder les posts
 
 Cette section n'est pas à implémenter et elle est juste donner à titre d'exemple. Nous pourrions aussi définir qu'un post est un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Si nous representions les commentaires d'un post nous ne les declarerions pas non plus comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
 
-Pour cela on nous définissons les méthodes suivantes:
+Déclarer les posts comme racine aurait pour conséquence que les blogs sauvés aurait une référence à un objet TBPost alors que sans cela le post est inclus dans la sauvegarde du blog. Notez aussi que lorsqu'un post n'est pas un root, vous n'avez pas la certitude d'unicité de celui-ci lors du chargement depuis la base. En effet, lors du chargement (et ce qui peut être contraire à la situation du graphe d'objet avant la sauvegarde) un post n'est alors pas partagé entre deux instances de blogs. 
+Si avant la sauvegarde en base un post était partagé, après le chargement depuis la base, ce post sera dupliqué car recréer à partir de la définition du blog (et le blog contient alors complètement le post).
+
+Si vous désirez qu'un post soit partagé et unique entre plusieurs instances de blog, alors la classe TBPost doit être déclarée une racine dans la base. 
+Lorsque la classe TBPost est déclarée comme une racine, les posts sont sauvés comme des entités autonomes et les instances de TBBlog feront des références sur ces entités au lieu que leurs définitions soient incluses dans celle des blogs. Cela a pour effet qu'un post donné devient unique et partageable via une référence depuis le blog. 
+
+Pour cela on nous définirions les méthodes suivantes:
 
 [[[
 TBPost class >> isVoyageRoot
@@ -592,6 +602,12 @@ TBBlog >> remove
 
 Ici dans la méthode ==remove== nous enlevons chaque posts puis nous remontons à jour la collection et nous enlevons le blog lui-même.
 
+Encore une fois, notez qu'à chaque fois que vous décider de changer la définition d'une classe racine ou que vous ajoutez une nouvelle classe racine, il est capital de réinitializer Voyage car Voyage maintient un cache. 
+
+Pour cela exécutez l'expression suivante.
+[[[
+	VOMongoRepository current reset
+]]]
 
 !!! D'autres requêtes
 
@@ -617,27 +633,12 @@ Nous illustrons maintenant comment nous pouvons faire des requêtes sur la base 
    TBPost selectAll do: [:each | Transcript show: each text; cr]
 
    TBBlog current remove.
-   TBBlog count.
-   >0
-   TBPost count.
-   > 5 
-   ??? why the posts are still there
-
    TBPost removeAll.
    TBPost count.
    > 0
 ]]]
 
 Nous allons maintenant utiliser une base mongo externe à Pharo. 
-
-
-
-
-
-
-
-
-
 
 
 ! Mongo
