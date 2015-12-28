@@ -1136,7 +1136,6 @@ Les dates sont affichées de manière étrange. Ceci est dû au fait que les dat
 
 [[[
 TBPostComponent >> date
-
    ^ post date asDate
 ]]]
 
@@ -1217,15 +1216,14 @@ Reste maintenant à écrire la méthode de rendu du composant:
 [[[
 TBCategoriesComponent >> renderContentOn: html
    html tbsListGroup: [
-      html tbsLinkifyListGroupItem beActive; with: 'Categories'.
-      categories do: [ :cat | self renderCategoryLinkOn: html with: cat ].
-   ]
+     html tbsLinkifyListGroupItem beActive; with: 'Categories'.
+     categories do: [ :cat | self renderCategoryLinkOn: html with: cat ]]
 ]]]
 
-Nous avons presque fini. En effet l'affichage des posts ne tient pas en compte de la catégorie courante. 
+Nous avons presque fini. En effet, l'affichage des posts ne tient pas en compte de la catégorie courante. 
 
 !!! Mise à jour des Posts
-Nous devons aussi mettre à jour la liste des posts. Il faut gérer le raffraîchissement de la liste des posts en fonction de la catégorie choisie et donc modifier la méthode de rendu du composant ==TBPostsListComponent==.
+Nous devons aussi mettre à jour la liste des posts. Il faut gérer le rafraîchissement de la liste des posts en fonction de la catégorie choisie et donc modifier la méthode de rendu du composant ==TBPostsListComponent==.
 
 La méthode ==readSelectedPosts== récupère dans la base les posts à afficher. Si elle vaut ==nil==, l'utilisateur n'a pas encore sélectionner une catégorie et l'ensemble des posts visibles de la base est affiché. Si elle contient une valeur autre que ==nil==, l'utilisateur a sélectionné une catégorie et l'application affiche alors la liste des posts attachés à la catégorie.
 
@@ -1312,7 +1310,6 @@ TBPostsListComponent >> renderContentOn: html
 
 [[[
 TBPostsListComponent >> renderCategoryColumnOn: html
-
    html tbsColumn
       extraSmallSize: 12;
       smallSize: 2;
@@ -1322,7 +1319,9 @@ TBPostsListComponent >> renderCategoryColumnOn: html
 
 [[[
 TBPostsListComponent >> basicRenderCategoriesOn: html
-   ^ html render: (TBCategoriesComponent categories: self blog allCategories postsList: self)
+   ^ html render: (TBCategoriesComponent 
+         categories: self blog allCategories 
+         postsList: self)
 ]]]
 
 [[[   
@@ -1336,20 +1335,20 @@ TBPostsListComponent >> renderPostColumnOn: html
 
 [[[
 basicRenderPostsOn: html
-   ^ self readSelectedPosts do: [ :p | html render: (TBPostComponent new post: p) ]
+   ^ self readSelectedPosts do: [ :p | 
+        html render: (TBPostComponent new post: p) ]
 ]]]
 
 
 Nous voici prêts à définir la partie administrative de l'application.
 
 
-
 ! Décrire les données avec Magritte
 
 
-Magritte est une bibliothèque qui permet une fois les données décrites de générer diverses représentations ou opérations (telles des requêtes). Couplé avec Seaside Magritte permet de générer des formulaires et des rapports.  La sociétés Debris Publishing est un brillant exemple de la puissance de Magritte: tous les tableaux sont automatiquement générés (voir *http://www.pharo.org/success*). La validation des données est aussi définie au niveau de Magritte au lieu d'être dispersée dans le code de l'interface graphique. Ce chapitre ne montre pas cet aspect.
+Magritte est une bibliothèque qui permet une fois les données décrites de générer diverses représentations ou opérations (telles des requêtes). Couplée avec Seaside, Magritte permet de générer des formulaires et des rapports.  La société Debris Publishing est un brillant exemple de la puissance de Magritte: tous les tableaux sont automatiquement générés (voir *http://www.pharo.org/success*). La validation des données est aussi définie au niveau de Magritte au lieu d'être dispersée dans le code de l'interface graphique. Ce chapitre ne montre pas cet aspect.
 
-Un chapitre dans le livre sur Seaside (*http://book.seaside.st*) est disponible sur Magritte ainsi qu'un tutorial sur *https://github.com/SquareBracketAssociates/Magritte*.
+Un chapitre dans le livre sur Seaside (*http://book.seaside.st*) est disponible sur Magritte ainsi qu'un tutoriel sur *https://github.com/SquareBracketAssociates/Magritte*.
 
 
 Dans ce chapitre, les cinq variables d'instance de l'objet ==TBPost== sont décrites à l'aide de Magritte. Dans ce chapitre nous décrivons seulement les données et le chapitre suivant en tirera avantage. 
@@ -1380,7 +1379,7 @@ TBPost >> descriptionText
       yourself
 ]]]
 
-La catégorie d'un post est une chaine de caractères qui peut ne pas être renseignée. Dans ce cas, le post sera de toute manière rangé dans la catégorie "Unclassified".
+La catégorie d'un post est une chaine de caractères qui peut ne pas être renseignée. Dans ce cas, le post sera de toute manière rangé dans la catégorie 'Unclassified'.
 
 [[[
 TBPost >> descriptionCategory
@@ -1415,7 +1414,7 @@ TBPost >> descriptionVisible
    
 !!! Ameliorations possibles
 
-Voici quelques améliorations. Nous pourrions améliorer cette description pour qu'il ne soit pas possible de poster un post ayant une date antèrieure celle d'ajourd'hui. Nous pourrions changer la description d'une categorie pour en definir un enumere parmi les catégories existantes. Ceci permettrait de faire une interface plus simplement.
+Voici quelques améliorations. Nous pourrions améliorer cette description pour qu'il ne soit pas possible de poster un post ayant une date antèrieure celle d'ajourd'hui. Nous pourrions changer la description d'une categorie pour en definir un enuméré parmi les catégories existantes. Ceci permettrait de faire une interface plus simplement.
 
 
 
@@ -1428,7 +1427,7 @@ Voici quelques améliorations. Nous pourrions améliorer cette description pour 
 ! Administration de TinyBlog
 Nous allons aborder maintenant l'administration de TinyBlog. Cet exercice va nous permettre de montrer comment utiliser des informations de session ainsi que Magritte pour la définition de rapport. 
 
-Le scénario assez classiue que nous allons développer est le suivant : L'utilisateur doit s'authentifier pour accéder à la partie administration de TinyBlog. Il le fait à l'aide d'un compte et d'un mot de passe. Le lien permettant d'afficher le composant d'authentification sera placé sous la liste des catégories.
+Le scénario assez classique que nous allons développer est le suivant : l'utilisateur doit s'authentifier pour accéder à la partie administration de TinyBlog. Il le fait à l'aide d'un compte et d'un mot de passe. Le lien permettant d'afficher le composant d'authentification sera placé sous la liste des catégories.
 
 
 !! Composant d'identification
@@ -1462,14 +1461,14 @@ TBAuthentificationComponent >> component: anObject
    component := anObject
 ]]]
 
-La variable d'instance 'component' est initialisée par la méthode de classe suivante :
+La variable d'instance ==component== est initialisée par la méthode de classe suivante :
 
 [[[
 TBauthenticationComponent class >> from: aComponent
    ^ self new component: aComponent
 ]]]
 
-La méthode ==renderContentOn:== definit le contenu d'une boite de dialogue modale.
+La méthode ==renderContentOn:== définit le contenu d'une boite de dialogue modale.
 
 [[[
 TBAuthentificationComponent >> renderContentOn: html
@@ -1541,7 +1540,6 @@ TBAuthentificationComponent >> renderHeaderOn: html
 
 [[[
 TBAuthentificationComponent >> renderInputAccountOn: html
-
    html text: 'Account:'.
    html break.
    html textInput
@@ -1551,7 +1549,6 @@ TBAuthentificationComponent >> renderInputAccountOn: html
 
 [[[
 TBAuthentificationComponent >> renderInputPasswordOn: html
-
    html text: 'Password:'.
    html break.
    html passwordInput
@@ -1568,19 +1565,18 @@ TBAuthentificationComponent >> renderOkCancelOn: html
       value: 'SignIn'
 ]]]
 
-Lorsque l'utilisateur clique sur le bouton 'SignIn', le message ==validate== est envoyée et vérifie que l'utilisateur a bien le compte "admin" et a saisi le mot de passe "password".
+Lorsque l'utilisateur clique sur le bouton 'SignIn', le message ==validate== est envoyé et vérifie que l'utilisateur a bien le compte 'admin' et a saisi le mot de passe 'password'.
 
 [[[
 TBAuthentificationComponent >> validate
-   (self account = 'admin' and: [ self password = 'password' ]) ifTrue: [
-      self alert: 'Success!'
-   ]
+   (self account = 'admin' and: [ self password = 'password' ]) 
+      ifTrue: [ self alert: 'Success!' ]
 ]]]
 
 !!!! Critique 
  Rechercher une autre méthode pour réaliser l'authentification de l'utilisateur (utilisation d'un backend de type base de données, LDAP ou fichier texte). En tout cas, ce n'est pas à la boite de login de faire ce travail, il faut le déléguer à un objet métier qui saura consulter le backend et authentifier l'utilisateur.
 
- De plus le composant ==TBAuthentificationComponent== pourrait afficher l'utilisateur lorsque celui-ci est logué 
+ De plus le composant ==TBAuthentificationComponent== pourrait afficher l'utilisateur lorsque celui-ci est logué.
 
 !!! Intégration de l'authentification
 
@@ -1609,7 +1605,6 @@ TBPostsListComponent >> renderSignInOn: html
 Nous ajoutons le composant d'authentification dessous la liste de categories.
 [[[
 TBPostsListComponent >> renderCategoryColumnOn: html
-
    html tbsColumn
       extraSmallSize: 12;
       smallSize: 2;
@@ -1632,7 +1627,7 @@ Nous allons développer deux components l'un deux sera un rapport qui contiendra
 
 !!! Création d'un composant d'administration
 
-Le composant admin hérite de TBScreenComponent pour bénéficier du header et de l'accès au blog. Il contiendra en plus le rapport que nous construisons par la suite. 
+Le composant ==TBAdminComponent== hérite de ==TBScreenComponent== pour bénéficier du header et de l'accès au blog. Il contiendra en plus le rapport que nous construisons par la suite. 
 
 [[[
 TBScreenComponent subclass: #TBAdminComponent
@@ -1648,8 +1643,7 @@ TBAdminComponent >> renderContentOn: html
    super renderContentOn: html.
    html tbsContainer: [
       html heading: 'Blog Admin'.
-      html horizontalRule.
-   ]
+      html horizontalRule ]
 ]]]
 
 
@@ -1683,7 +1677,7 @@ TBSMagritteReport subclass: #TBPostsReport
    category: 'TinyBlog-Components'
 ]]]
 
-Avec la méthode ==from:== nous disons que nous voulons créer un rapport en prenant les descriptions de n'importe quel blogs. 
+Avec la méthode ==from:== nous disons que nous voulons créer un rapport en prenant les descriptions de n'importe quel blog. 
 [[[
 TBPostsReport class >> from: aBlog
    | allBlogs |
