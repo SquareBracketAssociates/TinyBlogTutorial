@@ -1129,7 +1129,7 @@ TBPostsListComponent >> renderContentOn: html
 ]]]
 
 Rafraichissez la page et vous devez obtenir la Figure *@container*.
-+TinyBlog avec une liste de posts élémentaire.>file://figures/containerList.png|width=75|label=container+
++TinyBlog avec une liste de posts élémentaire.>file://figures/ContainerList.png|width=75|label=container+
    
 Les dates sont affichées de manière étrange. Ceci est dû au fait que les dates sont en fait des instance de ==DateAndTime== donc nous les convertissons dans date comme suit. 
 
