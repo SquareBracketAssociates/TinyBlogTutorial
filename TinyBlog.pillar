@@ -85,7 +85,7 @@ Cinq variables d'instance pour décrire un post sur le blog.
 |visible       |Post visible ou pas ?        |
 
 
-Ces variables ont des méthodes accesseurs dans le protocole 'accessing'.
+Ces variables ont des méthodes accèsseurs dans le protocole 'accèssing'.
 
 [[[
 TBPost >> title
@@ -623,7 +623,7 @@ Nous illustrons maintenant comment nous pouvons faire des requêtes sur la base 
    TBBlog current allBlogPosts size.
    > 5
 
-   “Via repository"
+   "Via repository"
    TBBlog count.
    > 1 
    TBPost count.
@@ -774,13 +774,15 @@ Notez que si vous avez besoin de réinitialiser la base exterieure completement,
 Nous commençons par définir une interface telle que celle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera.
 Nous allons définir des composants Seaside *http://www.seaside.st*. L'ouvrage de référence est disponible en ligne à *http://book.seaside.st*
 
+
++Lancer le serveur.>file://figures/RunningSeaside.png|width=50|label=RunningSeaside+
+
+
 !! Démarrer Seaside
 
-En utilisant le Seaside Control Panel, en utilisant le menu, ajouté un serveur ==ZnZincServerAdaptor==, puis
+En utilisant le Seaside Control Panel et son menu, ajoutez un serveur ==ZnZincServerAdaptor==, puis définissez le port surlequel le serveur doit fonctionner (comme illustré dans la figure *@RunningSeaside* et *@SeasideWebStart*).
 
-+Lancer le serveur.>file://figures/RunningSeaside.png|width=75+
-
-
++Vérification que Seaside fonctionne.>file://figures/SeasideWebStart.png|width=75|label=SeasideWebStart+
 
 !! Initialisation de l'application
 
@@ -795,7 +797,7 @@ WAComponent subclass: #TBApplicationRootComponent
 
 
 
-On déclare l'application au serveur Seaside, coté classe, dans le protocole =='initialize'==. On en profite pour intégrer les dépendances du framework Bootstrap (les fichiers css et js seront stockés dans l'application).
+On déclare l'application au serveur Seaside, coté classe, dans le protocole =='initialization'==. On en profite pour intégrer les dépendances du framework Bootstrap (les fichiers css et js seront stockés dans l'application).
 
 [[[
 TBApplicationRootComponent class >> initialize
@@ -812,11 +814,11 @@ Dans un Playground ou dans l'éditeur de méthode, exécuter ==TBApplicationRoot
 
 Les méthodes de classe ==initialize== sont invoquées automatiquement lors du chargement du package.
 
-+Vérification que Seaside fonctionne.>file://figures/SeasideWebStart.png|width=75+
 
-Une connexion sur le serveur Seaside ("Browse the applications installed in your image") permet de vérifier que l'application est bien enregistrée.
 
-+TinyBlog est bien enregistrée>file://figures/BrowseApplications.png|width=75+
+Une connexion sur le serveur Seaside ("Browse the applications installed in your image") permet de vérifier que l'application est bien enregistrée comme le montre la figure *@BrowseApplications*.
+
++TinyBlog est bien enregistrée.>file://figures/BrowseApplications.png|width=75|label=BrowseApplications+
 
 Ajoutons également la méthode ==canBeRoot== afin de préciser que la classe ==TBApplicationRootComponent== est la première instanciée lors qu'un utilisateur se connecte sur l'application et représente une application et pas seulement un composant.
 
@@ -832,9 +834,9 @@ TBApplicationRootComponent >> renderContentOn: html
    html text: 'TinyBlog'
 ]]]
 
-Connexion avec un navigateur sur *http://localhost:8080/TinyBlog*. La page doit apparaître.
+Connexion avec un navigateur sur *http://localhost:8080/TinyBlog*. La page doit apparaître comme dans la figure *@EmptyPage*.
 
-+Une page quasi vide mais servie par Seaside.>file://figures/EmptyPage.png|width=75+
++Une page quasi vide mais servie par Seaside.>file://figures/EmptyPage.png|width=75|label=EmptyPage+
 
 
 Ajoutons maintenant des informations dans l'entête de la page HTML afin que TinyBlog ait un titre et soit une application HTML5. 
@@ -849,19 +851,19 @@ TBApplicationRootComponent >> updateRoot: anHtmlRoot
 
 Le composant ==TBApplicationRootComponent== est le composant principal de l'application, il ne fait que rendu graphique limité en affichant dans le future le composant principal qu'il contiendra. Il contiendra plus tard soit les composants qu'un lecteur du blog pourra utiliser soit les composants pour administrer le blog et ses postes. 
 
-Nous avons décidé que le composant ==TBApplicationRootComponent== contiendra des composants sousclass de la classe abstraite ==TBScreenComponent== que nous allons définir dans le prochain chapitre. 
+Nous avons décidé que le composant ==TBApplicationRootComponent== contiendra des composants inhéritants de la classe abstraite ==TBScreenComponent== que nous allons définir dans le prochain chapitre. 
 
 
 
 ! Composants Visuels de TinyBlog
 
 Nous sommes prets à définir les composants visuels de notre petite application.
-Les premiers chapitre de *http://book.seaside.st* peuvent vous aider.
+Les premiers chapitres de *http://book.seaside.st* peuvent vous aider.
 
 
-La figure montre les différents composants que nous allons développer. 
+La figure *@ComponentOverview* montre les différents composants que nous allons développer. 
 
-+Les composants composant l'application TinyBlog.>file://figures/ComponentOverview.pdf|width=75+
++Les composants composant l'application TinyBlog.>file://figures/ComponentOverview.pdf|width=75|label=ComponentOverview+
 
 !! Le composant TBScreenComponent
 
@@ -874,7 +876,7 @@ WAComponent subclass: #TBScreenComponent
    package: 'TinyBlog-Components'
 ]]]
 
-Les différents composants d'interface de TinyBlog auront besoin d'accéder aux règles métier de l'application. Dans le protocole 'accessing', créons un méthode ==blog== qui retourne l'instance de ==TBBlog==. 
+Les différents composants d'interface de TinyBlog auront besoin d'accéder aux règles métier de l'application. Dans le protocole 'accèssing', créons un méthode ==blog== qui retourne l'instance de ==TBBlog==. 
 
 [[[
 TBScreenComponent >> blog
@@ -885,16 +887,14 @@ TBScreenComponent >> blog
 
 Dans le future, lorsque nous gérerons les utilisateurs et le fait qu'un utilisateurs puisse avoir plusieurs blogs nous modifierons cette méthode pour utiliser des informations stockées dans la session active (Voir TBSession plus loin). 
 
++Accès à la bibliothèque Bootstrap.>file://figures/SeasideBootstrap.png|width=75|label=bootstrap+
 
 !! Bootstrap for Seaside
 
-La bibliotheque Bootstrap est totallement accessible depuis Seaside comme nous allons le montrer.
+La bibliothèque Bootstrap est totallement accèssible depuis Seaside comme nous allons le montrer.
 Pour parcourir les nombreux exemples, cliquer sur le lien bootstrap dans la liste des applications servies par Seaside ou pointer votre navigateur sur le lien http://localhost:8080/bootstrap. Vous devez obtenir l'écran *@bootstrap*
 
-+Acces à la bibliothèque Bootstrap.>file://figures/SeasideBootstrap.png|width=75|label=bootstrap+
-
 Cliquer sur le lien ""Examples"" au bas de la page et vous pouvez ainsi voir les éléments graphiques ainsi que le code pour les obtenir comme montré par la figure *@examplebootstrap*. 
-
 
 +Comprendre un élément et son code en Bootstrap.>file://figures/TBSAlert.png|width=75|label=examplebootstrap+
 
@@ -922,7 +922,7 @@ TBHeaderComponent >> renderContentOn: html
          with: 'TinyBlog' ]
 ]]]
 
-L'entête  (header) est affichée à l'aide d'une barre de navigation Bootstrap (voir la figure *@navbar*)
+L'entête  (header) est affichée à l'aide d'une barre de navigation Bootstrap (voir la figure *@navBlog*)
 
 Par défaut dans une barre de navigation Bootstrap, il y a un lien sur tbsNavbarBrand qui est ici inutile (sur le titre de l'application). Ici nous l'initialisons avec une ancre =='#'== de façon à ce que si l'utilisateur clique sur le titre, il ne se passe rien. En général, cliquer sur le titre de l'application permet de revenir à la page de départ du site. 
 
@@ -953,6 +953,7 @@ TBScreenComponent >> initialize
    header := TBHeaderComponent new.
 ]]]
 
++TinyBlog avec une barre de navigation.>file://figures/navBlog.png|width=75|label=navBlog+
 
 !!! Relation Composite-Composant
 En Seaside, les sous-composants d'un composant doivent être retournés par le composite en réponse au message ==children==. Définissons que l'instance du composant ==TBHeaderComponent== est un enfant de ==TBScreenComponent== dans la hiérarchie de composants Seaside (en non entre classes Pharo). 
@@ -970,11 +971,13 @@ TBScreenComponent >> renderContentOn: html
 ]]]
 
 
+
+
 !! Utilisation du Composant Screen
 
 Bien que le composant ==TBScreenComposant== n'est pas vocation à être utilisé directement, nous allons l'utiliser de manière temporaire pendant que nous développons les autres composants. 
 
-Ainsi 
+Ainsi nous l'instancions dans la méthode ==initialize== suivante. 
 
 [[[
 TBApplicationRootComponent >> initialize
@@ -995,15 +998,14 @@ TBApplicationRootComponent >> children
    ^ { main }
 ]]]
 
-Si vous faites un rafraichissement de l'application vous devez voir la Figure *@navBlog*
-+TinyBlog avec une barre de navigation.>file://figures/navBlog.png|width=75|label=navBlog+
+Si vous faites un rafraichissement de l'application vous devez voir la Figure *@navBlog*.
 
 
 
 
 !! Liste des Posts
 
-Nous allons afficher la liste des posts - ce qui reste d'ailleurs le but d'un blog. Ici nous parlons de l'acces public au lecteur du blog. Dans le future, nous  proposerons une interface administrative des posts.
+Nous allons afficher la liste des posts - ce qui reste d'ailleurs le but d'un blog. Ici nous parlons de l'accès public au lecteur du blog. Dans le future, nous  proposerons une interface administrative des posts.
 
 
 Créons un composant ==TBPostsListComponent== qui hérite de ==TBScreenComponent==:
@@ -1023,7 +1025,7 @@ TBPostsListComponent >> renderContentOn: html
    html text: 'Blog Posts here !!!'
 ]]]
 
-Nous pouvons maintenant dire au composant de l'application d'utiliser ce composant. 
+Nous pouvons maintenant dire au composant de l'application d'utiliser ce composant. Pour cela nous redéfinissons la 
 
 [[[
 TBApplicationRootComponent >> initialize
@@ -1078,7 +1080,6 @@ TBPostComponent >> text
 
 [[[
 TBPostComponent >> date
-
    ^ post date
 ]]]
 
@@ -1363,7 +1364,7 @@ Le titre d'un post est une chaine de caractères devant être obligatoirement co
 TBPost >> descriptionTitle
    <magritteDescription>
    ^ MAStringDescription new
-      accessor: #title;
+      accèssor: #title;
       beRequired;
       yourself
 ]]]
@@ -1374,7 +1375,7 @@ Le texte d'un post est une chaine de caractères multi-lignes devant être oblig
 TBPost >> descriptionText
    <magritteDescription>
    ^ MAMemoDescription new
-      accessor: #text;
+      accèssor: #text;
       beRequired;
       yourself
 ]]]
@@ -1385,7 +1386,7 @@ La catégorie d'un post est une chaine de caractères qui peut ne pas être rens
 TBPost >> descriptionCategory
    <magritteDescription>
    ^ MAStringDescription new
-      accessor: #category;
+      accèssor: #category;
       yourself
 ]]]
 
@@ -1395,7 +1396,7 @@ La date de création d'un post est importante car elle permet de définir l'ordr
 TBPost >> descriptionDate
    <magritteDescription>
    ^ MADateDescription new
-      accessor: #date;
+      accèssor: #date;
       beRequired;
       yourself
 ]]]
@@ -1407,7 +1408,7 @@ La variable d'instance ==visible== doit obligatoirement contenir une valeur bool
 TBPost >> descriptionVisible
    <magritteDescription>
    ^ MABooleanDescription new
-      accessor: #visible;
+      accèssor: #visible;
       beRequired;
       yourself
 ]]]
@@ -1631,7 +1632,7 @@ Nous allons développer deux components l'un deux sera un rapport qui contiendra
 
 !!! Création d'un composant d'administration
 
-Le composant admin hérite de TBScreenComponent pour bénéficier du header et de l'acces au blog. Il contiendra en plus le rapport que nous construisons par la suite. 
+Le composant admin hérite de TBScreenComponent pour bénéficier du header et de l'accès au blog. Il contiendra en plus le rapport que nous construisons par la suite. 
 
 [[[
 TBScreenComponent subclass: #TBAdminComponent
@@ -1696,7 +1697,7 @@ Nous ajoutons une méthode de classe pour la sélection des colonnes et modifier
 
 [[[
 TBPostsReport class >> filteredDescriptionsFrom: aBlogPost
-   ^ aBlogPost magritteDescription select: [ :each | #(title category date) includes: each accessor selector ]
+   ^ aBlogPost magritteDescription select: [ :each | #(title category date) includes: each accèssor selector ]
    
 TBPostsReport class >> from: aBlog
    | allBlogs |
@@ -1764,7 +1765,7 @@ TBPost >> descriptionTitle
    ^ MAStringDescription new
       label: 'Title';
       priority: 100;
-      accessor: #title;
+      accèssor: #title;
       beRequired;
       yourself
 ]]]
@@ -1774,7 +1775,7 @@ TBPost >> descriptionText
    ^ MAMemoDescription new
       label: 'Text';
       priority: 200;
-      accessor: #text;
+      accèssor: #text;
       beRequired;
       yourself
 ]]]
@@ -1784,7 +1785,7 @@ TBPost >> descriptionCategory
    ^ MAStringDescription new
       label: 'Category';
       priority: 300;
-      accessor: #category;
+      accèssor: #category;
       yourself
 ]]]
 [[[
@@ -1793,7 +1794,7 @@ TBPost >> descriptionDate
    ^ MADateDescription new
       label: 'Date';
       priority: 400;
-      accessor: #date;
+      accèssor: #date;
       beRequired;
       yourself
 ]]]
@@ -1803,7 +1804,7 @@ TBPost >> descriptionVisible
    ^ MABooleanDescription new
       label: 'Visible';
       priority: 500;
-      accessor: #visible;
+      accèssor: #visible;
       beRequired;
       yourself
 ]]]
@@ -1814,7 +1815,7 @@ TBPost >> descriptionVisible
 
 Nous pouvons mettre en place un CRUD (Create Read Update Delete) permettant de gérer les posts. Pour cela, nous allons ajouter une colonne (instance ==MACommandColumn==) au rapport qui regroupera les différentes opérations utilisant ==addCommandOn:==.
 
-Ceci se fait lors de la création du rapport. En particulier nous donnons un acces au blog depuis le rapport. 
+Ceci se fait lors de la création du rapport. En particulier nous donnons un accès au blog depuis le rapport. 
 
 [[[
 TBSMagritteReport subclass: #TBPostsReport
@@ -1981,7 +1982,7 @@ TBPost >> descriptionTitle
 	^ MAStringDescription new
 		label: 'Title';
 		priority: 100;
-		accessor: #title;
+		accèssor: #title;
 		requiredErrorMessage: 'A blog post must have a title.';
 		comment: 'Please enter a title';
 		componentClass: TBSMagritteTextInputComponent;
@@ -1995,7 +1996,7 @@ TBPost >> descriptionText
 	^ MAMemoDescription new
 		label: 'Text';
 		priority: 200;
-		accessor: #text;
+		accèssor: #text;
 		beRequired;
 		requiredErrorMessage: 'A blog post must contain a text.';
 		comment: 'Please enter a text';
@@ -2009,7 +2010,7 @@ TBPost >> descriptionCategory
 	^ MAStringDescription new
 		label: 'Category';
 		priority: 300;
-		accessor: #category;
+		accèssor: #category;
 		comment: 'Unclassified if empty';
 		componentClass: TBSMagritteTextInputComponent;
 		yourself
@@ -2023,7 +2024,7 @@ TBPost >> descriptionVisible
 	^ MABooleanDescription new
 		checkboxLabel: 'Visible';
 		priority: 500;
-		accessor: #visible;
+		accèssor: #visible;
 		componentClass: TBSMagritteCheckboxComponent;
 		beRequired;
 		yourself
@@ -2038,7 +2039,7 @@ TBPost >> descriptionVisible
 
 @@todo Should revisit this part.
 
-Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants. Une session est pratique pour gérer les informations de l'utilisateur en cours (loggé).  Nous allons voir comment nous l'utilisons pour gérer une connexion.
+Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations qui sont partagées et accèssible entre les composants. Une session est pratique pour gérer les informations de l'utilisateur en cours (loggé).  Nous allons voir comment nous l'utilisons pour gérer une connexion.
 
 L'administrateur du blog peut vouloir voyager entre la partie privée et la partie publique de TinyBlog. 
 
@@ -2214,7 +2215,7 @@ TBRestfulFilter >> listAll
 ]]]
 
 
-+Acces a tous les postes.>file://figures/RESTlistAll.png|width=75|label=RESTlistAll+
++accès à tous les posts.>file://figures/RESTlistAll.png|width=75|label=RESTlistAll+
 
 
 !!! Refactoring
@@ -2294,7 +2295,7 @@ http://localhost:8080/TinyBlog/post/Welcome%20in%20TinyBlog
 
 
 
-+Acces a un post.>file://figures/RestPost.png|width=75|label=post+
++REST post.>file://figures/RestPost.png|width=75|label=post+
 
 [[[
 TBRestfulFilter >> notFound
@@ -2306,7 +2307,7 @@ TBRestfulFilter >> notFound
 		respond
 ]]]
 
-+Acces a un post.>file://figures/RESTError.png|width=75|label=error+
++REST Error.>file://figures/RESTError.png|width=75|label=error+
 
 [[[
 javascriptOn: aStream
