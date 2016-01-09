@@ -2133,14 +2133,22 @@ TBApplicationRootComponent class >> initialize
 Proposer l'ajout d'un bouton "Déconnexion"
 La gestion de plusieurs blogs pourra aussi passer par une amélioration des sessions qui devront conserver l'identification de l'utilisateur. 
 
+
+
+
+
 ! REST
 
+!! Définir un filtre REST
+
 [[[
-	WARestfulFilter subclass: #TBRestfulFilter
-		instanceVariableNames: ''
-		classVariableNames: ''
-		category: 'TinyBlog-REST'
+WARestfulFilter subclass: #TBRestfulFilter
+	instanceVariableNames: ''
+	classVariableNames: ''
+	category: 'TinyBlog-REST'
 ]]]
+
+!!! Associer un filtre à notre application
 
 [[[
 TBApplicationRootComponent class >> initialize
@@ -2156,9 +2164,13 @@ TBApplicationRootComponent class >> initialize
 		app addFilter: TBRestfulFilter new.
 ]]]
 
+Ne pas oublier d'initialiser.
+
 [[[
 self initialize
 ]]]
+
+!! Obtenir 
 
 [[[
 TBRestfulFilter >> listAll
@@ -2166,11 +2178,14 @@ TBRestfulFilter >> listAll
   <produces: 'text/json'>
 
   ^ String streamContents: [ :astream | 
-  		TBBlog current allBlogPosts
+       TBBlog current allBlogPosts
 			do: [ :each | each javascriptOn: stream ]
-			separatedBy: [stream << ',' ]] 
-		]
+			separatedBy: [ stream << ',' ]] 
+    ]
 ]]]
+
+
+Si on veut selectionner les informations que l'on retourne.
 
 [[[
 TBRestfulFilter >> listAll
@@ -2182,30 +2197,11 @@ TBRestfulFilter >> listAll
   			do: [ :each | 
   			Dictionary new
   				at: #title put: each title;
-  				at: #categroy put: each category;
+  				at: #category put: each category;
   				at: #date put: each date;
   				at: #text put: each text;
   				javascriptOn: astream ]
   			separatedBy: [ astream << ',' ]] 
-]]]
-
-Vous pouvez 
-
-[[[
-TBRestfulFilter >> listAll
-  <get>
-  <produces: 'text/json'>
-
-  ^ String streamContents: [ :astream | 
-  		TBBlog current allBlogPosts
-			do: [ :each | 
-			Dictionary new
-				at: #title put: each title;
-				at: #categroy put: each category;
-				at: #date put: each date;
-				at: #text put: each text;
-				javascriptOn: astream ]
-			separatedBy: [ astream << ',' ]] 
 ]]]
 
 
@@ -2214,17 +2210,20 @@ TBRestfulFilter >> listAll
 
 !!! Refactoring
 
+Définir la transformation en Javascript dans notre composant n'est pas optimal. Nous allons donc le définir dans la classe
+et appeller cette fonctionalité. 
+
 [[[
 TBPost >> javascriptOn: aStream
 
-		Dictionary new
-				at: #title put: self title;
-				at: #categroy put: self category;
-				at: #date put: self  date;
-				at: #text put: self  text;
-				javascriptOn: aStream 
-]]]				
-				
+	Dictionary new
+			at: #title put: self title;
+			at: #categroy put: self category;
+			at: #date put: self  date;
+			at: #text put: self  text;
+			javascriptOn: aStream 
+]]]
+
 [[[
 TBRestfulFilter >> listAll
   <get>
@@ -2232,15 +2231,15 @@ TBRestfulFilter >> listAll
 
   ^ String streamContents: [ :astream | 
 		astream << '['.
-  		TBBlog current allBlogPosts
+		TBBlog current allBlogPosts
 			do: [ :each | each javascriptOn: astream]
 			separatedBy: [ astream << ',' ].
 		astream << ']'
 		]
 ]]]
 
-
-
+Nous raffinons afin de pouvoir sélectionner les attributs que nous voulons convertir 
+en introduisant la méthode ==javascriptOn: aStream attributes: aCollection==.
 
 [[[
 TBPost >> javascriptOn: aStream attributes: aCollection
@@ -2252,8 +2251,6 @@ TBPost >> javascriptOn: aStream attributes: aCollection
 	^ dictionary javascriptOn: aStream 
 ]]]
 
-
-
 [[[
 TBPost >> javascriptOn: aStream
 
@@ -2261,7 +2258,10 @@ TBPost >> javascriptOn: aStream
 ]]]
 
 
-!!! Looking for a Post
+!!! Recherche d'un Post
+
+Maintenant nous allons proposer d'autres fonctionalité comme la recherche d'un poste. 
+Nous définissons donc cette fonctionalité dans la classe ==TBlog==.
 
 [[[
 TBBlog >> postWithTitle: aString
@@ -2282,6 +2282,8 @@ TBRestfulFilter >> post: title
    ^ String streamContents: [ :astream | 
 		post javascriptOn: astream ]
 ]]]
+
+Nous pouvons tester en faisant la requete suivante : 
 
 [[[
 http://localhost:8080/TinyBlog/post/Welcome%20in%20TinyBlog
@@ -2306,7 +2308,7 @@ TBRestfulFilter >> notFound
 [[[
 javascriptOn: aStream
 
-		^ self javascriptOn: aStream attributes: #(title category date text)
+   ^ self javascriptOn: aStream attributes: #(title category date text)
 ]]]
 
 
@@ -2358,7 +2360,7 @@ TBRestfulFilter >> searchDateFrom: beginString to: endString
 Dire un mot de 
 - Put in header vs. Post 
 
-!!! Delete
+!!! Eliminer un post
 
 [[[
 TBRestfulFilter >> remove: title
@@ -2378,7 +2380,7 @@ TBRestfulFilter >> remove: title
 ]]]
 
 Notez que status n'est pas du REST car REST ne specifie pas la maniere de gerer les erreurs. 
-Maintenant ce code ne fonctionne pas car TBPost n'est pas une racine en Voyage.
+Maintenant ce code ne fonctionne pas car ==TBPost== n'est pas une racine en Voyage.
 
 Essayons mais nous ne pouvons pas tester avec un browser web dans son url ne peut faire qu'un GET. 
 Donc il nous faut utiliser Zinc. 
@@ -2387,7 +2389,7 @@ Donc il nous faut utiliser Zinc.
 ZnEasy delete: 'http://localhost:8080/TinyBlog/remove/RemoveMe'
 ]]]
 
-Vous pouvez verifiez que votre post n'est pas enlever.
+Vous pouvez verifiez que votre post n'est pas enlevé.
 
 [[[
 TBRestfulFilter >> remove: title
@@ -2414,7 +2416,7 @@ ZnEasy delete: 'http://localhost:8080/TinyBlog/remove/RemoveMe'
 Vous pouvez verifiez que votre post n'est pas enlever.
 
 
-!!! 
+!!! Ajout de Blog Post
 
 [[[
 TBRestfulFilter >> addPost
@@ -2449,6 +2451,11 @@ TBRestfulFilter >> addPost
 		contents: 'Ici un super post';
 		post.
 ]]]
+
+
+
+
+
 
 ! Deployement
 
