@@ -892,12 +892,17 @@ Dans le future, lorsque nous gérerons les utilisateurs et le fait qu'un utilisa
 !! Bootstrap for Seaside
 
 La bibliothèque Bootstrap est totallement accèssible depuis Seaside comme nous allons le montrer.
-Pour parcourir les nombreux exemples, cliquer sur le lien bootstrap dans la liste des applications servies par Seaside ou pointer votre navigateur sur le lien http://localhost:8080/bootstrap. Vous devez obtenir l'écran *@bootstrap*
+Pour parcourir les nombreux exemples, cliquer sur le lien bootstrap dans la liste des applications servies par Seaside ou pointer votre navigateur sur le lien *http://localhost:8080/bootstrap*. Vous devez obtenir l'écran *@bootstrap*
 
 Cliquer sur le lien ""Examples"" au bas de la page et vous pouvez ainsi voir les éléments graphiques ainsi que le code pour les obtenir comme montré par la figure *@examplebootstrap*. 
 
 +Comprendre un élément et son code en Bootstrap.>file://figures/TBSAlert.png|width=75|label=examplebootstrap+
 
+!!! Bootstrap
+
+Le repository pour le source et la documentation est 
+*http://smalltalkhub.com/#!/~TorstenBergmann/Bootstrap*.
+Une demo en ligne est disponible à *http://pharo.pharocloud.com/bootstrap*.
 
 
 
