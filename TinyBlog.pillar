@@ -403,7 +403,7 @@ TBBlog >> allCategories
 
 !! Futures évolutions
 
-Plusieurs évolutions peuvent être apportées telles que obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts contenus, renommer un catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons à les développer.
+Plusieurs évolutions peuvent être apportées telles que obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts contenus, renommer une catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons à les développer.
 
 Afin de nous aider à tester l'application nous définissons quelques postes. 
 
@@ -433,7 +433,7 @@ TBBlog class >> createDemoPosts
 
 ! Préparation de sauvegarde extérieure avec Voyage
 
-Alors qu'avoir un modèle d'objets en mémoire fonctionne bien, et que des sauvegardes de l'image Pharo sauve aussi de tels objets, il est préférable de pouvoir sauver les objets dans une base de données extérieure. Voyage permet de sauver les objets dans une base de donnée Mongo. 
+Alors qu'avoir un modèle d'objets en mémoire fonctionne bien, et que des sauvegardes de l'image Pharo sauve aussi de tels objets, il est préférable de pouvoir sauver les objets dans une base de données extérieure. Voyage permet de sauver les objets dans une base de données Mongo. 
 C'est ce que nous allons voir. Dans un premier temps nous allons utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second nous installerons une base de données Mongo et nous y accéderons via la couche Voyage. 
 
 
