@@ -8,7 +8,7 @@ D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une faç
 !! Installation et préparation de Pharo
 
 !!! Créer un projet sur SmalltalkHub
- 
+
 - Depuis votre compte créer un projet sur http://smalltalkhub.com
 -- Nommez le "TinyBlog",
 -- Récupérer l'URL du projet: 'http://smalltalkhub.com/mc/XXX/TinyBlog/main'
@@ -23,14 +23,14 @@ D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une faç
 -- Mustache
 - Créez un paquet nommé TinyBlog
 
-Nous avons préparer une image contenant les projets Seaside, Voyage, Bootstrap et Magritte. Vous pouvez y accéder 
+Nous avons préparer une image contenant les projets Seaside, Voyage, Bootstrap et Magritte. Vous pouvez y accéder
 en utilisant le Pharo Launcher et en cherchant le projet TinyBlogBase dans les contributions Pharo.
 Sinon cette image se trouve sur le serveur d'integration http://ci.inria.fr dans les Pharo-Contributions et le projet TinyBlogBase.
 
 
 !!! Créer la configuration du projet
 
-Dans un premier temps vous pouvez sauter cette étape. 
+Dans un premier temps vous pouvez sauter cette étape.
 
 - Créer un projet avec Versionner
 -- Créer un nouveau projet "TinyBlog",
@@ -51,6 +51,15 @@ Dans un premier temps vous pouvez sauter cette étape.
 - Cliquer sur le serveur pour le sélectionner et cliquez sur le bouton "Start".
 
 
+!!! Configurer le débugger de Seaside
+
+ - Pointer votre navigateur sur http://localhost:8080/config
+ - Aller dans votre projet TinyBlog
+ - Dans la section Filters, cliquer sur le bouton "configure" de WAExceptionFilter
+ - Dans l'onglet "General" selectionner dans la liste déroulante "WADebugErrorHandler"
+ - Cliquer sur Ok
+
+
 
 
 
@@ -60,7 +69,7 @@ Dans un premier temps vous pouvez sauter cette étape.
 ! Le modèle de TinyBlog
 
 Le modèle de TinyBlog est extrêmement simple: Les deux classes ==TBPost== et  ==TBBlog==.
-Notez que comme nous le verrons plus tard, nous allons utiliser le fait que Voyage offre une base de données en mémoire pour développer la solution sans avoir besoin de se connecter en permanence à la base. 
+Notez que comme nous le verrons plus tard, nous allons utiliser le fait que Voyage offre une base de données en mémoire pour développer la solution sans avoir besoin de se connecter en permanence à la base.
 
 
 !!! La classe TBPost
@@ -209,7 +218,7 @@ Object subclass: #TBBlog
 [[[
 TBBlog >> initialize
    super initialize.
-   posts := OrderedCollection new. 
+   posts := OrderedCollection new.
 ]]]
 
 
@@ -252,10 +261,10 @@ Avant le lancement des tests, la méthode ==setUp== initialise la connexion vers
 TBBlogTest >> setUp
    blog := TBBlog current.
    blog remove.
-   
+
    first := (TBPost title: 'A title' text: 'A text' category: 'First Category').
    blog writeBlogPost: first.
-   
+
    post := (TBPost title: 'Another title' text: 'Another text' category: 'Second Category') beVisible
 ]]]
 
@@ -303,7 +312,7 @@ TBBlog >> size
 
 Le test précédent doit maintenant passer.
 
-Ecrivons un test pour couvrir les fonctionalités que nous venons de développer. 
+Ecrivons un test pour couvrir les fonctionalités que nous venons de développer.
 
 !!!! Obtenir le nombre de posts dans la base
 
@@ -323,7 +332,7 @@ TBBlogTest >> testRemoveAllBlogPosts
 
 !!! Quelques autres fonctionalités
 
-Nous définissons les fonctionalités et nous assurons que les tests passent. 
+Nous définissons les fonctionalités et nous assurons que les tests passent.
 Les règles métiers sont regroupées dans le protocole 'action' de la classe ==TBBlog==.
 
 !!!! Obtenir l'ensemble des posts (visibles et invisibles)
@@ -405,15 +414,15 @@ TBBlog >> allCategories
 
 Plusieurs évolutions peuvent être apportées telles que obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts contenus, renommer un catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons à les développer.
 
-Afin de nous aider à tester l'application nous définissons quelques postes. 
+Afin de nous aider à tester l'application nous définissons quelques postes.
 
 [[[
 TBBlog class >> createDemoPosts
    "TBBlog createDemoPosts"
-   self current 
+   self current
       writeBlogPost: ((TBPost title: 'Welcome in TinyBlog' text: 'TinyBlog is a small blog engine made with Pharo.' category: 'TinyBlog') visible: true);
       writeBlogPost: ((TBPost title: 'Report Pharo Sprint' text: 'Friday, June 12 there was a Pharo sprint / Moose dojo. It was a nice event with more than 15 motivated sprinters. With the help of candies, cakes and chocolate, huge work has been done' category: 'Pharo') visible: true);
-      writeBlogPost: ((TBPost title: 'Brick on top of Bloc - Preview' text: 'We are happy to announce the first preview version of Brick, a new widget set created from scratch on top of Bloc. Brick is being developed primarily by Alex Syrel (together with Alain Plantec, Andrei Chis and myself), and the work is sponsored by ESUG. 
+      writeBlogPost: ((TBPost title: 'Brick on top of Bloc - Preview' text: 'We are happy to announce the first preview version of Brick, a new widget set created from scratch on top of Bloc. Brick is being developed primarily by Alex Syrel (together with Alain Plantec, Andrei Chis and myself), and the work is sponsored by ESUG.
       Brick is part of the Glamorous Toolkit effort and will provide the basis for the new versions of the development tools.' category: 'Pharo') visible: true);
       writeBlogPost: ((TBPost title: 'The sad story of unclassified blog posts' text: 'So sad that I can read this.') visible: true);
       writeBlogPost: ((TBPost title: 'Working with Pharo on the Raspberry Pi' text: 'Hardware is getting cheaper and many new small devices like the famous Raspberry Pi provide new computation power that was one once only available on regular desktop computers.' category: 'Pharo') visible: true)
@@ -433,8 +442,8 @@ TBBlog class >> createDemoPosts
 
 ! Préparation de sauvegarde extérieure avec Voyage
 
-Alors qu'avoir un modèle d'objets en mémoire fonctionne bien, et que des sauvegardes de l'image Pharo sauve aussi de tels objets, il est préférable de pouvoir sauver les objets dans une base de données extérieure. Voyage permet de sauver les objets dans une base de donnée Mongo. 
-C'est ce que nous allons voir. Dans un premier temps nous allons utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second nous installerons une base de données Mongo et nous y accéderons via la couche Voyage. 
+Alors qu'avoir un modèle d'objets en mémoire fonctionne bien, et que des sauvegardes de l'image Pharo sauve aussi de tels objets, il est préférable de pouvoir sauver les objets dans une base de données extérieure. Voyage permet de sauver les objets dans une base de donnée Mongo.
+C'est ce que nous allons voir. Dans un premier temps nous allons utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second nous installerons une base de données Mongo et nous y accéderons via la couche Voyage.
 
 
 !! Sauvegarde d'un blog
@@ -445,7 +454,7 @@ La première méthode à modifier est la méthode ==writeBlogPost:== pour sauver
 TBBlog >> writeBlogPost: aPost
    "Write the blog post in database"
    posts add: aPost.
-   self save 
+   self save
 ]]]
 
 Si vous essayez d'exécuter le test suivant, vous allez voir qu'il ne passe pas car le système rend 0 au lieu de 2 instances de posts.
@@ -458,7 +467,7 @@ TBBlogTest >> testAddBlogPost
 
 Pourquoi cela arrive-t-il? En fait nous n'avons jamais dit quels objets devaient être sauvés dans la base de données.
 
-La méthode de class ==isVoyageRoot== permet de déclarer que les objets de la classe ==TBBlog== doivent être sauvés dans la base. 
+La méthode de class ==isVoyageRoot== permet de déclarer que les objets de la classe ==TBBlog== doivent être sauvés dans la base.
 
 [[[
 TBBlog class >> isVoyageRoot
@@ -466,17 +475,17 @@ TBBlog class >> isVoyageRoot
    ^ true
 ]]]
 
-De plus nous devons soit créer une connexion sur une base de données réelle soit travailler en mémoire. C'est cette dernière option que nous faisons 
-maintenant en utilisant cette expression. 
+De plus nous devons soit créer une connexion sur une base de données réelle soit travailler en mémoire. C'est cette dernière option que nous faisons
+maintenant en utilisant cette expression.
 
 [[[
-VOMemoryRepository new enableSingleton. 
+VOMemoryRepository new enableSingleton.
 ]]]
 
 Le message ==enableSingleton== indique à Voyage que nous n'utilisons qu'une seule base de donnée ce qui nous permet de ne pas avoir à préciser avec laquelle nous travaillons. ==enableSingleton== met à jour le repository.
 
 
-Nous définissons une méthode ==initializeMongo== dont le role est d'initialiser correctement la base. 
+Nous définissons une méthode ==initializeMongo== dont le role est d'initialiser correctement la base.
 
 
 
@@ -486,37 +495,37 @@ TBBlog class >> initializeMongo
    repository := VOMemoryRepository new.
    repository enableSingleton.
 ]]]
-Ici nous n'avons pas besoin de stocker la base dans une variable d'instance car nous n'avons qu'une seule base de donnée (en mode singleton). 
+Ici nous n'avons pas besoin de stocker la base dans une variable d'instance car nous n'avons qu'une seule base de donnée (en mode singleton).
 
 
 
-Nous redéfinissons la méthode ==reset== et la méthode ==initialize== pour nous assurer que l'endroit où la base est sauvée est réinitialisé lorsque que l'on charge le code. 
+Nous redéfinissons la méthode ==reset== et la méthode ==initialize== pour nous assurer que l'endroit où la base est sauvée est réinitialisé lorsque que l'on charge le code.
 
-La méthode ==reset== réinitialize la base. 
+La méthode ==reset== réinitialize la base.
 [[[
 TBBlog class >> reset
       "self reset"
       self initializeMongo
-      
+
 TBBlog class >> initialize
       self initializeMongo
-   
+
 ]]]
 
-Le cas de de la méthode ==current== est plus délicat. Avant l'utilisation de Mongo, nous avions un singleton tout simple. Cependant utiliser un Singleton 
-ne fonctionne plus car imaginons que nous ayons sauvé notre blog et que le serveur s'éteigne par accident ou que nous rechargions une nouvelle version 
-du code. Ceci conduirait à une réinitialisation et création d'une nouvelle instance. Nous pouvons donc nous retrouver avec une instance différente de celle sauvée. 
+Le cas de de la méthode ==current== est plus délicat. Avant l'utilisation de Mongo, nous avions un singleton tout simple. Cependant utiliser un Singleton
+ne fonctionne plus car imaginons que nous ayons sauvé notre blog et que le serveur s'éteigne par accident ou que nous rechargions une nouvelle version
+du code. Ceci conduirait à une réinitialisation et création d'une nouvelle instance. Nous pouvons donc nous retrouver avec une instance différente de celle sauvée.
 
-Nous redéfinissons ==current== de manière à faire une requête dans la base. Comme pour le moment nous ne gérons qu'un blog il nous suffit de faire ==self selectOne: [ :each | true ]== ou ==self selectAll anyOne==. Nous nous assurons de créer une nouvelle instance et la sauvegarder si aucune instance n'existe dans la base. 
+Nous redéfinissons ==current== de manière à faire une requête dans la base. Comme pour le moment nous ne gérons qu'un blog il nous suffit de faire ==self selectOne: [ :each | true ]== ou ==self selectAll anyOne==. Nous nous assurons de créer une nouvelle instance et la sauvegarder si aucune instance n'existe dans la base.
 
 [[[
 TBBlog class >> current
-   ^ self selectAll 
+   ^ self selectAll
 			ifNotEmpty: [ :x | x anyOne ]
 			ifEmpty: [ self new save ]
 ]]]
 
-Nous pouvons aussi modifier la méthode ==remove== afin de sauver le nouvel état d'un blog. 
+Nous pouvons aussi modifier la méthode ==remove== afin de sauver le nouvel état d'un blog.
 
 [[[
 TBBlog >> remove
@@ -530,19 +539,19 @@ TBBlog >> remove
 Alors même que la base est en mémoire et bien que nous pouvons accèder au blog en utilisant le singleton de la class ==TBBlog==,
 nous allons montrer l'API offerte par Voyage. C'est la même API que nous pourrons utiliser pour accèder à une base mongo.
 
-Nous créons des posts dans 
+Nous créons des posts dans
 [[[
 TBBlog createDemoPosts.
 ]]]
 
-Nous pouvons compter le nombre de blog sauvés. ==count== fait partie de l'API directe de Voyage. Ici nous obtenons ce qui est normal puisque le blog est implémenté comme un singleton. 
+Nous pouvons compter le nombre de blog sauvés. ==count== fait partie de l'API directe de Voyage. Ici nous obtenons ce qui est normal puisque le blog est implémenté comme un singleton.
 
 [[[
 TBBlog count
 >1
 ]]]
 
-De la même manière, nous pouvons sélectionner touts objets sauvés. 
+De la même manière, nous pouvons sélectionner touts objets sauvés.
 
 [[[
 TBBlog selectAll
@@ -550,14 +559,14 @@ TBBlog selectAll
 
 
 Vous pouvez voir l'API de Voyage en parcourant
-- la classe ==Class==, et 
+- la classe ==Class==, et
 - la classe ==VORepository== qui est la racine d'héritage des bases de données en mémoire ou extérieur.
 
 Ces queries sont plus pertinentes quand on a plus d'objets comme lorsque nous ajouterons plusieurs blogs.
 
 !! Changement de TBBlog
 
-Notez qu'à chaque fois que vous décidez de changer soit en ajoutant une nouvelle racine d'objets ou soit lors d'une modification de la définition d'une classe racine (ajout, retrait, modification d'attribut) il est capital de réinitializer Voyage car Voyage maintient un cache. 
+Notez qu'à chaque fois que vous décidez de changer soit en ajoutant une nouvelle racine d'objets ou soit lors d'une modification de la définition d'une classe racine (ajout, retrait, modification d'attribut) il est capital de réinitializer Voyage car Voyage maintient un cache.
 
 La réinitialisation se fait comme suit:
 
@@ -568,13 +577,13 @@ La réinitialisation se fait comme suit:
 
 !! Si nous devions sauvegarder les posts
 
-Cette section n'est pas à implémenter et elle est juste donner à titre d'exemple. Nous pourrions aussi définir qu'un post est un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Si nous representions les commentaires d'un post nous ne les declarerions pas non plus comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
+Cette section n'est pas à implémenter et elle est juste donner à titre d'exemple. Nous pourrions aussi définir qu'un post est un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Si nous representions les commentaires d'un post nous ne les declarerions pas non plus comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens.
 
-Déclarer les posts comme racine aurait pour conséquence que les blogs sauvés aurait une référence à un objet TBPost alors que sans cela le post est inclus dans la sauvegarde du blog. Notez aussi que lorsqu'un post n'est pas un root, vous n'avez pas la certitude d'unicité de celui-ci lors du chargement depuis la base. En effet, lors du chargement (et ce qui peut être contraire à la situation du graphe d'objet avant la sauvegarde) un post n'est alors pas partagé entre deux instances de blogs. 
+Déclarer les posts comme racine aurait pour conséquence que les blogs sauvés aurait une référence à un objet TBPost alors que sans cela le post est inclus dans la sauvegarde du blog. Notez aussi que lorsqu'un post n'est pas un root, vous n'avez pas la certitude d'unicité de celui-ci lors du chargement depuis la base. En effet, lors du chargement (et ce qui peut être contraire à la situation du graphe d'objet avant la sauvegarde) un post n'est alors pas partagé entre deux instances de blogs.
 Si avant la sauvegarde en base un post était partagé, après le chargement depuis la base, ce post sera dupliqué car recréer à partir de la définition du blog (et le blog contient alors complètement le post).
 
-Si vous désirez qu'un post soit partagé et unique entre plusieurs instances de blog, alors la classe TBPost doit être déclarée une racine dans la base. 
-Lorsque la classe TBPost est déclarée comme une racine, les posts sont sauvés comme des entités autonomes et les instances de TBBlog feront des références sur ces entités au lieu que leurs définitions soient incluses dans celle des blogs. Cela a pour effet qu'un post donné devient unique et partageable via une référence depuis le blog. 
+Si vous désirez qu'un post soit partagé et unique entre plusieurs instances de blog, alors la classe TBPost doit être déclarée une racine dans la base.
+Lorsque la classe TBPost est déclarée comme une racine, les posts sont sauvés comme des entités autonomes et les instances de TBBlog feront des références sur ces entités au lieu que leurs définitions soient incluses dans celle des blogs. Cela a pour effet qu'un post donné devient unique et partageable via une référence depuis le blog.
 
 Pour cela on nous définirions les méthodes suivantes:
 
@@ -588,8 +597,8 @@ TBPost class >> isVoyageRoot
 TBBlog >> writeBlogPost: aPost
    "Write the blog post in database"
    posts add: aPost.
-   aPost save. 
-   self save 
+   aPost save.
+   self save
 ]]]
 
 
@@ -602,7 +611,7 @@ TBBlog >> remove
 
 Ici dans la méthode ==remove== nous enlevons chaque posts puis nous remontons à jour la collection et nous enlevons le blog lui-même.
 
-Encore une fois, notez qu'à chaque fois que vous décider de changer la définition d'une classe racine ou que vous ajoutez une nouvelle classe racine, il est capital de réinitializer Voyage car Voyage maintient un cache. 
+Encore une fois, notez qu'à chaque fois que vous décider de changer la définition d'une classe racine ou que vous ajoutez une nouvelle classe racine, il est capital de réinitializer Voyage car Voyage maintient un cache.
 
 Pour cela exécutez l'expression suivante.
 [[[
@@ -612,7 +621,7 @@ Pour cela exécutez l'expression suivante.
 !!! D'autres requêtes
 
 
-Nous illustrons maintenant comment nous pouvons faire des requêtes sur la base en mémoire en incluant les posts. 
+Nous illustrons maintenant comment nous pouvons faire des requêtes sur la base en mémoire en incluant les posts.
 
 [[[
    TBBlog reset.
@@ -625,7 +634,7 @@ Nous illustrons maintenant comment nous pouvons faire des requêtes sur la base 
 
    "Via repository"
    TBBlog count.
-   > 1 
+   > 1
    TBPost count.
    > 5
 
@@ -638,13 +647,13 @@ Nous illustrons maintenant comment nous pouvons faire des requêtes sur la base 
    > 0
 ]]]
 
-Nous allons maintenant utiliser une base mongo externe à Pharo. 
+Nous allons maintenant utiliser une base mongo externe à Pharo.
 
 
 ! Mongo
 
-En utilisant Voyage nous pouvons rapidement sauver nos posts sur une base de données Mongo. Ce chapitre explique rapidement la mise en oeuvre et les quelques modifications que nous devons apporter a notre projet pour sauver en Pharo. 
-Nous commencons 
+En utilisant Voyage nous pouvons rapidement sauver nos posts sur une base de données Mongo. Ce chapitre explique rapidement la mise en oeuvre et les quelques modifications que nous devons apporter a notre projet pour sauver en Pharo.
+Nous commencons
 
 !! Obtenir une base de données MongoDB
 
@@ -670,17 +679,17 @@ chmod 770 /data/db
 
 Lancement de mongo: ==[sudo] mongod==
 
-Attention une fois que votre application utilise Mongo, il est important que Mongo soit lancé avant Pharo. 
-Vous pouvez tester cela avec ce script. 
+Attention une fois que votre application utilise Mongo, il est important que Mongo soit lancé avant Pharo.
+Vous pouvez tester cela avec ce script.
 
 [[[
 | server |
 server := Mongo default.
-[ server open ] 
-   on: ConnectionTimedOut 
+[ server open ]
+   on: ConnectionTimedOut
    do: [ :e | ^ false ].
 ^ server isOpen
-]]]   
+]]]
 
 Vous pouvez aussi utiliser la méthode ==VOMongoRepository class >> #validateConectionHost:port:==
 
@@ -718,7 +727,7 @@ Pensez à changer les valeurs!
 
 !!!! Paramètres du serveur
 
-Lors de votre enregistrement sur mongolab vous obtenez des valeurs que nous pouvons utiliser. 
+Lors de votre enregistrement sur mongolab vous obtenez des valeurs que nous pouvons utiliser.
 
 
 |!Paramètre      |!Valeur                |
@@ -728,7 +737,7 @@ Lors de votre enregistrement sur mongolab vous obtenez des valeurs que nous pouv
 
 !!!! Utilisateur de la base tinyblog
 
-Pour le moment Voyage ne fonctionne qu'avec Mongo 2.0 car la version 3.0 a changé son mécanisme de vérification de mots de passe. 
+Pour le moment Voyage ne fonctionne qu'avec Mongo 2.0 car la version 3.0 a changé son mécanisme de vérification de mots de passe.
 |!Champs       |!Valeur      |
 |Compte       |tbuser      |
 |Mot de passe |tbpassword  |
@@ -839,7 +848,7 @@ Connexion avec un navigateur sur *http://localhost:8080/TinyBlog*. La page doit 
 +Une page quasi vide mais servie par Seaside.>file://figures/EmptyPage.png|width=75|label=EmptyPage+
 
 
-Ajoutons maintenant des informations dans l'entête de la page HTML afin que TinyBlog ait un titre et soit une application HTML5. 
+Ajoutons maintenant des informations dans l'entête de la page HTML afin que TinyBlog ait un titre et soit une application HTML5.
 
 [[[
 TBApplicationRootComponent >> updateRoot: anHtmlRoot
@@ -849,9 +858,9 @@ TBApplicationRootComponent >> updateRoot: anHtmlRoot
 ]]]
 
 
-Le composant ==TBApplicationRootComponent== est le composant principal de l'application, il ne fait que rendu graphique limité en affichant dans le future le composant principal qu'il contiendra. Il contiendra plus tard soit les composants qu'un lecteur du blog pourra utiliser soit les composants pour administrer le blog et ses postes. 
+Le composant ==TBApplicationRootComponent== est le composant principal de l'application, il ne fait que rendu graphique limité en affichant dans le future le composant principal qu'il contiendra. Il contiendra plus tard soit les composants qu'un lecteur du blog pourra utiliser soit les composants pour administrer le blog et ses postes.
 
-Nous avons décidé que le composant ==TBApplicationRootComponent== contiendra des composants inhéritants de la classe abstraite ==TBScreenComponent== que nous allons définir dans le prochain chapitre. 
+Nous avons décidé que le composant ==TBApplicationRootComponent== contiendra des composants inhéritants de la classe abstraite ==TBScreenComponent== que nous allons définir dans le prochain chapitre.
 
 
 
@@ -861,13 +870,13 @@ Nous sommes prets à définir les composants visuels de notre petite application
 Les premiers chapitres de *http://book.seaside.st* peuvent vous aider.
 
 
-La figure *@ComponentOverview* montre les différents composants que nous allons développer. 
+La figure *@ComponentOverview* montre les différents composants que nous allons développer.
 
 +Les composants composant l'application TinyBlog.>file://figures/ComponentOverview.pdf|width=75|label=ComponentOverview+
 
 !! Le composant TBScreenComponent
 
-Le composant ==TBApplicationRootComponent== contiendra des composants sousclasses de la classe abstraite ==TBScreenComponent==. Cette classe nous permet de factoriser les comportements que nous souhaitons partager entre tous nos composants. 
+Le composant ==TBApplicationRootComponent== contiendra des composants sousclasses de la classe abstraite ==TBScreenComponent==. Cette classe nous permet de factoriser les comportements que nous souhaitons partager entre tous nos composants.
 
 [[[
 WAComponent subclass: #TBScreenComponent
@@ -876,16 +885,16 @@ WAComponent subclass: #TBScreenComponent
    package: 'TinyBlog-Components'
 ]]]
 
-Les différents composants d'interface de TinyBlog auront besoin d'accéder aux règles métier de l'application. Dans le protocole 'accèssing', créons un méthode ==blog== qui retourne l'instance de ==TBBlog==. 
+Les différents composants d'interface de TinyBlog auront besoin d'accéder aux règles métier de l'application. Dans le protocole 'accèssing', créons un méthode ==blog== qui retourne l'instance de ==TBBlog==.
 
 [[[
 TBScreenComponent >> blog
-   "Return the current blog in the future we will ask the 
+   "Return the current blog in the future we will ask the
    session to return the blog of the currently logged user."
    ^ TBBlog current
 ]]]
 
-Dans le future, lorsque nous gérerons les utilisateurs et le fait qu'un utilisateurs puisse avoir plusieurs blogs nous modifierons cette méthode pour utiliser des informations stockées dans la session active (Voir TBSession plus loin). 
+Dans le future, lorsque nous gérerons les utilisateurs et le fait qu'un utilisateurs puisse avoir plusieurs blogs nous modifierons cette méthode pour utiliser des informations stockées dans la session active (Voir TBSession plus loin).
 
 +Accès à la bibliothèque Bootstrap.>file://figures/SeasideBootstrap.png|width=75|label=bootstrap+
 
@@ -894,13 +903,13 @@ Dans le future, lorsque nous gérerons les utilisateurs et le fait qu'un utilisa
 La bibliothèque Bootstrap est totallement accèssible depuis Seaside comme nous allons le montrer.
 Pour parcourir les nombreux exemples, cliquer sur le lien bootstrap dans la liste des applications servies par Seaside ou pointer votre navigateur sur le lien *http://localhost:8080/bootstrap*. Vous devez obtenir l'écran *@bootstrap*
 
-Cliquer sur le lien ""Examples"" au bas de la page et vous pouvez ainsi voir les éléments graphiques ainsi que le code pour les obtenir comme montré par la figure *@examplebootstrap*. 
+Cliquer sur le lien ""Examples"" au bas de la page et vous pouvez ainsi voir les éléments graphiques ainsi que le code pour les obtenir comme montré par la figure *@examplebootstrap*.
 
 +Comprendre un élément et son code en Bootstrap.>file://figures/TBSAlert.png|width=75|label=examplebootstrap+
 
 !!! Bootstrap
 
-Le repository pour le source et la documentation est 
+Le repository pour le source et la documentation est
 *http://smalltalkhub.com/#!/~TorstenBergmann/Bootstrap*.
 Une demo en ligne est disponible à *http://pharo.pharocloud.com/bootstrap*.
 
@@ -927,9 +936,9 @@ TBHeaderComponent >> renderContentOn: html
          with: 'TinyBlog' ]
 ]]]
 
-L'entête  (header) est affichée à l'aide d'une barre de navigation Bootstrap (voir la figure *@navBlog*)
+A la fin des manipulations suivantes, l'entête (header) sera affiché à l'aide d'une barre de navigation Bootstrap (voir la figure *@navBlog*)
 
-Par défaut dans une barre de navigation Bootstrap, il y a un lien sur tbsNavbarBrand qui est ici inutile (sur le titre de l'application). Ici nous l'initialisons avec une ancre =='#'== de façon à ce que si l'utilisateur clique sur le titre, il ne se passe rien. En général, cliquer sur le titre de l'application permet de revenir à la page de départ du site. 
+Par défaut dans une barre de navigation Bootstrap, il y a un lien sur tbsNavbarBrand qui est ici inutile (sur le titre de l'application). Ici nous l'initialisons avec une ancre =='#'== de façon à ce que si l'utilisateur clique sur le titre, il ne se passe rien. En général, cliquer sur le titre de l'application permet de revenir à la page de départ du site.
 
 
 
@@ -961,7 +970,7 @@ TBScreenComponent >> initialize
 +TinyBlog avec une barre de navigation.>file://figures/navBlog.png|width=75|label=navBlog+
 
 !!! Relation Composite-Composant
-En Seaside, les sous-composants d'un composant doivent être retournés par le composite en réponse au message ==children==. Définissons que l'instance du composant ==TBHeaderComponent== est un enfant de ==TBScreenComponent== dans la hiérarchie de composants Seaside (en non entre classes Pharo). 
+En Seaside, les sous-composants d'un composant doivent être retournés par le composite en réponse au message ==children==. Définissons que l'instance du composant ==TBHeaderComponent== est un enfant de ==TBScreenComponent== dans la hiérarchie de composants Seaside (en non entre classes Pharo).
 
 [[[
 TBScreenComponent >> children
@@ -980,15 +989,15 @@ TBScreenComponent >> renderContentOn: html
 
 !! Utilisation du Composant Screen
 
-Bien que le composant ==TBScreenComposant== n'est pas vocation à être utilisé directement, nous allons l'utiliser de manière temporaire pendant que nous développons les autres composants. 
+Bien que le composant ==TBScreenComposant== n'est pas vocation à être utilisé directement, nous allons l'utiliser de manière temporaire pendant que nous développons les autres composants.
 
-Ainsi nous l'instancions dans la méthode ==initialize== suivante. 
+Ainsi nous l'instancions dans la méthode ==initialize== suivante.
 
 [[[
 TBApplicationRootComponent >> initialize
 
    super initialize.
-   main := TBScreenComponent new. 
+   main := TBScreenComponent new.
 ]]]
 
 [[[
@@ -1030,17 +1039,17 @@ TBPostsListComponent >> renderContentOn: html
    html text: 'Blog Posts here !!!'
 ]]]
 
-Nous pouvons maintenant dire au composant de l'application d'utiliser ce composant. Pour cela nous redéfinissons la 
+Nous pouvons maintenant dire au composant de l'application d'utiliser ce composant. Pour cela nous redéfinissons la
 
 [[[
 TBApplicationRootComponent >> initialize
 
    super initialize.
-   main := TBPostsListComponent new. 
+   main := TBPostsListComponent new.
 ]]]
 
 Editer cette méthode n'est guère propre. Nous ajoutons un setter qui nous permettra
-de changer dynamiquement de composant dans le future tout en gardant le composant actuel pour une initialisation par défaut. 
+de changer dynamiquement de composant dans le future tout en gardant le composant actuel pour une initialisation par défaut.
 
 [[[
 TBApplicationRootComponent >> main: aComponent
@@ -1073,7 +1082,7 @@ TBPostComponent >> initialize
       post := TBPost new.
 ]]]
 
-[[[      
+[[[
 TBPostComponent >> title
    ^ post title
 ]]]
@@ -1098,8 +1107,8 @@ TBPostComponent >> renderContentOn: html
 ]]]
 
 
-!!!! A propos de formulaire 
-Nous montrerons dans le chapitre décrivant Magritte puis les interfaces d'administration, qu'il est rare de définir un composant de manière aussi manuelle. En effet Magritte en décrivant les données manipulées permet de générer automatiquement des composants Seaside. Le code équivalent serait comme suit: 
+!!!! A propos de formulaire
+Nous montrerons dans le chapitre décrivant Magritte puis les interfaces d'administration, qu'il est rare de définir un composant de manière aussi manuelle. En effet Magritte en décrivant les données manipulées permet de générer automatiquement des composants Seaside. Le code équivalent serait comme suit:
 
 [[[
 TBPostComponent >> renderContentOn: html
@@ -1124,20 +1133,20 @@ Rafraichissez la page et vous devez obtenir la Figure *@better*.
 
 +TinyBlog avec une liste de posts.>file://figures/betterListPosts.png|width=75|label=better+
 
-Nous allons utiliser Bootstrap pour rendre la liste un peu plus jolie en utilisant un container. 
+Nous allons utiliser Bootstrap pour rendre la liste un peu plus jolie en utilisant un container.
 
 [[[
 TBPostsListComponent >> renderContentOn: html
    super renderContentOn: html.
-   html tbsContainer: [ 
+   html tbsContainer: [
    self blog allVisibleBlogPosts do: [ :p |
       html render: (TBPostComponent new post: p) ] ]
 ]]]
 
 Rafraichissez la page et vous devez obtenir la Figure *@container*.
 +TinyBlog avec une liste de posts élémentaire.>file://figures/ContainerList.png|width=75|label=container+
-   
-Les dates sont affichées de manière étrange. Ceci est dû au fait que les dates sont en fait des instance de ==DateAndTime== donc nous les convertissons dans date comme suit. 
+
+Les dates sont affichées de manière étrange. Ceci est dû au fait que les dates sont en fait des instance de ==DateAndTime== donc nous les convertissons dans date comme suit.
 
 [[[
 TBPostComponent >> date
@@ -1180,7 +1189,7 @@ Nous définissons aussi une méthode de création au niveau classe.
 
 [[[
 TBCategoriesComponent class >> categories: aCollectionOfCategories postsList: aTBScreen
-   ^ self new categories: aCollectionOfCategories; postsList: aTBScreen 
+   ^ self new categories: aCollectionOfCategories; postsList: aTBScreen
 ]]]
 
 La méthode ==selectCategory:== (protocole 'action') communique au composant ==TBPostsListComponent== la nouvelle catégorie courante.
@@ -1200,10 +1209,10 @@ TBScreenComponent subclass: #TBPostsListComponent
 ]]]
 
 [[[
-TBScreenComponent >> currentCategory
+TBPostsListComponent >> currentCategory
    ^ currentCategory
 
-TBScreenComponent >> currentCategory: anObject
+TBPostsListComponent >> currentCategory: anObject
    currentCategory := anObject
 ]]]
 
@@ -1225,7 +1234,7 @@ TBCategoriesComponent >> renderContentOn: html
      categories do: [ :cat | self renderCategoryLinkOn: html with: cat ]]
 ]]]
 
-Nous avons presque fini. En effet, l'affichage des posts ne tient pas en compte de la catégorie courante. 
+Nous avons presque fini. En effet, l'affichage des posts ne tient pas en compte de la catégorie courante.
 
 !!! Mise à jour des Posts
 Nous devons aussi mettre à jour la liste des posts. Il faut gérer le rafraîchissement de la liste des posts en fonction de la catégorie choisie et donc modifier la méthode de rendu du composant ==TBPostsListComponent==.
@@ -1248,7 +1257,7 @@ TBPostsListComponent >> renderContentOn: html
    html render: (TBCategoriesComponent
                categories: (self blog allCategories)
                postsList: self).
-   html tbsContainer: [ 
+   html tbsContainer: [
       self readSelectedPosts do: [ :p |
          html render: (TBPostComponent new post: p) ] ]
 ]]]
@@ -1297,8 +1306,8 @@ Vous devez obtenir une application proche de celle représentée figure *@nicer*
 +Avec un meilleur agencement.>file://figures/NicerCategories.png|width=75|label=nicer+
 
 
-Bien que le code fonctionne, on ne doit pas laisser la méthode ==TBPostsListComponent >> renderContentOn: html== dans un tel état. Elle est bien trop longue et difficilement réutilisable. 
-Proposer une solution. 
+Bien que le code fonctionne, on ne doit pas laisser la méthode ==TBPostsListComponent >> renderContentOn: html== dans un tel état. Elle est bien trop longue et difficilement réutilisable.
+Proposer une solution.
 
 !!!! Notre solution
 
@@ -1306,7 +1315,7 @@ Proposer une solution.
 TBPostsListComponent >> renderContentOn: html
    super renderContentOn: html.
    html
-      tbsContainer: [ 
+      tbsContainer: [
          html tbsRow
             showGrid;
             with: [ self renderCategoryColumnOn: html.
@@ -1324,23 +1333,23 @@ TBPostsListComponent >> renderCategoryColumnOn: html
 
 [[[
 TBPostsListComponent >> basicRenderCategoriesOn: html
-   ^ html render: (TBCategoriesComponent 
-         categories: self blog allCategories 
+   ^ html render: (TBCategoriesComponent
+         categories: self blog allCategories
          postsList: self)
 ]]]
 
-[[[   
+[[[
 TBPostsListComponent >> renderPostColumnOn: html
    html tbsColumn
          extraSmallSize: 12;
          smallSize: 10;
          mediumSize: 8;
-         with: [ self basicRenderPostsOn: html ] 
+         with: [ self basicRenderPostsOn: html ]
 ]]]
 
 [[[
 basicRenderPostsOn: html
-   ^ self readSelectedPosts do: [ :p | 
+   ^ self readSelectedPosts do: [ :p |
         html render: (TBPostComponent new post: p) ]
 ]]]
 
@@ -1356,11 +1365,11 @@ Magritte est une bibliothèque qui permet une fois les données décrites de gé
 Un chapitre dans le livre sur Seaside (*http://book.seaside.st*) est disponible sur Magritte ainsi qu'un tutoriel sur *https://github.com/SquareBracketAssociates/Magritte*.
 
 
-Dans ce chapitre, les cinq variables d'instance de l'objet ==TBPost== sont décrites à l'aide de Magritte. Dans ce chapitre nous décrivons seulement les données et le chapitre suivant en tirera avantage. 
+Dans ce chapitre, les cinq variables d'instance de l'objet ==TBPost== sont décrites à l'aide de Magritte. Dans ce chapitre nous décrivons seulement les données et le chapitre suivant en tirera avantage.
 
-!! Descriptions 
+!! Descriptions
 Les cinq méthodes sont dans le protocole 'descriptions' de la classe ==TBPost==.
-Noter que le nom des méthodes n'est pas important mais que nous suivons une convention. C'est le pragma ==<magritteDescription>== qui permet à Magritte d'identifier les descriptions. 
+Noter que le nom des méthodes n'est pas important mais que nous suivons une convention. C'est le pragma ==<magritteDescription>== qui permet à Magritte d'identifier les descriptions.
 
 Le titre d'un post est une chaine de caractères devant être obligatoirement complétée.
 
@@ -1416,7 +1425,7 @@ TBPost >> descriptionVisible
       beRequired;
       yourself
 ]]]
-   
+
 !!! Ameliorations possibles
 
 Voici quelques améliorations. Nous pourrions améliorer cette description pour qu'il ne soit pas possible de poster un post ayant une date antèrieure celle d'ajourd'hui. Nous pourrions changer la description d'une categorie pour en definir un enuméré parmi les catégories existantes. Ceci permettrait de faire une interface plus simplement.
@@ -1430,7 +1439,7 @@ Voici quelques améliorations. Nous pourrions améliorer cette description pour 
 
 
 ! Administration de TinyBlog
-Nous allons aborder maintenant l'administration de TinyBlog. Cet exercice va nous permettre de montrer comment utiliser des informations de session ainsi que Magritte pour la définition de rapport. 
+Nous allons aborder maintenant l'administration de TinyBlog. Cet exercice va nous permettre de montrer comment utiliser des informations de session ainsi que Magritte pour la définition de rapport.
 
 Le scénario assez classique que nous allons développer est le suivant : l'utilisateur doit s'authentifier pour accéder à la partie administration de TinyBlog. Il le fait à l'aide d'un compte et d'un mot de passe. Le lien permettant d'afficher le composant d'authentification sera placé sous la liste des catégories.
 
@@ -1439,7 +1448,7 @@ Le scénario assez classique que nous allons développer est le suivant : l'util
 
 Nous allons commencer par développer un petit composant d'identification qui lorsqu'il sera invoqué ouvrira une petite boite de dialogue pour demander les informations d'identification. Remarquer qu'une telle fonctionnalité devrait faire partie d'une bibliothèque de composants de base en Seaside.
 
-Ce composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances du composant. 
+Ce composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances du composant.
 
 [[[
 WAComponent subclass: #TBAuthentificationComponent
@@ -1518,16 +1527,16 @@ Quelle critique peut on faire sur cette méthode ? Proposer une refactorisation 
 TBAuthentificationComponent >> renderContentOn: html
    html tbsModal
       id: 'myAuthDialog';
-      with: [ html tbsModalDialog: [ 
-                     html tbsModalContent: [ 
+      with: [ html tbsModalDialog: [
+                     html tbsModalContent: [
                            self renderHeaderOn: html.
                            html
-                              tbsModalBody: [ 
+                              tbsModalBody: [
                                  html
-                                    form: [ 
-                                       self renderInputAccountOn: html. 
+                                    form: [
+                                       self renderInputAccountOn: html.
                                        html break.
-                                       self renderInputPasswordOn: html. 
+                                       self renderInputPasswordOn: html.
                                        html break.
                                        html break.
                                        html tbsModalFooter: [ self renderOkCancelOn: html ] ] ] ] ] ]
@@ -1536,7 +1545,7 @@ TBAuthentificationComponent >> renderContentOn: html
 [[[
 TBAuthentificationComponent >> renderHeaderOn: html
    html
-      tbsModalHeader: [ 
+      tbsModalHeader: [
          html tbsModalCloseIcon.
          html tbsModalTitle
             level: 4;
@@ -1574,11 +1583,11 @@ Lorsque l'utilisateur clique sur le bouton 'SignIn', le message ==validate== est
 
 [[[
 TBAuthentificationComponent >> validate
-   (self account = 'admin' and: [ self password = 'password' ]) 
+   (self account = 'admin' and: [ self password = 'password' ])
       ifTrue: [ self alert: 'Success!' ]
 ]]]
 
-!!!! Critique 
+!!!! Critique
  Rechercher une autre méthode pour réaliser l'authentification de l'utilisateur (utilisation d'un backend de type base de données, LDAP ou fichier texte). En tout cas, ce n'est pas à la boite de login de faire ce travail, il faut le déléguer à un objet métier qui saura consulter le backend et authentifier l'utilisateur.
 
  De plus le composant ==TBAuthentificationComponent== pourrait afficher l'utilisateur lorsque celui-ci est logué.
@@ -1592,11 +1601,11 @@ TBPostsListComponent >> renderContentOn: html
    super renderContentOn: html.
    html render: (TBAuthentificationComponent from: self).
    html
-      tbsContainer: [ 
+      tbsContainer: [
          html tbsRow
             showGrid;
             with: [ self renderCategoryColumnOn: html.
-                  self renderPostColumnOn: html ] ] 
+                  self renderPostColumnOn: html ] ]
 ]]]
 
  On définit maintenant une méthode qui affiche un pictogramme clé et un lien 'SignIn'.
@@ -1627,12 +1636,12 @@ Lorsque nous pressons sur le lien SignIn nous obtenons la figure *@authentificat
 
 !! Administration des posts
 
-Nous allons développer deux components l'un deux sera un rapport qui contiendra tous les posts et un autre composant qui contiendra ce rapport. Le rapport bien que générer avec Magritte est un composant Seaside nous aurions pu n'avoir qu'un seul composant mais nous pensons que distinguer le composant d'administration du rapport est une bonne chose pour l'évolution de la partie administration. Commençons donc par le component d'administration. 
+Nous allons développer deux components l'un deux sera un rapport qui contiendra tous les posts et un autre composant qui contiendra ce rapport. Le rapport bien que générer avec Magritte est un composant Seaside nous aurions pu n'avoir qu'un seul composant mais nous pensons que distinguer le composant d'administration du rapport est une bonne chose pour l'évolution de la partie administration. Commençons donc par le component d'administration.
 
 
 !!! Création d'un composant d'administration
 
-Le composant ==TBAdminComponent== hérite de ==TBScreenComponent== pour bénéficier du header et de l'accès au blog. Il contiendra en plus le rapport que nous construisons par la suite. 
+Le composant ==TBAdminComponent== hérite de ==TBScreenComponent== pour bénéficier du header et de l'accès au blog. Il contiendra en plus le rapport que nous construisons par la suite.
 
 [[[
 TBScreenComponent subclass: #TBAdminComponent
@@ -1641,7 +1650,7 @@ TBScreenComponent subclass: #TBAdminComponent
    category: 'TinyBlog-Components'
 ]]]
 
-Nous définissons une première version de la méthode de rendu afin de pourvoir tester. 
+Nous définissons une première version de la méthode de rendu afin de pourvoir tester.
 
 [[[
 TBAdminComponent >> renderContentOn: html
@@ -1652,7 +1661,7 @@ TBAdminComponent >> renderContentOn: html
 ]]]
 
 
-Nous modifions la méthode ==validate== pour qu'elle invoque la méthode ==gotoAdministration== définie dans le composant ==TBPostsListComponent==. Cette dernière méthode invoque le composant d'administration. 
+Nous modifions la méthode ==validate== pour qu'elle invoque la méthode ==gotoAdministration== définie dans le composant ==TBPostsListComponent==. Cette dernière méthode invoque le composant d'administration.
 
 [[[
 TBPostsListComponent >> gotoAdministration
@@ -1673,7 +1682,7 @@ Enregistrez-vous et vous devez obtenir la situation telle que représentée par 
 
 La liste des posts est affichée à l'aide d'un rapport généré dynamiquement par le framework Magritte. Nous utilisons ce framework pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
 
-Pour rester modulaire, nous allons créer un composant Seaside pour cette tâche. 
+Pour rester modulaire, nous allons créer un composant Seaside pour cette tâche.
 
 [[[
 TBSMagritteReport subclass: #TBPostsReport
@@ -1682,7 +1691,7 @@ TBSMagritteReport subclass: #TBPostsReport
    category: 'TinyBlog-Components'
 ]]]
 
-Avec la méthode ==from:== nous disons que nous voulons créer un rapport en prenant les descriptions de n'importe quel blog. 
+Avec la méthode ==from:== nous disons que nous voulons créer un rapport en prenant les descriptions de n'importe quel blog.
 [[[
 TBPostsReport class >> from: aBlog
    | allBlogs |
@@ -1697,7 +1706,7 @@ Nous ajoutons une méthode de classe pour la sélection des colonnes et modifier
 [[[
 TBPostsReport class >> filteredDescriptionsFrom: aBlogPost
    ^ aBlogPost magritteDescription select: [ :each | #(title category date) includes: each accèssor selector ]
-   
+
 TBPostsReport class >> from: aBlog
    | allBlogs |
    allBlogs := aBlog allBlogPosts.
@@ -1814,7 +1823,7 @@ TBPost >> descriptionVisible
 
 Nous pouvons mettre en place un CRUD (Create Read Update Delete) permettant de gérer les posts. Pour cela, nous allons ajouter une colonne (instance ==MACommandColumn==) au rapport qui regroupera les différentes opérations utilisant ==addCommandOn:==.
 
-Ceci se fait lors de la création du rapport. En particulier nous donnons un accès au blog depuis le rapport. 
+Ceci se fait lors de la création du rapport. En particulier nous donnons un accès au blog depuis le rapport.
 
 [[[
 TBSMagritteReport subclass: #TBPostsReport
@@ -1865,9 +1874,9 @@ TBPostsReport >> renderAddPostForm: aPost
 		yourself
 ]]]
 
-La méthode ==renderAddPostForm== illustre la puissance de Magritte pour générer des formulaire. 
-Ici le message ==asComponent== envoyé à un objet de la class ==TBPost== donc du domaine, crée directement un composant Seaside. 
-Nous lui ajoutons une décoration afin de gérer ok/cancel. 
+La méthode ==renderAddPostForm== illustre la puissance de Magritte pour générer des formulaire.
+Ici le message ==asComponent== envoyé à un objet de la class ==TBPost== donc du domaine, crée directement un composant Seaside.
+Nous lui ajoutons une décoration afin de gérer ok/cancel.
 
 [[[
 TBPostsReport >> addPost
@@ -1919,7 +1928,7 @@ Pour éviter une opération accidentelle, nous utilisons une boite modale pour q
 
 [[[
 TBPostsReport >> deletePost: aPost
-	(self confirm: 'Do you want remove this post ?') 
+	(self confirm: 'Do you want remove this post ?')
 		ifTrue: [ blog removeBlogPost: aPost ]
 ]]]
 
@@ -1930,7 +1939,7 @@ TBBlog >> removeBlogPost: aPost
 	self save.
 ]]]
 
-Nous devons ajouter un test. 
+Nous devons ajouter un test.
 
 
 !!! Gérer le problème du raffraichissement des données
@@ -1953,7 +1962,7 @@ TBPostsReport >> addPost
 	]
 
 TBPostsReport >> deletePost: aPost
-	(self confirm: 'Do you want remove this post ?') 
+	(self confirm: 'Do you want remove this post ?')
 		ifTrue: [ blog removeBlogPost: aPost.
 				 self refreshReport ]
 ]]]
@@ -2040,9 +2049,9 @@ TBPost >> descriptionVisible
 
 Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations qui sont partagées et accèssible entre les composants. Une session est pratique pour gérer les informations de l'utilisateur en cours (loggé).  Nous allons voir comment nous l'utilisons pour gérer une connexion.
 
-L'administrateur du blog peut vouloir voyager entre la partie privée et la partie publique de TinyBlog. 
+L'administrateur du blog peut vouloir voyager entre la partie privée et la partie publique de TinyBlog.
 
-Nous définissons une nouvelle souclasse de ==WASession== nommée ==TBSession==. Pour savoir si l'utilisateur s'est authentifié, nous devons définir un objet session et ajouter une variable d'instance contenant une valeur booléenne précisant l'état de l'utilisateur. 
+Nous définissons une nouvelle souclasse de ==WASession== nommée ==TBSession==. Pour savoir si l'utilisateur s'est authentifié, nous devons définir un objet session et ajouter une variable d'instance contenant une valeur booléenne précisant l'état de l'utilisateur.
 
 [[[
 WASession subclass: #TBSession
@@ -2101,13 +2110,13 @@ Enfin, le composant ==TBAuthentificationComponent== doit mettre à jour la varia
 
 [[[
 TBauthentificationComponent >> validate
-	(self account = 'admin' and: [ self password = 'password' ]) 
+	(self account = 'admin' and: [ self password = 'password' ])
 		ifTrue: [ self session logged: true.
 		component gotoAdministrationScreen ]
 ]]]
 
 
-Il vous faut maintenant spécifier à Seaside qu'il doit utiliser l'objet ==TBSession== comme objet de session courant pour l'application TinyBlog. 
+Il vous faut maintenant spécifier à Seaside qu'il doit utiliser l'objet ==TBSession== comme objet de session courant pour l'application TinyBlog.
 Pour cela, on utilise l'outil d'administration de Seaside.
 
 - connexion sur *http://localhost:8080/config*,
@@ -2116,14 +2125,14 @@ Pour cela, on utilise l'outil d'administration de Seaside.
 - Choisir 'TBSession' dans la liste déroulante,
 - Cliquez sur le bouton "Apply" en bas du formulaire.
 
-On peut automatiser cette initialisation en améliorant la méthode initialize de la class ==TBApplicationRootComponent==. 
+On peut automatiser cette initialisation en améliorant la méthode initialize de la class ==TBApplicationRootComponent==.
 
 [[[
 TBApplicationRootComponent class >> initialize
       "self initialize"
       | app |
       app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
-      app 
+      app
          preferenceAt: #sessionClass put: TBSession.
       app
          addLibrary: JQDeploymentLibrary;
@@ -2134,9 +2143,9 @@ TBApplicationRootComponent class >> initialize
 
 
 
-!!!! Exercices: 
+!!!! Exercices:
 Proposer l'ajout d'un bouton "Déconnexion"
-La gestion de plusieurs blogs pourra aussi passer par une amélioration des sessions qui devront conserver l'identification de l'utilisateur. 
+La gestion de plusieurs blogs pourra aussi passer par une amélioration des sessions qui devront conserver l'identification de l'utilisateur.
 
 
 
@@ -2160,7 +2169,7 @@ TBApplicationRootComponent class >> initialize
 	   "self initialize"
 	   | app |
 	   app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
-		app 
+		app
 			preferenceAt: #sessionClass put: TBSession.
 	   app
 	      addLibrary: JQDeploymentLibrary;
@@ -2175,17 +2184,17 @@ Ne pas oublier d'initialiser.
 self initialize
 ]]]
 
-!! Obtenir 
+!! Obtenir
 
 [[[
 TBRestfulFilter >> listAll
   <get>
   <produces: 'text/json'>
 
-  ^ String streamContents: [ :astream | 
+  ^ String streamContents: [ :astream |
        TBBlog current allBlogPosts
 			do: [ :each | each javascriptOn: stream ]
-			separatedBy: [ stream << ',' ]] 
+			separatedBy: [ stream << ',' ]]
     ]
 ]]]
 
@@ -2197,16 +2206,16 @@ TBRestfulFilter >> listAll
   <get>
   <produces: 'text/json'>
 
-  ^ String streamContents: [ :astream | 
+  ^ String streamContents: [ :astream |
     		TBBlog current allBlogPosts
-  			do: [ :each | 
+  			do: [ :each |
   			Dictionary new
   				at: #title put: each title;
   				at: #category put: each category;
   				at: #date put: each date;
   				at: #text put: each text;
   				javascriptOn: astream ]
-  			separatedBy: [ astream << ',' ]] 
+  			separatedBy: [ astream << ',' ]]
 ]]]
 
 
@@ -2216,7 +2225,7 @@ TBRestfulFilter >> listAll
 !!! Refactoring
 
 Définir la transformation en Javascript dans notre composant n'est pas optimal. Nous allons donc le définir dans la classe
-et appeller cette fonctionalité. 
+et appeller cette fonctionalité.
 
 [[[
 TBPost >> javascriptOn: aStream
@@ -2226,7 +2235,7 @@ TBPost >> javascriptOn: aStream
 			at: #categroy put: self category;
 			at: #date put: self  date;
 			at: #text put: self  text;
-			javascriptOn: aStream 
+			javascriptOn: aStream
 ]]]
 
 [[[
@@ -2234,7 +2243,7 @@ TBRestfulFilter >> listAll
   <get>
   <produces: 'text/json'>
 
-  ^ String streamContents: [ :astream | 
+  ^ String streamContents: [ :astream |
 		astream << '['.
 		TBBlog current allBlogPosts
 			do: [ :each | each javascriptOn: astream]
@@ -2243,17 +2252,17 @@ TBRestfulFilter >> listAll
 		]
 ]]]
 
-Nous raffinons afin de pouvoir sélectionner les attributs que nous voulons convertir 
+Nous raffinons afin de pouvoir sélectionner les attributs que nous voulons convertir
 en introduisant la méthode ==javascriptOn: aStream attributes: aCollection==.
 
 [[[
 TBPost >> javascriptOn: aStream attributes: aCollection
-	
+
 	| dictionary |
 	dictionary := Dictionary new.
-	aCollection do: [ :each | 
+	aCollection do: [ :each |
 				dictionary at: each put: (self perform: each asSymbol) ].
-	^ dictionary javascriptOn: aStream 
+	^ dictionary javascriptOn: aStream
 ]]]
 
 [[[
@@ -2265,13 +2274,13 @@ TBPost >> javascriptOn: aStream
 
 !!! Recherche d'un Post
 
-Maintenant nous allons proposer d'autres fonctionalité comme la recherche d'un poste. 
+Maintenant nous allons proposer d'autres fonctionalité comme la recherche d'un poste.
 Nous définissons donc cette fonctionalité dans la classe ==TBlog==.
 
 [[[
 TBBlog >> postWithTitle: aString
-	
-	^ self allBlogPosts 		
+
+	^ self allBlogPosts
 			detect: [ :each | each title = aString ]
 			ifNone: [ nil ]
 ]]]
@@ -2283,12 +2292,12 @@ TBRestfulFilter >> post: title
 	<produces: 'text/json'>
    | post |
 	post := TBBlog current postWithTitle: title.
-	post ifNil: [ ^ self notFound ]. 
-   ^ String streamContents: [ :astream | 
+	post ifNil: [ ^ self notFound ].
+   ^ String streamContents: [ :astream |
 		post javascriptOn: astream ]
 ]]]
 
-Nous pouvons tester en faisant la requete suivante : 
+Nous pouvons tester en faisant la requete suivante :
 
 [[[
 http://localhost:8080/TinyBlog/post/Welcome%20in%20TinyBlog
@@ -2325,8 +2334,8 @@ TBRestfulFilter >> search: title
 	<produces: 'text/json'>
    | post |
 	post := TBBlog current postWithTitle: title.
-	post ifNil: [ ^ self notFound ]. 
-   ^ String streamContents: [ :astream | 
+	post ifNil: [ ^ self notFound ].
+   ^ String streamContents: [ :astream |
 		post javascriptOn: astream attributes: #(title category date text)]
 ]]]
 
@@ -2342,28 +2351,28 @@ TBRestfulFilter >> searchDateFrom: beginString to: endString
 	<produces: 'text/json'>
    | posts dateFrom dateTo |
 
-	dateFrom := Date fromString: beginString. 
-	dateTo := Date fromString: endString. 
-	
+	dateFrom := Date fromString: beginString.
+	dateTo := Date fromString: endString.
+
 	posts := TBBlog current allBlogPosts
 		select: [  :each | each date between: dateFrom and: dateTo ].
-	
-	^ String streamContents: [ :astream | 
+
+	^ String streamContents: [ :astream |
 	 	astream << '['.
   		posts
 			do: [ :each | each javascriptOn: astream]
 			separatedBy: [ astream << ',' ].
 		astream << ']'
 		]
-		
+
 ]]]
 
 
 +Avec des dates.>file://figures/RestWithDate.png|width=75|label=RestWithDate+
 
 
-Dire un mot de 
-- Put in header vs. Post 
+Dire un mot de
+- Put in header vs. Post
 
 !!! Eliminer un post
 
@@ -2372,23 +2381,23 @@ TBRestfulFilter >> remove: title
 	<delete>
 	<path: '/remove/{title}'>
 	<produces: 'text/json'>
-	
+
 	| post |
-	
+
 	post := TBBlog current postWithTitle: title.
-	^ post 
-		ifNotNil: [ 
+	^ post
+		ifNotNil: [
 			post remove.
 			'{status: "ok"}' ]
-		ifNil: [ 
+		ifNil: [
 			'{status: "notFound"}' ]
 ]]]
 
-Notez que status n'est pas du REST car REST ne specifie pas la maniere de gerer les erreurs. 
+Notez que status n'est pas du REST car REST ne specifie pas la maniere de gerer les erreurs.
 Maintenant ce code ne fonctionne pas car ==TBPost== n'est pas une racine en Voyage.
 
-Essayons mais nous ne pouvons pas tester avec un browser web dans son url ne peut faire qu'un GET. 
-Donc il nous faut utiliser Zinc. 
+Essayons mais nous ne pouvons pas tester avec un browser web dans son url ne peut faire qu'un GET.
+Donc il nous faut utiliser Zinc.
 
 [[[
 ZnEasy delete: 'http://localhost:8080/TinyBlog/remove/RemoveMe'
@@ -2401,14 +2410,14 @@ TBRestfulFilter >> remove: title
 	<delete>
 	<path: '/remove/{title}'>
 	<produces: 'text/json'>
-	
+
 	| post |
 	post := TBBlog current postWithTitle: title.
-	^ post 
-		ifNotNil: [ 
+	^ post
+		ifNotNil: [
 			TBBlog current removeBlogPost: post.
 			'{status: "ok"}' ]
-		ifNil: [ 
+		ifNil: [
 			'{status: "notFound"}' ]
 ]]]
 
@@ -2427,16 +2436,16 @@ Vous pouvez verifiez que votre post n'est pas enlever.
 TBRestfulFilter >> addPost
 	<post>
 	<path: '/add-post'>
-	
+
 	| request title category date text post |
 
 	request := self requestContext request.
-	title := request at: #title.  
-	category := request at: #category.  
-	text := request at: #text.  
-	date := Date fromString: (request at: #title).  
+	title := request at: #title.
+	category := request at: #category.
+	text := request at: #text.
+	date := Date fromString: (request at: #title).
 	"Of course many can go wrong here (Date could be wrong ... and a real version we should validate"
-	post := TBBlog new 
+	post := TBBlog new
 		title: title;
 		text: text;
 		category: category;
@@ -2463,61 +2472,3 @@ TBRestfulFilter >> addPost
 
 
 ! Deployement
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
