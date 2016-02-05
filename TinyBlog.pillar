@@ -1209,10 +1209,10 @@ TBScreenComponent subclass: #TBPostsListComponent
 ]]]
 
 [[[
-TBScreenComponent >> currentCategory
+TBPostsListComponent >> currentCategory
    ^ currentCategory
 
-TBScreenComponent >> currentCategory: anObject
+TBPostsListComponent >> currentCategory: anObject
    currentCategory := anObject
 ]]]
 
