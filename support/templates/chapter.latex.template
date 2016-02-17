@@ -1,4 +1,5 @@
 % -*- mode: latex; -*-
+%!TEX TS-program = lualatex
 \ifx\wholebook\relax\else
 
 	\documentclass[10pt,twoside,english]{root/support/latex/sbabook/sbabook}
@@ -16,6 +17,8 @@
 \begin{titlingpage}
     \maketitle
 \end{titlingpage}
+
+\tableofcontents
 
 «& content»
 
