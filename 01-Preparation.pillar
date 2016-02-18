@@ -16,7 +16,8 @@ D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une faç
 
 Nous avons préparé une image contenant les projets Seaside, Voyage, Bootstrap et Magritte. 
 Vous pouvez la télécharger directement en utilisant Pharo Launcher et en cherchant le projet TinyBlogBase dans les contributions Pharo.
-Cette image se trouve également sur le serveur d'intégration *https://ci.inria.fr/* dans les Pharo-Contributions et le projet TinyBlogBase. Le lien direct est *https://ci.inria.fr/pharo-contribution/job/TinyBlogBase/lastSuccessfulBuild/artifact/TinyBlogBase.zip*.
+Cette image se trouve également sur le serveur d'intégration *https://ci.inria.fr/* dans les Pharo-Contributions et le projet TinyBlogBase. 
+% Le lien direct est *https://ci.inria.fr/pharo-contribution/job/TinyBlogBase/lastSuccessfulBuild/artifact/TinyBlogBase.zip*.
 
 Pour recréer cette image manuellement :
 

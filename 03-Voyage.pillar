@@ -2,9 +2,8 @@
 !Préparation de sauvegarde extérieure avec Voyage
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Alors qu'avoir un modèle d'objets en mémoire fonctionne bien, et que des sauvegardes de l'image Pharo sauve aussi de tels objets, il est préférable de pouvoir sauver les objets dans une base de données extérieure. Voyage permet de sauver les objets dans une base de donnée Mongo. 
-C'est ce que nous allons voir. Dans un premier temps nous allons utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second nous installerons une base de données Mongo et nous y accéderons via la couche Voyage. 
-
+Avoir un modèle d'objets en mémoire fonctionne bien, et que sauvegarder l'image Pharo sauve aussi ces objets. Toutefois, il est préférable de pouvoir sauver les objets dans une base de données extérieure. Voyage permet de sauver les objets dans une base de donnée Mongo. 
+C'est ce que nous allons voir. Dans un premier temps, nous allons utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second temps, nous installerons une base de données Mongo et nous y accéderons à travers Voyage. 
 
 !!Sauvegarde d'un blog
 
@@ -27,7 +26,7 @@ TBBlogTest >> testAddBlogPost
 
 Pourquoi cela arrive-t-il? En fait nous n'avons jamais dit quels objets devaient être sauvés dans la base de données.
 
-La méthode de class ==isVoyageRoot== permet de déclarer que les objets de la classe ==TBBlog== doivent être sauvés dans la base. 
+La méthode de class ==isVoyageRoot== permet de déclarer que les objets de la classe ==TBBlog== doivent être sauvés dans la base en tant qu'objets racines.
 
 [[[
 TBBlog class >> isVoyageRoot
@@ -35,31 +34,28 @@ TBBlog class >> isVoyageRoot
    ^ true
 ]]]
 
-De plus nous devons soit créer une connexion sur une base de données réelle soit travailler en mémoire. C'est cette dernière option que nous faisons 
-maintenant en utilisant cette expression. 
+De plus nous devons soit créer une connexion sur une base de données réelle soit travailler en mémoire. C'est cette dernière option que nous choisissons pour l'instant en utilisant cette expression. 
 
 [[[
 VOMemoryRepository new enableSingleton. 
 ]]]
 
-Le message ==enableSingleton== indique à Voyage que nous n'utilisons qu'une seule base de donnée ce qui nous permet de ne pas avoir à préciser avec laquelle nous travaillons. ==enableSingleton== met à jour le repository.
+Le message ==enableSingleton== indique à Voyage que nous n'utilisons qu'une seule base de donnée ce qui nous permet de ne pas avoir à préciser avec laquelle nous travaillons. 
 
 
-Nous définissons une méthode ==initializeMongo== dont le role est d'initialiser correctement la base. 
+Nous définissons une méthode ==initializeMongo== dont le rôle est d'initialiser correctement la base. 
 
-
+@@todo Luc: vérifier le code réel de initializeMongo et reset
 
 [[[
 TBBlog class >> initializeMongo
-   | repository |
-   repository := VOMemoryRepository new.
-   repository enableSingleton.
+   VOMemoryRepository new enableSingleton
 ]]]
-Ici nous n'avons pas besoin de stocker la base dans une variable d'instance car nous n'avons qu'une seule base de donnée (en mode singleton). 
+Ici nous n'avons pas besoin de stocker la base dans une variable d'instance car nous n'avons qu'une seule base de donnée en mode singleton. 
 
 
 
-Nous redéfinissons la méthode ==reset== et la méthode ==initialize== pour nous assurer que l'endroit où la base est sauvée est réinitialisé lorsque que l'on charge le code. 
+Nous redéfinissons la méthode ==reset== et la méthode ==initialize== pour nous assurer que l'endroit où la base est sauvée est réinitialisé lorsque l'on charge le code. 
 
 La méthode ==reset== réinitialize la base. 
 [[[
@@ -94,10 +90,10 @@ TBBlog >> remove
 ]]]
 
 
-!! Utilisation de la base
+!!Utilisation de la base
 
-Alors même que la base est en mémoire et bien que nous pouvons accèder au blog en utilisant le singleton de la class ==TBBlog==,
-nous allons montrer l'API offerte par Voyage. C'est la même API que nous pourrons utiliser pour accèder à une base mongo.
+Alors même que la base est en mémoire et bien que nous pouvons accéder au blog en utilisant le singleton de la class ==TBBlog==,
+nous allons montrer l'API offerte par Voyage. C'est la même API que nous pourrons utiliser pour accéder à une base mongo.
 
 Nous créons des posts dans 
 [[[
@@ -111,7 +107,7 @@ TBBlog count
 >1
 ]]]
 
-De la même manière, nous pouvons sélectionner touts objets sauvés. 
+De la même manière, nous pouvons sélectionner tous les objets sauvés. 
 
 [[[
 TBBlog selectAll
@@ -124,7 +120,7 @@ Vous pouvez voir l'API de Voyage en parcourant
 
 Ces queries sont plus pertinentes quand on a plus d'objets comme lorsque nous ajouterons plusieurs blogs.
 
-!! Changement de TBBlog
+!!Changement de TBBlog
 
 Notez qu'à chaque fois que vous décidez de changer soit en ajoutant une nouvelle racine d'objets ou soit lors d'une modification de la définition d'une classe racine (ajout, retrait, modification d'attribut) il est capital de réinitializer Voyage car Voyage maintient un cache. 
 
@@ -134,13 +130,15 @@ La réinitialisation se fait comme suit:
 	VOMongoRepository current reset
 ]]]
 
+@@todo Luc: pourquoi ce bout code n'est pas intégré dans ==TBBlog class>>reset==?
 
-!! Si nous devions sauvegarder les posts
 
-Cette section n'est pas à implémenter et elle est juste donner à titre d'exemple. Nous pourrions aussi définir qu'un post est un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Si nous representions les commentaires d'un post nous ne les declarerions pas non plus comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
+!!Si nous devions sauvegarder les posts
+
+Cette section n'est pas à implémenter et elle est juste donnée à titre d'exemple. Nous pourrions aussi définir qu'un post est un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Si nous représentions les commentaires d'un post nous ne les déclarerions pas non plus comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
 
 Déclarer les posts comme racine aurait pour conséquence que les blogs sauvés aurait une référence à un objet TBPost alors que sans cela le post est inclus dans la sauvegarde du blog. Notez aussi que lorsqu'un post n'est pas un root, vous n'avez pas la certitude d'unicité de celui-ci lors du chargement depuis la base. En effet, lors du chargement (et ce qui peut être contraire à la situation du graphe d'objet avant la sauvegarde) un post n'est alors pas partagé entre deux instances de blogs. 
-Si avant la sauvegarde en base un post était partagé, après le chargement depuis la base, ce post sera dupliqué car recréer à partir de la définition du blog (et le blog contient alors complètement le post).
+Si avant la sauvegarde en base un post était partagé, après le chargement depuis la base, ce post sera dupliqué car recréé à partir de la définition du blog (et le blog contient alors complètement le post).
 
 Si vous désirez qu'un post soit partagé et unique entre plusieurs instances de blog, alors la classe TBPost doit être déclarée une racine dans la base. 
 Lorsque la classe TBPost est déclarée comme une racine, les posts sont sauvés comme des entités autonomes et les instances de TBBlog feront des références sur ces entités au lieu que leurs définitions soient incluses dans celle des blogs. Cela a pour effet qu'un post donné devient unique et partageable via une référence depuis le blog. 
@@ -169,16 +167,16 @@ TBBlog >> remove
    super remove.
 ]]]
 
-Ici dans la méthode ==remove== nous enlevons chaque posts puis nous remontons à jour la collection et nous enlevons le blog lui-même.
+Ici dans la méthode ==remove== nous enlevons chaque posts puis nous remettons à jour la collection et nous enlevons le blog lui-même.
 
-Encore une fois, notez qu'à chaque fois que vous décider de changer la définition d'une classe racine ou que vous ajoutez une nouvelle classe racine, il est capital de réinitializer Voyage car Voyage maintient un cache. 
+Encore une fois, notez qu'à chaque fois que vous décidez de changer la définition d'une classe racine ou que vous ajoutez une nouvelle classe racine, il est capital de réinitialiser Voyage pour qu'il invalide le cache qu'il maintient. 
 
 Pour cela exécutez l'expression suivante.
 [[[
 	VOMongoRepository current reset
 ]]]
 
-!!! D'autres requêtes
+!!!D'autres requêtes
 
 
 Nous illustrons maintenant comment nous pouvons faire des requêtes sur la base en mémoire en incluant les posts. 
@@ -207,4 +205,4 @@ Nous illustrons maintenant comment nous pouvons faire des requêtes sur la base 
    > 0
 ]]]
 
-Nous allons maintenant utiliser une base mongo externe à Pharo. 
+Nous allons maintenant utiliser une base Mongo externe à Pharo. 
