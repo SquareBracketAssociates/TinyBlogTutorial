@@ -1,4 +1,4 @@
-! Décrire les données avec Magritte
+!Décrire les données avec Magritte
 
 
 Magritte est une bibliothèque qui permet une fois les données décrites de générer diverses représentations ou opérations (telles des requêtes). Couplée avec Seaside, Magritte permet de générer des formulaires et des rapports.  La société Debris Publishing est un brillant exemple de la puissance de Magritte: tous les tableaux sont automatiquement générés (voir *http://www.pharo.org/success*). La validation des données est aussi définie au niveau de Magritte au lieu d'être dispersée dans le code de l'interface graphique. Ce chapitre ne montre pas cet aspect.
