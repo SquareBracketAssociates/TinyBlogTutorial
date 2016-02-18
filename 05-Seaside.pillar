@@ -1,0 +1,84 @@
+!Infrastructure Web
+
+Nous commençons par définir une interface telle que celle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera.
+Nous allons définir des composants Seaside *http://www.seaside.st*. L'ouvrage de référence est disponible en ligne à *http://book.seaside.st*
+
+
++Lancer le serveur.>file://figures/RunningSeaside.png|width=50|label=RunningSeaside+
+
+
+!! Démarrer Seaside
+
+En utilisant le Seaside Control Panel et son menu, ajoutez un serveur ==ZnZincServerAdaptor==, puis définissez le port surlequel le serveur doit fonctionner (comme illustré dans la figure *@RunningSeaside* et *@SeasideWebStart*).
+
++Vérification que Seaside fonctionne.>file://figures/SeasideWebStart.png|width=75|label=SeasideWebStart+
+
+!! Initialisation de l'application
+
+Création d'une classe ==TBApplicationRootComponent== qui est le point d'entrée de l'application. Il sert à l'initialisation de l'application.
+
+[[[
+WAComponent subclass: #TBApplicationRootComponent
+   instanceVariableNames: ''
+   classVariableNames: ''
+   category: 'TinyBlog-Components'
+]]]
+
+
+
+On déclare l'application au serveur Seaside, coté classe, dans le protocole =='initialization'==. On en profite pour intégrer les dépendances du framework Bootstrap (les fichiers css et js seront stockés dans l'application).
+
+[[[
+TBApplicationRootComponent class >> initialize
+   "self initialize"
+   | app |
+   app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
+   app
+      addLibrary: JQDeploymentLibrary;
+      addLibrary: JQUiDeploymentLibrary;
+      addLibrary: TBSDeploymentLibrary
+]]]
+
+Dans un Playground ou dans l'éditeur de méthode, exécuter ==TBApplicationRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. Notez que nous venons de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices.
+
+Les méthodes de classe ==initialize== sont invoquées automatiquement lors du chargement du package.
+
+
+
+Une connexion sur le serveur Seaside ("Browse the applications installed in your image") permet de vérifier que l'application est bien enregistrée comme le montre la figure *@BrowseApplications*.
+
++TinyBlog est bien enregistrée.>file://figures/BrowseApplications.png|width=75|label=BrowseApplications+
+
+Ajoutons également la méthode ==canBeRoot== afin de préciser que la classe ==TBApplicationRootComponent== est la première instanciée lors qu'un utilisateur se connecte sur l'application et représente une application et pas seulement un composant.
+
+[[[
+TBApplicationRootComponent class >> canBeRoot
+   ^ true
+]]]
+
+Ajoutons maintenant une méthode ==renderContentOn:== afin de vérifier que notre application répond bien. La méthode est une méthode d'instance dans le protocole ==rendering==.
+
+[[[
+TBApplicationRootComponent >> renderContentOn: html
+   html text: 'TinyBlog'
+]]]
+
+Connexion avec un navigateur sur *http://localhost:8080/TinyBlog*. La page doit apparaître comme dans la figure *@EmptyPage*.
+
++Une page quasi vide mais servie par Seaside.>file://figures/EmptyPage.png|width=75|label=EmptyPage+
+
+
+Ajoutons maintenant des informations dans l'entête de la page HTML afin que TinyBlog ait un titre et soit une application HTML5. 
+
+[[[
+TBApplicationRootComponent >> updateRoot: anHtmlRoot
+   super updateRoot: anHtmlRoot.
+   anHtmlRoot beHtml5.
+   anHtmlRoot title: 'TinyBlog'.
+]]]
+
+
+Le composant ==TBApplicationRootComponent== est le composant principal de l'application, il ne fait que rendu graphique limité en affichant dans le futur le composant principal qu'il contiendra. Il contiendra plus tard soit les composants qu'un lecteur du blog pourra utiliser soit les composants pour administrer le blog et ses posts. 
+
+Nous avons décidé que le composant ==TBApplicationRootComponent== contiendra des composants inhéritants de la classe abstraite ==TBScreenComponent== que nous allons définir dans le prochain chapitre. 
+

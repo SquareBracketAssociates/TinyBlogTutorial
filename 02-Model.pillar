@@ -1,0 +1,359 @@
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!Le modèle de TinyBlog
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Le modèle de TinyBlog est extrêmement simple et constitué de deux classes: ==TBPost== et  ==TBBlog==.
+Notez que comme nous le verrons plus tard, nous allons utiliser le fait que Voyage offre une base de données en mémoire pour développer la solution sans avoir besoin de se connecter en permanence à la base. 
+
+
+!!La classe TBPost
+Définissez la class ==TBPost== comme suit:
+
+[[[
+Object subclass: #TBPost
+   instanceVariableNames: 'title text date category visible'
+   classVariableNames: ''
+   package: 'TinyBlog'
+]]]
+
+!!!Description d'un post
+
+Cinq variables d'instance pour décrire un post sur le blog.
+
+|!Variable |!Signification |
+|title         |Titre du post                |
+|text          |Texte du post                |
+|date          |Date de redaction            |
+|category      |Rubrique contenant le post   |
+|visible       |Post visible ou pas ?        |
+
+
+Ces variables ont des méthodes accesseurs dans le protocole 'accessing'.
+
+[[[
+TBPost >> title
+   ^ title
+
+TBPost >> title: anObject
+   title := anObject
+
+TBPost >> text
+   ^ text
+
+TBPost >> text: anObject
+   text := anObject
+
+TBPost >> date
+   ^ date
+
+TBPost >> date: anObject
+   date := anObject
+
+TBPost >> visible
+   ^ visible
+
+TBPost >> visible: anObject
+   visible := anObject
+
+TBPost >> category
+   ^ category
+
+TBPost >> category: anObject
+   category := anObject
+]]]
+
+!!!Gérer la visibilité d'un post
+
+Il faut avoir la possibilité d'indiquer qu'un post est visible ou pas. Il faut également pouvoir demander à un post s'il est visible. Les méthodes sont définies dans la protocole 'action'.
+
+[[[
+TBPost >> beVisible
+   self visible: true
+
+TBPost >> notVisible
+   self visible: false
+
+TBPost >> isVisible
+   ^ self visible
+]]]
+
+
+!!!Initialisation
+
+La méthode ==initialize== (protocole 'initialize-release') fixe la date à celle du jour et la visibilité à faux (l'utilisateur devra par la suite activer la visibilité ce qui permet de rédiger des brouillons et de publier lorsque le post est terminé). Un post est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe.  La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
+[[[
+TBPost class >> unclassifiedTag
+   ^ 'Unclassified'
+]]]
+
+[[[
+TBPost >> initialize
+  self category: TBPost unclassifiedTag.
+  self date: Date today.
+  self visible: false.
+]]]
+
+
+!!!Amélioration
+Il serait préférable de ne pas faire une référence en dur à la class ==TBPost== comme dans la méthode ==initialize==.
+Proposer une solution.
+
+
+!!!Méthode de création
+Coté classe, on spécifie des méthodes pour faciliter la création de post appartenant ou pas à une catégorie.
+
+[[[
+TBPost class >> title: aTitle text: aText
+   ^ self new
+        title: aTitle;
+        text: aText;
+        yourself
+]]]
+
+[[[
+TBPost class >> title: aTitle text: aText category: aCategory
+   ^ (self title: aTitle text: aText)
+            category: aCategory;
+            yourself
+]]]
+
+
+!!!Test
+
+Savoir si un post est classé dans une catégorie.
+
+[[[
+TBPost >> isUnclassified
+   ^ self category = TBPost unclassifiedTag
+]]]
+
+Il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==.
+Proposer une solution.
+
+%001-TinyBlog-BGPost-StephaneDucasse.1
+
+
+!!La classe TBBlog
+
+La classe ==TBBlog== contient des posts. Nous allons développer ==TBBlog== en écrivant des tests puis les implémentant.
+
+[[[
+Object subclass: #TBBlog
+   instanceVariableNames: 'posts'
+   classVariableNames: ''
+   package: 'TinyBlog'
+]]]
+
+[[[
+TBBlog >> initialize
+   super initialize.
+   posts := OrderedCollection new. 
+]]]
+
+
+
+!!!Une seule base
+
+Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. Dans le futur, nous ajouterons la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant nous utilisons donc un singleton pour la class ==TBBlog==.
+
+[[[
+TBBlog class
+   instanceVariableNames: 'uniqueInstance'
+
+TBBlog class >> reset
+   uniqueInstance := nil
+
+TBBlog class >> current
+   "answer the instance of the TBRepository"
+   ^ uniqueInstance ifNil: [ uniqueInstance := self new ]
+
+TBBlog class >> initialize
+   self reset
+]]]
+
+
+!!Tester les règles métiers
+Nous allons écrire des tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premiers puis en définissant les fonctionalités jsuqu'à ce que les tests passent.
+
+Les tests unitaires sont regroupés dans le paquet ==TinyBlog-Tests== qui contient la classe ==TBBlogTest==.
+
+[[[
+TestCase subclass: #TBBlogTest
+   instanceVariableNames: 'blog post first'
+   classVariableNames: ''
+   category: 'TinyBlog-Tests'
+]]]
+
+Avant le lancement des tests, la méthode ==setUp== initialise la connexion vers la base, efface son contenu, ajoute un post et en crée un autre qui provisoirement n'est pas enregistré.
+
+[[[
+TBBlogTest >> setUp
+   blog := TBBlog current.
+   blog remove.
+   
+   first := (TBPost title: 'A title' text: 'A text' category: 'First Category').
+   blog writeBlogPost: first.
+   
+   post := (TBPost title: 'Another title' text: 'Another text' category: 'Second Category') beVisible
+]]]
+
+On en profite pour tester différentes configuration. 
+Les posts ne sont pas dans la même catégorie, l'un est visible, l'autre pas.
+
+La méthode ==tearDown== exécutée au terme des tests remet à zéro la connexion.
+
+[[[
+TBBlogTest >> tearDown
+   TBBlog reset
+]]]
+
+Noter que si vous déployez un blog puis exécutez les tests vous perdrez les posts que vous avez crées car nous les remettons à zéro.
+
+Nous allons développer les tests d'abord puis ensuite passer à l'implémentation des fonctionnalités.
+
+!!!Un premier test
+
+Commençons par écrire un premier test qui ajoute un post.
+
+[[[
+TBBlogTest >> testAddBlogPost
+   blog writeBlogPost: post.
+   self assert: blog size equals: 2
+]]]
+
+Ce test ne marche pas (n'est pas vert) car nous n'avons pas défini les méthodes: ==writeBlogPost:== et ==remove==.
+Ajoutons-les.
+
+[[[
+TBBlog >> remove
+   posts := OrderedCollection new
+]]]
+
+[[[
+TBBlog >> writeBlogPost: aPost
+   "Write the blog post in database"
+   posts add: aPost
+]]]
+
+[[[
+TBBlog >> size
+   ^ posts size
+]]]
+
+Le test précédent doit maintenant passer.
+
+Ecrivons un test pour couvrir les fonctionalités que nous venons de développer. 
+
+!!!Obtenir le nombre de posts dans la base
+
+[[[
+TBBlogTest >> testSize
+   self assert: blog size equals: 1
+]]]
+
+!!!Effacer l'intégralité des posts
+
+[[[
+TBBlogTest >> testRemoveAllBlogPosts
+   blog remove.
+   self assert: blog size equals: 0
+]]]
+
+
+!!Quelques autres fonctionnalités
+
+Nous définissons les fonctionnalités et nous assurons que les tests passent. 
+Les règles métiers sont regroupées dans le protocole 'action' de la classe ==TBBlog==.
+
+!!!Obtenir l'ensemble des posts (visibles et invisibles)
+
+[[[
+TBBlogTest >> testAllBlogPosts
+   blog writeBlogPost: post.
+   self assert: (blog allBlogPosts) size equals: 2
+]]]
+
+[[[
+TBBlog >> allBlogPosts
+   ^ posts
+]]]
+
+
+!!!Obtenir tous les posts visibles
+
+[[[
+TBBlogTest >> testAllVisibleBlogPosts
+   blog writeBlogPost: post.
+   self assert: (blog allVisibleBlogPosts) size equals: 1
+]]]
+
+[[[
+TBBlog >> allVisibleBlogPosts
+   ^ posts select: [ :p | p isVisible ]
+]]]
+
+
+!!!Obtenir tous les posts d'une catégorie
+
+[[[
+TBBlogTest >> testAllBlogPostsFromCategory
+   self assert: (blog allBlogPostsFromCategory: 'First Category') size equals: 1
+]]]
+
+[[[
+TBBlog >> allVisibleBlogPostsFromCategory: aCategory
+   ^ posts select: [ :p | p category = aCategory and: [ p isVisible ] ]
+]]]
+
+
+!!!Obtenir tous les posts visibles d'une catégorie
+
+[[[
+TBBlogTest >> testAllVisibleBlogPostsFromCategory
+   blog writeBlogPost: post.
+   self assert: (blog allVisibleBlogPostsFromCategory: 'First Category') size equals: 0.
+   self assert: (blog allVisibleBlogPostsFromCategory: 'Second Category') size equals: 1
+]]]
+
+[[[
+TBBlog >> allBlogPostsFromCategory: aCategory
+   ^ posts select: [ :p | p category = aCategory ]
+]]]
+
+!!!Vérifier la gestion des posts non classés
+
+[[[
+TBBlogTest >> testUnclassifiedBlogPosts
+   self assert: (blog allBlogPosts select: [ :p | p isUnclassified ]) size equals: 0
+]]]
+
+!!!Obtenir la liste des catégories
+
+[[[
+TBBlogTest >> testAllCategories
+   blog writeBlogPost: post.
+   self assert: (blog allCategories) size equals: 2
+]]]
+
+[[[
+TBBlog >> allCategories
+   ^ (self allBlogPosts collect: [ :p | p category ]) asSet
+]]]
+
+!!Futures évolutions
+
+Plusieurs évolutions peuvent être apportées telles que: obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts contenus, renommer une catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons à les développer.
+
+Afin de nous aider à tester l'application nous définissons une méthode permettant de créer quelques posts. 
+
+[[[
+TBBlog class >> createDemoPosts
+   "TBBlog createDemoPosts"
+   self current 
+      writeBlogPost: ((TBPost title: 'Welcome in TinyBlog' text: 'TinyBlog is a small blog engine made with Pharo.' category: 'TinyBlog') visible: true);
+      writeBlogPost: ((TBPost title: 'Report Pharo Sprint' text: 'Friday, June 12 there was a Pharo sprint / Moose dojo. It was a nice event with more than 15 motivated sprinters. With the help of candies, cakes and chocolate, huge work has been done' category: 'Pharo') visible: true);
+      writeBlogPost: ((TBPost title: 'Brick on top of Bloc - Preview' text: 'We are happy to announce the first preview version of Brick, a new widget set created from scratch on top of Bloc. Brick is being developed primarily by Alex Syrel (together with Alain Plantec, Andrei Chis and myself), and the work is sponsored by ESUG. 
+      Brick is part of the Glamorous Toolkit effort and will provide the basis for the new versions of the development tools.' category: 'Pharo') visible: true);
+      writeBlogPost: ((TBPost title: 'The sad story of unclassified blog posts' text: 'So sad that I can read this.') visible: true);
+      writeBlogPost: ((TBPost title: 'Working with Pharo on the Raspberry Pi' text: 'Hardware is getting cheaper and many new small devices like the famous Raspberry Pi provide new computation power that was one once only available on regular desktop computers.' category: 'Pharo') visible: true)
+]]]

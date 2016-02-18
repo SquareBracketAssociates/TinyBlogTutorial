@@ -1,0 +1,119 @@
+!Mongo
+
+En utilisant Voyage nous pouvons rapidement sauver nos posts sur une base de données Mongo. Ce chapitre explique rapidement la mise en oeuvre et les quelques modifications que nous devons apporter a notre projet pour sauver en Pharo. 
+Nous commencons 
+
+!! Obtenir une base de données MongoDB
+
+!!! Installation locale
+
+!!!! Mac OS X
+
+- Installer Brew (*http://brew.sh*)
+
+- Dans le terminal, mettre à jour les paquets et installer MongoDB:
+
+[[[
+brew update
+brew install mongodb
+]]]
+
+- Créer un répertoire pour le stockage des données et attribution des droits
+
+[[[
+mkdir -p /data/db
+chmod 770 /data/db
+]]]
+
+Lancement de mongo: ==[sudo] mongod==
+
+Attention une fois que votre application utilise Mongo, il est important que Mongo soit lancé avant Pharo. 
+Vous pouvez tester cela avec ce script. 
+
+[[[
+| server |
+server := Mongo default.
+[ server open ] 
+   on: ConnectionTimedOut 
+   do: [ :e | ^ false ].
+^ server isOpen
+]]]   
+
+Vous pouvez aussi utiliser la méthode ==VOMongoRepository class >> #validateConectionHost:port:==
+
+!!!! Linux Debian
+Google pour le moment. A venir
+
+!!!! Windows
+Google pour le moment. A venir
+
+
+!!! Dans le cloud avec MongoLab
+Dans un premier temps vous pouvez passer cette étape si vous avez une installation locale.
+
+- Se connecter sur *https://mongolab.com*
+- Cliquer sur signup,
+- Créer un compte utilisateur (un mail de vérification de l'adresse mail est envoyé. Il faut confirmer le compte).
+- Cliquer sur "Create New"
+- modèle d'hébergement: option "Single-node" et on sélectionne "Sandbox" (gratuit pour 0.5 Go)
+- On fournit un nom ("tinyblog") pour la base de données (Database name)
+- On clique sur "Create new MongoDB deployment",
+- En cliquant sur le nom de la base Mongo, on accède à l'écran de configuration,
+-- Les paramètres de configuration sont dans l'URL,
+-- On clique sur l'onglet "Users", puis le bouton "Add database user" pour ajouter un nouvel utilisateur,
+
+!!!! Configuration du compte
+
+Pensez à changer les valeurs!
+
+
+|!Champs       |!Valeur                  |
+|Account name |tinyblog                |
+|Username     |tinyblog                |
+|Email        |olivier.auverlot@free.fr|
+|Password     |tinyblog2015            |
+
+!!!! Paramètres du serveur
+
+Lors de votre enregistrement sur mongolab vous obtenez des valeurs que nous pouvons utiliser. 
+
+
+|!Paramètre      |!Valeur                |
+|Serveur        |ds045064.mongolab.com |
+|Port           |45064                 |
+|Nom de la base |tinyblog              |
+
+!!!! Utilisateur de la base tinyblog
+
+Pour le moment Voyage ne fonctionne qu'avec Mongo 2.0 car la version 3.0 a changé son mécanisme de vérification de mots de passe. 
+|!Champs       |!Valeur      |
+|Compte       |tbuser      |
+|Mot de passe |tbpassword  |
+
+
+
+
+!! Revisitons la connexion à la base
+
+Nous définissions les méthodes ==initializeMongo== pour établir la connexion vers la base de données.
+
+[[[
+TBBlog class >> initializeMongo
+   | repository |
+   repository := VOMongoRepository
+      host: 'localhost'
+      database: 'tinyblog'.
+   repository enableSingleton.
+]]]
+
+
+@@note Pas d'authentification utilisée car impossible de le faire avec MongoDB 3.0 (nouvelle méthode de chiffrement SCRAM pas encore supportée avec Pharo)
+
+
+Notez que si vous avez besoin de réinitialiser la base exterieure completement, vous pouvez utiliser la méthode ==dropDatabase==
+
+[[[
+(VOMongoRepository
+   host: 'localhost'
+   database: 'tinyblog') dropDatabase
+]]]

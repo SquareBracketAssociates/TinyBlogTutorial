@@ -1,0 +1,52 @@
+!TinyBlog: Préparation
+
+Ce tutoriel va vous enseigner comment définir et déployer une application en utilisant Pharo/Seaside/Mongo ainsi que des frameworks disponibles en Pharo comme NeoJSON. Nous exposerons aussi comment exposer votre application via un serveur REST. Nous allons définir un mini moteur de blogs. Les solutions proposées dans ce tutoriel sont parfois non optimales afin de vous faire réagir et que vous puissiez proposer d'autres solutions et améliorations.
+
+D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une façon de faire cependant nous invitons le lecteur à lire les références sur les autres chapitres, livres et tutoriaux afin d'approfondir son expertise.
+
+!!Installation et préparation de Pharo
+
+!!!Créer un projet sur SmalltalkHub
+ 
+- Depuis votre compte créer un projet sur *http://smalltalkhub.com/*
+-- Nommez le "TinyBlog",
+-- Récupérer l'URL du projet: 'http://smalltalkhub.com/mc/XXX/TinyBlog/main'
+
+!!!Mettre en place Pharo
+
+Nous avons préparé une image contenant les projets Seaside, Voyage, Bootstrap et Magritte. 
+Vous pouvez la télécharger directement en utilisant Pharo Launcher et en cherchant le projet TinyBlogBase dans les contributions Pharo.
+Cette image se trouve également sur le serveur d'intégration *https://ci.inria.fr/* dans les Pharo-Contributions et le projet TinyBlogBase. Le lien direct est *https://ci.inria.fr/pharo-contribution/job/TinyBlogBase/lastSuccessfulBuild/artifact/TinyBlogBase.zip*.
+
+Pour recréer cette image manuellement :
+
+- Télécharger Pharo 4.0 à partir du site pharo.org
+- A partir du "Configuration Browser", installer les paquets:
+-- Seaside3,
+-- VoyageMongo,
+-- BootstrapMagritte,
+-- Mustache
+- Créez un paquet nommé TinyBlog
+
+
+!!Créer la configuration du projet
+
+Dans un premier temps vous pouvez sauter cette étape. 
+
+- Créer un projet avec Versionner
+-- Créer un nouveau projet "TinyBlog",
+-- Dans development, ajoutez les paquets dont votre projet dépend:
+--- Seaside3,
+--- VoyageMongo,
+--- BootstrapMagritte,
+--- Mustache
+-- Dans Packages, ajoutez le paquet TinyBlog,
+--- Définissez son repository: 'http://smalltalkhub.com/mc/XXX/TinyBlog/main'
+--- Cliquer sur le bouton "Save to development"
+
+!!Démarrer le serveur HTTP
+
+- Aller dans Tools pour ouvrir le Seaside Control Panel,
+- Faire un clic droit dans la partie supérieure et sélectionner le ZnZinServerAdaptor,
+- Choisir le port 8080,
+- Cliquer sur le serveur pour le sélectionner et cliquez sur le bouton "Start".
