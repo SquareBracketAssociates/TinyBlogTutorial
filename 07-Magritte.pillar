@@ -66,7 +66,7 @@ TBPost >> descriptionVisible
       yourself
 ]]]
    
-!!!Améliorations possibles
+!!Améliorations possibles
 
 Voici quelques améliorations ou extensions possibles. 
 Nous pourrions enrichir les descriptions pour qu'il ne soit pas possible de poster un post ayant une date antérieure à celle du jour. Nous pourrions changer la description d'une catégorie pour que ses valeurs possibles soient définies par l'ensemble des catégories existantes. Tout cela permettrait de produire des interfaces plus complètes et toujours aussi simplement.
