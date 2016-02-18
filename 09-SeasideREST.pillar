@@ -1,6 +1,8 @@
 !Une interface REST pour TinyBlog
 
-!! Définir un filtre REST
+Ce chapitre décrit comment doter notre application TinyBlog d'une interface REST (REpresentational State Transfer).
+
+!!Définir un filtre REST
 
 [[[
 WARestfulFilter subclass: #TBRestfulFilter
@@ -9,7 +11,7 @@ WARestfulFilter subclass: #TBRestfulFilter
 	category: 'TinyBlog-REST'
 ]]]
 
-!!! Associer un filtre à notre application
+!!!Associer un filtre à notre application
 
 [[[
 TBApplicationRootComponent class >> initialize
@@ -31,7 +33,7 @@ Ne pas oublier d'initialiser.
 self initialize
 ]]]
 
-!! Obtenir 
+!!Obtenir 
 
 [[[
 TBRestfulFilter >> listAll
@@ -46,7 +48,7 @@ TBRestfulFilter >> listAll
 ]]]
 
 
-Si on veut selectionner les informations que l'on retourne.
+Si on veut sélectionner les informations que l'on retourne.
 
 [[[
 TBRestfulFilter >> listAll
@@ -69,10 +71,10 @@ TBRestfulFilter >> listAll
 +Accès à tous les posts.>file://figures/RESTlistAll.png|width=75|label=RESTlistAll+
 
 
-!!! Refactoring
+!!!Refactoring
 
 Définir la transformation en Javascript dans notre composant n'est pas optimal. Nous allons donc le définir dans la classe
-et appeller cette fonctionalité. 
+et appeler cette fonctionnalité. 
 
 [[[
 TBPost >> javascriptOn: aStream
@@ -119,10 +121,10 @@ TBPost >> javascriptOn: aStream
 ]]]
 
 
-!!! Recherche d'un Post
+!!!Recherche d'un Post
 
-Maintenant nous allons proposer d'autres fonctionalité comme la recherche d'un poste. 
-Nous définissons donc cette fonctionalité dans la classe ==TBlog==.
+Maintenant nous allons proposer d'autres fonctionnalités comme la recherche d'un post. 
+Nous définissons donc cette fonctionnalité dans la classe ==TBlog==.
 
 [[[
 TBBlog >> postWithTitle: aString
@@ -144,7 +146,7 @@ TBRestfulFilter >> post: title
 		post javascriptOn: astream ]
 ]]]
 
-Nous pouvons tester en faisant la requete suivante : 
+Nous pouvons tester en effectuant la requête suivante : 
 
 [[[
 http://localhost:8080/TinyBlog/post/Welcome%20in%20TinyBlog
@@ -221,7 +223,7 @@ TBRestfulFilter >> searchDateFrom: beginString to: endString
 Dire un mot de 
 - Put in header vs. Post 
 
-!!! Eliminer un post
+!!!Eliminer un post
 
 [[[
 TBRestfulFilter >> remove: title
@@ -240,7 +242,7 @@ TBRestfulFilter >> remove: title
 			'{status: "notFound"}' ]
 ]]]
 
-Notez que status n'est pas du REST car REST ne specifie pas la maniere de gerer les erreurs. 
+Notez que status n'est pas du REST car REST ne spécifie pas la manière de gérer les erreurs. 
 Maintenant ce code ne fonctionne pas car ==TBPost== n'est pas une racine en Voyage.
 
 Essayons mais nous ne pouvons pas tester avec un browser web dans son url ne peut faire qu'un GET. 
@@ -250,7 +252,7 @@ Donc il nous faut utiliser Zinc.
 ZnEasy delete: 'http://localhost:8080/TinyBlog/remove/RemoveMe'
 ]]]
 
-Vous pouvez verifiez que votre post n'est pas enlevé.
+Vous pouvez vérifiez que votre post n'est pas enlevé.
 
 [[[
 TBRestfulFilter >> remove: title
@@ -274,10 +276,11 @@ Maintenant nous réessayons et nous pouvons effectivement éliminer un post.
 ZnEasy delete: 'http://localhost:8080/TinyBlog/remove/RemoveMe'
 ]]]
 
-Vous pouvez verifiez que votre post n'est pas enlever.
+Vous pouvez vérifiez que votre post n'est pas enlever.
 
+@@todo bizarre, il est enlevé ou pas?
 
-!!! Ajout de Blog Post
+!!!Ajout de Blog Post
 
 [[[
 TBRestfulFilter >> addPost
