@@ -4,12 +4,11 @@ Ce tutoriel va vous enseigner comment définir et déployer une application en u
 
 D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une façon de faire cependant nous invitons le lecteur à lire les références sur les autres chapitres, livres et tutoriaux afin d'approfondir son expertise.
 
-
 !!Installation et préparation de Pharo
 
 !!!Créer un projet sur SmalltalkHub
  
-- Depuis votre compte créer un projet sur http://smalltalkhub.com
+- Depuis votre compte créer un projet sur *http://smalltalkhub.com/*
 -- Nommez le "TinyBlog",
 -- Récupérer l'URL du projet: 'http://smalltalkhub.com/mc/XXX/TinyBlog/main'
 
@@ -30,7 +29,7 @@ Pour recréer cette image manuellement :
 - Créez un paquet nommé TinyBlog
 
 
-!!!Créer la configuration du projet
+!!Créer la configuration du projet
 
 Dans un premier temps vous pouvez sauter cette étape. 
 
@@ -45,7 +44,7 @@ Dans un premier temps vous pouvez sauter cette étape.
 --- Définissez son repository: 'http://smalltalkhub.com/mc/XXX/TinyBlog/main'
 --- Cliquer sur le bouton "Save to development"
 
-!!! Démarrer le serveur HTTP
+!!Démarrer le serveur HTTP
 
 - Aller dans Tools pour ouvrir le Seaside Control Panel,
 - Faire un clic droit dans la partie supérieure et sélectionner le ZnZinServerAdaptor,
@@ -53,13 +52,15 @@ Dans un premier temps vous pouvez sauter cette étape.
 - Cliquer sur le serveur pour le sélectionner et cliquez sur le bouton "Start".
 
 
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !Le modèle de TinyBlog
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Le modèle de TinyBlog est extrêmement simple: Les deux classes ==TBPost== et  ==TBBlog==.
+Le modèle de TinyBlog est extrêmement simple et constitué de deux classes: ==TBPost== et  ==TBBlog==.
 Notez que comme nous le verrons plus tard, nous allons utiliser le fait que Voyage offre une base de données en mémoire pour développer la solution sans avoir besoin de se connecter en permanence à la base. 
 
 
-!!!La classe TBPost
+!!La classe TBPost
 Définissez la class ==TBPost== comme suit:
 
 [[[
@@ -81,7 +82,7 @@ Cinq variables d'instance pour décrire un post sur le blog.
 |visible       |Post visible ou pas ?        |
 
 
-Ces variables ont des méthodes accèsseurs dans le protocole 'accèssing'.
+Ces variables ont des méthodes accesseurs dans le protocole 'accessing'.
 
 [[[
 TBPost >> title
@@ -115,7 +116,7 @@ TBPost >> category: anObject
    category := anObject
 ]]]
 
-!!!!Gérer la visibilité d'un post
+!!!Gérer la visibilité d'un post
 
 Il faut avoir la possibilité d'indiquer qu'un post est visible ou pas. Il faut également pouvoir demander à un post s'il est visible. Les méthodes sont définies dans la protocole 'action'.
 
@@ -131,11 +132,9 @@ TBPost >> isVisible
 ]]]
 
 
+!!!Initialisation
 
-
-!!!!Initialisation
-
-La méthode ==initialize== (protocole 'initialize-release') fixe par défaut la date et la visibilité à faux (l'utilisateur devra par la suite activer la visibilité ce qui permet de rédiger des brouillons et de publier lors que le post est terminé). Un post est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe.  La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
+La méthode ==initialize== (protocole 'initialize-release') fixe la date à celle du jour et la visibilité à faux (l'utilisateur devra par la suite activer la visibilité ce qui permet de rédiger des brouillons et de publier lorsque le post est terminé). Un post est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe.  La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
 [[[
 TBPost class >> unclassifiedTag
    ^ 'Unclassified'
@@ -149,14 +148,13 @@ TBPost >> initialize
 ]]]
 
 
-!!!! Amélioration
+!!!Amélioration
 Il serait préférable de ne pas faire une référence en dur à la class ==TBPost== comme dans la méthode ==initialize==.
 Proposer une solution.
 
 
-!!!! Méthode de création
-Coté classe, on définit que ==TBPost== est un objet géré par Voyage et on spécifie des méthodes pour faciliter la création de post appartenant ou pas à une catégorie.
-
+!!!Méthode de création
+Coté classe, on spécifie des méthodes pour faciliter la création de post appartenant ou pas à une catégorie.
 
 [[[
 TBPost class >> title: aTitle text: aText
@@ -174,25 +172,23 @@ TBPost class >> title: aTitle text: aText category: aCategory
 ]]]
 
 
-!!!!Test
+!!!Test
 
-Savoir si un post est classé dans une catégorie
+Savoir si un post est classé dans une catégorie.
 
 [[[
 TBPost >> isUnclassified
    ^ self category = TBPost unclassifiedTag
 ]]]
 
-Il serait préférable de ne pas faire une référence en dur à la class ==TBPost==.
+Il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==.
 Proposer une solution.
 
 %001-TinyBlog-BGPost-StephaneDucasse.1
 
 
+!!La classe TBBlog
 
-
-
-!!!La classe TBBlog
 La classe ==TBBlog== contient des posts. Nous allons développer ==TBBlog== en écrivant des tests puis les implémentant.
 
 [[[
@@ -210,9 +206,9 @@ TBBlog >> initialize
 
 
 
-!!!! Une seule base
+!!!Une seule base
 
-Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. Dans le future, nous ajouterons la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant nous utilisons donc un singleton pour la class ==TBBlog==.
+Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. Dans le futur, nous ajouterons la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant nous utilisons donc un singleton pour la class ==TBBlog==.
 
 [[[
 TBBlog class
@@ -255,7 +251,8 @@ TBBlogTest >> setUp
    post := (TBPost title: 'Another title' text: 'Another text' category: 'Second Category') beVisible
 ]]]
 
-On en profite pour tester différentes configuration. Les posts ne sont pas dans la même catégorie, l'un est visible, l'autre pas.
+On en profite pour tester différentes configuration. 
+Les posts ne sont pas dans la même catégorie, l'un est visible, l'autre pas.
 
 La méthode ==tearDown== exécutée au terme des tests remet à zéro la connexion.
 
@@ -264,12 +261,11 @@ TBBlogTest >> tearDown
    TBBlog reset
 ]]]
 
-Noter que si vous déployer un blog puis exécuter les tests vous perdrez les postes que vous avez crées car nous les remettons à zéro.
+Noter que si vous déployez un blog puis exécutez les tests vous perdrez les posts que vous avez crées car nous les remettons à zéro.
 
-Nous allons développer les tests d'abord puis ensuite passer à l'implémentation
-des fonctionalités.
+Nous allons développer les tests d'abord puis ensuite passer à l'implémentation des fonctionnalités.
 
-!!!!Un premier test
+!!!Un premier test
 
 Commençons par écrire un premier test qui ajoute un post.
 
@@ -279,7 +275,8 @@ TBBlogTest >> testAddBlogPost
    self assert: blog size equals: 2
 ]]]
 
-Ce test ne marche pas car nous n'avons pas défini ==writeBlogPost:== et ==remove==.
+Ce test ne marche pas (n'est pas vert) car nous n'avons pas défini les méthodes: ==writeBlogPost:== et ==remove==.
+Ajoutons-les.
 
 [[[
 TBBlog >> remove
@@ -301,14 +298,14 @@ Le test précédent doit maintenant passer.
 
 Ecrivons un test pour couvrir les fonctionalités que nous venons de développer. 
 
-!!!!Obtenir le nombre de posts dans la base
+!!!Obtenir le nombre de posts dans la base
 
 [[[
 TBBlogTest >> testSize
    self assert: blog size equals: 1
 ]]]
 
-!!!!Effacer l'intégralité des posts
+!!!Effacer l'intégralité des posts
 
 [[[
 TBBlogTest >> testRemoveAllBlogPosts
@@ -317,12 +314,12 @@ TBBlogTest >> testRemoveAllBlogPosts
 ]]]
 
 
-!!!Quelques autres fonctionalités
+!!Quelques autres fonctionnalités
 
-Nous définissons les fonctionalités et nous assurons que les tests passent. 
+Nous définissons les fonctionnalités et nous assurons que les tests passent. 
 Les règles métiers sont regroupées dans le protocole 'action' de la classe ==TBBlog==.
 
-!!!!Obtenir l'ensemble des posts (visibles et invisibles)
+!!!Obtenir l'ensemble des posts (visibles et invisibles)
 
 [[[
 TBBlogTest >> testAllBlogPosts
@@ -336,7 +333,7 @@ TBBlog >> allBlogPosts
 ]]]
 
 
-!!!!Obtenir tous les posts visibles
+!!!Obtenir tous les posts visibles
 
 [[[
 TBBlogTest >> testAllVisibleBlogPosts
@@ -350,7 +347,7 @@ TBBlog >> allVisibleBlogPosts
 ]]]
 
 
-!!!! Obtenir tous les posts d'une catégorie
+!!!Obtenir tous les posts d'une catégorie
 
 [[[
 TBBlogTest >> testAllBlogPostsFromCategory
@@ -363,7 +360,7 @@ TBBlog >> allVisibleBlogPostsFromCategory: aCategory
 ]]]
 
 
-!!!! Obtenir tous les posts visibles d'une catégorie
+!!!Obtenir tous les posts visibles d'une catégorie
 
 [[[
 TBBlogTest >> testAllVisibleBlogPostsFromCategory
@@ -377,14 +374,14 @@ TBBlog >> allBlogPostsFromCategory: aCategory
    ^ posts select: [ :p | p category = aCategory ]
 ]]]
 
-!!!!Vérifier la gestion des posts non classés
+!!!Vérifier la gestion des posts non classés
 
 [[[
 TBBlogTest >> testUnclassifiedBlogPosts
    self assert: (blog allBlogPosts select: [ :p | p isUnclassified ]) size equals: 0
 ]]]
 
-!!!!Obtenir la liste des catégories
+!!!Obtenir la liste des catégories
 
 [[[
 TBBlogTest >> testAllCategories
@@ -399,9 +396,9 @@ TBBlog >> allCategories
 
 !!Futures évolutions
 
-Plusieurs évolutions peuvent être apportées telles que obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts contenus, renommer un catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons à les développer.
+Plusieurs évolutions peuvent être apportées telles que: obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts contenus, renommer un catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons à les développer.
 
-Afin de nous aider à tester l'application nous définissons quelques postes. 
+Afin de nous aider à tester l'application nous définissons une méthode permettant de créer quelques posts. 
 
 [[[
 TBBlog class >> createDemoPosts
@@ -416,24 +413,15 @@ TBBlog class >> createDemoPosts
 ]]]
 
 
-
-
-
-
-
-
-
-
-
-
-
-! Préparation de sauvegarde extérieure avec Voyage
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!Préparation de sauvegarde extérieure avec Voyage
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Alors qu'avoir un modèle d'objets en mémoire fonctionne bien, et que des sauvegardes de l'image Pharo sauve aussi de tels objets, il est préférable de pouvoir sauver les objets dans une base de données extérieure. Voyage permet de sauver les objets dans une base de donnée Mongo. 
 C'est ce que nous allons voir. Dans un premier temps nous allons utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second nous installerons une base de données Mongo et nous y accéderons via la couche Voyage. 
 
 
-!! Sauvegarde d'un blog
+!!Sauvegarde d'un blog
 
 La première méthode à modifier est la méthode ==writeBlogPost:== pour sauver le blog.
 
@@ -845,7 +833,7 @@ TBApplicationRootComponent >> updateRoot: anHtmlRoot
 ]]]
 
 
-Le composant ==TBApplicationRootComponent== est le composant principal de l'application, il ne fait que rendu graphique limité en affichant dans le future le composant principal qu'il contiendra. Il contiendra plus tard soit les composants qu'un lecteur du blog pourra utiliser soit les composants pour administrer le blog et ses postes. 
+Le composant ==TBApplicationRootComponent== est le composant principal de l'application, il ne fait que rendu graphique limité en affichant dans le futur le composant principal qu'il contiendra. Il contiendra plus tard soit les composants qu'un lecteur du blog pourra utiliser soit les composants pour administrer le blog et ses posts. 
 
 Nous avons décidé que le composant ==TBApplicationRootComponent== contiendra des composants inhéritants de la classe abstraite ==TBScreenComponent== que nous allons définir dans le prochain chapitre. 
 
@@ -872,7 +860,7 @@ WAComponent subclass: #TBScreenComponent
    package: 'TinyBlog-Components'
 ]]]
 
-Les différents composants d'interface de TinyBlog auront besoin d'accéder aux règles métier de l'application. Dans le protocole 'accèssing', créons un méthode ==blog== qui retourne l'instance de ==TBBlog==. 
+Les différents composants d'interface de TinyBlog auront besoin d'accéder aux règles métier de l'application. Dans le protocole 'accessing', créons un méthode ==blog== qui retourne l'instance de ==TBBlog==. 
 
 [[[
 TBScreenComponent >> blog
@@ -881,13 +869,13 @@ TBScreenComponent >> blog
    ^ TBBlog current
 ]]]
 
-Dans le future, lorsque nous gérerons les utilisateurs et le fait qu'un utilisateurs puisse avoir plusieurs blogs nous modifierons cette méthode pour utiliser des informations stockées dans la session active (Voir TBSession plus loin). 
+Dans le futur, lorsque nous gérerons les utilisateurs et le fait qu'un utilisateurs puisse avoir plusieurs blogs nous modifierons cette méthode pour utiliser des informations stockées dans la session active (Voir TBSession plus loin). 
 
 +Accès à la bibliothèque Bootstrap.>file://figures/SeasideBootstrap.png|width=75|label=bootstrap+
 
 !! Bootstrap for Seaside
 
-La bibliothèque Bootstrap est totallement accèssible depuis Seaside comme nous allons le montrer.
+La bibliothèque Bootstrap est totallement accessible depuis Seaside comme nous allons le montrer.
 Pour parcourir les nombreux exemples, cliquer sur le lien bootstrap dans la liste des applications servies par Seaside ou pointer votre navigateur sur le lien *http://localhost:8080/bootstrap*. Vous devez obtenir l'écran *@bootstrap*
 
 Cliquer sur le lien ""Examples"" au bas de la page et vous pouvez ainsi voir les éléments graphiques ainsi que le code pour les obtenir comme montré par la figure *@examplebootstrap*. 
@@ -1006,7 +994,7 @@ Si vous faites un rafraichissement de l'application vous devez voir la Figure *@
 
 !! Liste des Posts
 
-Nous allons afficher la liste des posts - ce qui reste d'ailleurs le but d'un blog. Ici nous parlons de l'accès public au lecteur du blog. Dans le future, nous  proposerons une interface administrative des posts.
+Nous allons afficher la liste des posts - ce qui reste d'ailleurs le but d'un blog. Ici nous parlons de l'accès public au lecteur du blog. Dans le futur, nous  proposerons une interface administrative des posts.
 
 
 Créons un composant ==TBPostsListComponent== qui hérite de ==TBScreenComponent==:
@@ -1036,7 +1024,7 @@ TBApplicationRootComponent >> initialize
 ]]]
 
 Editer cette méthode n'est guère propre. Nous ajoutons un setter qui nous permettra
-de changer dynamiquement de composant dans le future tout en gardant le composant actuel pour une initialisation par défaut. 
+de changer dynamiquement de composant dans le futur tout en gardant le composant actuel pour une initialisation par défaut. 
 
 [[[
 TBApplicationRootComponent >> main: aComponent
@@ -1364,7 +1352,7 @@ Le titre d'un post est une chaine de caractères devant être obligatoirement co
 TBPost >> descriptionTitle
    <magritteDescription>
    ^ MAStringDescription new
-      accèssor: #title;
+      accessor: #title;
       beRequired;
       yourself
 ]]]
@@ -1375,7 +1363,7 @@ Le texte d'un post est une chaine de caractères multi-lignes devant être oblig
 TBPost >> descriptionText
    <magritteDescription>
    ^ MAMemoDescription new
-      accèssor: #text;
+      accessor: #text;
       beRequired;
       yourself
 ]]]
@@ -1386,7 +1374,7 @@ La catégorie d'un post est une chaine de caractères qui peut ne pas être rens
 TBPost >> descriptionCategory
    <magritteDescription>
    ^ MAStringDescription new
-      accèssor: #category;
+      accessor: #category;
       yourself
 ]]]
 
@@ -1396,7 +1384,7 @@ La date de création d'un post est importante car elle permet de définir l'ordr
 TBPost >> descriptionDate
    <magritteDescription>
    ^ MADateDescription new
-      accèssor: #date;
+      accessor: #date;
       beRequired;
       yourself
 ]]]
@@ -1408,7 +1396,7 @@ La variable d'instance ==visible== doit obligatoirement contenir une valeur bool
 TBPost >> descriptionVisible
    <magritteDescription>
    ^ MABooleanDescription new
-      accèssor: #visible;
+      accessor: #visible;
       beRequired;
       yourself
 ]]]
@@ -1692,7 +1680,7 @@ Nous ajoutons une méthode de classe pour la sélection des colonnes et modifier
 
 [[[
 TBPostsReport class >> filteredDescriptionsFrom: aBlogPost
-   ^ aBlogPost magritteDescription select: [ :each | #(title category date) includes: each accèssor selector ]
+   ^ aBlogPost magritteDescription select: [ :each | #(title category date) includes: each accessor selector ]
    
 TBPostsReport class >> from: aBlog
    | allBlogs |
@@ -1760,7 +1748,7 @@ TBPost >> descriptionTitle
    ^ MAStringDescription new
       label: 'Title';
       priority: 100;
-      accèssor: #title;
+      accessor: #title;
       beRequired;
       yourself
 ]]]
@@ -1770,7 +1758,7 @@ TBPost >> descriptionText
    ^ MAMemoDescription new
       label: 'Text';
       priority: 200;
-      accèssor: #text;
+      accessor: #text;
       beRequired;
       yourself
 ]]]
@@ -1780,7 +1768,7 @@ TBPost >> descriptionCategory
    ^ MAStringDescription new
       label: 'Category';
       priority: 300;
-      accèssor: #category;
+      accessor: #category;
       yourself
 ]]]
 [[[
@@ -1789,7 +1777,7 @@ TBPost >> descriptionDate
    ^ MADateDescription new
       label: 'Date';
       priority: 400;
-      accèssor: #date;
+      accessor: #date;
       beRequired;
       yourself
 ]]]
@@ -1799,7 +1787,7 @@ TBPost >> descriptionVisible
    ^ MABooleanDescription new
       label: 'Visible';
       priority: 500;
-      accèssor: #visible;
+      accessor: #visible;
       beRequired;
       yourself
 ]]]
@@ -1977,7 +1965,7 @@ TBPost >> descriptionTitle
 	^ MAStringDescription new
 		label: 'Title';
 		priority: 100;
-		accèssor: #title;
+		accessor: #title;
 		requiredErrorMessage: 'A blog post must have a title.';
 		comment: 'Please enter a title';
 		componentClass: TBSMagritteTextInputComponent;
@@ -1991,7 +1979,7 @@ TBPost >> descriptionText
 	^ MAMemoDescription new
 		label: 'Text';
 		priority: 200;
-		accèssor: #text;
+		accessor: #text;
 		beRequired;
 		requiredErrorMessage: 'A blog post must contain a text.';
 		comment: 'Please enter a text';
@@ -2005,7 +1993,7 @@ TBPost >> descriptionCategory
 	^ MAStringDescription new
 		label: 'Category';
 		priority: 300;
-		accèssor: #category;
+		accessor: #category;
 		comment: 'Unclassified if empty';
 		componentClass: TBSMagritteTextInputComponent;
 		yourself
@@ -2019,7 +2007,7 @@ TBPost >> descriptionVisible
 	^ MABooleanDescription new
 		checkboxLabel: 'Visible';
 		priority: 500;
-		accèssor: #visible;
+		accessor: #visible;
 		componentClass: TBSMagritteCheckboxComponent;
 		beRequired;
 		yourself
@@ -2034,7 +2022,7 @@ TBPost >> descriptionVisible
 
 @@todo Should revisit this part.
 
-Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations qui sont partagées et accèssible entre les composants. Une session est pratique pour gérer les informations de l'utilisateur en cours (loggé).  Nous allons voir comment nous l'utilisons pour gérer une connexion.
+Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants. Une session est pratique pour gérer les informations de l'utilisateur en cours (loggé).  Nous allons voir comment nous l'utilisons pour gérer une connexion.
 
 L'administrateur du blog peut vouloir voyager entre la partie privée et la partie publique de TinyBlog. 
 
@@ -2206,7 +2194,7 @@ TBRestfulFilter >> listAll
 ]]]
 
 
-+accès à tous les posts.>file://figures/RESTlistAll.png|width=75|label=RESTlistAll+
++Accès à tous les posts.>file://figures/RESTlistAll.png|width=75|label=RESTlistAll+
 
 
 !!! Refactoring
