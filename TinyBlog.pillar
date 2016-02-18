@@ -1,19 +1,25 @@
-! TinyBlog: Préparation
+!TinyBlog: Préparation
 
-Ce tutoriel va vous enseigner comment définir et déployer une application en utilisant Pharo/Seaside/Mongo ainsi que des frameworks disponibles en Pharo comme NeoJSON. Nous exposerons aussi comment exposer votre application via un serveur REST. Nous allons définir un mini moteur de blogs. Les solutions proposées dans le tutoriel sont parfois non optimales afin de vous faire réagir et que vous puissiez proposer d'autres solutions et améliorations.
+Ce tutoriel va vous enseigner comment définir et déployer une application en utilisant Pharo/Seaside/Mongo ainsi que des frameworks disponibles en Pharo comme NeoJSON. Nous exposerons aussi comment exposer votre application via un serveur REST. Nous allons définir un mini moteur de blogs. Les solutions proposées dans ce tutoriel sont parfois non optimales afin de vous faire réagir et que vous puissiez proposer d'autres solutions et améliorations.
 
 D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une façon de faire cependant nous invitons le lecteur à lire les références sur les autres chapitres, livres et tutoriaux afin d'approfondir son expertise.
 
 
-!! Installation et préparation de Pharo
+!!Installation et préparation de Pharo
 
-!!! Créer un projet sur SmalltalkHub
+!!!Créer un projet sur SmalltalkHub
  
 - Depuis votre compte créer un projet sur http://smalltalkhub.com
 -- Nommez le "TinyBlog",
 -- Récupérer l'URL du projet: 'http://smalltalkhub.com/mc/XXX/TinyBlog/main'
 
-!!! Mettre en place Pharo
+!!!Mettre en place Pharo
+
+Nous avons préparé une image contenant les projets Seaside, Voyage, Bootstrap et Magritte. 
+Vous pouvez la télécharger directement en utilisant Pharo Launcher et en cherchant le projet TinyBlogBase dans les contributions Pharo.
+Cette image se trouve également sur le serveur d'intégration *https://ci.inria.fr/* dans les Pharo-Contributions et le projet TinyBlogBase. Le lien direct est *https://ci.inria.fr/pharo-contribution/job/TinyBlogBase/lastSuccessfulBuild/artifact/TinyBlogBase.zip*.
+
+Pour recréer cette image manuellement :
 
 - Télécharger Pharo 4.0 à partir du site pharo.org
 - A partir du "Configuration Browser", installer les paquets:
@@ -23,12 +29,8 @@ D'autre part, notre objectif n'est pas d'être exhaustif. Nous montrons une faç
 -- Mustache
 - Créez un paquet nommé TinyBlog
 
-Nous avons préparer une image contenant les projets Seaside, Voyage, Bootstrap et Magritte. Vous pouvez y accéder 
-en utilisant le Pharo Launcher et en cherchant le projet TinyBlogBase dans les contributions Pharo.
-Sinon cette image se trouve sur le serveur d'integration http://ci.inria.fr dans les Pharo-Contributions et le projet TinyBlogBase.
 
-
-!!! Créer la configuration du projet
+!!!Créer la configuration du projet
 
 Dans un premier temps vous pouvez sauter cette étape. 
 
@@ -51,19 +53,13 @@ Dans un premier temps vous pouvez sauter cette étape.
 - Cliquer sur le serveur pour le sélectionner et cliquez sur le bouton "Start".
 
 
-
-
-
-
-
-
-! Le modèle de TinyBlog
+!Le modèle de TinyBlog
 
 Le modèle de TinyBlog est extrêmement simple: Les deux classes ==TBPost== et  ==TBBlog==.
 Notez que comme nous le verrons plus tard, nous allons utiliser le fait que Voyage offre une base de données en mémoire pour développer la solution sans avoir besoin de se connecter en permanence à la base. 
 
 
-!!! La classe TBPost
+!!!La classe TBPost
 Définissez la class ==TBPost== comme suit:
 
 [[[
@@ -73,7 +69,7 @@ Object subclass: #TBPost
    package: 'TinyBlog'
 ]]]
 
-!!! Description d'un post
+!!!Description d'un post
 
 Cinq variables d'instance pour décrire un post sur le blog.
 
@@ -119,7 +115,7 @@ TBPost >> category: anObject
    category := anObject
 ]]]
 
-!!!! Gérer la visibilité d'un post
+!!!!Gérer la visibilité d'un post
 
 Il faut avoir la possibilité d'indiquer qu'un post est visible ou pas. Il faut également pouvoir demander à un post s'il est visible. Les méthodes sont définies dans la protocole 'action'.
 
@@ -137,7 +133,7 @@ TBPost >> isVisible
 
 
 
-!!!! Initialisation
+!!!!Initialisation
 
 La méthode ==initialize== (protocole 'initialize-release') fixe par défaut la date et la visibilité à faux (l'utilisateur devra par la suite activer la visibilité ce qui permet de rédiger des brouillons et de publier lors que le post est terminé). Un post est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe.  La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
 [[[
@@ -178,7 +174,7 @@ TBPost class >> title: aTitle text: aText category: aCategory
 ]]]
 
 
-!!!! Test
+!!!!Test
 
 Savoir si un post est classé dans une catégorie
 
@@ -196,7 +192,7 @@ Proposer une solution.
 
 
 
-!!! La classe TBBlog
+!!!La classe TBBlog
 La classe ==TBBlog== contient des posts. Nous allons développer ==TBBlog== en écrivant des tests puis les implémentant.
 
 [[[
@@ -234,7 +230,7 @@ TBBlog class >> initialize
 ]]]
 
 
-!! Tester les règles métiers
+!!Tester les règles métiers
 Nous allons écrire des tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premiers puis en définissant les fonctionalités jsuqu'à ce que les tests passent.
 
 Les tests unitaires sont regroupés dans le paquet ==TinyBlog-Tests== qui contient la classe ==TBBlogTest==.
@@ -273,7 +269,7 @@ Noter que si vous déployer un blog puis exécuter les tests vous perdrez les po
 Nous allons développer les tests d'abord puis ensuite passer à l'implémentation
 des fonctionalités.
 
-!!!! Un premier test
+!!!!Un premier test
 
 Commençons par écrire un premier test qui ajoute un post.
 
@@ -305,14 +301,14 @@ Le test précédent doit maintenant passer.
 
 Ecrivons un test pour couvrir les fonctionalités que nous venons de développer. 
 
-!!!! Obtenir le nombre de posts dans la base
+!!!!Obtenir le nombre de posts dans la base
 
 [[[
 TBBlogTest >> testSize
    self assert: blog size equals: 1
 ]]]
 
-!!!! Effacer l'intégralité des posts
+!!!!Effacer l'intégralité des posts
 
 [[[
 TBBlogTest >> testRemoveAllBlogPosts
@@ -321,12 +317,12 @@ TBBlogTest >> testRemoveAllBlogPosts
 ]]]
 
 
-!!! Quelques autres fonctionalités
+!!!Quelques autres fonctionalités
 
 Nous définissons les fonctionalités et nous assurons que les tests passent. 
 Les règles métiers sont regroupées dans le protocole 'action' de la classe ==TBBlog==.
 
-!!!! Obtenir l'ensemble des posts (visibles et invisibles)
+!!!!Obtenir l'ensemble des posts (visibles et invisibles)
 
 [[[
 TBBlogTest >> testAllBlogPosts
@@ -340,7 +336,7 @@ TBBlog >> allBlogPosts
 ]]]
 
 
-!!!! Obtenir tous les posts visibles
+!!!!Obtenir tous les posts visibles
 
 [[[
 TBBlogTest >> testAllVisibleBlogPosts
@@ -381,14 +377,14 @@ TBBlog >> allBlogPostsFromCategory: aCategory
    ^ posts select: [ :p | p category = aCategory ]
 ]]]
 
-!!!! Vérifier la gestion des posts non classés
+!!!!Vérifier la gestion des posts non classés
 
 [[[
 TBBlogTest >> testUnclassifiedBlogPosts
    self assert: (blog allBlogPosts select: [ :p | p isUnclassified ]) size equals: 0
 ]]]
 
-!!!! Obtenir la liste des catégories
+!!!!Obtenir la liste des catégories
 
 [[[
 TBBlogTest >> testAllCategories
@@ -401,7 +397,7 @@ TBBlog >> allCategories
    ^ (self allBlogPosts collect: [ :p | p category ]) asSet
 ]]]
 
-!! Futures évolutions
+!!Futures évolutions
 
 Plusieurs évolutions peuvent être apportées telles que obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts contenus, renommer un catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons à les développer.
 
