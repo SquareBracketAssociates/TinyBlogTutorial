@@ -7,7 +7,7 @@ Notez que comme nous le verrons plus tard, nous allons utiliser le fait que Voya
 
 
 !!La classe TBPost
-Définissez la class ==TBPost== comme suit:
+Définissez la classe ==TBPost== comme suit:
 
 [[[
 Object subclass: #TBPost
@@ -95,7 +95,7 @@ TBPost >> initialize
 
 
 !!!Amélioration
-Il serait préférable de ne pas faire une référence en dur à la class ==TBPost== comme dans la méthode ==initialize==.
+Il serait préférable de ne pas faire une référence en dur à la classe ==TBPost== comme dans la méthode ==initialize==.
 Proposer une solution.
 
 
@@ -154,7 +154,7 @@ TBBlog >> initialize
 
 !!!Une seule base
 
-Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. Dans le futur, nous ajouterons la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant nous utilisons donc un singleton pour la class ==TBBlog==.
+Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. Dans le futur, nous ajouterons la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant nous utilisons donc un singleton pour la classe ==TBBlog==.
 
 [[[
 TBBlog class
@@ -173,7 +173,7 @@ TBBlog class >> initialize
 
 
 !!Tester les règles métiers
-Nous allons écrire des tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premiers puis en définissant les fonctionalités jsuqu'à ce que les tests passent.
+Nous allons écrire des tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premier puis en définissant les fonctionalités jsuqu'à ce que les tests passent.
 
 Les tests unitaires sont regroupés dans le paquet ==TinyBlog-Tests== qui contient la classe ==TBBlogTest==.
 

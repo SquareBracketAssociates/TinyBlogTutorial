@@ -46,11 +46,10 @@ TBBlog class >> initialize
    self reset
 ]]]
 
-L'expression ==VORepository setRepository: nil.== est une expression Voyage qui détruit la connexion avec la base de données Mongo qu'elle soit en mémoire ou extèrieure.
-
+L'expression ==VORepository setRepository: nil.== est une expression Voyage qui détruit la connexion avec la base de données Mongo qu'elle soit en mémoire ou extérieure.
 
 !! Tester les règles métiers
-Nous allons écrire les tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premiers puis en définissant les fonctionalités jsuqu'à ce que les tests passent.
+Nous allons écrire les tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premier puis en définissant les fonctionalités jsuqu'à ce que les tests passent.
 
 Les tests unitaires sont regroupés dans le paquet ==TinyBlog-tests== qui contient la classe ==TBBlogTest==.
 
