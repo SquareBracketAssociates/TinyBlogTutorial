@@ -2,7 +2,24 @@
 
 Ce chapitre décrit comment doter notre application TinyBlog d'une interface REST (REpresentational State Transfer).
 
-Le code est placé dans un package =='TinyBlog-Rest'== car l'utilisation de REST est optionnelle. Les tests seront dans le package =='TinyBlog-Rest-Tests'==.
+Le code est placé dans un package =='TinyBlog-Rest'== car l'utilisation de REST est optionnelle.
+
+Les tests seront dans le package =='TinyBlog-Rest-Tests'==.
+
+!!Notions de base sur REST
+
+REST se base sur les verbes HTTP pour décrire l'accès aux ressources HTTP. Les principaux verbes ont la signification suivante:
+
+* GET pour lire une ressource,
+* POST pour créer une nouvelle ressource,
+* PUT pour modifier une ressource existante,
+* DELETE pour effacer une ressource,
+
+Les ressources sont définies à l'aide des URL qui pointent sur une entité. Le chemin précisé dans l'URL permet de donner une signification plus précise à l'action devant être réalisée. Par exemple, un ==GET /files/file.txt== signifie que le client veut accéder au contenu de l'entité nommée ==file.txt==. Par contre, un ==GET /files/== précise que le client veut obtenir la liste des entités contenues dans l'entité ==files==.
+
+Une autre notion importante est le respect des formats de données acceptés par le client et par le serveur. Lorsqu'un client REST émet une requête vers un serveur REST, il précise dans l'entête de la requête HTTP la liste des types de données qu'il est capable de gérer. Le serveur REST se doit de répondre dans un format compréhensible par le client et si cela n'est pas possible, préciser au client qu'il n'est pas capable de lui répondre.
+
+La réussite ou l'échec d'une opération est basée sur les codes de statut du protocole HTTP. Par exemple,si une opération réussi, le serveur doit répondre un code 200 (OK). De même, si une ressource demandé par le client n'existe pas, il doit retourner un code 404 (Not Found). Il est très important de respecter la signification de ces codes de statut qui permettent de mettre en place un dialogue compréhensible entre le client et le serveur.
 
 !!Définir un filtre REST
 
@@ -99,7 +116,16 @@ TBPost >> javascriptOn: aStream
 !!!Recherche d'un Post
 
 Maintenant nous allons proposer d'autres fonctionnalités comme la recherche d'un post.
-Nous définissons donc cette fonctionnalité dans la classe ==TBlog==.
+Nous définissons donc cette fonctionnalité dans la classe ==TBlog==. La méthode ==postWithTitle:== reçoit une chaine de caractères comme unique argument et recherche un post ayant un titre identique à la chaine de caractères. Si plusieurs posts sont trouvés, la méthode retourne le premier sélectionné.
+
+[[[
+TBBlog >> postWithTitle: aString
+	| result |
+	result := self allVisibleBlogPosts select: [ :post | post title = aTitle ].
+	result ifNotEmpty: [ ^result first ] ifEmpty: [ ^nil ]
+]]]
+
+Il faut maintenant déclarer la route HTTP permettant de lancer la recherche. L'emplacement du titre au sein de l'URL est entouré à l'aide de crochets et le nom de l'argument doit être identique à celui du paramêtre reçu par la méthode.
 
 [[[
 TBRestfulFilter >> search: title
@@ -113,53 +139,35 @@ TBRestfulFilter >> search: title
 		post javascriptOn: astream attributes: #(title category date text)]
 ]]]
 
+Il nous faut également ajouter une méthode ==notFound== qui permettra de signaler au client que la recherche a été infructueuse. Il récupérera alors un code HTTP 404 (Not found).
+
 [[[
 TBRestfulFilter >> notFound
-
-	|  |
 	"trick self halt puis dans le debugger req := self requestContext."
 	self requestContext responseGenerator
 		notFound;
 		respond
 ]]]
 
+Si nous essayons ce code, un problème apparaît rapidement. En effet, cet outil de recherche ne fonctionne que sur des posts dont le titre ne contient qu'une seule chaine de caractères et échoue sur les titres comportant des espaces.
+
 +REST Error.>file://figures/RESTError.png|width=75|label=error+
+
+La raison est que HTTP considère que l'espace fait partie des caractères spéciaux et donc le client encode celui-ci à l'aide de la valeur %20.
 
 [[[
 http://localhost:8080/TinyBlog/search?title=Welcome%20in%20TinyBlog
 ]]]
 
-
-!!!!Chercher selon le titre
-[[[
-TBBlog >> postWithTitle: aString
-	
-	^ self allBlogPosts
-			detect: [ :each | each title = aString ]
-			ifNone: [ nil ]
-]]]
+Coté serveur, la chaine reçu ne correspond donc pas au vériable titre du post recherché. Il est donc nécessaire de convertir la chaine de caractères avant de lancer la recherche. Pour cela, il est nécessaire de modifier le code de la méthode ==search:== pour utiliser la méthode ==urlDecoded==.
 
 [[[
-TBRestfulFilter >> post: title
-	<get>
-	<path: 'post/{title}'>
-	<produces: 'text/json'>
-   | post |
-	post := TBBlog current postWithTitle: title.
-	post ifNil: [ ^ self notFound ].
-   ^ String streamContents: [ :astream |
-		post javascriptOn: astream ]
+post := TBBlog current postWithTitle: aTitle urlDecoded.
 ]]]
-
-Nous pouvons tester en effectuant la requête suivante :
-
-[[[
-http://localhost:8080/TinyBlog/post/Welcome%20in%20TinyBlog
-]]]
-
-+REST post.>file://figures/RestPost.png|width=75|label=post+
 
 !!!!Chercher selon une période
+
+Une autre méthode intéressante pour lancer une recherche consiste à extraire l'ensemble des posts créés entre deux dates qui définissent ainsi une période. Pour cette raison, la méthode ==searchDateFrom:to:== reçoit deux arguments qui sont également définis dans la syntaxe de l'URL.
 
 [[[
 TBRestfulFilter >> searchDateFrom: beginString to: endString
@@ -181,11 +189,15 @@ TBRestfulFilter >> searchDateFrom: beginString to: endString
 			separatedBy: [ astream << ',' ].
 		astream << ']'
 		]
-		
 ]]]
+
+REFAIRE L'IMAGE POUR UTILISER LE FORMAT ANGLOSAXON !
 
 +Avec des dates.>file://figures/RestWithDate.png|width=75|label=RestWithDate+
 
+[[
+http://localhost:8080/TinyBlog/search?begin=2010-1-1&end=2016-12-31
+]]
 
 !!!Ajouter un post
 
@@ -287,6 +299,36 @@ Vous pouvez vérifiez que votre post n'est pas enlever.
 
 
 
+Filtrer selon le type de données demandé
+-> bloquer autre chose qu'un accept = JSON
+
+
+
+-------------------------------------------------------------------------------
+
+
+!!!!Chercher selon le titre
+
+
+[[[
+TBRestfulFilter >> post: title
+	<get>
+	<path: 'post/{title}'>
+	<produces: 'text/json'>
+   | post |
+	post := TBBlog current postWithTitle: title.
+	post ifNil: [ ^ self notFound ].
+   ^ String streamContents: [ :astream |
+		post javascriptOn: astream ]
+]]]
+
+Nous pouvons tester en effectuant la requête suivante :
+
+[[[
+http://localhost:8080/TinyBlog/post/Welcome%20in%20TinyBlog
+]]]
+
++REST post.>file://figures/RestPost.png|width=75|label=post+
 
 
 
