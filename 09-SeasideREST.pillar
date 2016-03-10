@@ -2,6 +2,8 @@
 
 Ce chapitre décrit comment doter notre application TinyBlog d'une interface REST (REpresentational State Transfer).
 
+Le code est placé dans un package =='TinyBlog-Rest'== car l'utilisation de REST est optionnelle. Les tests seront dans le package =='TinyBlog-Rest-Tests'==.
+
 !!Définir un filtre REST
 
 [[[
@@ -18,7 +20,7 @@ TBApplicationRootComponent class >> initialize
 	   "self initialize"
 	   | app |
 	   app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
-		app 
+		app
 			preferenceAt: #sessionClass put: TBSession.
 	   app
 	      addLibrary: JQDeploymentLibrary;
@@ -27,54 +29,27 @@ TBApplicationRootComponent class >> initialize
 		app addFilter: TBRestfulFilter new.
 ]]]
 
-Ne pas oublier d'initialiser.
+Ne pas oublier d'initialiser la classe TBAppllicationRootComponent en saisissant dans le playGround. Ceci permet à Seaside de prendre en compte le filtre REST qui a été ajouté.
 
 [[[
-self initialize
+TBApplicationRootComponent initialize
 ]]]
 
-!!Obtenir 
-
-[[[
-TBRestfulFilter >> listAll
-  <get>
-  <produces: 'text/json'>
-
-  ^ String streamContents: [ :astream | 
-       TBBlog current allBlogPosts
-			do: [ :each | each javascriptOn: stream ]
-			separatedBy: [ stream << ',' ]] 
-    ]
-]]]
-
-
-Si on veut sélectionner les informations que l'on retourne.
+!!Obtenir
 
 [[[
 TBRestfulFilter >> listAll
-  <get>
-  <produces: 'text/json'>
-
-  ^ String streamContents: [ :astream | 
-    		TBBlog current allBlogPosts
-  			do: [ :each | 
-  			Dictionary new
-  				at: #title put: each title;
-  				at: #category put: each category;
-  				at: #date put: each date;
-  				at: #text put: each text;
-  				javascriptOn: astream ]
-  			separatedBy: [ astream << ',' ]] 
+	<get>
+	<produces: 'text/json'>
+	
+	^String streamContents: [ :aStream |
+		TBBlog current allBlogPosts
+			do: [ :each | each javascriptOn: aStream ]
+			separatedBy: [ aStream << ',' ]
+	]
 ]]]
 
-
-+Accès à tous les posts.>file://figures/RESTlistAll.png|width=75|label=RESTlistAll+
-
-
-!!!Refactoring
-
-Définir la transformation en Javascript dans notre composant n'est pas optimal. Nous allons donc le définir dans la classe
-et appeler cette fonctionnalité. 
+Il est rarement utile de retourner l'ensemble des informations pour chaque post. Modifions ce code pour ne retourner que les champs les plus pertinants pour décrire un post. Pour cela, il faut tout d'abord définir comment un post est converti en Javascript.
 
 [[[
 TBPost >> javascriptOn: aStream
@@ -84,34 +59,34 @@ TBPost >> javascriptOn: aStream
 			at: #categroy put: self category;
 			at: #date put: self  date;
 			at: #text put: self  text;
-			javascriptOn: aStream 
+			javascriptOn: aStream
 ]]]
+
+Nous pouvons ensuite modifier la méthode ==listAll== afin de prendre en compte la sélection des champs.
 
 [[[
 TBRestfulFilter >> listAll
   <get>
   <produces: 'text/json'>
 
-  ^ String streamContents: [ :astream | 
+  ^ String streamContents: [ :astream |
 		astream << '['.
 		TBBlog current allBlogPosts
 			do: [ :each | each javascriptOn: astream]
 			separatedBy: [ astream << ',' ].
-		astream << ']'
 		]
 ]]]
 
-Nous raffinons afin de pouvoir sélectionner les attributs que nous voulons convertir 
-en introduisant la méthode ==javascriptOn: aStream attributes: aCollection==.
+Nous raffinons afin de pouvoir sélectionner les attributs que nous voulons convertir en introduisant la méthode ==javascriptOn: aStream attributes: aCollection==.
 
 [[[
 TBPost >> javascriptOn: aStream attributes: aCollection
 	
 	| dictionary |
 	dictionary := Dictionary new.
-	aCollection do: [ :each | 
+	aCollection do: [ :each |
 				dictionary at: each put: (self perform: each asSymbol) ].
-	^ dictionary javascriptOn: aStream 
+	^ dictionary javascriptOn: aStream
 ]]]
 
 [[[
@@ -123,38 +98,20 @@ TBPost >> javascriptOn: aStream
 
 !!!Recherche d'un Post
 
-Maintenant nous allons proposer d'autres fonctionnalités comme la recherche d'un post. 
+Maintenant nous allons proposer d'autres fonctionnalités comme la recherche d'un post.
 Nous définissons donc cette fonctionnalité dans la classe ==TBlog==.
 
 [[[
-TBBlog >> postWithTitle: aString
-	
-	^ self allBlogPosts 		
-			detect: [ :each | each title = aString ]
-			ifNone: [ nil ]
-]]]
-
-[[[
-TBRestfulFilter >> post: title
+TBRestfulFilter >> search: title
 	<get>
-	<path: 'post/{title}'>
+	<path: 'search?title={title}'>
 	<produces: 'text/json'>
    | post |
 	post := TBBlog current postWithTitle: title.
-	post ifNil: [ ^ self notFound ]. 
-   ^ String streamContents: [ :astream | 
-		post javascriptOn: astream ]
+	post ifNil: [ ^ self notFound ].
+   ^ String streamContents: [ :astream |
+		post javascriptOn: astream attributes: #(title category date text)]
 ]]]
-
-Nous pouvons tester en effectuant la requête suivante : 
-
-[[[
-http://localhost:8080/TinyBlog/post/Welcome%20in%20TinyBlog
-]]]
-
-
-
-+REST post.>file://figures/RestPost.png|width=75|label=post+
 
 [[[
 TBRestfulFilter >> notFound
@@ -169,29 +126,40 @@ TBRestfulFilter >> notFound
 +REST Error.>file://figures/RESTError.png|width=75|label=error+
 
 [[[
-javascriptOn: aStream
-
-   ^ self javascriptOn: aStream attributes: #(title category date text)
-]]]
-
-
-
-[[[
-TBRestfulFilter >> search: title
-	<get>
-	<path: 'search?title={title}'>
-	<produces: 'text/json'>
-   | post |
-	post := TBBlog current postWithTitle: title.
-	post ifNil: [ ^ self notFound ]. 
-   ^ String streamContents: [ :astream | 
-		post javascriptOn: astream attributes: #(title category date text)]
-]]]
-
-[[[
 http://localhost:8080/TinyBlog/search?title=Welcome%20in%20TinyBlog
 ]]]
 
+
+!!!!Chercher selon le titre
+[[[
+TBBlog >> postWithTitle: aString
+	
+	^ self allBlogPosts
+			detect: [ :each | each title = aString ]
+			ifNone: [ nil ]
+]]]
+
+[[[
+TBRestfulFilter >> post: title
+	<get>
+	<path: 'post/{title}'>
+	<produces: 'text/json'>
+   | post |
+	post := TBBlog current postWithTitle: title.
+	post ifNil: [ ^ self notFound ].
+   ^ String streamContents: [ :astream |
+		post javascriptOn: astream ]
+]]]
+
+Nous pouvons tester en effectuant la requête suivante :
+
+[[[
+http://localhost:8080/TinyBlog/post/Welcome%20in%20TinyBlog
+]]]
+
++REST post.>file://figures/RestPost.png|width=75|label=post+
+
+!!!!Chercher selon une période
 
 [[[
 TBRestfulFilter >> searchDateFrom: beginString to: endString
@@ -200,13 +168,13 @@ TBRestfulFilter >> searchDateFrom: beginString to: endString
 	<produces: 'text/json'>
    | posts dateFrom dateTo |
 
-	dateFrom := Date fromString: beginString. 
-	dateTo := Date fromString: endString. 
+	dateFrom := Date fromString: beginString.
+	dateTo := Date fromString: endString.
 	
 	posts := TBBlog current allBlogPosts
 		select: [  :each | each date between: dateFrom and: dateTo ].
 	
-	^ String streamContents: [ :astream | 
+	^ String streamContents: [ :astream |
 	 	astream << '['.
   		posts
 			do: [ :each | each javascriptOn: astream]
@@ -216,71 +184,10 @@ TBRestfulFilter >> searchDateFrom: beginString to: endString
 		
 ]]]
 
-
 +Avec des dates.>file://figures/RestWithDate.png|width=75|label=RestWithDate+
 
 
-Dire un mot de 
-- Put in header vs. Post 
-
-!!!Eliminer un post
-
-[[[
-TBRestfulFilter >> remove: title
-	<delete>
-	<path: '/remove/{title}'>
-	<produces: 'text/json'>
-	
-	| post |
-	
-	post := TBBlog current postWithTitle: title.
-	^ post 
-		ifNotNil: [ 
-			post remove.
-			'{status: "ok"}' ]
-		ifNil: [ 
-			'{status: "notFound"}' ]
-]]]
-
-Notez que status n'est pas du REST car REST ne spécifie pas la manière de gérer les erreurs. 
-Maintenant ce code ne fonctionne pas car ==TBPost== n'est pas une racine en Voyage.
-
-Essayons mais nous ne pouvons pas tester avec un browser web dans son url ne peut faire qu'un GET. 
-Donc il nous faut utiliser Zinc. 
-
-[[[
-ZnEasy delete: 'http://localhost:8080/TinyBlog/remove/RemoveMe'
-]]]
-
-Vous pouvez vérifiez que votre post n'est pas enlevé.
-
-[[[
-TBRestfulFilter >> remove: title
-	<delete>
-	<path: '/remove/{title}'>
-	<produces: 'text/json'>
-	
-	| post |
-	post := TBBlog current postWithTitle: title.
-	^ post 
-		ifNotNil: [ 
-			TBBlog current removeBlogPost: post.
-			'{status: "ok"}' ]
-		ifNil: [ 
-			'{status: "notFound"}' ]
-]]]
-
-Maintenant nous réessayons et nous pouvons effectivement éliminer un post.
-
-[[[
-ZnEasy delete: 'http://localhost:8080/TinyBlog/remove/RemoveMe'
-]]]
-
-Vous pouvez vérifiez que votre post n'est pas enlever.
-
-@@todo bizarre, il est enlevé ou pas?
-
-!!!Ajout de Blog Post
+!!!Ajouter un post
 
 [[[
 TBRestfulFilter >> addPost
@@ -290,12 +197,12 @@ TBRestfulFilter >> addPost
 	| request title category date text post |
 
 	request := self requestContext request.
-	title := request at: #title.  
-	category := request at: #category.  
-	text := request at: #text.  
-	date := Date fromString: (request at: #title).  
+	title := request at: #title.
+	category := request at: #category.
+	text := request at: #text.
+	date := Date fromString: (request at: #title).
 	"Of course many can go wrong here (Date could be wrong ... and a real version we should validate"
-	post := TBBlog new 
+	post := TBBlog new
 		title: title;
 		text: text;
 		category: category;
@@ -315,3 +222,83 @@ TBRestfulFilter >> addPost
 		contents: 'Ici un super post';
 		post.
 ]]]
+
+
+
+!!!Modifier un POST
+
+
+!!!Effacer un post
+
+[[[
+TBRestfulFilter >> remove: title
+	<delete>
+	<path: '/remove/{title}'>
+	<produces: 'text/json'>
+	
+	| post |
+	
+	post := TBBlog current postWithTitle: title.
+	^ post
+		ifNotNil: [
+			post remove.
+			'{status: "ok"}' ]
+		ifNil: [
+			'{status: "notFound"}' ]
+]]]
+
+Notez que status n'est pas du REST car REST ne spécifie pas la manière de gérer les erreurs.
+Maintenant ce code ne fonctionne pas car ==TBPost== n'est pas une racine en Voyage.
+
+Essayons mais nous ne pouvons pas tester avec un browser web dans son url ne peut faire qu'un GET.
+Donc il nous faut utiliser Zinc.
+
+[[[
+ZnEasy delete: 'http://localhost:8080/TinyBlog/remove/RemoveMe'
+]]]
+
+Vous pouvez vérifiez que votre post n'est pas enlevé.
+
+[[[
+TBRestfulFilter >> remove: title
+	<delete>
+	<path: '/remove/{title}'>
+	<produces: 'text/json'>
+	
+	| post |
+	post := TBBlog current postWithTitle: title.
+	^ post
+		ifNotNil: [
+			TBBlog current removeBlogPost: post.
+			'{status: "ok"}' ]
+		ifNil: [
+			'{status: "notFound"}' ]
+]]]
+
+Maintenant nous réessayons et nous pouvons effectivement éliminer un post.
+
+[[[
+ZnEasy delete: 'http://localhost:8080/TinyBlog/remove/RemoveMe'
+]]]
+
+Vous pouvez vérifiez que votre post n'est pas enlever.
+
+@@todo bizarre, il est enlevé ou pas?
+
+
+
+
+
+
+
+
+[[[
+javascriptOn: aStream
+
+   ^ self javascriptOn: aStream attributes: #(title category date text)
+]]]
+
+
+
+
+
