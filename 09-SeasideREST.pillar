@@ -54,10 +54,37 @@ TBApplicationRootComponent initialize
 
 !!Obtenir
 
+Le premier service proposé sera destiné à récupérer la liste des posts. Il s'agit d'une opération de lecture et elle utilisera donc le verbe GET du protocole HTTP. La réponse sera produite au format Javascript. La méthode ==listAll== est marquée comme étant un point d'entrée REST à l'aide des annotations ==<get>== et ==<produces:>==.
+
+Si le client interroge le serveur à l'aide de l'URL ==http://localhost:8080/TinyBlog/listAll==, la méthode ==listAll== est appelée. Celle-ci retourne les données selon le type MIME (Multipurpose Internet Mail Extensions) spécifié par l'annotation ==<produces:>==.
+
+PENSER A CHARGER SEASIDE-JSON-CORE ET SEASIDE-PHARO-JSON-CORE
+
 [[[
 TBRestfulFilter >> listAll
 	<get>
-	<produces: 'text/json'>
+	<produces: 'text/javascript'>
+	
+	^String streamContents: [ :aStream |
+		TBBlog current allBlogPosts
+			do: [ :each | each javascriptOn: aStream ]
+			separatedBy: [ aStream << ',' ]
+	]
+]]]
+
+Afin de faciliter l'utilisation d'un service REST, il est préférable de préciser finement la ou les ressources manipulées. Dans le cas présent, le nom de la méthode ==listAll== ne précise pas au client quelles sont les ressources qui seront retournées. Certes, nous savons que ce sont les posts mais après tout, cela pourrait également être les rubriques. Il faut donc être plus explicite dans la formalisation de l'URL afin de lui donner une réelle signification sémantique. C'est d'ailleur la principale difficulté dans la mise en place des services REST. La meilleure méthode est de faire simple et de s'efforcer d'être cohérent dans la désignation des chemins d'accès aux ressources. Si nous voulons la liste des posts, il nous suffit de demander la liste des posts. L'URL doit donc avoir la forme suivante:
+
+[[
+http://localhost:8080/TinyBlog/Posts
+]]
+
+Pour obtenir cela, nous pouvons renommer la méthode ==listAll== ou préciser le chemin d'accès qui appellera cette méthode. Cette seconde approche est plus souple puisqu'elle permet de réorganiser les appels aux services REST sans nécessiter de refactoriser le code.
+
+[[[
+TBRestfulFilter >> listAll
+	<get>
+  <path: '/posts'>
+	<produces: 'text/javascript'>
 	
 	^String streamContents: [ :aStream |
 		TBBlog current allBlogPosts
@@ -73,7 +100,7 @@ TBPost >> javascriptOn: aStream
 
 	Dictionary new
 			at: #title put: self title;
-			at: #categroy put: self category;
+			at: #category put: self category;
 			at: #date put: self  date;
 			at: #text put: self  text;
 			javascriptOn: aStream
@@ -84,7 +111,8 @@ Nous pouvons ensuite modifier la méthode ==listAll== afin de prendre en compte 
 [[[
 TBRestfulFilter >> listAll
   <get>
-  <produces: 'text/json'>
+  <path: '/posts'>
+  <produces: 'text/javascript'>
 
   ^ String streamContents: [ :astream |
 		astream << '['.
@@ -108,10 +136,15 @@ TBPost >> javascriptOn: aStream attributes: aCollection
 
 [[[
 TBPost >> javascriptOn: aStream
-
 	^ self javascriptOn: aStream attributes: #(title category date)
 ]]]
 
+!!!Construire une réponse
+
+
+!!!Respecter les contraintes du client
+
+ (JavaScript Object Notation) - XML - CSV - TEXT
 
 !!!Recherche d'un Post
 
@@ -125,7 +158,7 @@ TBBlog >> postWithTitle: aString
 	result ifNotEmpty: [ ^result first ] ifEmpty: [ ^nil ]
 ]]]
 
-Il faut maintenant déclarer la route HTTP permettant de lancer la recherche. L'emplacement du titre au sein de l'URL est entouré à l'aide de crochets et le nom de l'argument doit être identique à celui du paramêtre reçu par la méthode.
+Il faut déclarer la route HTTP permettant de lancer la recherche. L'emplacement du titre recherché au sein de l'URL est entouré à l'aide de crochets et le nom de l'argument doit être identique à celui du paramêtre reçu par la méthode.
 
 [[[
 TBRestfulFilter >> search: title
@@ -135,8 +168,8 @@ TBRestfulFilter >> search: title
    | post |
 	post := TBBlog current postWithTitle: title.
 	post ifNil: [ ^ self notFound ].
-   ^ String streamContents: [ :astream |
-		post javascriptOn: astream attributes: #(title category date text)]
+  ^ String streamContents: [ :astream |
+	  post javascriptOn: astream attributes: #(title category date text)]
 ]]]
 
 Il nous faut également ajouter une méthode ==notFound== qui permettra de signaler au client que la recherche a été infructueuse. Il récupérera alors un code HTTP 404 (Not found).
@@ -159,10 +192,18 @@ La raison est que HTTP considère que l'espace fait partie des caractères spéc
 http://localhost:8080/TinyBlog/search?title=Welcome%20in%20TinyBlog
 ]]]
 
-Coté serveur, la chaine reçu ne correspond donc pas au vériable titre du post recherché. Il est donc nécessaire de convertir la chaine de caractères avant de lancer la recherche. Pour cela, il est nécessaire de modifier le code de la méthode ==search:== pour utiliser la méthode ==urlDecoded==.
+Coté serveur, la chaine reçu ne correspond donc pas au vériable titre du post recherché. Il faut donc convertir la chaine de caractères avant de lancer la recherche. Pour cela, il est nécessaire de modifier le code de la méthode ==search:== pour utiliser la méthode ==urlDecoded==.
 
 [[[
-post := TBBlog current postWithTitle: aTitle urlDecoded.
+TBRestfulFilter >> search: title
+	<get>
+	<path: 'search?title={title}'>
+	<produces: 'text/json'>
+   | post |
+  post := TBBlog current postWithTitle: aTitle urlDecoded.
+	post ifNil: [ ^ self notFound ].
+  ^ String streamContents: [ :astream |
+	  post javascriptOn: astream attributes: #(title category date text)]
 ]]]
 
 !!!!Chercher selon une période
@@ -201,10 +242,12 @@ http://localhost:8080/TinyBlog/search?begin=2010-1-1&end=2016-12-31
 
 !!!Ajouter un post
 
+Voyons maintenant comment ajouter un nouveau post à notre blog à l'aide de REST. Etant donné qu'il s'agit ici de la création d'une nouvelle ressource, nous devons utiliser le verbe POST pour décrire l'action. Le chemin sera la ressource désignant la liste des posts.
+
 [[[
 TBRestfulFilter >> addPost
 	<post>
-	<path: '/add-post'>
+	<path: '/posts'>
 	
 	| request title category date text post |
 
