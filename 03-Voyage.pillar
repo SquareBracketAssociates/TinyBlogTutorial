@@ -30,7 +30,7 @@ La méthode de classe ==isVoyageRoot== permet de déclarer que les objets de la 
 
 [[[
 TBBlog class >> isVoyageRoot
-   "Indicates that instances of this class are top level document in noSQL databases"
+   "Indicates that instances of this class are top level documents in noSQL databases"
    ^ true
 ]]]
 
@@ -135,7 +135,7 @@ La réinitialisation se fait comme suit:
 
 !!Si nous devions sauvegarder les posts
 
-Cette section n'est pas à implémenter et elle est juste donnée à titre d'exemple. Nous pourrions aussi définir qu'un post est un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Si nous représentions les commentaires d'un post nous ne les déclarerions pas non plus comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
+Cette section n'est pas à implémenter et elle est juste donnée à titre d'exemple. Nous pourrions aussi définir qu'un post est un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Si nous représentions les commentaires d'un post, nous ne les déclarerions pas non plus comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
 
 Déclarer les posts comme racine aurait pour conséquence que les blogs sauvés aurait une référence à un objet TBPost alors que sans cela le post est inclus dans la sauvegarde du blog. Notez aussi que lorsqu'un post n'est pas un root, vous n'avez pas la certitude d'unicité de celui-ci lors du chargement depuis la base. En effet, lors du chargement (et ce qui peut être contraire à la situation du graphe d'objet avant la sauvegarde) un post n'est alors pas partagé entre deux instances de blogs. 
 Si avant la sauvegarde en base un post était partagé, après le chargement depuis la base, ce post sera dupliqué car recréé à partir de la définition du blog (et le blog contient alors complètement le post).
