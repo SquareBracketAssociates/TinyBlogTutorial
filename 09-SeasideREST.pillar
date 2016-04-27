@@ -236,9 +236,9 @@ REFAIRE L'IMAGE POUR UTILISER LE FORMAT ANGLOSAXON !
 
 +Avec des dates.>file://figures/RestWithDate.png|width=75|label=RestWithDate+
 
-[[
+[[[
 http://localhost:8080/TinyBlog/search?begin=2010-1-1&end=2016-12-31
-]]
+]]]
 
 !!!Ajouter un post
 
@@ -291,8 +291,7 @@ TBRestfulFilter >> remove: title
 	<path: '/remove/{title}'>
 	<produces: 'text/json'>
 	
-	| post |
-	
+	| post |	
 	post := TBBlog current postWithTitle: title.
 	^ post
 		ifNotNil: [
@@ -341,14 +340,10 @@ Vous pouvez vérifiez que votre post n'est pas enlever.
 @@todo bizarre, il est enlevé ou pas?
 
 
-
-Filtrer selon le type de données demandé
--> bloquer autre chose qu'un accept = JSON
+Filtrer selon le type de données demandé bloquer autre chose qu'un accept equal JSON
 
 
-
--------------------------------------------------------------------------------
-
+%----------------------------------------------
 
 !!!!Chercher selon le titre
 
