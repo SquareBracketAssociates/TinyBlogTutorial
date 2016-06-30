@@ -13,7 +13,7 @@ REST se base sur les verbes HTTP pour décrire l'accès aux ressources HTTP. Les
 * GET pour lire une ressource,
 * POST pour créer une nouvelle ressource,
 * PUT pour modifier une ressource existante,
-* DELETE pour effacer une ressource,
+* DELETE pour effacer une ressource.
 
 Les ressources sont définies à l'aide des URL qui pointent sur une entité. Le chemin précisé dans l'URL permet de donner une signification plus précise à l'action devant être réalisée. Par exemple, un ==GET /files/file.txt== signifie que le client veut accéder au contenu de l'entité nommée ==file.txt==. Par contre, un ==GET /files/== précise que le client veut obtenir la liste des entités contenues dans l'entité ==files==.
 
@@ -52,24 +52,115 @@ Ne pas oublier d'initialiser la classe TBAppllicationRootComponent en saisissant
 TBApplicationRootComponent initialize
 ]]]
 
-!!Obtenir
+!!Modéliser un service REST
 
-Le premier service proposé sera destiné à récupérer la liste des posts. Il s'agit d'une opération de lecture et elle utilisera donc le verbe GET du protocole HTTP. La réponse sera produite au format Javascript. La méthode ==listAll== est marquée comme étant un point d'entrée REST à l'aide des annotations ==<get>== et ==<produces:>==.
+Tous les services REST fonctionnent de la même manière. Ils sont déclenchés par une commande HTTP et recoivent des informations provenant du client. Ils traitent les données et forgent ensuite une réponse qui est retournée au client. Il est donc aisé de réduire le volume de code nécessaire à leur mise en place à l'aide de l'héritage.
+
+La classe ==TBRestService== représente un service REST générique dont hériterons les véritables services REST de TinyBlog. Certaines méthodes seront abstraites et le travail sera délégué aux sous-classe de ==TBRestService==.
+
+La requête et la réponse (au sens HTTP du terme) sont considérées comme étant le contexte dans lequel le service REST s'exécute. Les données produites et formatées par le service REST doivent également être accessibles. La gestion du contexte nécessite des accesseurs pour être rendu public. Ce n'est pas le cas des données produites.
+
+[[[
+Object subclass: #TBRestService
+	instanceVariableNames: 'result context'
+	classVariableNames: ''
+	category: 'TinyBlog-Rest'
+
+TBRestService >> context
+	^ context
+
+TBRestService >> context: anObject
+	context := anObject
+]]]
+
+Lorsque ==TBRestService== est instancié, il doit initialisé la variable d'instance ==result== à l'aide de l'instance d'un objet ayant la capacité de contenir les données destinées au client.
+
+[[[
+TBRestService >> initialize
+	super initialize.
+	result := TBRestResponseContent new.
+]]]
+
+Les données conservée dans la variable d'instance ==result== sont dans un format brut et seront converties juste avant leur envoi au client à l'aide de la méthode ==dataType:with:===. Le type MIME utilisé est initialisé au sein de la réponse.
+
+[[[
+TBRestService >> dataType: aDataType with: aResultSet
+  self context response contentType: (aDataType greaseString).
+	self context respond: [ :response | response nextPutAll: aResultSet ]
+]]]
+
+Un service REST est activé à l'aide la méthode ==applyServiceWithContext:== qui initialise le contexte d'exécution HTTP et lance le traitement demandé.
+
+[[[
+TBRestService >> applyServiceWithContext: aRequestContext
+	self context: aRequestContext.
+	self execute.
+]]]
+
+Dans le cas de la classe TBRestService, il n'y a aucun traitement des données possible et la méthode est donc abstraite.
+
+[[[
+TBRestService >> execute
+	self subclassResponsibility
+]]]
+
+!!Définir le conteneur des données
+
+La classe TBRestResponseContent est une toute petite classe qui n'a pour finalité que de contenir les données qui seront transmise au client et ceci avant leur éventuelle conversion en fonction de la valeur du paramêtre ==accept== présent dans la requête HTTP du client.
+
+[[[
+Object subclass: #TBRestResponseContent
+	instanceVariableNames: 'data'
+	classVariableNames: ''
+	category: 'TinyBlog-Rest'
+]]]
+
+La méthode ==initialize== permet d'initialiser la variable d'instance ==data== à l'aide d'une collection ordonnée.
+
+[[[
+TBRestResponseContent >> initialize
+	super initialize.
+	data := OrderedCollection new.
+]]]
+
+La méthode ==add== permet d'ajouter des données dans la réponse.
+
+[[[
+TBRestResponseContent >> add: aValue
+	data add: aValue
+]]]
+
+La méthode ==toJson== assure la conversion du contenu de la réponse en une chaine de caractères au format JSON. Le framework utilisé ici est NeoJSON. D'autres format peuvent être ajouté tels que XML ou CSV. Il suffit d'ajouter les méthodes nécessaires pour chaque conversion.
+
+[[[
+TBRestResponseContent >> toJson
+	^String streamContents: [ :stream |
+		(NeoJSONWriter on: stream)
+		for: Date
+		customDo: [ :mapping | mapping encoder: [ :value | value asDateAndTime printString ] ];
+		nextPut: data ]
+]]]
+
+!! Implémenter les services REST de TinyBlog
+
+L'objectif est d'implémenter quatre services REST au sein de TinyBlog.
+
+!!!Obtenir la liste des posts
+
+Le premier service proposé sera destiné à récupérer la liste des posts. Il s'agit d'une opération de lecture et elle utilisera donc le verbe GET du protocole HTTP. La réponse sera produite au format JSON (javascript Object Notation).
+
+!!!!Définir le point d'entrée
+
+La méthode ==listAll== est marquée comme étant un point d'entrée REST à l'aide des annotations ==<get>== et ==<produces:>==.
 
 Si le client interroge le serveur à l'aide de l'URL ==http://localhost:8080/TinyBlog/listAll==, la méthode ==listAll== est appelée. Celle-ci retourne les données selon le type MIME (Multipurpose Internet Mail Extensions) spécifié par l'annotation ==<produces:>==.
-
-PENSER A CHARGER SEASIDE-JSON-CORE ET SEASIDE-PHARO-JSON-CORE
 
 [[[
 TBRestfulFilter >> listAll
 	<get>
-	<produces: 'text/javascript'>
-	
-	^String streamContents: [ :aStream |
-		TBBlog current allBlogPosts
-			do: [ :each | each javascriptOn: aStream ]
-			separatedBy: [ aStream << ',' ]
-	]
+	<produces: 'application/json'>
+
+	TBRestServiceListAll new applyServiceWithContext: (self requestContext)
 ]]]
 
 Afin de faciliter l'utilisation d'un service REST, il est préférable de préciser finement la ou les ressources manipulées. Dans le cas présent, le nom de la méthode ==listAll== ne précise pas au client quelles sont les ressources qui seront retournées. Certes, nous savons que ce sont les posts mais après tout, cela pourrait également être les rubriques. Il faut donc être plus explicite dans la formalisation de l'URL afin de lui donner une réelle signification sémantique. C'est d'ailleur la principale difficulté dans la mise en place des services REST. La meilleure méthode est de faire simple et de s'efforcer d'être cohérent dans la désignation des chemins d'accès aux ressources. Si nous voulons la liste des posts, il nous suffit de demander la liste des posts. L'URL doit donc avoir la forme suivante:
@@ -83,103 +174,66 @@ Pour obtenir cela, nous pouvons renommer la méthode ==listAll== ou préciser le
 [[[
 TBRestfulFilter >> listAll
 	<get>
-  <path: '/posts'>
-	<produces: 'text/javascript'>
-	
-	^String streamContents: [ :aStream |
-		TBBlog current allBlogPosts
-			do: [ :each | each javascriptOn: aStream ]
-			separatedBy: [ aStream << ',' ]
-	]
+	<path: '/posts'>
+	<produces: 'application/json'>
+
+	TBRestServiceListAll new applyServiceWithContext: (self requestContext)
 ]]]
 
-Il est rarement utile de retourner l'ensemble des informations pour chaque post. Modifions ce code pour ne retourner que les champs les plus pertinants pour décrire un post. Pour cela, il faut tout d'abord définir comment un post est converti en Javascript.
+!!!!Construire le service listAll
+
+L'implémentation de ce service tient sur deux lignes de code. Le service ==TBRestServiceListAll== hérite du service ==TBRestService==. Il suffit d'implémenter la méthode ==execute== qui a la responsabilité de lire les posts disponibles dans la base et de déclencher leur envoi au client.
 
 [[[
-TBPost >> javascriptOn: aStream
-
-	Dictionary new
-			at: #title put: self title;
-			at: #category put: self category;
-			at: #date put: self  date;
-			at: #text put: self  text;
-			javascriptOn: aStream
+TBRestServiceListAll >> execute
+	TBBlog current allBlogPosts do: [ :each | result add: (each asDictionary) ].
+	self dataType: (WAMimeType applicationJson) with: (result toJson)
 ]]]
-
-Nous pouvons ensuite modifier la méthode ==listAll== afin de prendre en compte la sélection des champs.
-
-[[[
-TBRestfulFilter >> listAll
-  <get>
-  <path: '/posts'>
-  <produces: 'text/javascript'>
-
-  ^ String streamContents: [ :astream |
-		astream << '['.
-		TBBlog current allBlogPosts
-			do: [ :each | each javascriptOn: astream]
-			separatedBy: [ astream << ',' ].
-		]
-]]]
-
-Nous raffinons afin de pouvoir sélectionner les attributs que nous voulons convertir en introduisant la méthode ==javascriptOn: aStream attributes: aCollection==.
-
-[[[
-TBPost >> javascriptOn: aStream attributes: aCollection
-	
-	| dictionary |
-	dictionary := Dictionary new.
-	aCollection do: [ :each |
-				dictionary at: each put: (self perform: each asSymbol) ].
-	^ dictionary javascriptOn: aStream
-]]]
-
-[[[
-TBPost >> javascriptOn: aStream
-	^ self javascriptOn: aStream attributes: #(title category date)
-]]]
-
-!!!Construire une réponse
-
-
-!!!Respecter les contraintes du client
-
- (JavaScript Object Notation) - XML - CSV - TEXT
 
 !!!Recherche d'un Post
 
 Maintenant nous allons proposer d'autres fonctionnalités comme la recherche d'un post.
-Nous définissons donc cette fonctionnalité dans la classe ==TBlog==. La méthode ==postWithTitle:== reçoit une chaine de caractères comme unique argument et recherche un post ayant un titre identique à la chaine de caractères. Si plusieurs posts sont trouvés, la méthode retourne le premier sélectionné.
+
+Nous définissons donc cette fonctionnalité dans la classe ==TBRestfulFilter==. La méthode ==search:== reçoit une chaine de caractères comme unique argument. L'emplacement du titre recherché au sein de l'URL est entouré à l'aide de crochets et le nom de l'argument doit être identique à celui du paramêtre reçu par la méthode. La méthode instancie alors le service TBRestServiceSearch et lui transmet la valeur de l'argument avant de déclencher le traitement.
 
 [[[
-TBBlog >> postWithTitle: aString
-	| result |
-	result := self allVisibleBlogPosts select: [ :post | post title = aTitle ].
-	result ifNotEmpty: [ ^result first ] ifEmpty: [ ^nil ]
-]]]
-
-Il faut déclarer la route HTTP permettant de lancer la recherche. L'emplacement du titre recherché au sein de l'URL est entouré à l'aide de crochets et le nom de l'argument doit être identique à celui du paramêtre reçu par la méthode.
-
-[[[
-TBRestfulFilter >> search: title
+TBRestfulFilter >> search: aTitle
 	<get>
-	<path: 'search?title={title}'>
-	<produces: 'text/json'>
-   | post |
-	post := TBBlog current postWithTitle: title.
-	post ifNil: [ ^ self notFound ].
-  ^ String streamContents: [ :astream |
-	  post javascriptOn: astream attributes: #(title category date text)]
+	<path: '/posts/search?title={aTitle}'>
+	<produces: 'application/json'>
+
+	TBRestServiceSearch new
+		title: aTitle;
+		applyServiceWithContext: self requestContext
 ]]]
 
-Il nous faut également ajouter une méthode ==notFound== qui permettra de signaler au client que la recherche a été infructueuse. Il récupérera alors un code HTTP 404 (Not found).
+L'implémentation du service ===TBRestServiceSearch== nécessite une variable d'instance ==title== disposant d'accesseurs.
 
 [[[
-TBRestfulFilter >> notFound
-	"trick self halt puis dans le debugger req := self requestContext."
-	self requestContext responseGenerator
-		notFound;
-		respond
+TBRestService subclass: #TBRestServiceSearch
+	instanceVariableNames: 'title'
+	classVariableNames: ''
+	category: 'TinyBlog-Rest'
+
+TBRestServiceSearch >> TBRestService >> title
+	^ title
+
+TBRestServiceSearch >> TBRestService >> title: anObject
+	title := anObject
+]]]
+
+La méthode ==execute== recherche un post ayant un titre identique à la chaine de caractères. Si aucun post ne correspond, c'est le code d'erreur HTTP 404 (Not found) qui est retourné au client.
+
+[[[
+TBRestService >> execute
+	| post |
+
+	post := TBBlog current postWithTitle: title urlDecoded.
+	
+	post
+		ifNotNil: [ result add: (post asDictionary) ]
+		ifNil: [ self context response notFound ].
+	self dataType: (WAMimeType applicationJson) with: result toJson
 ]]]
 
 Si nous essayons ce code, un problème apparaît rapidement. En effet, cet outil de recherche ne fonctionne que sur des posts dont le titre ne contient qu'une seule chaine de caractères et échoue sur les titres comportant des espaces.
@@ -189,195 +243,133 @@ Si nous essayons ce code, un problème apparaît rapidement. En effet, cet outil
 La raison est que HTTP considère que l'espace fait partie des caractères spéciaux et donc le client encode celui-ci à l'aide de la valeur %20.
 
 [[[
-http://localhost:8080/TinyBlog/search?title=Welcome%20in%20TinyBlog
+http://localhost:8080/TinyBlog/posts/search?title=Welcome%20in%20TinyBlog
 ]]]
 
 Coté serveur, la chaine reçu ne correspond donc pas au vériable titre du post recherché. Il faut donc convertir la chaine de caractères avant de lancer la recherche. Pour cela, il est nécessaire de modifier le code de la méthode ==search:== pour utiliser la méthode ==urlDecoded==.
 
 [[[
-TBRestfulFilter >> search: title
-	<get>
-	<path: 'search?title={title}'>
-	<produces: 'text/json'>
-   | post |
-  post := TBBlog current postWithTitle: aTitle urlDecoded.
-	post ifNil: [ ^ self notFound ].
-  ^ String streamContents: [ :astream |
-	  post javascriptOn: astream attributes: #(title category date text)]
+TBRestService >> execute
+	| post |
+
+	post := TBBlog current postWithTitle: title urlDecoded.
+	
+	post
+		ifNotNil: [ result add: (post asDictionary) ]
+		ifNil: [ self context response notFound ].
+	self dataType: (WAMimeType applicationJson) with: result toJson
 ]]]
 
-!!!!Chercher selon une période
+!!!Chercher selon une période
 
 Une autre méthode intéressante pour lancer une recherche consiste à extraire l'ensemble des posts créés entre deux dates qui définissent ainsi une période. Pour cette raison, la méthode ==searchDateFrom:to:== reçoit deux arguments qui sont également définis dans la syntaxe de l'URL.
 
 [[[
-TBRestfulFilter >> searchDateFrom: beginString to: endString
+WARestfulFilter searchDateFrom: beginString to: endString
 	<get>
-	<path: 'search?begin={beginString}&end={endString}'>
-	<produces: 'text/json'>
-   | posts dateFrom dateTo |
-
-	dateFrom := Date fromString: beginString.
-	dateTo := Date fromString: endString.
+	<path: '/posts/search?begin={beginString}&end={endString}'>
+	<produces: 'application/json'>
 	
-	posts := TBBlog current allBlogPosts
-		select: [  :each | each date between: dateFrom and: dateTo ].
-	
-	^ String streamContents: [ :astream |
-	 	astream << '['.
-  		posts
-			do: [ :each | each javascriptOn: astream]
-			separatedBy: [ astream << ',' ].
-		astream << ']'
-		]
+	TBRestServiceSearchDate new
+		from: beginString;
+		to: endString;
+		applyServiceWithContext: self requestContext
 ]]]
-
-REFAIRE L'IMAGE POUR UTILISER LE FORMAT ANGLOSAXON !
 
 +Avec des dates.>file://figures/RestWithDate.png|width=75|label=RestWithDate+
 
+[[
+http://localhost:8080/TinyBlog/posts/search?begin=2010-1-1&end=2016-12-31
+]]
+
+Le service TBRestServiceSearchDate nécessite donc deux variables d'instances disposant d'accesseurs.
+
 [[[
-http://localhost:8080/TinyBlog/search?begin=2010-1-1&end=2016-12-31
+TBRestService subclass: #TBRestServiceSearchDate
+	instanceVariableNames: 'from to'
+	classVariableNames: ''
+	category: 'TinyBlog-Rest'
+
+TBRestServiceSearchDate >> from
+	^ from
+
+TBRestServiceSearchDate >> from: anObject
+	from := anObject
+
+TBRestServiceSearchDate >> to
+	^ to
+
+TBRestServiceSearchDate >> to: anObject
+	to := anObject
+]]]
+
+La méthode ==execute== utilise ces deux dates pour rechercher les posts correspondants et les retourner au client.
+
+[[[
+TBRestServiceSearchDate >> execute
+
+	| posts dateFrom dateTo |
+		
+	dateFrom := Date fromString: self from.
+	dateTo := Date fromString: self to.
+
+	posts := TBBlog current allBlogPosts
+		select: [  :each | each date between: dateFrom and: dateTo ].
+	
+	posts do: [ :each | result add: (each asDictionary) ].
+	self dataType: (WAMimeType applicationJson) with: result toJson
 ]]]
 
 !!!Ajouter un post
 
-Voyons maintenant comment ajouter un nouveau post à notre blog à l'aide de REST. Etant donné qu'il s'agit ici de la création d'une nouvelle ressource, nous devons utiliser le verbe POST pour décrire l'action. Le chemin sera la ressource désignant la liste des posts.
+Voyons maintenant comment ajouter un nouveau post à notre blog à l'aide de REST. Etant donné qu'il s'agit ici de la création d'une nouvelle ressource, nous devons utiliser le verbe POST pour décrire l'action. Notre service web accepte en entrée des données encodées au format JSON. C'est l'annotation <consumes:> qui permet d'indiquer à Seaside/Rest le type MIME attendu en entrée.
 
 [[[
-TBRestfulFilter >> addPost
+addPost
 	<post>
-	<path: '/posts'>
+	<consumes: '*/json'>
+	<path: '/posts/add'>
 	
-	| request title category date text post |
-
-	request := self requestContext request.
-	title := request at: #title.
-	category := request at: #category.
-	text := request at: #text.
-	date := Date fromString: (request at: #title).
-	"Of course many can go wrong here (Date could be wrong ... and a real version we should validate"
-	post := TBBlog new
-		title: title;
-		text: text;
-		category: category;
-		date: date;
-		yourself.
-	TBBlog current writeBlogPost: post.
-	^ '{status: "ok"}'
+	TBRestServiceAddPost new
+		applyServiceWithContext: self requestContext
 ]]]
 
+Les données reçues avec la méthode HTTP POST ne sont pas transmises lors de l'instanciation de la classe ==TBRestServiceAddPost== car elles sont contenues au sein du contexte de la requête du client.
+
+L'ajout d'un post est implémenté à l'aide du service TBRestServiceAddPost.
+
+[[[
+TBRestService subclass: #TBRestServiceAddPost
+	instanceVariableNames: ''
+	classVariableNames: ''
+	category: 'TinyBlog-Rest'
+]]]
+
+La méthode ==execute== récupère le contenu du post dans la requête du client et extrait les informations contenues dans la chaine formatée en JSON. Le post est ensuite enregistré dans la base de données. Une gestion d'erreur, basée sur une exception, permet de détecter un problème lors du traitement. En cas d'echec, un code d'erreur HTTP 404 est transmis au client.
+
+[[[
+TBRestServiceAddPost >> execute
+	| post |
+
+	[
+		post := NeoJSONReader fromString: (self context request rawBody).
+		TBBlog current writeBlogPost: (TBPost title: (post at: #title) text: (post at: #text) category: (post at: #category)).
+	] on: Error do: [ self context request badRequest ].
+
+	self dataType: (WAMimeType textPlain) with: ''
+]]]
+
+Le code Pharo suivant vous permet de tester le bon fonctionnement du service.
 
 [[[
 	ZnClient new
-		url: 'http://localhost:8080/TinyBlog/add-post';
+		url: 'http://localhost:8080/TinyBlog/posts/add';
 		formAt: 'title' put: 'Exemple de POST';
 		formAt: 'category' put: 'TEST';
 		formAt: 'date' put: '12/23/2015';
 		contents: 'Ici un super post';
 		post.
 ]]]
-
-
-
-!!!Modifier un POST
-
-
-!!!Effacer un post
-
-[[[
-TBRestfulFilter >> remove: title
-	<delete>
-	<path: '/remove/{title}'>
-	<produces: 'text/json'>
-	
-	| post |	
-	post := TBBlog current postWithTitle: title.
-	^ post
-		ifNotNil: [
-			post remove.
-			'{status: "ok"}' ]
-		ifNil: [
-			'{status: "notFound"}' ]
-]]]
-
-Notez que status n'est pas du REST car REST ne spécifie pas la manière de gérer les erreurs.
-Maintenant ce code ne fonctionne pas car ==TBPost== n'est pas une racine en Voyage.
-
-Essayons mais nous ne pouvons pas tester avec un browser web dans son url ne peut faire qu'un GET.
-Donc il nous faut utiliser Zinc.
-
-[[[
-ZnEasy delete: 'http://localhost:8080/TinyBlog/remove/RemoveMe'
-]]]
-
-Vous pouvez vérifiez que votre post n'est pas enlevé.
-
-[[[
-TBRestfulFilter >> remove: title
-	<delete>
-	<path: '/remove/{title}'>
-	<produces: 'text/json'>
-	
-	| post |
-	post := TBBlog current postWithTitle: title.
-	^ post
-		ifNotNil: [
-			TBBlog current removeBlogPost: post.
-			'{status: "ok"}' ]
-		ifNil: [
-			'{status: "notFound"}' ]
-]]]
-
-Maintenant nous réessayons et nous pouvons effectivement éliminer un post.
-
-[[[
-ZnEasy delete: 'http://localhost:8080/TinyBlog/remove/RemoveMe'
-]]]
-
-Vous pouvez vérifiez que votre post n'est pas enlever.
-
-@@todo bizarre, il est enlevé ou pas?
-
-
-Filtrer selon le type de données demandé bloquer autre chose qu'un accept equal JSON
-
-
-%----------------------------------------------
-
-!!!!Chercher selon le titre
-
-
-[[[
-TBRestfulFilter >> post: title
-	<get>
-	<path: 'post/{title}'>
-	<produces: 'text/json'>
-   | post |
-	post := TBBlog current postWithTitle: title.
-	post ifNil: [ ^ self notFound ].
-   ^ String streamContents: [ :astream |
-		post javascriptOn: astream ]
-]]]
-
-Nous pouvons tester en effectuant la requête suivante :
-
-[[[
-http://localhost:8080/TinyBlog/post/Welcome%20in%20TinyBlog
-]]]
-
-+REST post.>file://figures/RestPost.png|width=75|label=post+
-
-
-
-
-
-[[[
-javascriptOn: aStream
-
-   ^ self javascriptOn: aStream attributes: #(title category date text)
-]]]
-
 
 
 
