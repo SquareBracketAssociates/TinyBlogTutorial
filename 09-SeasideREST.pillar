@@ -1,27 +1,45 @@
 !Une interface REST pour TinyBlog
 
+Permettre d'accéder et de modifier une application web est important car cela permet de l'intégrer dans un 
+ecosystème et d'interagir avec d'autres applications. Une manière de faire est de définir une interface
+REST. C'est ce que nous allons faire dans ce chapitre. 
+
 Ce chapitre décrit comment doter notre application TinyBlog d'une interface REST (REpresentational State Transfer).
 
-Le code est placé dans un package =='TinyBlog-Rest'== car l'utilisation de REST est optionnelle.
-
-Les tests seront dans le package =='TinyBlog-Rest-Tests'==.
+Le code est placé dans un package =='TinyBlog-Rest'== car l'utilisation de REST est optionnelle. Les tests seront dans le package =='TinyBlog-Rest-Tests'==.
 
 !!Notions de base sur REST
 
-REST se base sur les verbes HTTP pour décrire l'accès aux ressources HTTP. Les principaux verbes ont la signification suivante:
+REST se base sur les verbes HTTP pour décrire l'accès aux ressources HTTP. Les principaux verbes ont la signification suivante :
 
-* GET pour lire une ressource,
-* POST pour créer une nouvelle ressource,
-* PUT pour modifier une ressource existante,
-* DELETE pour effacer une ressource.
+- GET pour lire une ressource,
+- POST pour créer une nouvelle ressource,
+- PUT pour modifier une ressource existante,
+- DELETE pour effacer une ressource.
 
-Les ressources sont définies à l'aide des URL qui pointent sur une entité. Le chemin précisé dans l'URL permet de donner une signification plus précise à l'action devant être réalisée. Par exemple, un ==GET /files/file.txt== signifie que le client veut accéder au contenu de l'entité nommée ==file.txt==. Par contre, un ==GET /files/== précise que le client veut obtenir la liste des entités contenues dans l'entité ==files==.
+Les ressources sont définies à l'aide des URLs qui pointent sur une entité. Le chemin précisé dans l'URL permet de donner une signification plus précise à l'action devant être réalisée. Par exemple, un ==GET /files/file.txt== signifie que le client veut accéder au contenu de l'entité nommée ==file.txt==. Par contre, un ==GET /files/== précise que le client veut obtenir la liste des entités contenues dans l'entité ==files==.
 
 Une autre notion importante est le respect des formats de données acceptés par le client et par le serveur. Lorsqu'un client REST émet une requête vers un serveur REST, il précise dans l'entête de la requête HTTP la liste des types de données qu'il est capable de gérer. Le serveur REST se doit de répondre dans un format compréhensible par le client et si cela n'est pas possible, préciser au client qu'il n'est pas capable de lui répondre.
 
-La réussite ou l'échec d'une opération est basée sur les codes de statut du protocole HTTP. Par exemple,si une opération réussi, le serveur doit répondre un code 200 (OK). De même, si une ressource demandé par le client n'existe pas, il doit retourner un code 404 (Not Found). Il est très important de respecter la signification de ces codes de statut qui permettent de mettre en place un dialogue compréhensible entre le client et le serveur.
+La réussite ou l'échec d'une opération est basée sur les codes de statut du protocole HTTP. Par exemple, si une opération réussit, le serveur doit répondre un code 200 (OK). De même, si une ressource demandée par le client n'existe pas, il doit retourner un code 404 (Not Found). Il est très important de respecter la signification de ces codes de statut qui permettent de mettre en place un dialogue compréhensible entre le client et le serveur.
 
-!!Définir un filtre REST
+
+!! Seaside et REST
+
+Seaside offre deux façons pour définir une interface REST. La première fonctionne
+en ajout de la définition d'une application web. La seconde permet la définition d'une interface REST 
+lorsque que nous n'avons pas défini au préalable d'application web. 
+
+@@todo stef checks the previous text because I thought that I already wrote 
+
+Dans le cadre de ce tutoriel nous allons donc utiliser la première approche. Pour cela nous allons définir 
+un filtre REST. 
+
+
+
+!!! Définir un filtre REST
+
+Nous définissons une souclasse de la class ==WARestfulFilter==. 
 
 [[[
 WARestfulFilter subclass: #TBRestfulFilter
@@ -30,33 +48,33 @@ WARestfulFilter subclass: #TBRestfulFilter
 	category: 'TinyBlog-REST'
 ]]]
 
+Une fois définie, nous devons associer ce filtre à notre application.  
+
 !!!Associer un filtre à notre application
 
 [[[
 TBApplicationRootComponent class >> initialize
-	   "self initialize"
-	   | app |
-	   app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
-		app
-			preferenceAt: #sessionClass put: TBSession.
-	   app
-	      addLibrary: JQDeploymentLibrary;
-	      addLibrary: JQUiDeploymentLibrary;
-	      addLibrary: TBSDeploymentLibrary.
-		app addFilter: TBRestfulFilter new.
+	"self initialize"
+	| app |
+	app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
+	app preferenceAt: #sessionClass put: TBSession.
+	app
+		addLibrary: JQDeploymentLibrary;
+		addLibrary: JQUiDeploymentLibrary;
+		addLibrary: TBSDeploymentLibrary.
+	app addFilter: TBRestfulFilter new.
 ]]]
 
-Ne pas oublier d'initialiser la classe TBAppllicationRootComponent en saisissant dans le playGround. Ceci permet à Seaside de prendre en compte le filtre REST qui a été ajouté.
+Ne pas oublier d'exécuter la méthode de class d'initialization de notre application, en exécutant ==TBAppllicationRootComponent initialize==. 
+Ceci permet à Seaside de prendre en compte le filtre REST qui a été ajouté.
 
-[[[
-TBApplicationRootComponent initialize
-]]]
 
-!!Modéliser un service REST
+!! Modéliser un service REST
+Tous les services REST fonctionnent de la même manière. Ils sont déclenchés par une commande HTTP et recoivent des informations provenant du client. Ils traitent les données et créent ensuite une réponse qui est retournée au client. Il est donc aisé de réduire le volume de code nécessaire à leur mise en place à l'aide de l'héritage.
 
-Tous les services REST fonctionnent de la même manière. Ils sont déclenchés par une commande HTTP et recoivent des informations provenant du client. Ils traitent les données et forgent ensuite une réponse qui est retournée au client. Il est donc aisé de réduire le volume de code nécessaire à leur mise en place à l'aide de l'héritage.
 
-La classe ==TBRestService== représente un service REST générique dont hériterons les véritables services REST de TinyBlog. Certaines méthodes seront abstraites et le travail sera délégué aux sous-classe de ==TBRestService==.
+
+La classe ==TBRestService== représente un service REST générique dont hériteront les véritables services REST de TinyBlog. Certaines méthodes seront abstraites et le travail sera délégué aux sous-classe de ==TBRestService==.
 
 La requête et la réponse (au sens HTTP du terme) sont considérées comme étant le contexte dans lequel le service REST s'exécute. Les données produites et formatées par le service REST doivent également être accessibles. La gestion du contexte nécessite des accesseurs pour être rendu public. Ce n'est pas le cas des données produites.
 
@@ -265,7 +283,7 @@ TBRestService >> execute
 Une autre méthode intéressante pour lancer une recherche consiste à extraire l'ensemble des posts créés entre deux dates qui définissent ainsi une période. Pour cette raison, la méthode ==searchDateFrom:to:== reçoit deux arguments qui sont également définis dans la syntaxe de l'URL.
 
 [[[
-WARestfulFilter searchDateFrom: beginString to: endString
+WARestfulFilter >> searchDateFrom: beginString to: endString
 	<get>
 	<path: '/posts/search?begin={beginString}&end={endString}'>
 	<produces: 'application/json'>
@@ -278,9 +296,9 @@ WARestfulFilter searchDateFrom: beginString to: endString
 
 +Avec des dates.>file://figures/RestWithDate.png|width=75|label=RestWithDate+
 
-[[
+[[[
 http://localhost:8080/TinyBlog/posts/search?begin=2010-1-1&end=2016-12-31
-]]
+]]]
 
 Le service TBRestServiceSearchDate nécessite donc deux variables d'instances disposant d'accesseurs.
 
@@ -370,6 +388,275 @@ Le code Pharo suivant vous permet de tester le bon fonctionnement du service.
 		contents: 'Ici un super post';
 		post.
 ]]]
+
+
+! OLD version
+
+
+
+!!Obtenir
+
+[[[
+TBRestfulFilter >> listAll
+	<get>
+	<produces: 'text/json'>
+	
+	^String streamContents: [ :aStream |
+		TBBlog current allBlogPosts
+			do: [ :each | each javascriptOn: aStream ]
+			separatedBy: [ aStream << ',' ]
+	]
+]]]
+
+Il est rarement utile de retourner l'ensemble des informations pour chaque post. Modifions ce code pour ne retourner que les champs les plus pertinants pour décrire un post. Pour cela, il faut tout d'abord définir comment un post est converti en Javascript.
+
+[[[
+TBPost >> javascriptOn: aStream
+
+	Dictionary new
+			at: #title put: self title;
+			at: #categroy put: self category;
+			at: #date put: self  date;
+			at: #text put: self  text;
+			javascriptOn: aStream
+]]]
+
+Nous pouvons ensuite modifier la méthode ==listAll== afin de prendre en compte la sélection des champs.
+
+[[[
+TBRestfulFilter >> listAll
+  <get>
+  <produces: 'text/json'>
+
+  ^ String streamContents: [ :astream |
+		astream << '['.
+		TBBlog current allBlogPosts
+			do: [ :each | each javascriptOn: astream]
+			separatedBy: [ astream << ',' ].
+		]
+]]]
+
+Nous raffinons afin de pouvoir sélectionner les attributs que nous voulons convertir en introduisant la méthode ==javascriptOn: aStream attributes: aCollection==.
+
+[[[
+TBPost >> javascriptOn: aStream attributes: aCollection
+	
+	| dictionary |
+	dictionary := Dictionary new.
+	aCollection do: [ :each |
+				dictionary at: each put: (self perform: each asSymbol) ].
+	^ dictionary javascriptOn: aStream
+]]]
+
+[[[
+TBPost >> javascriptOn: aStream
+
+	^ self javascriptOn: aStream attributes: #(title category date)
+]]]
+
+
+!!!Recherche d'un Post
+
+Maintenant nous allons proposer d'autres fonctionnalités comme la recherche d'un post.
+Nous définissons donc cette fonctionnalité dans la classe ==TBlog==.
+
+[[[
+TBRestfulFilter >> search: title
+	<get>
+	<path: 'search?title={title}'>
+	<produces: 'text/json'>
+   | post |
+	post := TBBlog current postWithTitle: title.
+	post ifNil: [ ^ self notFound ].
+   ^ String streamContents: [ :astream |
+		post javascriptOn: astream attributes: #(title category date text)]
+]]]
+
+[[[
+TBRestfulFilter >> notFound
+
+	|  |
+	"trick self halt puis dans le debugger req := self requestContext."
+	self requestContext responseGenerator
+		notFound;
+		respond
+]]]
+
++REST Error.>file://figures/RESTError.png|width=75|label=error+
+
+[[[
+http://localhost:8080/TinyBlog/search?title=Welcome%20in%20TinyBlog
+]]]
+
+
+!!!!Chercher selon le titre
+[[[
+TBBlog >> postWithTitle: aString
+	
+	^ self allBlogPosts
+			detect: [ :each | each title = aString ]
+			ifNone: [ nil ]
+]]]
+
+[[[
+TBRestfulFilter >> post: title
+	<get>
+	<path: 'post/{title}'>
+	<produces: 'text/json'>
+   | post |
+	post := TBBlog current postWithTitle: title.
+	post ifNil: [ ^ self notFound ].
+   ^ String streamContents: [ :astream |
+		post javascriptOn: astream ]
+]]]
+
+Nous pouvons tester en effectuant la requête suivante :
+
+[[[
+http://localhost:8080/TinyBlog/post/Welcome%20in%20TinyBlog
+]]]
+
++REST post.>file://figures/RestPost.png|width=75|label=post+
+
+!!!!Chercher selon une période
+
+[[[
+TBRestfulFilter >> searchDateFrom: beginString to: endString
+	<get>
+	<path: 'search?begin={beginString}&end={endString}'>
+	<produces: 'text/json'>
+   | posts dateFrom dateTo |
+
+	dateFrom := Date fromString: beginString.
+	dateTo := Date fromString: endString.
+	
+	posts := TBBlog current allBlogPosts
+		select: [  :each | each date between: dateFrom and: dateTo ].
+	
+	^ String streamContents: [ :astream |
+	 	astream << '['.
+  		posts
+			do: [ :each | each javascriptOn: astream]
+			separatedBy: [ astream << ',' ].
+		astream << ']'
+		]
+		
+]]]
+
++Avec des dates.>file://figures/RestWithDate.png|width=75|label=RestWithDate+
+
+
+!!!Ajouter un post
+
+[[[
+TBRestfulFilter >> addPost
+	<post>
+	<path: '/add-post'>
+	
+	| request title category date text post |
+
+	request := self requestContext request.
+	title := request at: #title.
+	category := request at: #category.
+	text := request at: #text.
+	date := Date fromString: (request at: #title).
+	"Of course many can go wrong here (Date could be wrong ... and a real version we should validate"
+	post := TBBlog new
+		title: title;
+		text: text;
+		category: category;
+		date: date;
+		yourself.
+	TBBlog current writeBlogPost: post.
+	^ '{status: "ok"}'
+]]]
+
+
+[[[
+	ZnClient new
+		url: 'http://localhost:8080/TinyBlog/add-post';
+		formAt: 'title' put: 'Exemple de POST';
+		formAt: 'category' put: 'TEST';
+		formAt: 'date' put: '12/23/2015';
+		contents: 'Ici un super post';
+		post.
+]]]
+
+
+
+!!!Modifier un POST
+
+
+!!!Effacer un post
+
+[[[
+TBRestfulFilter >> remove: title
+	<delete>
+	<path: '/remove/{title}'>
+	<produces: 'text/json'>
+	
+	| post |
+	
+	post := TBBlog current postWithTitle: title.
+	^ post
+		ifNotNil: [
+			post remove.
+			'{status: "ok"}' ]
+		ifNil: [
+			'{status: "notFound"}' ]
+]]]
+
+Notez que status n'est pas du REST car REST ne spécifie pas la manière de gérer les erreurs.
+Maintenant ce code ne fonctionne pas car ==TBPost== n'est pas une racine en Voyage.
+
+Essayons mais nous ne pouvons pas tester avec un browser web dans son url ne peut faire qu'un GET.
+Donc il nous faut utiliser Zinc.
+
+[[[
+ZnEasy delete: 'http://localhost:8080/TinyBlog/remove/RemoveMe'
+]]]
+
+Vous pouvez vérifiez que votre post n'est pas enlevé.
+
+[[[
+TBRestfulFilter >> remove: title
+	<delete>
+	<path: '/remove/{title}'>
+	<produces: 'text/json'>
+	
+	| post |
+	post := TBBlog current postWithTitle: title.
+	^ post
+		ifNotNil: [
+			TBBlog current removeBlogPost: post.
+			'{status: "ok"}' ]
+		ifNil: [
+			'{status: "notFound"}' ]
+]]]
+
+Maintenant nous réessayons et nous pouvons effectivement éliminer un post.
+
+[[[
+ZnEasy delete: 'http://localhost:8080/TinyBlog/remove/RemoveMe'
+]]]
+
+Vous pouvez vérifiez que votre post n'est pas enlever.
+
+@@todo bizarre, il est enlevé ou pas?
+
+
+
+
+
+
+
+
+[[[
+javascriptOn: aStream
+
+   ^ self javascriptOn: aStream attributes: #(title category date text)
+]]]
+
 
 
 
