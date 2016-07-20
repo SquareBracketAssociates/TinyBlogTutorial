@@ -78,8 +78,14 @@ Nous sommes prêt pour la définition de services REST. Comme énoncé dans l'in
 @@note pour Olivier: Est ce que text a la place de application est faux? Dans quelles occasions doit-on utiliser text/json?
 
 
-
 !!! Obtenir la liste des posts
+
+Nous définissons une méthode ==listAll==. Cette méthode retourne une chaine comprenant les postes séparés par des virgules. 
+De plus, cette méthode est annotée avec trois informations supplémentaires:
+
+- ==<get>== qui indique que cela sera une requête REST GET.
+- ==<path:== qui indique le chemin auquel la ressource est disponible. 
+- ==<produces:>== qui décrit la ressource. Ici nous specifions que l'application rend du texte. 
 
 [[[
 TBRestfulFilter >> listAll
@@ -95,7 +101,9 @@ TBRestfulFilter >> listAll
 ]]]
 
 
-@@note pourquoi qd je fais /posts j'obtiens un fichier a dowloader et pas qq que je peux voir dans le browser?
+@@note pourquoi qd je fais /posts j'obtiens un fichier a dowloader et pas qq que je peux voir dans le browser? si je mets text/text j'obtiens une liste dans safari.
+
+@@note attention le printOn: the post n'est pas defini (sync avec mooc version!)
 
 Il est rarement utile de retourner l'ensemble des informations pour chaque post. Modifions ce code pour ne retourner que les champs les plus pertinants pour décrire un post. Pour cela, il faut tout d'abord définir comment un post est converti en Javascript.
 
@@ -110,11 +118,13 @@ TBPost >> javascriptOn: aStream
 			javascriptOn: aStream
 ]]]
 
-Nous pouvons ensuite modifier la méthode ==listAll== afin de prendre en compte la sélection des champs.
+Nous pouvons ensuite modifier la méthode ==listAll== afin de prendre en compte la génération de JSON.
+Nous aurions pu aussi utiliser NeoJSON qui permet de traduire en JSON des objets Pharo. 
 
 [[[
 TBRestfulFilter >> listAll
   <get>
+  <path: '/posts'>
   <produces: 'text/json'>
 
   ^ String streamContents: [ :astream |
@@ -125,7 +135,12 @@ TBRestfulFilter >> listAll
 		]
 ]]]
 
-Nous raffinons afin de pouvoir sélectionner les attributs que nous voulons convertir en introduisant la méthode ==javascriptOn: aStream attributes: aCollection==.
+Nous devons alors obtenir la situation décrite par la figure *@RESTlistAll*.
+
++Accessing all the posts via a REST request.>file://figures/RESTlistAll.png|width=75|label=RESTlistAll+
+
+
+Nous pouvons raffiner afin de pouvoir sélectionner les attributs que nous voulons convertir en introduisant la méthode ==javascriptOn: aStream attributes: aCollection==.
 
 [[[
 TBPost >> javascriptOn: aStream attributes: aCollection
