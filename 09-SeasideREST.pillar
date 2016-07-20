@@ -1,10 +1,9 @@
 !Une interface REST pour TinyBlog
 
-Permettre d'accéder et de modifier une application web est important car cela permet de l'intégrer dans un 
-ecosystème et d'interagir avec d'autres applications. Une manière de faire est de définir une interface
-REST. C'est ce que nous allons faire dans ce chapitre. 
+Accéder et de modifier une application web via une requête est important car cela permet de l'intégrer dans un ensemble de services et applications hétérogènes et d'interagir avec d'autres applications. Une manière de faire est de définir une interface REST (REpresentational State Transfer)qui expose les services de l'application. C'est ce que nous allons faire dans ce chapitre. 
 
-Ce chapitre décrit comment doter notre application TinyBlog d'une interface REST (REpresentational State Transfer).
+Dans ce chapitre vous allez apprendre à définir un service REST, ce qui reste réellement simple avec Seaside. Dans un premier lieu, vous allez définir un service très simple pour comprendre le processus et
+par la suite nous allons définir une petite architecture pour ajouter des services de manière plus flexible (pour gérer diverses types de format d'échange de données).
 
 Le code est placé dans un package =='TinyBlog-Rest'== car l'utilisation de REST est optionnelle. Les tests seront dans le package =='TinyBlog-Rest-Tests'==.
 
@@ -399,11 +398,11 @@ Le code Pharo suivant vous permet de tester le bon fonctionnement du service.
 [[[
 TBRestfulFilter >> listAll
 	<get>
-	<produces: 'text/json'>
+	<produces: 'text/text'>
 	
 	^String streamContents: [ :aStream |
 		TBBlog current allBlogPosts
-			do: [ :each | each javascriptOn: aStream ]
+			do: [ :each | each printOn: aStream ]
 			separatedBy: [ aStream << ',' ]
 	]
 ]]]
