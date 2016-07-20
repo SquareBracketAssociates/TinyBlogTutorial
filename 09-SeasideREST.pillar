@@ -9,36 +9,37 @@ Le code est placé dans un package =='TinyBlog-Rest'== car l'utilisation de REST
 
 !!Notions de base sur REST
 
-REST se base sur les verbes HTTP pour décrire l'accès aux ressources HTTP. Les principaux verbes ont la signification suivante :
+REST (REpresentational State Transfer) se base sur les verbes HTTP pour décrire l'accès à des ressources HTTP. Les principaux verbes ont la signification suivante :
 
-- GET pour lire une ressource,
+- GET pour lire et retourner une ressource,
 - POST pour créer une nouvelle ressource,
 - PUT pour modifier une ressource existante,
 - DELETE pour effacer une ressource.
 
-Les ressources sont définies à l'aide des URLs qui pointent sur une entité. Le chemin précisé dans l'URL permet de donner une signification plus précise à l'action devant être réalisée. Par exemple, un ==GET /files/file.txt== signifie que le client veut accéder au contenu de l'entité nommée ==file.txt==. Par contre, un ==GET /files/== précise que le client veut obtenir la liste des entités contenues dans l'entité ==files==.
+Les ressources sont définies à l'aide des URLs qui pointent sur une entité. Le chemin précisé dans l'URL permet de donner une signification plus précise à l'action devant être réalisée. 
+- Par exemple, un ==GET /files/file.txt== signifie que le client veut accéder au contenu de l'entité nommée ==file.txt==. 
+- Par contre, un ==GET /files/== précise que le client veut obtenir la liste des entités contenues dans l'entité ==files==.
 
-Une autre notion importante est le respect des formats de données acceptés par le client et par le serveur. Lorsqu'un client REST émet une requête vers un serveur REST, il précise dans l'entête de la requête HTTP la liste des types de données qu'il est capable de gérer. Le serveur REST se doit de répondre dans un format compréhensible par le client et si cela n'est pas possible, préciser au client qu'il n'est pas capable de lui répondre.
+Une autre notion importante est le respect des formats de données acceptés par le client et par le serveur. Lorsqu'un client REST émet une requête vers un serveur REST, il précise dans l'entête de la requête HTTP la liste des types de données qu'il est capable de gérer. Le serveur REST se doit de répondre dans un format compréhensible par le client et si cela n'est pas possible, préciser au client qu'il n'est pas capable de lui répondre. Les formats usuels sont 
 
-La réussite ou l'échec d'une opération est basée sur les codes de statut du protocole HTTP. Par exemple, si une opération réussit, le serveur doit répondre un code 200 (OK). De même, si une ressource demandée par le client n'existe pas, il doit retourner un code 404 (Not Found). Il est très important de respecter la signification de ces codes de statut qui permettent de mettre en place un dialogue compréhensible entre le client et le serveur.
+- Text qui a le désavantage que le client doit connaître le format interne du fichier afin de pouvoir parser ce contenu.
+- XML ou JSON qui structurent les données échangées de manière structurer. 
+
+La réussite ou l'échec d'une opération est basée sur les codes de statut du protocole HTTP (*http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html*). Par exemple, si une opération réussit, le serveur doit répondre un code 200 (OK). De même, si une ressource demandée par le client n'existe pas, il doit retourner un code 404 (Not Found). Il est très important de respecter la signification de ces codes de statut qui permettent de mettre en place un dialogue compréhensible entre le client et le serveur.
+
+Seaside encapsule ces code d'erreurs donc nous n'avons pas besoin de les connaitre par coeur et de les coder en dur dans le code. 
 
 
-!! Seaside et REST
+!! REST avec Seaside
 
 Seaside offre deux façons pour définir une interface REST. La première fonctionne
-en ajout de la définition d'une application web. La seconde permet la définition d'une interface REST 
-lorsque que nous n'avons pas défini au préalable d'application web. 
+en ajout de la définition d'une application web telle que TinyBlog. La seconde permet la définition d'une interface REST  lorsque que nous n'avons pas défini au préalable d'application web. 
 
-@@todo stef checks the previous text because I thought that I already wrote 
-
-Dans le cadre de ce tutoriel nous allons donc utiliser la première approche. Pour cela nous allons définir 
-un filtre REST. 
-
-
+Dans le cadre de ce tutoriel nous allons donc utiliser la première approche. Pour cela nous allons définir un filtre REST puis l'associer à notre application.
 
 !!! Définir un filtre REST
 
-Nous définissons une souclasse de la class ==WARestfulFilter==. 
+Nous définissons une souclasse de la class ==WARestfulFilter== nommée ==TBRestfulFilter==.
 
 [[[
 WARestfulFilter subclass: #TBRestfulFilter
@@ -47,9 +48,10 @@ WARestfulFilter subclass: #TBRestfulFilter
 	category: 'TinyBlog-REST'
 ]]]
 
-Une fois définie, nous devons associer ce filtre à notre application.  
+ 
 
 !!!Associer un filtre à notre application
+Une fois défini, nous devons associer ce filtre à notre application en utilisant le message ==addFilter:==. Nous ajoutons cette association dans la méthode d'initialisation de notre application.  
 
 [[[
 TBApplicationRootComponent class >> initialize
@@ -64,13 +66,139 @@ TBApplicationRootComponent class >> initialize
 	app addFilter: TBRestfulFilter new.
 ]]]
 
-Ne pas oublier d'exécuter la méthode de class d'initialization de notre application, en exécutant ==TBAppllicationRootComponent initialize==. 
+N'oubliez pas d'exécuter la méthode de class d'initialization de notre application, en exécutant ==TBAppllicationRootComponent initialize==. 
 Ceci permet à Seaside de prendre en compte le filtre REST qui a été ajouté.
+
+
+!! Premiers services REST
+
+Nous sommes prêt pour la définition de services REST. Comme énoncé dans l'introduction de ce chapitre, nous allons définir dans un premier temps les services aussi simplement que possible pour vous montrer la manière de faire, puis dans un second temps nous mettrons en place un architecture de services. 
+
+
+@@note pour Olivier: Est ce que text a la place de application est faux? Dans quelles occasions doit-on utiliser text/json?
+
+
+
+!!! Obtenir la liste des posts
+
+[[[
+TBRestfulFilter >> listAll
+	<get>
+	<path: '/posts'>
+	<produces: 'application/text'>
+	
+	^String streamContents: [ :aStream |
+		TBBlog current allBlogPosts
+			do: [ :each | each printOn: aStream ]
+			separatedBy: [ aStream << ',' ]
+	]
+]]]
+
+
+@@note pourquoi qd je fais /posts j'obtiens un fichier a dowloader et pas qq que je peux voir dans le browser?
+
+Il est rarement utile de retourner l'ensemble des informations pour chaque post. Modifions ce code pour ne retourner que les champs les plus pertinants pour décrire un post. Pour cela, il faut tout d'abord définir comment un post est converti en Javascript.
+
+[[[
+TBPost >> javascriptOn: aStream
+
+	Dictionary new
+			at: #title put: self title;
+			at: #categroy put: self category;
+			at: #date put: self  date;
+			at: #text put: self  text;
+			javascriptOn: aStream
+]]]
+
+Nous pouvons ensuite modifier la méthode ==listAll== afin de prendre en compte la sélection des champs.
+
+[[[
+TBRestfulFilter >> listAll
+  <get>
+  <produces: 'text/json'>
+
+  ^ String streamContents: [ :astream |
+		astream << '['.
+		TBBlog current allBlogPosts
+			do: [ :each | each javascriptOn: astream]
+			separatedBy: [ astream << ',' ].
+		]
+]]]
+
+Nous raffinons afin de pouvoir sélectionner les attributs que nous voulons convertir en introduisant la méthode ==javascriptOn: aStream attributes: aCollection==.
+
+[[[
+TBPost >> javascriptOn: aStream attributes: aCollection
+	
+	| dictionary |
+	dictionary := Dictionary new.
+	aCollection do: [ :each |
+				dictionary at: each put: (self perform: each asSymbol) ].
+	^ dictionary javascriptOn: aStream
+]]]
+
+[[[
+TBPost >> javascriptOn: aStream
+
+	^ self javascriptOn: aStream attributes: #(title category date)
+]]]
+
+
+!!! Recherche d'un Post
+
+Maintenant nous allons proposer d'autres fonctionnalités comme la recherche d'un post.
+Nous définissons donc cette fonctionnalité dans la classe ==TBlog==.
+
+[[[
+TBRestfulFilter >> search: title
+	<get>
+	<path: 'search?title={title}'>
+	<produces: 'text/json'>
+   | post |
+	post := TBBlog current postWithTitle: title.
+	post ifNil: [ ^ self notFound ].
+   ^ String streamContents: [ :astream |
+		post javascriptOn: astream attributes: #(title category date text)]
+]]]
+
+
+"trick self halt puis dans le debugger req := self requestContext."
+[[[
+TBRestfulFilter >> notFound
+
+	self requestContext responseGenerator
+		notFound;
+		respond
+]]]
+
+
++REST Error.>file://figures/RESTError.png|width=75|label=error+
+
+[[[
+http://localhost:8080/TinyBlog/search?title=Welcome%20in%20TinyBlog
+]]]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 !! Modéliser un service REST
 Tous les services REST fonctionnent de la même manière. Ils sont déclenchés par une commande HTTP et recoivent des informations provenant du client. Ils traitent les données et créent ensuite une réponse qui est retournée au client. Il est donc aisé de réduire le volume de code nécessaire à leur mise en place à l'aide de l'héritage.
-
 
 
 La classe ==TBRestService== représente un service REST générique dont hériteront les véritables services REST de TinyBlog. Certaines méthodes seront abstraites et le travail sera délégué aux sous-classe de ==TBRestService==.
@@ -82,13 +210,19 @@ Object subclass: #TBRestService
 	instanceVariableNames: 'result context'
 	classVariableNames: ''
 	category: 'TinyBlog-Rest'
+]]]
 
+[[[
 TBRestService >> context
 	^ context
+]]]
 
+[[[
 TBRestService >> context: anObject
 	context := anObject
 ]]]
+
+Le contexte est obtenu par Seaside avec la ==self requestContext==.
 
 Lorsque ==TBRestService== est instancié, il doit initialisé la variable d'instance ==result== à l'aide de l'instance d'un objet ayant la capacité de contenir les données destinées au client.
 
@@ -177,7 +311,7 @@ TBRestfulFilter >> listAll
 	<get>
 	<produces: 'application/json'>
 
-	TBRestServiceListAll new applyServiceWithContext: (self requestContext)
+	TBRestServiceListAll new applyServiceWithContext: self requestContext
 ]]]
 
 Afin de faciliter l'utilisation d'un service REST, il est préférable de préciser finement la ou les ressources manipulées. Dans le cas présent, le nom de la méthode ==listAll== ne précise pas au client quelles sont les ressources qui seront retournées. Certes, nous savons que ce sont les posts mais après tout, cela pourrait également être les rubriques. Il faut donc être plus explicite dans la formalisation de l'URL afin de lui donner une réelle signification sémantique. C'est d'ailleur la principale difficulté dans la mise en place des services REST. La meilleure méthode est de faire simple et de s'efforcer d'être cohérent dans la désignation des chemins d'accès aux ressources. Si nous voulons la liste des posts, il nous suffit de demander la liste des posts. L'URL doit donc avoir la forme suivante:
@@ -391,101 +525,6 @@ Le code Pharo suivant vous permet de tester le bon fonctionnement du service.
 
 ! OLD version
 
-
-
-!!Obtenir
-
-[[[
-TBRestfulFilter >> listAll
-	<get>
-	<produces: 'text/text'>
-	
-	^String streamContents: [ :aStream |
-		TBBlog current allBlogPosts
-			do: [ :each | each printOn: aStream ]
-			separatedBy: [ aStream << ',' ]
-	]
-]]]
-
-Il est rarement utile de retourner l'ensemble des informations pour chaque post. Modifions ce code pour ne retourner que les champs les plus pertinants pour décrire un post. Pour cela, il faut tout d'abord définir comment un post est converti en Javascript.
-
-[[[
-TBPost >> javascriptOn: aStream
-
-	Dictionary new
-			at: #title put: self title;
-			at: #categroy put: self category;
-			at: #date put: self  date;
-			at: #text put: self  text;
-			javascriptOn: aStream
-]]]
-
-Nous pouvons ensuite modifier la méthode ==listAll== afin de prendre en compte la sélection des champs.
-
-[[[
-TBRestfulFilter >> listAll
-  <get>
-  <produces: 'text/json'>
-
-  ^ String streamContents: [ :astream |
-		astream << '['.
-		TBBlog current allBlogPosts
-			do: [ :each | each javascriptOn: astream]
-			separatedBy: [ astream << ',' ].
-		]
-]]]
-
-Nous raffinons afin de pouvoir sélectionner les attributs que nous voulons convertir en introduisant la méthode ==javascriptOn: aStream attributes: aCollection==.
-
-[[[
-TBPost >> javascriptOn: aStream attributes: aCollection
-	
-	| dictionary |
-	dictionary := Dictionary new.
-	aCollection do: [ :each |
-				dictionary at: each put: (self perform: each asSymbol) ].
-	^ dictionary javascriptOn: aStream
-]]]
-
-[[[
-TBPost >> javascriptOn: aStream
-
-	^ self javascriptOn: aStream attributes: #(title category date)
-]]]
-
-
-!!!Recherche d'un Post
-
-Maintenant nous allons proposer d'autres fonctionnalités comme la recherche d'un post.
-Nous définissons donc cette fonctionnalité dans la classe ==TBlog==.
-
-[[[
-TBRestfulFilter >> search: title
-	<get>
-	<path: 'search?title={title}'>
-	<produces: 'text/json'>
-   | post |
-	post := TBBlog current postWithTitle: title.
-	post ifNil: [ ^ self notFound ].
-   ^ String streamContents: [ :astream |
-		post javascriptOn: astream attributes: #(title category date text)]
-]]]
-
-[[[
-TBRestfulFilter >> notFound
-
-	|  |
-	"trick self halt puis dans le debugger req := self requestContext."
-	self requestContext responseGenerator
-		notFound;
-		respond
-]]]
-
-+REST Error.>file://figures/RESTError.png|width=75|label=error+
-
-[[[
-http://localhost:8080/TinyBlog/search?title=Welcome%20in%20TinyBlog
-]]]
 
 
 !!!!Chercher selon le titre
