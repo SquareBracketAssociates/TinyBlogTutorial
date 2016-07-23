@@ -45,7 +45,7 @@ Nous définissons une souclasse de la class ==WARestfulFilter== nommée ==TBRest
 WARestfulFilter subclass: #TBRestfulFilter
 	instanceVariableNames: ''
 	classVariableNames: ''
-	category: 'TinyBlog-REST'
+	package: 'TinyBlog-REST'
 ]]]
 
  
@@ -100,8 +100,8 @@ TBRestfulFilter >> listAll
 	]
 ]]]
 
-
-@@note pourquoi qd je fais /posts j'obtiens un fichier a dowloader et pas qq que je peux voir dans le browser? si je mets text/text j'obtiens une liste dans safari.
+Notez que parfois les navigateurs webs interprètent différemment =='text/json'== de =='application/json'==.
+Dans le second cas, ils offrent de récupérer un fichier au lieu d'afficher son contenu dans le navigateur.
 
 @@note attention le printOn: the post n'est pas defini (sync avec mooc version!)
 
@@ -187,17 +187,14 @@ TBRestfulFilter >> search: title
 
 La méthode ==notFound== est la suivante:
 
-
-"trick self halt puis dans le debugger req := self requestContext."
 [[[
 TBRestfulFilter >> notFound
-
 	self requestContext responseGenerator
 		notFound;
 		respond
 ]]]
+Cette méthode utilise l'expression ==self requestContext== pour accéder à l'ensemble des informations relatives à la requête en cours. Ensuite nous demandons à l'objet responsable de générer une réponse d'émettre une erreur. 
 
-Notez la manière dont nous générons une réponse indiquant une erreur. 
 
 +REST Error.>file://figures/RESTError.png|width=75|label=error+
 
@@ -213,7 +210,7 @@ http://localhost:8080/TinyBlog/post/Welcome%20in%20TinyBlog
 
 !!!Chercher selon une période
 
-Une variation possible est d'offrir une recherche sur une période de parution. 
+Une variation possible est d'offrir une recherche sur une période de parution. La méthode ==searchDateFrom:to:== et ses annotations montrent encore une fois comment 
 
 [[[
 TBRestfulFilter >> searchDateFrom: beginString to: endString
@@ -238,10 +235,11 @@ TBRestfulFilter >> searchDateFrom: beginString to: endString
 		]
 ]]]
 
-+Avec des dates.>file://figures/RestWithDate.png|width=75|label=RestWithDate+
++Filtrer sur une période.>file://figures/RestWithDate.png|width=75|label=RestWithDate+
 
 
 !!!Ajouter un post
+@@todo Olivier peux tu me dire si c'est juste.
 
 [[[
 TBRestfulFilter >> addPost
@@ -250,7 +248,8 @@ TBRestfulFilter >> addPost
 	
 	| request title category date text post |
 
-	request := self requestContext request.
+	request := self requestContext request. 
+	"We should probably use ??? self requestContext responseGenerator"
 	title := request at: #title.
 	category := request at: #category.
 	text := request at: #text.
@@ -263,35 +262,35 @@ TBRestfulFilter >> addPost
 		date: date;
 		yourself.
 	TBBlog current writeBlogPost: post.
-	^ '{status: "ok"}'
+	self requestContext responseGenerator
+		ok;
+		respond
 ]]]
 
+Comme nous ne pouvons pas encoder une operation post dans un browser web, nous utilisons le client HTTP
+de Pharo pour créer une requête. 
 
 [[[
-	ZnClient new
-		url: 'http://localhost:8080/TinyBlog/add-post';
-		formAt: 'title' put: 'Exemple de POST';
-		formAt: 'category' put: 'TEST';
-		formAt: 'date' put: '12/23/2015';
-		contents: 'Ici un super post';
-		post.
+ZnClient new
+	url: 'http://localhost:8080/TinyBlog/add-post';
+	formAt: 'title' put: 'Exemple de POST';
+	formAt: 'category' put: 'TEST';
+	formAt: 'date' put: '12/23/2015';
+	contents: 'Ici un super post';
+	post.
 ]]]
-
-
-
-
-
 
 
 
 !! Une architecture de services
+Nous avons vu comment définir des services REST avec Seaside. Nous allons maintenant définir une architecture dans laquelle de nouveaux services peuvent définis. 
 
+Nous commençons par modéliser un service REST.
 
 !! Modéliser un service REST
 Tous les services REST fonctionnent de la même manière. Ils sont déclenchés par une commande HTTP et recoivent des informations provenant du client. Ils traitent les données et créent ensuite une réponse qui est retournée au client. Il est donc aisé de réduire le volume de code nécessaire à leur mise en place à l'aide de l'héritage.
 
-
-La classe ==TBRestService== représente un service REST générique dont hériteront les véritables services REST de TinyBlog. Certaines méthodes seront abstraites et le travail sera délégué aux sous-classe de ==TBRestService==.
+La classe ==TBRestService== représente un service REST générique dont hériteront les véritables services REST de TinyBlog. Certaines méthodes sont abstraites et le travail est délégué aux sous-classes de ==TBRestService==.
 
 La requête et la réponse (au sens HTTP du terme) sont considérées comme étant le contexte dans lequel le service REST s'exécute. Les données produites et formatées par le service REST doivent également être accessibles. La gestion du contexte nécessite des accesseurs pour être rendu public. Ce n'est pas le cas des données produites.
 
@@ -299,7 +298,7 @@ La requête et la réponse (au sens HTTP du terme) sont considérées comme éta
 Object subclass: #TBRestService
 	instanceVariableNames: 'result context'
 	classVariableNames: ''
-	category: 'TinyBlog-Rest'
+	package: 'TinyBlog-Rest'
 ]]]
 
 [[[
@@ -312,7 +311,7 @@ TBRestService >> context: anObject
 	context := anObject
 ]]]
 
-Le contexte est obtenu par Seaside avec la ==self requestContext==.
+Le contexte est obtenu par Seaside avec l'expression ==self requestContext==.
 
 Lorsque ==TBRestService== est instancié, il doit initialisé la variable d'instance ==result== à l'aide de l'instance d'un objet ayant la capacité de contenir les données destinées au client.
 
@@ -322,7 +321,7 @@ TBRestService >> initialize
 	result := TBRestResponseContent new.
 ]]]
 
-Les données conservée dans la variable d'instance ==result== sont dans un format brut et seront converties juste avant leur envoi au client à l'aide de la méthode ==dataType:with:===. Le type MIME utilisé est initialisé au sein de la réponse.
+Les données conservées dans la variable d'instance ==result== sont dans un format brut et seront converties juste avant leur envoi au client à l'aide de la méthode ==dataType:with:===. Le type MIME utilisé est initialisé au sein de la réponse.
 
 [[[
 TBRestService >> dataType: aDataType with: aResultSet
@@ -330,7 +329,7 @@ TBRestService >> dataType: aDataType with: aResultSet
 	self context respond: [ :response | response nextPutAll: aResultSet ]
 ]]]
 
-Un service REST est activé à l'aide la méthode ==applyServiceWithContext:== qui initialise le contexte d'exécution HTTP et lance le traitement demandé.
+Un service REST est activé à l'aide de la méthode ==applyServiceWithContext:== invoquée par le serveur (instance de ==TBRestfulServer==) lors de la création du service. Elle initialise le contexte d'exécution HTTP et lance le traitement demandé.
 
 [[[
 TBRestService >> applyServiceWithContext: aRequestContext
@@ -338,7 +337,7 @@ TBRestService >> applyServiceWithContext: aRequestContext
 	self execute.
 ]]]
 
-Dans le cas de la classe TBRestService, il n'y a aucun traitement des données possible et la méthode est donc abstraite.
+Dans le cas de la classe ==TBRestService==, il n'y a aucun traitement des données possible et la méthode ==execute== est donc abstraite.
 
 [[[
 TBRestService >> execute
@@ -347,7 +346,7 @@ TBRestService >> execute
 
 !!Définir le conteneur des données
 
-La classe TBRestResponseContent est une toute petite classe qui n'a pour finalité que de contenir les données qui seront transmise au client et ceci avant leur éventuelle conversion en fonction de la valeur du paramêtre ==accept== présent dans la requête HTTP du client.
+La classe ==TBRestResponseContent== est une toute petite classe qui n'a pour finalité que de contenir les données qui seront transmises au client et ceci avant leur éventuelle conversion en fonction de la valeur du paramêtre ==accept== présent dans la requête HTTP du client.
 
 [[[
 Object subclass: #TBRestResponseContent
