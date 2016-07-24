@@ -75,9 +75,6 @@ Ceci permet à Seaside de prendre en compte le filtre REST qui a été ajouté.
 Nous sommes prêt pour la définition de services REST. Comme énoncé dans l'introduction de ce chapitre, nous allons définir dans un premier temps les services aussi simplement que possible pour vous montrer la manière de faire, puis dans un second temps nous mettrons en place un architecture de services. 
 
 
-@@note pour Olivier: Est ce que text a la place de application est faux? Dans quelles occasions doit-on utiliser text/json?
-
-
 !!! Obtenir la liste des posts en texte
 
 Nous définissons une méthode ==listAll==. Cette méthode retourne une chaine comprenant les postes séparés par des virgules. 
@@ -100,10 +97,18 @@ TBRestfulFilter >> listAll
 	]
 ]]]
 
+
 Notez que parfois les navigateurs webs interprètent différemment =='text/json'== de =='application/json'==.
 Dans le second cas, ils offrent de récupérer un fichier au lieu d'afficher son contenu dans le navigateur.
 
 @@note attention le printOn: the post n'est pas defini (sync avec mooc version!)
+
+Nous ajoutons une méthode ==blog== pour éviter d'avoir de multiples références au Singleton.
+
+[[[
+TBRestfulFilter >> blog
+	^ TBBlog current
+]]]
 
 !!! En JSON
 
@@ -131,7 +136,7 @@ TBRestfulFilter >> listAll
 
   ^ String streamContents: [ :astream |
 		astream << '['.
-		TBBlog current allBlogPosts
+		self blog allBlogPosts
 			do: [ :each | each javascriptOn: astream]
 			separatedBy: [ astream << ',' ].
 		]
@@ -179,7 +184,7 @@ TBRestfulFilter >> search: title
 	<produces: 'application/json'>
 	
    | post |
-	post := TBBlog current postWithTitle: title.
+	post := self blog postWithTitle: title.
 	post ifNil: [ ^ self notFound ].
    ^ String streamContents: [ :astream |
 		post javascriptOn: astream attributes: #(title category date text)]
@@ -219,12 +224,11 @@ TBRestfulFilter >> searchDateFrom: beginString to: endString
 	<produces: 'application/json'>
 	
    | posts dateFrom dateTo |
-
 	dateFrom := Date fromString: beginString.
 	dateTo := Date fromString: endString.
 	
-	posts := TBBlog current allBlogPosts
-		select: [  :each | each date between: dateFrom and: dateTo ].
+	posts := self allBlogPosts
+		select: [ :each | each date between: dateFrom and: dateTo ].
 	
 	^ String streamContents: [ :astream |
 	 	astream << '['.
@@ -261,13 +265,13 @@ TBRestfulFilter >> addPost
 		category: category;
 		date: date;
 		yourself.
-	TBBlog current writeBlogPost: post.
+	self blog writeBlogPost: post.
 	self requestContext responseGenerator
 		ok;
 		respond
 ]]]
 
-Comme nous ne pouvons pas encoder une operation post dans un browser web, nous utilisons le client HTTP
+Comme nous ne pouvons pas encoder une opération post dans un browser web, nous utilisons le client HTTP
 de Pharo pour créer une requête. 
 
 [[[
@@ -283,9 +287,7 @@ ZnClient new
 
 
 !! Une architecture de services
-Nous avons vu comment définir des services REST avec Seaside. Nous allons maintenant définir une architecture dans laquelle de nouveaux services peuvent définis. 
-
-Nous commençons par modéliser un service REST.
+Nous avons vu comment définir simplement des services REST avec Seaside. Nous allons maintenant définir une architecture dans laquelle de nouveaux services peuvent définis. Nous commençons par modéliser un service REST.
 
 !! Modéliser un service REST
 Tous les services REST fonctionnent de la même manière. Ils sont déclenchés par une commande HTTP et recoivent des informations provenant du client. Ils traitent les données et créent ensuite une réponse qui est retournée au client. Il est donc aisé de réduire le volume de code nécessaire à leur mise en place à l'aide de l'héritage.
@@ -300,6 +302,15 @@ Object subclass: #TBRestService
 	classVariableNames: ''
 	package: 'TinyBlog-Rest'
 ]]]
+
+Nous définissons une méthode pour factoriser les appels au singleton. 
+
+[[[
+TBRestService >> blog
+	^ TBBlog current
+]]]
+
+@@note Notez que cet usage du singleton est un mauvais signe de la conception de TinyBlog car il agit comme une variable globale. Chaque partie de TinyBlog devrait savoir travailler sur un blog et le système devrait lui passer l'instance de TBBlog adéquate. 
 
 [[[
 TBRestService >> context
@@ -329,6 +340,14 @@ TBRestService >> dataType: aDataType with: aResultSet
 	self context respond: [ :response | response nextPutAll: aResultSet ]
 ]]]
 
+Dans le cas de la classe ==TBRestService==, il n'y a aucun traitement des données possible et la méthode ==execute== est donc abstraite.
+
+[[[
+TBRestService >> execute
+	"Hook method to fire the service logic."
+	self subclassResponsibility
+]]]
+
 Un service REST est activé à l'aide de la méthode ==applyServiceWithContext:== invoquée par le serveur (instance de ==TBRestfulServer==) lors de la création du service. Elle initialise le contexte d'exécution HTTP et lance le traitement demandé.
 
 [[[
@@ -337,12 +356,21 @@ TBRestService >> applyServiceWithContext: aRequestContext
 	self execute.
 ]]]
 
-Dans le cas de la classe ==TBRestService==, il n'y a aucun traitement des données possible et la méthode ==execute== est donc abstraite.
+!!!! Exemple de service
+Un exemple d'utilisation est par exemple le service 'ListAll'. La méthode ==listAll== de filtre crée une instance du service ==TBRestServiceListAll== et lui passe le contexte de la requête courante. 
 
 [[[
-TBRestService >> execute
-	self subclassResponsibility
+TBRestfulFilter >> listAll
+	<get>
+	<produces: 'application/json'>
+
+	TBRestServiceListAll new applyServiceWithContext: self requestContext
 ]]]
+
+
+
+
+
 
 !!Définir le conteneur des données
 
@@ -370,20 +398,20 @@ TBRestResponseContent >> add: aValue
 	data add: aValue
 ]]]
 
-La méthode ==toJson== assure la conversion du contenu de la réponse en une chaine de caractères au format JSON. Le framework utilisé ici est NeoJSON. D'autres format peuvent être ajouté tels que XML ou CSV. Il suffit d'ajouter les méthodes nécessaires pour chaque conversion.
+La méthode ==toJson== assure la conversion du contenu de la réponse en une chaine de caractères au format JSON. Le framework utilisé ici est NeoJSON. D'autres formats peuvent être ajoutés tels que XML ou CSV. Il suffit d'ajouter les méthodes nécessaires pour chaque conversion.
 
 [[[
 TBRestResponseContent >> toJson
 	^String streamContents: [ :stream |
 		(NeoJSONWriter on: stream)
-		for: Date
-		customDo: [ :mapping | mapping encoder: [ :value | value asDateAndTime printString ] ];
-		nextPut: data ]
+			for: Date
+			customDo: [ :mapping | mapping encoder: [ :value | value asDateAndTime printString ] ];
+			nextPut: data ]
 ]]]
 
 !! Implémenter les services REST de TinyBlog
 
-L'objectif est d'implémenter quatre services REST au sein de TinyBlog.
+L'objectif est d'implémenter quatre services REST au sein de TinyBlog: obtenir la liste des posts, 
 
 !!!Obtenir la liste des posts
 
@@ -426,7 +454,7 @@ L'implémentation de ce service tient sur deux lignes de code. Le service ==TBRe
 
 [[[
 TBRestServiceListAll >> execute
-	TBBlog current allBlogPosts do: [ :each | result add: (each asDictionary) ].
+	self blog allBlogPosts do: [ :each | result add: (each asDictionary) ].
 	self dataType: (WAMimeType applicationJson) with: (result toJson)
 ]]]
 
@@ -468,7 +496,7 @@ La méthode ==execute== recherche un post ayant un titre identique à la chaine 
 TBRestService >> execute
 	| post |
 
-	post := TBBlog current postWithTitle: title urlDecoded.
+	post := self blog postWithTitle: title urlDecoded.
 	
 	post
 		ifNotNil: [ result add: (post asDictionary) ]
@@ -492,7 +520,7 @@ Coté serveur, la chaine reçu ne correspond donc pas au vériable titre du post
 TBRestService >> execute
 	| post |
 
-	post := TBBlog current postWithTitle: title urlDecoded.
+	post := self blog postWithTitle: title urlDecoded.
 	
 	post
 		ifNotNil: [ result add: (post asDictionary) ]
@@ -529,16 +557,22 @@ TBRestService subclass: #TBRestServiceSearchDate
 	instanceVariableNames: 'from to'
 	classVariableNames: ''
 	category: 'TinyBlog-Rest'
+]]]
 
+[[[
 TBRestServiceSearchDate >> from
 	^ from
+]]]
 
+[[[
 TBRestServiceSearchDate >> from: anObject
 	from := anObject
-
+]]]
+[[[
 TBRestServiceSearchDate >> to
 	^ to
-
+]]]
+[[[
 TBRestServiceSearchDate >> to: anObject
 	to := anObject
 ]]]
@@ -553,9 +587,9 @@ TBRestServiceSearchDate >> execute
 	dateFrom := Date fromString: self from.
 	dateTo := Date fromString: self to.
 
-	posts := TBBlog current allBlogPosts
+	posts := self blog allBlogPosts
 		select: [  :each | each date between: dateFrom and: dateTo ].
-	
+		"such logic should be moved to the blog class itself"
 	posts do: [ :each | result add: (each asDictionary) ].
 	self dataType: (WAMimeType applicationJson) with: result toJson
 ]]]
@@ -590,10 +624,9 @@ La méthode ==execute== récupère le contenu du post dans la requête du client
 [[[
 TBRestServiceAddPost >> execute
 	| post |
-
 	[
 		post := NeoJSONReader fromString: (self context request rawBody).
-		TBBlog current writeBlogPost: (TBPost title: (post at: #title) text: (post at: #text) category: (post at: #category)).
+		self blog writeBlogPost: (TBPost title: (post at: #title) text: (post at: #text) category: (post at: #category)).
 	] on: Error do: [ self context request badRequest ].
 
 	self dataType: (WAMimeType textPlain) with: ''
@@ -602,19 +635,17 @@ TBRestServiceAddPost >> execute
 Le code Pharo suivant vous permet de tester le bon fonctionnement du service.
 
 [[[
-	ZnClient new
-		url: 'http://localhost:8080/TinyBlog/posts/add';
-		formAt: 'title' put: 'Exemple de POST';
-		formAt: 'category' put: 'TEST';
-		formAt: 'date' put: '12/23/2015';
-		contents: 'Ici un super post';
-		post.
+ZnClient new
+	url: 'http://localhost:8080/TinyBlog/posts/add';
+	formAt: 'title' put: 'Exemple de POST';
+	formAt: 'category' put: 'TEST';
+	formAt: 'date' put: '12/23/2015';
+	contents: 'Ici un super post';
+	post.
 ]]]
 
 
+La même logique doit être mise en place pour modifier un post. 
 
-
-
-
-!!!Modifier un POST
+!! Conclusion
 
