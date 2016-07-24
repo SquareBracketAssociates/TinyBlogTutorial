@@ -201,7 +201,7 @@ TBRestfulFilter >> notFound
 Cette méthode utilise l'expression ==self requestContext== pour accéder à l'ensemble des informations relatives à la requête en cours. Ensuite nous demandons à l'objet responsable de générer une réponse d'émettre une erreur. 
 
 
-+REST Error.>file://figures/RESTError.png|width=75|label=error+
++REST Error (a revoir).>file://figures/RESTError.png|width=75|label=error+
 
 
 Nous pouvons tester en effectuant la requête suivante :
@@ -437,9 +437,9 @@ TBRestfulFilter >> listAll
 
 Afin de faciliter l'utilisation d'un service REST, il est préférable de préciser finement la ou les ressources manipulées. Dans le cas présent, le nom de la méthode ==listAll== ne précise pas au client quelles sont les ressources qui seront retournées. Certes, nous savons que ce sont les posts mais après tout, cela pourrait également être les rubriques. Il faut donc être plus explicite dans la formalisation de l'URL afin de lui donner une réelle signification sémantique. C'est d'ailleur la principale difficulté dans la mise en place des services REST. La meilleure méthode est de faire simple et de s'efforcer d'être cohérent dans la désignation des chemins d'accès aux ressources. Si nous voulons la liste des posts, il nous suffit de demander la liste des posts. L'URL doit donc avoir la forme suivante:
 
-[[
+[[[
 http://localhost:8080/TinyBlog/Posts
-]]
+]]]
 
 Pour obtenir cela, nous pouvons renommer la méthode ==listAll== ou préciser le chemin d'accès qui appellera cette méthode. Cette seconde approche est plus souple puisqu'elle permet de réorganiser les appels aux services REST sans nécessiter de refactoriser le code.
 
@@ -510,7 +510,7 @@ Si nous essayons ce code, un problème apparaît rapidement. En effet, cet outil
 
 +REST Error.>file://figures/RESTError.png|width=75|label=error+
 
-La raison est que HTTP considère que l'espace fait partie des caractères spéciaux et donc le client encode celui-ci à l'aide de la valeur %20.
+La raison est que HTTP considère que l'espace fait partie des caractères spéciaux et donc le client encode celui-ci à l'aide de la valeur ==%20==.
 
 [[[
 http://localhost:8080/TinyBlog/posts/search?title=Welcome%20in%20TinyBlog
