@@ -287,14 +287,53 @@ ZnClient new
 
 
 !! Une architecture de services
-Nous avons vu comment définir simplement des services REST avec Seaside. Nous allons maintenant définir une architecture dans laquelle de nouveaux services peuvent définis. Nous commençons par modéliser un service REST.
+Nous avons vu comment définir simplement des services REST avec Seaside. Nous allons maintenant définir une architecture dans laquelle de nouveaux services peuvent définis. Nous commençons par définir un petit conteneur de données pour ensuite modéliser un service REST. Notez que ce genre d'architecture ne porte réellement ces fruits que lorsque vous avez plus que quelques services. 
+
+!!Définir un petit conteneur des données
+
+La classe ==TBRestResponseContent== est une toute petite classe qui n'a pour finalité que de contenir les données qui seront transmises au client et ceci avant leur éventuelle conversion en fonction de la valeur du paramêtre ==accept== présent dans la requête HTTP du client.
+
+[[[
+Object subclass: #TBRestResponseContent
+	instanceVariableNames: 'data'
+	classVariableNames: ''
+	category: 'TinyBlog-Rest'
+]]]
+
+La méthode ==initialize== permet d'initialiser la variable d'instance ==data== à l'aide d'une collection ordonnée.
+
+[[[
+TBRestResponseContent >> initialize
+	super initialize.
+	data := OrderedCollection new.
+]]]
+
+La méthode ==add:== permet d'ajouter des données de la réponse.
+
+[[[
+TBRestResponseContent >> add: aValue
+	data add: aValue
+]]]
+
+La méthode ==toJson== assure la conversion du contenu de la réponse en une chaine de caractères au format JSON. Le framework utilisé ici est NeoJSON. D'autres formats peuvent être ajoutés tels que XML ou CSV. Il suffit d'ajouter les méthodes nécessaires pour chaque conversion.
+
+[[[
+TBRestResponseContent >> toJson
+	^String streamContents: [ :stream |
+		(NeoJSONWriter on: stream)
+			for: Date
+			customDo: [ :mapping | mapping encoder: [ :value | value asDateAndTime printString ] ];
+			nextPut: data ]
+]]]
+
+@@todo On doit mettre un exemple de TBRestResponseContent
 
 !! Modéliser un service REST
-Tous les services REST fonctionnent de la même manière. Ils sont déclenchés par une commande HTTP et recoivent des informations provenant du client. Ils traitent les données et créent ensuite une réponse qui est retournée au client. Il est donc aisé de réduire le volume de code nécessaire à leur mise en place à l'aide de l'héritage.
+Tous les services REST fonctionnent de la même manière. Ils sont déclenchés par une commande HTTP et recoivent des informations provenant du client. Ils traitent les données et créent ensuite une réponse qui est retournée au client. Il est donc aisé de réduire le volume de code nécessaire à leur mise en place à l'aide de l'héritage. Nous allons donc créer une classe racine ==TBRestService== dont les filles définissent des services. 
 
 La classe ==TBRestService== représente un service REST générique dont hériteront les véritables services REST de TinyBlog. Certaines méthodes sont abstraites et le travail est délégué aux sous-classes de ==TBRestService==.
 
-La requête et la réponse (au sens HTTP du terme) sont considérées comme étant le contexte dans lequel le service REST s'exécute. Les données produites et formatées par le service REST doivent également être accessibles. La gestion du contexte nécessite des accesseurs pour être rendu public. Ce n'est pas le cas des données produites.
+La requête et la réponse (au sens HTTP du terme) sont considérées comme le contexte dans lequel le service REST s'exécute. Les données produites et formatées par le service REST doivent également être accessibles. La gestion du contexte nécessite des accesseurs pour être rendu public. Ce n'est pas le cas des données produites.
 
 [[[
 Object subclass: #TBRestService
@@ -303,14 +342,15 @@ Object subclass: #TBRestService
 	package: 'TinyBlog-Rest'
 ]]]
 
-Nous définissons une méthode pour factoriser les appels au singleton. 
-
 [[[
 TBRestService >> blog
 	^ TBBlog current
 ]]]
 
-@@note Notez que cet usage du singleton est un mauvais signe de la conception de TinyBlog car il agit comme une variable globale. Chaque partie de TinyBlog devrait savoir travailler sur un blog et le système devrait lui passer l'instance de TBBlog adéquate. 
+@@note Notez que cet usage du singleton est un mauvais signe de la conception de TinyBlog car il agit comme une variable globale. Chaque partie de TinyBlog devrait savoir travailler sur un blog et le système devrait lui passer l'instance de ==TBBlog== adéquate. 
+
+
+Nous définissons une méthode pour factoriser les appels au singleton. 
 
 [[[
 TBRestService >> context
@@ -324,7 +364,7 @@ TBRestService >> context: anObject
 
 Le contexte est obtenu par Seaside avec l'expression ==self requestContext==.
 
-Lorsque ==TBRestService== est instancié, il doit initialisé la variable d'instance ==result== à l'aide de l'instance d'un objet ayant la capacité de contenir les données destinées au client.
+Lorsqu'un service est instancié, il doit initialisé la variable d'instance ==result== à l'aide de l'instance d'un objet ayant la capacité de contenir les données destinées au client.
 
 [[[
 TBRestService >> initialize
@@ -336,9 +376,11 @@ Les données conservées dans la variable d'instance ==result== sont dans un for
 
 [[[
 TBRestService >> dataType: aDataType with: aResultSet
-  self context response contentType: (aDataType greaseString).
+	self context response contentType: aDataType greaseString.
 	self context respond: [ :response | response nextPutAll: aResultSet ]
 ]]]
+
+@@todo Olivier je ne comprends pas pourquoi la reponse recoit les donnees brut et ce qu'est le greaseString c'est une chaine pour encoder le type?
 
 Dans le cas de la classe ==TBRestService==, il n'y a aucun traitement des données possible et la méthode ==execute== est donc abstraite.
 
@@ -370,44 +412,6 @@ TBRestfulFilter >> listAll
 
 
 
-
-
-!!Définir le conteneur des données
-
-La classe ==TBRestResponseContent== est une toute petite classe qui n'a pour finalité que de contenir les données qui seront transmises au client et ceci avant leur éventuelle conversion en fonction de la valeur du paramêtre ==accept== présent dans la requête HTTP du client.
-
-[[[
-Object subclass: #TBRestResponseContent
-	instanceVariableNames: 'data'
-	classVariableNames: ''
-	category: 'TinyBlog-Rest'
-]]]
-
-La méthode ==initialize== permet d'initialiser la variable d'instance ==data== à l'aide d'une collection ordonnée.
-
-[[[
-TBRestResponseContent >> initialize
-	super initialize.
-	data := OrderedCollection new.
-]]]
-
-La méthode ==add== permet d'ajouter des données dans la réponse.
-
-[[[
-TBRestResponseContent >> add: aValue
-	data add: aValue
-]]]
-
-La méthode ==toJson== assure la conversion du contenu de la réponse en une chaine de caractères au format JSON. Le framework utilisé ici est NeoJSON. D'autres formats peuvent être ajoutés tels que XML ou CSV. Il suffit d'ajouter les méthodes nécessaires pour chaque conversion.
-
-[[[
-TBRestResponseContent >> toJson
-	^String streamContents: [ :stream |
-		(NeoJSONWriter on: stream)
-			for: Date
-			customDo: [ :mapping | mapping encoder: [ :value | value asDateAndTime printString ] ];
-			nextPut: data ]
-]]]
 
 !! Implémenter les services REST de TinyBlog
 
@@ -454,15 +458,13 @@ L'implémentation de ce service tient sur deux lignes de code. Le service ==TBRe
 
 [[[
 TBRestServiceListAll >> execute
-	self blog allBlogPosts do: [ :each | result add: (each asDictionary) ].
-	self dataType: (WAMimeType applicationJson) with: (result toJson)
+	self blog allBlogPosts do: [ :each | result add: each asDictionary ].
+	self dataType: WAMimeType applicationJson with: result toJson
 ]]]
 
 !!!Recherche d'un Post
-
-Maintenant nous allons proposer d'autres fonctionnalités comme la recherche d'un post.
-
-Nous définissons donc cette fonctionnalité dans la classe ==TBRestfulFilter==. La méthode ==search:== reçoit une chaine de caractères comme unique argument. L'emplacement du titre recherché au sein de l'URL est entouré à l'aide de crochets et le nom de l'argument doit être identique à celui du paramêtre reçu par la méthode. La méthode instancie alors le service TBRestServiceSearch et lui transmet la valeur de l'argument avant de déclencher le traitement.
+Maintenant nous allons proposer d'autres fonctionnalités en commençant par la recherche d'un post.
+Nous définissons donc cette fonctionnalité dans la classe ==TBRestfulFilter==. La méthode ==search:== reçoit une chaine de caractères comme unique argument. L'emplacement du titre recherché au sein de l'URL est entouré à l'aide de crochets et le nom de l'argument doit être identique à celui du paramêtre reçu par la méthode. La méthode instancie alors le service ==TBRestServiceSearch== et lui transmet la valeur de l'argument avant de déclencher le traitement.
 
 [[[
 TBRestfulFilter >> search: aTitle
@@ -482,7 +484,9 @@ TBRestService subclass: #TBRestServiceSearch
 	instanceVariableNames: 'title'
 	classVariableNames: ''
 	category: 'TinyBlog-Rest'
+]]]
 
+[[[
 TBRestServiceSearch >> TBRestService >> title
 	^ title
 
@@ -493,15 +497,13 @@ TBRestServiceSearch >> TBRestService >> title: anObject
 La méthode ==execute== recherche un post ayant un titre identique à la chaine de caractères. Si aucun post ne correspond, c'est le code d'erreur HTTP 404 (Not found) qui est retourné au client.
 
 [[[
-TBRestService >> execute
+TBRestServiceSearch >> execute
 	| post |
-
 	post := self blog postWithTitle: title urlDecoded.
-	
 	post
 		ifNotNil: [ result add: (post asDictionary) ]
 		ifNil: [ self context response notFound ].
-	self dataType: (WAMimeType applicationJson) with: result toJson
+	self dataType: WAMimeType applicationJson with: result toJson
 ]]]
 
 Si nous essayons ce code, un problème apparaît rapidement. En effet, cet outil de recherche ne fonctionne que sur des posts dont le titre ne contient qu'une seule chaine de caractères et échoue sur les titres comportant des espaces.
@@ -514,19 +516,19 @@ La raison est que HTTP considère que l'espace fait partie des caractères spéc
 http://localhost:8080/TinyBlog/posts/search?title=Welcome%20in%20TinyBlog
 ]]]
 
-Coté serveur, la chaine reçu ne correspond donc pas au vériable titre du post recherché. Il faut donc convertir la chaine de caractères avant de lancer la recherche. Pour cela, il est nécessaire de modifier le code de la méthode ==search:== pour utiliser la méthode ==urlDecoded==.
+Coté serveur, la chaine reçue ne correspond donc pas au vériable titre du post recherché. Il faut donc convertir la chaine de caractères avant de lancer la recherche. Pour cela, il est nécessaire de modifier le code de la méthode ==search:== pour utiliser la méthode ==urlDecoded==.
 
 [[[
-TBRestService >> execute
+TBRestServiceSearch >> execute
 	| post |
-
 	post := self blog postWithTitle: title urlDecoded.
-	
 	post
-		ifNotNil: [ result add: (post asDictionary) ]
+		ifNotNil: [ result add: post asDictionary ]
 		ifNil: [ self context response notFound ].
-	self dataType: (WAMimeType applicationJson) with: result toJson
+	self dataType: WAMimeType applicationJson with: result toJson
 ]]]
+
+Nous vous suggérons de créer une méthode ==setResultAsJson:== qui factorise entre les services la dernière expression de la méthode execute. 
 
 !!!Chercher selon une période
 
@@ -589,9 +591,8 @@ TBRestServiceSearchDate >> execute
 
 	posts := self blog allBlogPosts
 		select: [  :each | each date between: dateFrom and: dateTo ].
-		"such logic should be moved to the blog class itself"
 	posts do: [ :each | result add: (each asDictionary) ].
-	self dataType: (WAMimeType applicationJson) with: result toJson
+	self dataType: WAMimeType applicationJson with: result toJson
 ]]]
 
 !!!Ajouter un post
@@ -625,12 +626,13 @@ La méthode ==execute== récupère le contenu du post dans la requête du client
 TBRestServiceAddPost >> execute
 	| post |
 	[
-		post := NeoJSONReader fromString: (self context request rawBody).
+		post := NeoJSONReader fromString: self context request rawBody.
 		self blog writeBlogPost: (TBPost title: (post at: #title) text: (post at: #text) category: (post at: #category)).
 	] on: Error do: [ self context request badRequest ].
-
-	self dataType: (WAMimeType textPlain) with: ''
+	self dataType: WAMimeType textPlain with: ''
 ]]]
+
+@@todo olivier pourquoi on ne rend pas une reponse disant que tout s'est bien passé?
 
 Le code Pharo suivant vous permet de tester le bon fonctionnement du service.
 
@@ -644,8 +646,8 @@ ZnClient new
 	post.
 ]]]
 
-
 La même logique doit être mise en place pour modifier un post. 
 
 !! Conclusion
 
+Dans ce chapitre, vous avez déployez une première interface web pour votre application. Seaside rend cette définition assez simple. Nous avons mis en place un exemple d'architecture pour définir des services web de manière modulaire. 
