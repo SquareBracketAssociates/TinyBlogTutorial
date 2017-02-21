@@ -24,6 +24,7 @@ CascadingStyleSheetBuilder new
 ]]]
 
 Le résultat obtenu sera:
+
 [[[
 p.resume
 {
@@ -33,9 +34,11 @@ p.resume
 
 Utiliser Pharo pour construire la feuille CSS de votre application permet évidemment de la générer dynamiquement. Une feuille de style est un document statique dans lequel il vous est nécessaire d'anticiper vos besoins. RenoirSt est l'outil parfait pour générer la présentation de votre application et de l'adapter selon les situations rencontrées par votre logiciel durant son fonctionnement.
 
-!! Intégration d'une feuille de styles
+!! Intégrer une feuille de style dans TinyBlog
 
-Pour éviter que la feuille de style soit reconstruite systèmatiquement à chaque appel de la méthode ==style== de ==TBApplicationRootComponent==, nous allons utiliser une variable d'instance afin de la mettre en cache. Pour cela, ajouter la variable d'instance ==css== à ==TBApplicationRootComponent==.
+Vous allez maintenant améliorer l'apparence visuelle de TinyBlog en modifiant la partie publique du logiciel.
+
+Pour éviter que la feuille de style soit reconstruite systématiquement à chaque appel de la méthode ==style== de ==TBApplicationRootComponent==, nous allons utiliser une variable d'instance afin de la mettre en cache. Pour cela, ajoutez la variable d'instance ==css== à ==TBApplicationRootComponent==.
 
 [[[
   WAComponent subclass: #TBApplicationRootComponent
@@ -44,7 +47,7 @@ Pour éviter que la feuille de style soit reconstruite systèmatiquement à chaq
 	  category: 'TinyBlog-Components'
 ]]]
 
-La méthode ==TBApplicationRootComponent >> styleSheet== contiendra la définition de la feuille de styles et est appelé par la méthode ==initialize==. Pour l'instant, contentez vous de retourner une chaine vide.
+La méthode ==TBApplicationRootComponent >> styleSheet== contiendra la définition de la feuille de styles et est appelée par la méthode ==initialize==. Pour l'instant, contentez vous de retourner une chaine vide.
 
 [[[
 TBApplicationRootComponent >> styleSheet
@@ -60,9 +63,9 @@ A partir de maintenant, vous avez la possibilité de modifier l'apparence de Tin
 
 !! Améliorer le visuel
 
-Jusque maintenant, TinyBlog n'a pas été spécialement soigné visuellement. Il utilise le style de base fourni par le framework BootStrap et c'est vrai, il n'est pas très sexy. Grâce à la feuille de styles construite à l'aide de RenoirSt, vous allez lui donner un look plus travaillé.
+Jusque maintenant, TinyBlog n'a pas été spécialement soigné visuellement. Il utilise le style de base fourni par le framework BootStrap et c'est vrai, il n'est pas toujours très sexy. Grâce à la feuille de styles construite à l'aide de RenoirSt, vous allez lui donner un look plus travaillé.
 
-Commençons par l'affichage des posts. Celui ci a été défini dans ==TBPostComponent== selon une très mauvaise méthode puisque l'apparence du titre et du sous titre sont uniquement définis par les balises HTML <h2> et <h6> mais parce que aucune classe CSS n'a été spécifiée. Corrigez le code à l'aide de cette nouvelle version de la méthode:
+Commençons par l'affichage des billets. Celui ci a été défini dans ==TBPostComponent== selon une très mauvaise méthode puisque l'apparence du titre et du sous titre sont uniquement définis par les balises HTML <h2> et <h6> et qu'aucune classe CSS n'a été spécifiée. Corrigez le code à l'aide de cette nouvelle version de la méthode:
 
 [[[
 TBPostComponent >> renderContentOn: html
@@ -121,4 +124,26 @@ styleSheet
 		build) asString
 ]]]
 
-A ce stade, il est important de se poser la question de la maintenance de ce code. Il est évident que nous pouvons refactoriser le code afin de réduire 
+A ce stade, il est important de se poser la question de la maintenance de ce code. Il est évident que nous pouvons refactoriser le code en regroupant la définition des attributs.
+
+styleSheet
+	^(CascadingStyleSheetBuilder new 
+		declareRuleSetFor: [ :selector | selector paragraph class: 'title' ]
+			with: [ :style | 
+				style 
+					fontSize: 200 percent;
+					borderBottomStyle: CssConstants solid;
+					borderWidth: 1px;
+					borderColor: CssSVGColors black
+			];
+		declareRuleSetFor: [ :selector | (selector paragraph class: 'title') firstLetter ]
+			with: [ :style | 
+				style 
+					fontSize: 150 percent;
+					textTransform: CssConstants capitalize
+			];
+		declareRuleSetFor: [ :selector | selector paragraph class: 'subtitle' ]
+			with: [ :style | style fontStyle: CssConstants italic ];
+		declareRuleSetFor: [ :selector | selector paragraph class: 'content' ]
+			with: [ :style | style textAlign: CssConstants justify ];
+		build) asString
