@@ -2,7 +2,12 @@ MAIN = book
 CHAPTERS = \
 	Chapters/Chap01-TinyBlog-Model-FR \
 	Chapters/Chap02-TinyBlog-ModelExtensionTests-FR \
+	Chapters/Chap03-TinyBlog-Teapot-FR \
+	Chapters/Chap04-TinyBlog-VoyageMongo-FR \
+	Chapters/Chap05-TinyBlog-Seaside-FR \
+	Chapters/Chap06-TinyBlog-SeasideAdmin-FR \
 	Chapters/Chap09-SeasideREST \
+	Chapters/Chap10-TinyBlog-Deployment-FR
 
 
 OUTPUTDIRECTORY = build
