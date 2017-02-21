@@ -2,7 +2,8 @@
     "title":"Interface Web d'administration pour TinyBlog"
 }
 
-!Interface Web d'administration pour TinyBlog
+
+
 !!Correction semaine précédente
 
 Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
@@ -210,7 +211,7 @@ Rechercher une autre méthode pour réaliser l'authentification de l'utilisateur
 
 De plus le composant ==TBAuthentificationComponent== pourrait afficher l'utilisateur lorsque celui-ci est logué.
 
-!!!!Intégration de l'authentification
+!!Intégration de l'authentification
 
 Il faut maintenant intégrer le lien qui déclenchera l'affichage de la boite modale d'authentification. Au tout début de la méthode ==renderContentOn:== du composant ==TBPostsListComponent==, on ajoute le rendu du composant d'authentification. Ce composant reçoit en paramètre la référence vers le composant affichant les posts.
 
@@ -252,11 +253,11 @@ Lorsque nous pressons sur le lien SignIn nous obtenons la figure *@authentificat
 +Avec un meilleur agencement.>file://figures/Authentification.png|width=75|label=authentification+
 
 
-!!!Administration des posts
+!!Administration des posts
 
 Nous allons développer deux composants. Le premier sera un rapport qui contiendra tous les posts et le second contiendra ce rapport. Le rapport étant généré par Magritte sous la forme d'un composant Seaside, nous aurions pu n'avoir qu'un seul composant. Toutefois, nous pensons que distinguer le composant d'administration du rapport est une bonne chose pour l'évolution de la partie administration. Commençons donc par le composant d'administration.
 
-!!!!Création d'un composant d'administration
+!!!Création d'un composant d'administration
 
 Le composant ==TBAdminComponent== hérite de ==TBScreenComponent== pour bénéficier du header et de l'accès au blog. Il contiendra en plus le rapport que nous construisons par la suite.
 
@@ -296,7 +297,7 @@ Pour tester, identifiez-vous sur l'application et vous devez obtenir la situatio
 +Un composant d'administration vide.>file://figures/BlogAdminSimple.png|width=75|label=adminSimple+
 
 
-!!!!Le composant Rapport
+!!Le composant PostsReport
 
 La liste des posts est affichée à l'aide d'un rapport généré dynamiquement par le framework Magritte. Nous utilisons ce framework pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
 
@@ -368,7 +369,7 @@ TBPostsReport class >> from: aBlog
 ]]]
 
 
-!!!!Amélioration des rapports
+!!Amélioration des rapports
 
 Le rapport généré est brut. Il n'y a pas de titres sur les colonnes et l'ordre d'affichage des colonnes n'est pas fixé (il peut varier d'une instance à une autre). Pour gérer cela, il suffit de modifier les descriptions Magritte pour chaque variable d'instance.
 
@@ -427,7 +428,7 @@ Identifiez-vous et vous devez obtenir la situation telle que représentée par l
 +Administration avec un rapport.>file://figures/ReportDraft.png|width=85|label=adminReportDraft+
 
 
-!!!!Gestion des posts
+!!Gestion des posts
 
 Nous pouvons maintenant mettre en place un CRUD (Create Read Update Delete) permettant de gérer les posts. Pour cela, nous allons ajouter une colonne (instance ==MACommandColumn==) au rapport qui regroupera les différentes opérations utilisant ==addCommandOn:==.
 
@@ -475,7 +476,7 @@ Identifiez-vous à nouveau et vous devez obtenir la situation telle que représe
 +Ajout d'un post.>file://figures/RapportNewLookActions.png|width=75|label=RapportNewLookActions+
 
 
-!!!!Implémentation des actions CRUD
+!!Implémentation des actions CRUD
 
 A chaque action (Create/Read/Update/Delete) correspond une méthode de l'objet ==TBPostsReport==. Nous allons maintenant les implémenter. Un formulaire personnalisé est construit en fonction de l'opération demandé (il n'est pas utile par exemple d'avoir un bouton "Sauver" alors que l'utilisateur veut simplement lire le post).
 
@@ -551,7 +552,7 @@ TBBlogTest >> testRemoveBlogPost
     self assert: blog size equals: 0
 ]]]
 
-!!!!Gérer le problème du rafraîchissement des données
+!!Gérer le problème du rafraîchissement des données
 
 Les méthodes ==TBPostsReport>>addPost:== et ==TBPostsReport>>deletePost:== font bien leur travail mais les données à l'écran ne sont pas mises à jour. Il faut donc rafraichir la liste des posts car il y a un décalage entre les données en mémoire et celles stockées dans la base de données.
 
@@ -578,7 +579,7 @@ TBPostsReport >> deletePost: aPost
 
 Le formulaire est fonctionnel maintenant et gère même les contraintes de saisie c'est-à-dire que le formulaire assure par exemple que les champs déclarés comme obligatoire dans les descriptions Magritte sont bien renseignés.
 
-!!!!Amélioration de l'apparence du formulaire
+!!Amélioration de l'apparence du formulaire
 
 Pour tirer partie de Bootstrap, nous allons modifier les définitions Magritte. Tout d'abord, spécifions que le rendu du formulaire doit se baser sur Bootstrap.
 
@@ -650,7 +651,7 @@ Le formulaire d'édition d'un post doit maintenant ressembler à celui de la fig
 +Formulaire d'ajout d'un post avec Bootstrap.>file://figures/AddAPostBootstrap.png|width=85|label=addAPostBootstrap+
 
 
-!!!Gestion de Session
+!!Gestion de session
 
 Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants. Une session est pratique pour gérer les informations de l'utilisateur en cours (identifié).  Nous allons voir comment nous l'utilisons pour gérer une connexion.
 
@@ -740,7 +741,7 @@ TBApplicationRootComponent class >> initialize
 
 Pensez à exécuter cette méthode via ==TBApplicationRootComponent initialize== avant de tester à nouveau l'application.
 
-!!!Améliorations possibles
+!!Améliorations possibles
 
 - Ajouter un bouton "Déconnexion"
 - gérer plusieurs comptes administrateur ce qui nécessite une amélioration des sessions qui devront conserver l'identification de l'utilisateur courant
