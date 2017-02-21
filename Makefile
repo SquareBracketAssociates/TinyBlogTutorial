@@ -1,6 +1,8 @@
 MAIN = book
 CHAPTERS = \
-	Chapters/Exo-W1-TinyBlog-Model-FR \
+	Chapters/Chap01-TinyBlog-Model-FR \
+	Chapters/Chap02-TinyBlog-ModelExtensionTests-FR \
+	Chapters/Chap09-SeasideREST \
 
 
 OUTPUTDIRECTORY = build

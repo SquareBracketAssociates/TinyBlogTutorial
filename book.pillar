@@ -1,2 +1,6 @@
-${inputFile:Chapters/Exo-W1-TinyBlog-Model-FR.pillar}$
+${inputFile:Chapters/Chap01-TinyBlog-Model-FR.pillar}$
+
+${inputFile:Chapters/Chap02-TinyBlog-ModelExtensionTests-FR.pillar}$
+
+${inputFile:Chapters/Chap09-SeasideREST.pillar}$
 
