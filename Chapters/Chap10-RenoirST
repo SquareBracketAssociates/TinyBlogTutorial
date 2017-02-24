@@ -77,7 +77,7 @@ TBPostComponent >> renderContentOn: html
 Vous pouvez maintenant modifier le style de ces éléments dans la méthode ==stylesheet==. Commencez par fixer la taille du titre. Elle est fixée à 200% de la taille par défaut dans le navigateur.
 
 [[[
-styleSheet
+TBApplicationRootComponent >> styleSheet
 	^(CascadingStyleSheetBuilder new 
 		declareRuleSetFor: [ :selector | selector paragraph class: 'title' ]
 			with: [ :style | style fontSize: 200 percent ];
@@ -87,7 +87,7 @@ styleSheet
 Le sous-titre est écrit en italique et le contenu est justifié.
 
 [[[
-styleSheet
+TBApplicationRootComponent >> styleSheet
 	^(CascadingStyleSheetBuilder new 
 		declareRuleSetFor: [ :selector | selector paragraph class: 'title' ]
 			with: [ :style | style fontSize: 200 percent ];
@@ -101,7 +101,7 @@ styleSheet
 Le titre peut être amélioré en faisant en sorte que le premier caractère soit mis en valeur. Il sera plus grand et obligatoirement écrit à l'aide d'une lettre majuscule. Le titre est souligné à l'aide d'un trait fin. 
 
 [[[
-styleSheet
+TBApplicationRootComponent >> styleSheet
 	^(CascadingStyleSheetBuilder new 
 		declareRuleSetFor: [ :selector | selector paragraph class: 'title' ]
 			with: [ :style | style fontSize: 200 percent ];
@@ -126,7 +126,8 @@ styleSheet
 
 A ce stade, il est important de se poser la question de la maintenance de ce code. Il est évident que nous pouvons refactoriser le code en regroupant la définition des attributs.
 
-styleSheet
+[[[
+TBApplicationRootComponent >> styleSheet
 	^(CascadingStyleSheetBuilder new 
 		declareRuleSetFor: [ :selector | selector paragraph class: 'title' ]
 			with: [ :style | 
@@ -147,3 +148,83 @@ styleSheet
 		declareRuleSetFor: [ :selector | selector paragraph class: 'content' ]
 			with: [ :style | style textAlign: CssConstants justify ];
 		build) asString
+]]]
+
+Commencez par extraire les définitions des différents styles et à les transformer en méthodes. Vous pouvez les classer dans un protocole ==styles==.
+
+[[[
+TBApplicationRootComponent >> titleStyleOn: aStyle.
+	aStyle 
+		fontSize: 200 percent;
+		borderBottomStyle: CssConstants solid;
+		borderWidth: 1px;
+		borderColor: CssSVGColors black;
+		yourself
+
+TBApplicationRootComponent >> titleFirstLetterStyleOn: aStyle.
+	aStyle 
+		fontSize: 150 percent;
+		textTransform: CssConstants capitalize;
+		yourself
+
+TBApplicationRootComponent >> paragraphSubtitleStyleOn: aStyle
+	aStyle
+		fontStyle: CssConstants italic;
+		yourself
+
+TBApplicationRootComponent >> paragraphContentStyleOn: aStyle
+	aStyle 
+		textAlign: CssConstants justify;
+		yourself
+]]]
+
+Vous pouvez donc simplifier la méthode ==styleSheet== qui devient:
+
+[[[
+TBApplicationRootComponent >> styleSheet
+	^(CascadingStyleSheetBuilder new 
+		declareRuleSetFor: [ :selector | selector paragraph class: 'title' ]
+			with: [ :style | self titleStyleOn: style ];
+		declareRuleSetFor: [ :selector | (selector paragraph class: 'title') firstLetter ]
+			with: [ :style | self titleFirstLetterStyleOn: style ];
+		declareRuleSetFor: [ :selector | selector paragraph class: 'subtitle' ]
+			with: [ :style | self paragraphSubtitleStyleOn: style ];
+		declareRuleSetFor: [ :selector | selector paragraph class: 'content' ]
+			with: [ :style | self paragraphContentStyleOn: style ];
+		build) asString	
+]]]
+
+Poursuivez votre travail de refactorisation en extrayant les méthodes chargées d'appliquer les styles définis.
+
+[[[
+TBApplicationRootComponent >> applyTitleStyleOn: aSheet
+	^aSheet 
+		declareRuleSetFor: [ :selector | selector paragraph class: 'title' ]
+			with: [ :style | self titleStyleOn: style ];
+		declareRuleSetFor: [ :selector | (selector paragraph class: 'title') firstLetter ]
+			with: [ :style | self titleFirstLetterStyleOn: style ]
+
+TBApplicationRootComponent >> applyParagraphSubtitleStyleOn: aSheet
+	^aSheet declareRuleSetFor: [ :selector | selector paragraph class: 'subtitle' ]
+			with: [ :style | self paragraphSubtitleStyleOn: style ]
+
+TBApplicationRootComponent >> applyParagraphContentStyleOn: aSheet
+	^aSheet declareRuleSetFor: [ :selector | selector paragraph class: 'content' ]
+			with: [ :style | self paragraphContentStyleOn: style ]	
+]]]
+
+Il ne vous reste plus qu'à modifier la méthode ==styleSheet== pour qu'elle prennent en compte ces nouvelles méthodes.
+
+[[[
+TBApplicationRootComponent >> styleSheet
+	| styles |
+	styles := CascadingStyleSheetBuilder new.
+	self 
+		applyTitleStyleOn: styles;
+		applyParagraphSubtitleStyleOn: styles;
+		applyParagraphContentStyleOn: styles.
+	
+	^styles build asString
+]]]
+
+Le résultat est beaucoup plus lisible et surtout bien plus facile à maintenir. Des styles peut être définis et utilisés sur différents éléments de la feuilles de styles.
