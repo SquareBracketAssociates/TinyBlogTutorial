@@ -52,3 +52,78 @@ Sections inversées: elles s'affichent si la clé n'existe pas
 
 Templates partiels (sous modèles)
 ---------------------------------
+
+Ajouter un footer
+
+L'objectif est d'ajouter un bas de page à l'écran principal de TinyBlog. Cette zone est généralement destiné à recevoir les mentions légales d'un site, des liens, les noms des auteurs et de nombreuses autres informations. Pour constituer ces blocs de texte, le framework Mustache va être particulièrement utile puisqu'il va nous permettre de mixer aisément de nombreuses chaines de caractères avec des balises HTML et ceci, sans avoir recours à une pénible manipulation des chaines de caractères. 
+
+Ajouter un bas de page
+
+Pour mettre en place le bas de page, il nous faut tout d'abord ajouter la méthode ==renderFooterOn:== chargée de l'affichage du bas de page. Vous devez bien évidemment modifier la méthode ==renderContentOn:== de la classe ==TBPostListComponent== en ajoutant l'appel à la méthode ==renderFooterOn:==.
+
+[[[
+TBPostListComponent >> renderFooterOn: html
+ 	html div class: 'footer'; with: [
+		html text: 'I''am the footer!'
+	].
+
+renderContentOn: html
+	super renderContentOn: html.
+	html render: (TBAuthentificationComponent from: self).
+	html
+		tbsContainer: [ 
+			html tbsRow
+				showGrid;
+				with: [ 
+					self renderCategoryColumnOn: html.
+					self renderPostColumnOn: html
+			]. 
+			self renderFooterOn: html 		
+		]
+]]]
+
+Le style de la ==div== contenant le bas de page a été surchargé à l'aide d'une classe CSS nommée ==footer==. Celle ci va nous permettre de spécifier le style d'affichage du bas de page. Pour cela, ajoutez un appel à la méthode ==applyFooterStyleOn:== à la déclaration de la feuille de styles.
+
+[[[
+TBApplicationRootComponent >> styleSheet
+	| styles |
+	styles := CascadingStyleSheetBuilder new.
+	self 
+		applyTitleStyleOn: styles;
+		applyParagraphSubtitleStyleOn: styles;
+		applyParagraphContentStyleOn: styles;
+		applyFooterStyleOn: styles.
+	^styles build asString
+]]]
+
+Cette méthode sélectionne les éléments de la classe ==footer== et applique sur eux le style définir par une autre méthode nommée ==footerStyleOn:==. 
+
+[[[
+TBApplicationRootComponent >> applyFooterStyleOn: aSheet
+	^aSheet declareRuleSetFor: [ :selector | selector div class: 'footer' ]
+			with: [ :style | self footerStyleOn: style ]
+]]]
+
+La méthode ==footerStyleOn:== fixe les attributs CSS afin de placer la ==div== en bas de la page. Un fond gris est appliqué et le texte est centré.
+
+[[[
+TBApplicationRootComponent >> footerStyleOn: aStyle
+	aStyle
+		position: CssConstants absolute;
+		bottom: 0 pixels;
+		paddingTop: 25 pixels;
+		height: 150 pixels;
+		width: 100 percent;
+		backgroundColor: (CssRGBColor red: 239 green: 239 blue: 239);
+		
+		textAlign: CssConstants center;
+		yourself
+]]]
+
+
+-------------------------------------------
+Made by . 
+
+Powered by Pharo, Seaside and Bootstrap
+
+Login
