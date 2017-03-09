@@ -1,0 +1,54 @@
+!Utiliser des modèles de mise en page avec Mustache
+
+Poursuivons l'amélioration de TinyBlog en nous intéressant à l'utilisation de modèles pour l'affichage des données de TinyBlog.
+
+[[[
+'{{language}} is cool' asMustacheTemplate value: { 
+    'language' -> 'Pharo' 
+} asDictionary
+]]]
+
+{{{<b>Pharo</b>}}} : pour ne pas obtenir une séquence de caractères encodée ('<b>Pharo</b> is cool') sinon '&lt;b&gt;Pharo&lt;/b&gt; is cool'
+
+Affichage conditionnel
+----------------------
+'Pharo {{#visible}}is cool{{/visible}}' asMustacheTemplate value: { 
+	'language' -> '<b>Pharo</b>'.
+	'visible' -> true 
+} asDictionary.
+
+Affiche autant de fois qu'il y a de membres dans la collection du contexte
+--------------------------------------------------------------------------
+'Pharo is {{#list}}wow {{/list}}' asMustacheTemplate value: { 
+	'list' -> { 1. 2. 3.}
+} asDictionary.
+
+Affichage de n éléments
+------------------------
+'My prefered programming languages are {{#list}}{{language}} {{/list}}' asMustacheTemplate value: { 
+	'list' -> { 
+		{ 'language' -> 'Pharo'} asDictionary.
+		{ 'language' -> 'Smalltalk'} asDictionary.
+		{ 'language' -> 'Forth'} asDictionary.
+	}
+} asDictionary.
+
+Exécution de blocs de code
+--------------------------
+'{{language}} is great' asMustacheTemplate value: { 'language' -> [ 'pharo' asUppercase ] } asDictionary
+
+Les blocs peuvent recevoir un paramètre
+---------------------------------------
+'{{#wrapped}} {{name}} is awesome {{/wrapped}}' asMustacheTemplate
+    value: {
+        'name' -> 'Willy'.
+        'wrapped' -> [ :render | '<b>', render value, '</b>' ] } asDictionary.
+
+Sections inversées: elles s'affichent si la clé n'existe pas
+------------------------------------------------------------
+'list{{^ list }} is {{/ list}}displayed' asMustacheTemplate
+    value: { 'list' -> { 1 } } asDictionary.
+--> 'listdisplayed'
+
+Templates partiels (sous modèles)
+---------------------------------
