@@ -104,7 +104,14 @@ renderDateTodayOn: html
 	html text: ('The date today is {{today}}.' asMustacheTemplate value: { 'today' -> [ Date today ] } asDictionary)
 ]]]
 
+Pour que la date apparaisse sur la page, il vous faut ajoute l'appel à la méthode ==renderFooterOn:==.
 
+renderFooterOn: html
+ 	html div class: 'footer'; with: [
+		self renderDateTodayOn: html.
+		html break.
+		self renderPoweredByOn: html.
+	]
 
 -------------------------------------------------------------------------------
 
