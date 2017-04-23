@@ -7,7 +7,9 @@ CHAPTERS = \
 	Chapters/Chap05-TinyBlog-Seaside-FR \
 	Chapters/Chap06-TinyBlog-SeasideAdmin-FR \
 	Chapters/Chap09-SeasideREST \
-	Chapters/Chap10-TinyBlog-Deployment-FR
+	Chapters/Chap10-TinyBlog-RenoirST-FR \
+	Chapters/Chap11-TinyBlog-Mustache-FR \
+	Chapters/Chap12-TinyBlog-Deployment-FR
 
 
 OUTPUTDIRECTORY = build

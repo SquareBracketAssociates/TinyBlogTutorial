@@ -12,7 +12,9 @@ ${inputFile:Chapters/Chap06-TinyBlog-SeasideAdmin-FR.pillar}$
 
 ${inputFile:Chapters/Chap09-SeasideREST.pillar}$
 
-${inputFile:Chapters/Chap09-SeasideREST.pillar}$
+${inputFile:Chapters/Chap10-TinyBlog-RenoirST-FR.pillar}$
 
-${inputFile:Chapters/Chap10-TinyBlog-Deployment-FR.pillar}$
+${inputFile:Chapters/Chap11-TinyBlog-Mustache-FR.pillar}$
+
+${inputFile:Chapters/Chap12-TinyBlog-Deployment-FR.pillar}$
 
