@@ -31,7 +31,7 @@ TBPostListComponent >> renderContentOn: html
 					self renderCategoryColumnOn: html.
 					self renderPostColumnOn: html
 			]. 
-			self renderFooterOn: html 		
+			self renderFooterOn: html
 		]
 ]]]
 
@@ -78,7 +78,40 @@ Pour ajouter des élément dans le bas de page, vous allez utiliser certains fon
 
 !!! Utiliser du texte statique
 
-Le premier élément doit afficher les principales technologies utilisées dans TinyBlog. Pour cela, définissez une méthode ==renderPoweredByOn:== dans la classe TBScreenComponent. Un dictionaire contient les données qui sont insérées au sein du modèle. Celui-ci est définit par une chaîne de caractères où les éléments devant être substitués sont encadrés par les caractères "{{" et "}}". Par défaut, Mustache utilise les caractères spéciaux d'HTML pour assurer un rendu web optimal (par exemple '<b>Pharo</b>' est transformé en '&lt;b&gt;Pharo&lt;/b&gt;'). Si vous ne voulez pas les utiliser, vous devez encadrer les éléments par les caractères "{{{" et "}}}".
+Le premier élément doit afficher les principales technologies utilisées dans TinyBlog. Pour cela, définissez une méthode ==renderPoweredByOn:== dans la classe TBScreenComponent. Un dictionaire contient les données qui sont insérées au sein du modèle. Celui-ci est définit par une chaîne de caractères où les éléments devant être substitués sont encadrés par les caractères ==\{\{== et ==\}\}==. Par défaut, Mustache utilise les caractères spéciaux d'HTML pour assurer un rendu web optimal (par exemple =='<b>Pharo</b>'== est transformé en =='&lt;b&gt;Pharo&lt;/b&gt;'==). Si vous ne voulez pas les utiliser, vous devez encadrer les éléments par les caractères ==\{\{\{== et ==\}\}\}==.
+
+
+
+==\{\{\{<b>Pharo</b>\}\}\}== : pour ne pas obtenir une séquence de caractères encodée ('<b>Pharo</b> is cool') sinon =='&lt;b&gt;Pharo&lt;/b&gt; is cool'==
+
+!!! Affichage conditionnel
+
+[[[
+'Pharo {{#visible}}is cool{{/visible}}' asMustacheTemplate value: { 
+	'language' -> '<b>Pharo</b>'.
+	'visible' -> true 
+} asDictionary.
+]]]
+
+Affiche autant de fois qu'il y a de membres dans la collection du contexte
+[[[
+'Pharo is {{#list}}wow {{/list}}' asMustacheTemplate value: { 
+	'list' -> { 1. 2. 3.}
+} asDictionary.
+]]]
+
+
+!!! Affichage de n éléments
+
+[[[
+'My prefered programming languages are {{#list}}{{language}} {{/list}}' asMustacheTemplate value: { 
+	'list' -> { 
+		{ 'language' -> 'Pharo'} asDictionary.
+		{ 'language' -> 'Smalltalk'} asDictionary.
+		{ 'language' -> 'Forth'} asDictionary.
+	}
+} asDictionary.
+]]]
 
 [[[
 TBScreenComponent >> renderPoweredByOn: html
@@ -128,38 +161,6 @@ TBScreenComponent >> renderFooterOn: html
 ]]]
 
 
-{{{<b>Pharo</b>}}} : pour ne pas obtenir une séquence de caractères encodée ('<b>Pharo</b> is cool') sinon '&lt;b&gt;Pharo&lt;/b&gt; is cool'
-
-!!! Affichage conditionnel
-
-[[[
-'Pharo {{#visible}}is cool{{/visible}}' asMustacheTemplate value: { 
-	'language' -> '<b>Pharo</b>'.
-	'visible' -> true 
-} asDictionary.
-]]]
-
-Affiche autant de fois qu'il y a de membres dans la collection du contexte
-[[[
-'Pharo is {{#list}}wow {{/list}}' asMustacheTemplate value: { 
-	'list' -> { 1. 2. 3.}
-} asDictionary.
-]]]
-
-
-!!! Affichage de n éléments
-
-[[[
-'My prefered programming languages are {{#list}}{{language}} {{/list}}' asMustacheTemplate value: { 
-	'list' -> { 
-		{ 'language' -> 'Pharo'} asDictionary.
-		{ 'language' -> 'Smalltalk'} asDictionary.
-		{ 'language' -> 'Forth'} asDictionary.
-	}
-} asDictionary.
-]]]
-
-
 !!! Exécution de blocs de code
 
 [[[
@@ -187,4 +188,5 @@ Elles s'affichent si la clé n'existe pas
 ]]]
 
 !!! Templates partiels (sous modèles)
+
 
