@@ -2,11 +2,14 @@
 
 Les feuilles de styles (Cascading Style Sheet) dont devenues un élément incontournable du web. Elles permettent de séparer le fond de la forme en fournissant de puissants outils destinés à gérer l'apparence d'une page HTML. Grâce à elles, il n'est plus utile de glisser des attributs définissant l'apparence d'un élément au sein même des balises HTML. L'ensemble des ces attributs est déporté au sein d'une ou plusieurs feuilles de styles attachées ou intégrées au document HTML. Il est ainsi aisé de modifier l'apparence des titres, de choisir la justification d'un paragraphe ou encore la couleur des boutons.
 
+
 Pharo dispose d'un framework dédié à la définition de feuilles de styles. Il s'agit de RenoirST. Grâce à lui, vous allez définir les attributs CSS mais sans jamais manipuler les instructions CSS. Vous n'utiliserez donc que Pharo.
+
+Notez que l'utilisation de RenoirST est optionel et que vous pouvez aussi utiliser des fichiers CSS de manière plus traditionelle.
 
 !! Installation de RenoirSt
 
-Le framework ==RenoirSt== est disponible dans le catalogue Pharo. Il vous suffit donc d'ouvrir le Catalog Browser et de sélectionner RenoirSt. Pour Développer avec Seaside, il est recommandé d'installer également ==RenoirStPlusSeaside== qui comprend RenoirSt ainsi que le code nécessaire à une intégration correcte au serveur d'applications de Pharo.
+Le framework RenoirSt est disponible dans le catalogue Pharo. Il vous suffit donc d'ouvrir le Catalog Browser et de sélectionner RenoirSt. Pour Développer avec Seaside, il est recommandé d'installer également ==RenoirStPlusSeaside== qui comprend RenoirSt ainsi que le code nécessaire à une intégration correcte au serveur d'applications de Pharo.
 
 !! Principe de fonctionnement
 
@@ -41,10 +44,10 @@ Vous allez maintenant améliorer l'apparence visuelle de TinyBlog en modifiant l
 Pour éviter que la feuille de style soit reconstruite systématiquement à chaque appel de la méthode ==style== de ==TBApplicationRootComponent==, nous allons utiliser une variable d'instance afin de la mettre en cache. Pour cela, ajoutez la variable d'instance ==css== à ==TBApplicationRootComponent==.
 
 [[[
-  WAComponent subclass: #TBApplicationRootComponent
-	  instanceVariableNames: 'main css'
-	  classVariableNames: ''
-	  category: 'TinyBlog-Components'
+WAComponent subclass: #TBApplicationRootComponent
+	instanceVariableNames: 'main css'
+	classVariableNames: ''
+	category: 'TinyBlog-Components'
 ]]]
 
 La méthode ==TBApplicationRootComponent >> styleSheet== contiendra la définition de la feuille de styles et est appelée par la méthode ==initialize==. Pour l'instant, contentez vous de retourner une chaine vide.
@@ -223,7 +226,6 @@ TBApplicationRootComponent >> styleSheet
 		applyTitleStyleOn: styles;
 		applyParagraphSubtitleStyleOn: styles;
 		applyParagraphContentStyleOn: styles.
-	
 	^styles build asString
 ]]]
 

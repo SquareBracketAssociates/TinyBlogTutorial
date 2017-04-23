@@ -11,7 +11,6 @@ CHAPTERS = \
 	Chapters/Chap11-TinyBlog-Mustache-FR \
 	Chapters/Chap12-TinyBlog-Deployment-FR
 
-
 OUTPUTDIRECTORY = build
 LATEXTEMPLATE = support/templates/main.latex.mustache
 LATEXCHAPTERTEMPLATE = support/templates/chapter.latex.mustache
