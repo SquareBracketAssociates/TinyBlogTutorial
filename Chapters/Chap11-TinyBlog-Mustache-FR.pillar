@@ -1,13 +1,12 @@
-! Utiliser des modèles de mise en page avec Mustache (draft)
+!Utiliser des modèles de mise en page avec Mustache
 
-Poursuivons l'amélioration de TinyBlog en nous intéressant à l'utilisation de modèles pour l'affichage des données de TinyBlog.
-L'idée de ce chapitre est de vous montrer comment on peut utiliser Mustache pour l'utilisation de templates. 
+Poursuivons l'amélioration de TinyBlog en nous intéressant à l'utilisation de modèles pour l'affichage des données de TinyBlog. Les modèles sont particulièrement utiles pour le développement web car ils permettent de mixer aisément des chaînes de caractères avec des balises HTML et ceci, sans avoir recours à de toujours pénibles manipulations des chaînes de caractères. Ils facilitent également la lecture et la maintenance du code. Ils sont très utiles pour la localisation des applications. Si votre logiciel doit être traduit en plusieurs langues, vous apprécierez forcément les modèles.
 
-!! Ajouter un footer
+Parmi les technologies web, il existe de nombreux moteurs de gestion des modèles. Avec Pharo, vous disposez de l'adaptation de Mustache (https://mustache.github.io/) qui est un produit reconnu. L'installation est rapide puisque le framework Mustache est disponible dans le catalogue Pharo.
 
-L'objectif est d'ajouter un bas de page à l'écran principal de TinyBlog. Cette zone est généralement destiné à recevoir les mentions légales d'un site, des liens, les noms des auteurs et de nombreuses autres informations. Pour constituer ces blocs de texte, le framework Mustache va être particulièrement utile puisqu'il va nous permettre de mixer aisément de nombreuses chaines de caractères avec des balises HTML et ceci, sans avoir recours à une pénible manipulation des chaines de caractères. 
+!!Ajouter un bas de page
 
-!! Ajouter un bas de page
+L'objectif est d'ajouter un bas de page à l'écran principal de TinyBlog. Cette zone est généralement destiné à recevoir les mentions légales d'un site, des liens, les noms des auteurs et de nombreuses autres informations.
 
 Pour mettre en place le bas de page, il nous faut tout d'abord ajouter la méthode ==renderFooterOn:== chargée de l'affichage du bas de page. Vous devez bien évidemment modifier la méthode ==renderContentOn:== de la classe ==TBPostListComponent== en ajoutant l'appel à la méthode ==renderFooterOn:==.
 
@@ -15,11 +14,8 @@ Pour mettre en place le bas de page, il nous faut tout d'abord ajouter la métho
 TBPostListComponent >> renderFooterOn: html
  	html div class: 'footer'; with: [
 		html text: 'I''am the footer!'
-	].
-]]]
+	]
 
-
-[[[
 TBPostListComponent >> renderContentOn: html
 	super renderContentOn: html.
 	html render: (TBAuthentificationComponent from: self).
@@ -31,11 +27,11 @@ TBPostListComponent >> renderContentOn: html
 					self renderCategoryColumnOn: html.
 					self renderPostColumnOn: html
 			]. 
-			self renderFooterOn: html
+			self renderFooterOn: html 		
 		]
 ]]]
 
-Le style de la ==div== contenant le bas de page a été modifié à l'aide d'une classe CSS nommée ==footer==. Celle ci va nous permettre de spécifier le style d'affichage du bas de page. Pour cela, ajoutez un appel à la méthode ==applyFooterStyleOn:== à la déclaration de la feuille de styles.
+Le style de la ==div== contenant le bas de page est modifié à l'aide d'une classe CSS nommée ==footer==. Celle ci nous permet de spécifier le style d'affichage du bas de page. Pour cela, ajoutez un appel à la méthode ==applyFooterStyleOn:== à la déclaration de la feuille de styles.
 
 [[[
 TBApplicationRootComponent >> styleSheet
@@ -49,7 +45,7 @@ TBApplicationRootComponent >> styleSheet
 	^styles build asString
 ]]]
 
-Cette méthode sélectionne les éléments de la classe ==footer== et applique sur eux le style défini par une autre méthode nommée ==footerStyleOn:==. 
+Cette nouvelle méthode sélectionne les éléments de la classe ==footer== et applique sur eux le style défini par une autre méthode nommée ==footerStyleOn:==. 
 
 [[[
 TBApplicationRootComponent >> applyFooterStyleOn: aSheet
@@ -67,54 +63,21 @@ TBApplicationRootComponent >> footerStyleOn: aStyle
 		paddingTop: 25 pixels;
 		height: 150 pixels;
 		width: 100 percent;
-		backgroundColor: (CssRGBColor red: 239 green: 239 blue: 239);
+		backgroundColor: (CssRGBColor red: 239 green: 239 blue: 239);	
 		textAlign: CssConstants center;
 		yourself
 ]]]
 
-!! Ajouter du contenu dans le bas de page
+!!Ajouter du contenu dans le bas de page
 
-Pour ajouter des élément dans le bas de page, vous allez utiliser certains fonctionnalités de Mustache qui facilitent grandement la substitution d'éléments au sein de modèles. Bien évidemment, vous pourriez également utilisation les méthodes de manipulation de chaînes de caractères présentes dans Pharo mais le travail serait bien plus complexe et surtout bien moins lisible. Utiliser Mustage simplifie donc grandement la maintenance de votre code.
+Pour ajouter des élément dans le bas de page, vous allez utiliser certains fonctionnalités de Mustache qui facilitent grandement la substitution d'éléments au sein de modèles. Avec Mustache, il est aîsé de manipuler des éléments textuels statiques mais également des textes générés dynamiquement.
 
-!!! Utiliser du texte statique
+!!!Utiliser du texte statique
 
-Le premier élément doit afficher les principales technologies utilisées dans TinyBlog. Pour cela, définissez une méthode ==renderPoweredByOn:== dans la classe TBScreenComponent. Un dictionaire contient les données qui sont insérées au sein du modèle. Celui-ci est définit par une chaîne de caractères où les éléments devant être substitués sont encadrés par les caractères ==\{\{== et ==\}\}==. Par défaut, Mustache utilise les caractères spéciaux d'HTML pour assurer un rendu web optimal (par exemple =='<b>Pharo</b>'== est transformé en =='&lt;b&gt;Pharo&lt;/b&gt;'==). Si vous ne voulez pas les utiliser, vous devez encadrer les éléments par les caractères ==\{\{\{== et ==\}\}\}==.
-
-
-
-==\{\{\{<b>Pharo</b>\}\}\}== : pour ne pas obtenir une séquence de caractères encodée ('<b>Pharo</b> is cool') sinon =='&lt;b&gt;Pharo&lt;/b&gt; is cool'==
-
-!!! Affichage conditionnel
+Le premier modèle doit afficher les principales technologies utilisées dans TinyBlog. Pour cela, définissez une méthode ==renderPoweredByOn:== dans la classe ==TBPostListComponent==. Un dictionaire contient les données qui sont insérées au sein du modèle. Celui-ci est définit par une chaîne de caractères où les éléments devant être substitués sont encadrés par les caractères "{{" et "}}". Par défaut, Mustache utilise les caractères spéciaux d'HTML pour assurer un rendu web optimal (par exemple '<b>Pharo</b>' est transformé en '&lt;b&gt;Pharo&lt;/b&gt;'). Si vous ne voulez pas les utiliser, vous devez encadrer les éléments par les caractères "{{{" et "}}}".
 
 [[[
-'Pharo {{#visible}}is cool{{/visible}}' asMustacheTemplate value: { 
-	'language' -> '<b>Pharo</b>'.
-	'visible' -> true 
-} asDictionary.
-]]]
-
-Affiche autant de fois qu'il y a de membres dans la collection du contexte
-[[[
-'Pharo is {{#list}}wow {{/list}}' asMustacheTemplate value: { 
-	'list' -> { 1. 2. 3.}
-} asDictionary.
-]]]
-
-
-!!! Affichage de n éléments
-
-[[[
-'My prefered programming languages are {{#list}}{{language}} {{/list}}' asMustacheTemplate value: { 
-	'list' -> { 
-		{ 'language' -> 'Pharo'} asDictionary.
-		{ 'language' -> 'Smalltalk'} asDictionary.
-		{ 'language' -> 'Forth'} asDictionary.
-	}
-} asDictionary.
-]]]
-
-[[[
-TBScreenComponent >> renderPoweredByOn: html
+TBPostListComponent >> renderPoweredByOn: html
 	html text: ('Powered by {{language}}, {{framework}} and {{tool}}.' asMustacheTemplate value: { 
 		'language' -> 'Pharo'. 
 		'framework' -> 'Seaside'.
@@ -125,34 +88,40 @@ TBScreenComponent >> renderPoweredByOn: html
 Vous pouvez maintenant modifier la méthode ==renderFooterOn:== afin d'afficher le texte sur la page.
 
 [[[
-TBScreenComponent >> renderFooterOn: html
+TBPostListComponent >> renderFooterOn: html
  	html div class: 'footer'; with: [
 		self renderPoweredByOn: html.
 	]
 ]]]
 
-!!! Utiliser du texte généré dynamiquement
+!!!Utiliser du texte généré dynamiquement
 
-Avec Mustache, il est également possible de remplacer des éléments au sein d'un modèle à l'aide de texte généré dynamiquement. Par exemple, à l'aide de la méthode ==renderDateTodayOn:==, TinyBlog peut construire un texte contenant la date du jour. Le code exécuté doit être placé entre crochets au sein du dictionnaire définissant les données à insérer.
+Avec Mustache, il est également possible de remplacer des éléments au sein d'un modèle à l'aide d'un texte généré dynamiquement. Ici par exemple, la méthode ==renderDateTodayOn:== permet à TinyBlog de construire un texte contenant la date du jour. Le code exécuté doit être placé entre crochets au sein du dictionnaire définissant les données à insérer.
 
 [[[
-TBScreenComponent >> renderDateTodayOn: html
-	html 
-		text: ('The date today is {{today}}.' asMustacheTemplate 
-		value: { 'today' -> [ Date today ] } asDictionary)
+TBPostListComponent >> renderDateTodayOn: html
+	html text: ('The date today is {{today}}.' asMustacheTemplate value: { 'today' -> [ Date today ] } asDictionary)
 ]]]
 
-Pour que la date apparaisse sur la page, il vous faut ajoute l'appel à la méthode ==renderFooterOn:==.
+Pour que la date apparaisse sur la page, il vous faut ajouter l'appel à la méthode ==renderFooterOn:==.
 
 [[[
-TBScreenComponent >> renderFooterOn: html
-	html div class: 'footer'; with: [
+TBPostListComponent >> renderFooterOn: html
+ 	html div class: 'footer'; with: [
 		self renderDateTodayOn: html.
 		html break.
 		self renderPoweredByOn: html.
 	]
 ]]]
 
+!!Conclusion
+
+Nous n'avons ici qu'effleurer le potentiel de Mustache. Pour en savoir plus et explorer toutes ses possibilités, nous vous invitons à consulter le chapitre qui lui est consacré au sein du livre "Enterprise Pharo".
+
+
+Documentation compléte sur Mustache (dans le livre Enterprise Pharo)
+
+-------------------------------------------------------------------------------
 
 [[[
 '{{language}} is cool' asMustacheTemplate value: { 
@@ -160,33 +129,34 @@ TBScreenComponent >> renderFooterOn: html
 } asDictionary
 ]]]
 
+{{{<b>Pharo</b>}}} : pour ne pas obtenir une séquence de caractères encodée ('<b>Pharo</b> is cool') sinon '&lt;b&gt;Pharo&lt;/b&gt; is cool'
 
-!!! Exécution de blocs de code
+Affichage conditionnel
+----------------------
+'Pharo {{#visible}}is cool{{/visible}}' asMustacheTemplate value: { 
+	'language' -> '<b>Pharo</b>'.
+	'visible' -> true 
+} asDictionary.
 
-[[[
-'{{language}} is great' asMustacheTemplate value: { 'language' -> [ 'pharo' asUppercase ] } asDictionary
-]]]
+Affiche autant de fois qu'il y a de membres dans la collection du contexte
+--------------------------------------------------------------------------
+'Pharo is {{#list}}wow {{/list}}' asMustacheTemplate value: { 
+	'list' -> { 1. 2. 3.}
+} asDictionary.
 
 
 Les blocs peuvent recevoir un paramètre
-[[[
+---------------------------------------
 '{{#wrapped}} {{name}} is awesome {{/wrapped}}' asMustacheTemplate
     value: {
         'name' -> 'Willy'.
         'wrapped' -> [ :render | '<b>', render value, '</b>' ] } asDictionary.
-]]]
 
-
-!!! Sections inversées 
-
-Elles s'affichent si la clé n'existe pas
-
-[[[
+Sections inversées: elles s'affichent si la clé n'existe pas
+------------------------------------------------------------
 'list{{^ list }} is {{/ list}}displayed' asMustacheTemplate
     value: { 'list' -> { 1 } } asDictionary.
 --> 'listdisplayed'
-]]]
 
-!!! Templates partiels (sous modèles)
-
-
+Templates partiels (sous modèles)
+---------------------------------
