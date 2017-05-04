@@ -227,7 +227,7 @@ TBTeapotWebApp >> homePage
 
 Maintenant, la page d'accueil de l'application affiche bien une liste de lien vers les posts.
 
-!!Extensions possibles
+!!Amélioration possibles
 
 Cette application est un exemple pédagogique à travers lequel vous avez manipulé des collections, des flôts (Streams), etc. 
 

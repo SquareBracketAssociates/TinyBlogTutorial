@@ -6,7 +6,7 @@ Parmi les technologies web, il existe de nombreux moteurs de gestion des modèle
 
 !!Ajouter un bas de page
 
-L'objectif est d'ajouter un bas de page à l'écran principal de TinyBlog. Cette zone est généralement destiné à recevoir les mentions légales d'un site, des liens, les noms des auteurs et de nombreuses autres informations.
+L'objectif est d'ajouter un bas de page à l'écran principal de TinyBlog. Cette zone est généralement destinée à recevoir les mentions légales d'un site, des liens, les noms des auteurs et de nombreuses autres informations.
 
 Pour mettre en place le bas de page, il nous faut tout d'abord ajouter la méthode ==renderFooterOn:== chargée de l'affichage du bas de page. Vous devez bien évidemment modifier la méthode ==renderContentOn:== de la classe ==TBPostListComponent== en ajoutant l'appel à la méthode ==renderFooterOn:==.
 
@@ -68,13 +68,17 @@ TBApplicationRootComponent >> footerStyleOn: aStyle
 		yourself
 ]]]
 
++Le bas de page>file://figures/emptyfooter.png|width=75|label=nicer+
+
+Vous pouvez maintenant ajouter du contenu et pour cela, vous aller utiliser Mustache.
+
 !!Ajouter du contenu dans le bas de page
 
 Pour ajouter des élément dans le bas de page, vous allez utiliser certains fonctionnalités de Mustache qui facilitent grandement la substitution d'éléments au sein de modèles. Avec Mustache, il est aîsé de manipuler des éléments textuels statiques mais également des textes générés dynamiquement.
 
 !!!Utiliser du texte statique
 
-Le premier modèle doit afficher les principales technologies utilisées dans TinyBlog. Pour cela, définissez une méthode ==renderPoweredByOn:== dans la classe ==TBPostListComponent==. Un dictionaire contient les données qui sont insérées au sein du modèle. Celui-ci est définit par une chaîne de caractères où les éléments devant être substitués sont encadrés par les caractères "{{" et "}}". Par défaut, Mustache utilise les caractères spéciaux d'HTML pour assurer un rendu web optimal (par exemple '<b>Pharo</b>' est transformé en '&lt;b&gt;Pharo&lt;/b&gt;'). Si vous ne voulez pas les utiliser, vous devez encadrer les éléments par les caractères "{{{" et "}}}".
+Le premier modèle doit afficher les principales technologies utilisées dans TinyBlog. Pour cela, définissez une méthode ==renderPoweredByOn:== dans la classe ==TBPostListComponent==. Un dictionaire contient les données qui sont insérées au sein du modèle. Celui-ci est défini par une chaîne de caractères dans laquelle les éléments devant être substitués sont encadrés par les caractères "{{" et "}}". Par défaut, Mustache utilise les caractères spéciaux d'HTML pour assurer un rendu web optimal (par exemple '<b>Pharo</b>' est transformé en '&lt;b&gt;Pharo&lt;/b&gt;'). Si vous ne voulez pas les utiliser, vous devez encadrer les éléments par les caractères "{{{" et "}}}".
 
 [[[
 TBPostListComponent >> renderPoweredByOn: html
@@ -114,6 +118,8 @@ TBPostListComponent >> renderFooterOn: html
 	]
 ]]]
 
++Le bas de page>file://figures/footer.png|width=75|label=nicer+
+
 !!Conclusion
 
-Nous n'avons ici qu'effleurer le potentiel de Mustache. Pour en savoir plus et explorer toutes ses possibilités, nous vous invitons à consulter le chapitre qui lui est consacré au sein du livre "Enterprise Pharo".
+Nous n'avons ici qu'effleurer le potentiel de Mustache. Il simplifie réellement la construction d'éléments au sein d'une application web. Ce framework propose de nombreuses autres fonctionnalités. Pour en savoir plus et explorer toutes ses possibilités, nous vous invitons à consulter le chapitre qui lui est consacré au sein du livre "Enterprise Pharo".

@@ -1,19 +1,18 @@
 !Maîtriser les feuilles de styles avec RenoirSt
 
-Les feuilles de styles (Cascading Style Sheet) dont devenues un élément incontournable du web. Elles permettent de séparer le fond de la forme en fournissant de puissants outils destinés à gérer l'apparence d'une page HTML. Grâce à elles, il n'est plus utile de glisser des attributs définissant l'apparence d'un élément au sein même des balises HTML. L'ensemble des ces attributs est déporté au sein d'une ou plusieurs feuilles de styles attachées ou intégrées au document HTML. Il est ainsi aisé de modifier l'apparence des titres, de choisir la justification d'un paragraphe ou encore la couleur des boutons.
-
+Les feuilles de styles (Cascading Style Sheet) dont devenues un élément incontournable du web. Elles permettent de séparer le fond de la forme en fournissant de puissants outils destinés à gérer l'apparence d'une page HTML. Grâce à elles, il n'est plus utile d'insérer des attributs définissant l'apparence d'un élément au sein même des balises HTML. L'ensemble des ces attributs est déporté au sein d'une ou plusieurs feuilles de styles attachées ou intégrées au document HTML. Il est ainsi aisé de modifier l'apparence des titres, de choisir la justification d'un paragraphe ou encore la couleur des boutons.
 
 Pharo dispose d'un framework dédié à la définition de feuilles de styles. Il s'agit de RenoirST. Grâce à lui, vous allez définir les attributs CSS mais sans jamais manipuler les instructions CSS. Vous n'utiliserez donc que Pharo.
 
-Notez que l'utilisation de RenoirST est optionel et que vous pouvez aussi utiliser des fichiers CSS de manière plus traditionelle.
+Notez que l'utilisation de RenoirST est optionelle et que vous pouvez aussi utiliser des fichiers CSS de manière plus traditionelle.
 
 !! Installation de RenoirSt
 
-Le framework RenoirSt est disponible dans le catalogue Pharo. Il vous suffit donc d'ouvrir le Catalog Browser et de sélectionner RenoirSt. Pour Développer avec Seaside, il est recommandé d'installer également ==RenoirStPlusSeaside== qui comprend RenoirSt ainsi que le code nécessaire à une intégration correcte au serveur d'applications de Pharo.
+Le framework RenoirSt est disponible dans le catalogue Pharo. Il vous suffit donc d'ouvrir le Catalog Browser et de sélectionner RenoirSt. Pour développer avec Seaside, il est recommandé d'installer également ==RenoirStPlusSeaside== qui comprend RenoirSt ainsi que le code nécessaire à une intégration correcte au serveur d'applications de Pharo.
 
 !! Principe de fonctionnement
 
-RenoirSt est un générateur de code CSS. L'exécution d'une section de code Pharo déclenche la génération de la section CSS équivalente. Le résultat obtenu est une chaine de caractères.
+RenoirSt est un générateur de code CSS. L'exécution d'une section de code Pharo déclenche la construction de la section CSS équivalente. Le résultat obtenu est une chaine de caractères.
 
 Le principe de fonctionnement est assez simple. Il vous suffit d'utiliser la méthode d'instance ==declareRuleSetFor:with:== de l'objet ==CascadingStyleSheetBuilder==. Le premier argument  spécifie l'élement sur lequel le style est appliqué. Le second définit son apparence.
 
@@ -35,7 +34,7 @@ p.resume
 }
 ]]]
 
-Utiliser Pharo pour construire la feuille CSS de votre application permet évidemment de la générer dynamiquement. Une feuille de style est un document statique dans lequel il vous est nécessaire d'anticiper vos besoins. RenoirSt est l'outil parfait pour générer la présentation de votre application et de l'adapter selon les situations rencontrées par votre logiciel durant son fonctionnement.
+Utiliser Pharo pour construire la feuille CSS de votre application permet évidemment de la générer dynamiquement. Une feuille de style est un document statique dans lequel il vous est nécessaire d'anticiper vos besoins. RenoirSt est l'outil parfait pour générer la présentation de votre application et l'adapter selon les situations rencontrées par votre application durant son fonctionnement.
 
 !! Intégrer une feuille de style dans TinyBlog
 
@@ -66,9 +65,9 @@ A partir de maintenant, vous avez la possibilité de modifier l'apparence de Tin
 
 !! Améliorer le visuel
 
-Jusque maintenant, TinyBlog n'a pas été spécialement soigné visuellement. Il utilise le style de base fourni par le framework BootStrap et c'est vrai, il n'est pas toujours très sexy. Grâce à la feuille de styles construite à l'aide de RenoirSt, vous allez lui donner un look plus travaillé.
+Jusqu'ici, TinyBlog n'a pas été spécialement soigné visuellement. Il utilise le style de base fourni par le framework BootStrap et c'est vrai, il n'est pas toujours très sexy. Grâce à la feuille de styles construite à l'aide de RenoirSt, vous allez lui donner un look plus travaillé.
 
-Commençons par l'affichage des billets. Celui ci a été défini dans ==TBPostComponent== selon une très mauvaise méthode puisque l'apparence du titre et du sous titre sont uniquement définis par les balises HTML <h2> et <h6> et qu'aucune classe CSS n'a été spécifiée. Corrigez le code à l'aide de cette nouvelle version de la méthode:
+Commençons par l'affichage des billets. Celui ci a été défini dans ==TBPostComponent== selon une très mauvaise méthode puisque l'apparence du titre et du sous titre sont uniquement définis par les balises HTML <h2> et <h6> et qu'aucune classe CSS n'a été spécifiée. Corrigez le code à l'aide de cette nouvelle version de la méthode ==renderContentOn:==:
 
 [[[
 TBPostComponent >> renderContentOn: html
@@ -77,7 +76,7 @@ TBPostComponent >> renderContentOn: html
    	html paragraph class: 'content'; with: self text  
 ]]]
 
-Vous pouvez maintenant modifier le style de ces éléments dans la méthode ==stylesheet==. Commencez par fixer la taille du titre. Elle est fixée à 200% de la taille par défaut dans le navigateur.
+Vous pouvez modifier le style de ces éléments dans la méthode ==stylesheet==. Commencez par indiquer la taille du titre. Elle est fixée à 200% de la taille par défaut.
 
 [[[
 TBApplicationRootComponent >> styleSheet
@@ -127,7 +126,9 @@ TBApplicationRootComponent >> styleSheet
 		build) asString
 ]]]
 
-A ce stade, il est important de se poser la question de la maintenance de ce code. Il est évident que nous pouvons refactoriser le code en regroupant la définition des attributs.
++Amélioration de l'apparence de TinyBlog>file://figures/newlook.png|width=75|label=nicer+
+
+A ce stade, il est important de se poser la question de la maintenance de ce code. Il est évident que nous pouvons le refactoriser en regroupant la définition des attributs.
 
 [[[
 TBApplicationRootComponent >> styleSheet
@@ -153,7 +154,7 @@ TBApplicationRootComponent >> styleSheet
 		build) asString
 ]]]
 
-Commencez par extraire les définitions des différents styles et à les transformer en méthodes. Vous pouvez les classer dans un protocole ==styles==.
+Commencez par extraire les définitions des différents styles et transformez les ensuite en méthodes. Vous pouvez les classer dans un protocole ==styles==.
 
 [[[
 TBApplicationRootComponent >> titleStyleOn: aStyle.
@@ -230,3 +231,7 @@ TBApplicationRootComponent >> styleSheet
 ]]]
 
 Le résultat est beaucoup plus lisible et surtout bien plus facile à maintenir. Des styles peut être définis et utilisés sur différents éléments de la feuilles de styles.
+
+!! Conclusion
+
+L'utilisation de feuilles de styles autorise la modification profonde de l'aspect visuel de TinyBlog. A l'aide de RenoirSt, il ne vous est pas utile de connaître les détails de la syntaxe des CSS et vous utilisez uniquement la langage Pharo pour développer votre application. Par contre, une connaissance des mécanismes et du fonctionnement des CSS est requise pour exploiter correctement l'ensemble des possibilités de RenoirSt.

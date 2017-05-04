@@ -413,7 +413,7 @@ TBRestfulFilter >> addPost
 
 En guide de travaux pratiques, il vous est possible d'améliorer la gestion d'erreur de la méthode execute afin de différencier une erreur au sein de la structure des données transmises au serveur, du format utilisé ou encore lors de l'étape d'ajout du post à la base de données. Un service REST complet se doit de fournir une information pertinente au client afin d'expliciter la cause du problème.
 
-!!!Amélioration de la couche REST
+!!!Amélioration possibles
 
 Au fil de ce chapitre, vous avez implémenté les principales briques d'une API REST permettant de consulter et d'alimenter le contenu d'un moteur de blog. Il reste bien sur des évolutions possibles et nous vous encourageons à les implémenter. Voici quelques propositions qui constituent des améliorations pertinentes.
 
@@ -431,44 +431,6 @@ La modification d'un post existant peut facilement être réalisée. Il vous suf
 !!!! Supprimer un post
 
 La suppression d'un post sera le résultat d'une requête DELETE transmise au serveur. Ici aussi, il vous est conseillé d'implémenter une gestion la plus compléte possible des codes d'erreurs HTTP qui devrait être assez proche de celle utilisée dans le service de modification d'un post.
-
-
-
-
-
-
-
-
-
-/////////////////////////////////////////////////////////////////
-
-!!!Modifier un POST
-
-
-!!!Effacer un post
-
-[[[
-TBRestfulFilter >> remove: title
-	<delete>
-	<path: '/remove/{title}'>
-	<produces: 'text/json'>
-	
-	| post |
-	
-	post := TBBlog current postWithTitle: title.
-	^ post
-		ifNotNil: [
-			post remove.
-			'{status: "ok"}' ]
-		ifNil: [
-			'{status: "notFound"}' ]
-]]]
-
-Notez que status n'est pas du REST car REST ne spécifie pas la manière de gérer les erreurs.
-Maintenant ce code ne fonctionne pas car ==TBPost== n'est pas une racine en Voyage.
-
-Essayons mais nous ne pouvons pas tester avec un browser web dans son url ne peut faire qu'un GET.
-Donc il nous faut utiliser Zinc.
 
 
 
