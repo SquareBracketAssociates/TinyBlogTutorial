@@ -1,4 +1,8 @@
-!Une interface REST pour TinyBlog
+{
+"title":"Une interface REST pour TinyBlog"
+}
+
+! Une interface REST pour TinyBlog
 
 Ce chapitre décrit comment doter notre application TinyBlog d'une interface REST (REpresentational State Transfer).
 

@@ -1,4 +1,8 @@
-!Maîtriser les feuilles de styles avec RenoirSt
+{
+    "title":"Maîtriser les feuilles de styles avec RenoirSt"
+}
+
+! Maîtriser les feuilles de styles avec RenoirSt
 
 Les feuilles de styles (Cascading Style Sheet) dont devenues un élément incontournable du web. Elles permettent de séparer le fond de la forme en fournissant de puissants outils destinés à gérer l'apparence d'une page HTML. Grâce à elles, il n'est plus utile d'insérer des attributs définissant l'apparence d'un élément au sein même des balises HTML. L'ensemble des ces attributs est déporté au sein d'une ou plusieurs feuilles de styles attachées ou intégrées au document HTML. Il est ainsi aisé de modifier l'apparence des titres, de choisir la justification d'un paragraphe ou encore la couleur des boutons.
 
