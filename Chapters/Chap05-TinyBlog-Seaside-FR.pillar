@@ -1,10 +1,6 @@
-{
-    "title":"Construction d'une interface Web en Seaside pour TinyBlog"
-}
+!! Construction d'une interface Web en Seaside pour TinyBlog
 
-!Construction d'une interface Web en Seaside pour TinyBlog
-
-!!Correction semaine précédente
+!!!Correction semaine précédente
 
 Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
 
@@ -26,7 +22,7 @@ Assurez vous que votre serveur Teapot est bien stoppé.
 %]]]
 % Attention, vérifiez d'abord que votre propre serveur HTTP ne soit pas déjà lancé sur le port 8081.
 
-!!Une interface Web pour TinyBlog en Seaside
+!!!Une interface Web pour TinyBlog en Seaside
 
 Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
 
@@ -37,7 +33,7 @@ Nous allons définir des composants Seaside *http://www.seaside.st* dont l'ouvra
 +Lancer le serveur.>file://figures/RunningSeaside.png|width=50|label=RunningSeaside+
 
 
-!!Démarrer Seaside
+!!!Démarrer Seaside
 
 Il existe deux façons pour démarrer Seaside. La première consiste à exécuter le code suivant :
 
@@ -52,7 +48,7 @@ Dans le menu contextuel de cet outil (clic droit), cliquez sur "add adaptor..." 
 
 
 
-!!Point d'entrée de l'application
+!!!Point d'entrée de l'application
 
 Créez la classe ==TBApplicationRootComponent== qui est le point d'entrée de l'application. Elle sert à l'initialisation de l'application.
 
@@ -95,7 +91,7 @@ TBApplicationRootComponent class >> canBeRoot
 
 Une connexion sur le serveur Seaside ("Browse the applications installed in your image") permet de vérifier que l'application TinyBlog est bien enregistrée comme le montre la figure *@BrowseApplications*.
 
-!!Premier rendu simple 
+!!!Premier rendu simple 
 
 Ajoutons maintenant une méthode d'instance ==renderContentOn:== dans le protocole ==rendering== afin de vérifier que notre application répond bien.
 
@@ -126,7 +122,7 @@ Par exemple, les composants principaux de l'application permettant l'affichage d
 Pour cela, nous avons décidé que le composant ==TBApplicationRootComponent== contiendra des composants héritant tous de la classe abstraite ==TBScreenComponent== que nous allons définir dans le prochain chapitre. 
 
 
-!!Composants visuels pour TinyBlog
+!!!Composants visuels pour TinyBlog
 
 Nous sommes maintenant prêts à définir les composants visuels de notre application Web.
 Les premiers chapitres de *http://book.seaside.st* peuvent vous y aider et compléter efficacement ce tutoriel.
@@ -136,7 +132,7 @@ La figure *@ComponentOverview* montre les différents composants que nous allons
 
 +Les composants composant l'application TinyBlog.>file://figures/ComponentOverview.pdf|width=75|label=ComponentOverview+
 
-!!!Le composant TBScreenComponent
+!!!!Le composant TBScreenComponent
 
 Le composant ==TBApplicationRootComponent== contiendra des composants sous-classes de la classe abstraite ==TBScreenComponent==. Cette classe nous permet de factoriser les comportements que nous souhaitons partager entre tous nos composants. 
 
@@ -162,7 +158,7 @@ Dans le futur, lorsque nous gérerons les utilisateurs et le fait qu'un utilisat
 
 +Accès à la bibliothèque Bootstrap.>file://figures/SeasideBootstrap.png|width=75|label=bootstrap+
 
-!!Bootstrap for Seaside
+!!!Bootstrap for Seaside
 
 La bibliothèque Bootstrap est totalement accessible depuis Seaside comme nous allons le montrer.
 Pour parcourir les nombreux exemples, cliquer sur le lien ""bootstrap"" dans la liste des applications servies par Seaside ou pointer votre navigateur sur le lien *http://localhost:8080/bootstrap*. Vous devez obtenir l'écran de la figure *@bootstrap*.
@@ -171,13 +167,13 @@ Cliquer sur le lien ""Examples"" au bas de la page et vous pouvez ainsi voir les
 
 +Comprendre un élément et son code en Bootstrap.>file://figures/TBSAlert.png|width=75|label=examplebootstrap+
 
-!!!Bootstrap
+!!!!Bootstrap
 
 Le repository pour le source et la documentation est 
 *http://smalltalkhub.com/#!/~TorstenBergmann/Bootstrap*.
 Une démo en ligne est disponible à l'adresse : *http://pharo.pharocloud.com/bootstrap*. Cette bibliothèque a déjà été chargée dans l'image PharoWeb utilisée dans ce tutoriel.
 
-!!Définition du composant TBHeaderComponent
+!!!Définition du composant TBHeaderComponent
 
 Profitons de ce composant pour insérer dans la partie supérieure de chaque composant, l'instance d'un composant représentant l'entête de l'application.
 
@@ -207,7 +203,7 @@ Le nom du blog devrait être paramétrable à l'aide d'une variable d'instance d
 et le header pourrait afficher ce titre.
 
 
-!!Utilisation du header
+!!!Utilisation du header
 
 Il n'est pas souhaitable d'instancier systématiquement le composant à chaque fois qu'un composant est appelé. Créons une variable d'instance ==header== dans ==TBScreenComponent== que nous initialisons.
 
@@ -245,7 +241,7 @@ TBScreenComponent >> renderContentOn: html
 ]]]
 
 
-!!Utilisation du composant Screen
+!!!Utilisation du composant Screen
 
 Bien que le composant ==TBScreenComponent== n'ait pas vocation à être utilisé directement, nous allons l'utiliser de manière temporaire pendant que nous développons les autres composants. 
 Nous ajoutons ==main== comme variable d'instance dans la classe ==TBApplicationRootComponent==. Nous l'initialisons dans la méthode ==initialize== suivante. 
@@ -275,7 +271,7 @@ Si vous faites un rafraichissement de l'application dans votre navigateur web vo
 Le nom du blog doit être particularisable en utilisant par exemple une variable d'instance de la classe ==TBBlog==
 et l'entête (header) pour afficher ce titre. 
 
-!!Liste des posts
+!!!Liste des posts
 
 Nous allons afficher la liste des posts - ce qui reste d'ailleurs le but d'un blog. Ici nous parlons de l'accès public offert aux lecteurs du blog. Dans le futur, nous  proposerons une interface d'administration des posts.
 
@@ -316,7 +312,7 @@ TBApplicationRootComponent >> main: aComponent
 +TinyBlog avec une liste de posts plutot élémentaire.>file://figures/ElementaryListPost.png|width=75|label=elementary+
 
 
-!!Le composant post
+!!!Le composant post
 
 Nous allons maintenant définir le composant ==TBPostComponent== qui affiche le contenu d'un post.
 
@@ -371,7 +367,7 @@ TBPostComponent >> renderContentOn: html
 ]]]
 
 
-!!Afficher les posts
+!!!Afficher les posts
 
 Maintenant nous pouvons afficher des posts présents dans la base.
 
@@ -386,7 +382,7 @@ TBPostsListComponent >> renderContentOn: html
 
 Rafraichissez la page de votre navigateur et vous devez obtenir un message d'erreur.
 
-!!Debugger les erreurs
+!!!Débugger les erreurs
 
 Par défaut, lorsqu'une erreur se produit dans une application, Seaside retourne une page HTML contenant un message. Vous pouvez changer ce message mais le plus pratique pendant le développement de l'application est de configurer Seaside pour qu'il ouvre un debugger dans Pharo. Pour cela, exécuter le code suivant :
 
@@ -409,7 +405,7 @@ Vous pouvez ajouter cette méthode dans le debugger avec le bouton ==Create==. Q
 +TinyBlog avec une liste de posts.>file://figures/betterListPosts.png|width=75|label=better+
 
 
-!!Affichage de la liste des posts avec Bootstrap
+!!!Affichage de la liste des posts avec Bootstrap
 
 Nous allons utiliser Bootstrap pour rendre la liste un peu plus jolie en utilisant un container. 
 
@@ -425,13 +421,13 @@ Rafraichissez la page et vous devez obtenir la Figure *@container*.
 +TinyBlog avec une liste de posts élémentaire.>file://figures/ContainerList.png|width=75|label=container+
 
 
-!!Affichage des posts par catégorie
+!!!Affichage des posts par catégorie
 
 Les posts sont classés par catégorie. Par défaut, si aucune catégorie n'a été précisée, ils sont rangés dans une catégorie spéciale dénommée "Unclassified".
 
 Nous allons créer un composant pour gérer une liste de catégories nommée: ==TBCategoriesComponent==.
 
-!!!Definition d'un composant pour les catégories
+!!!!Definition d'un composant pour les catégories
 
 Nous avons besoin d'un composant qui affiche la liste des catégories présentes dans la base et permet d'en sélectionner une. Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui communiquer la catégorie courante.
 
@@ -440,7 +436,8 @@ WAComponent subclass: #TBCategoriesComponent
    instanceVariableNames: 'categories postsList'
    classVariableNames: ''
    package: 'TinyBlog-Components'
-
+]]]
+[[[
 TBCategoriesComponent >> categories
    ^ categories
 
@@ -475,15 +472,16 @@ TBScreenComponent subclass: #TBPostsListComponent
    instanceVariableNames: 'currentCategory'
    classVariableNames: ''
    package: 'TinyBlog-Components'
-
+]]]
+[[[
 TBScreenComponent >> currentCategory
    ^ currentCategory
-
+   
 TBScreenComponent >> currentCategory: anObject
    currentCategory := anObject
 ]]]
 
-!! Rendu des catégories
+!!! Rendu des catégories
 Nous pouvons maintenant ajouter une méthode (protocole 'rendering') pour afficher les catégories sur la page. En particulier pour chaque catégorie nous définissons le fait que cliquer sur la catégorie la sélectionne comme la catégorie courante.
 
 [[[
@@ -506,7 +504,7 @@ TBCategoriesComponent >> renderContentOn: html
 
 Nous avons presque fini mais il faut encore afficher la liste des catégories et mettre à jour la liste des posts en fonction de la catégorie courante. 
 
-!!Mise à jour des Posts
+!!!Mise à jour des Posts
 
 Pour cela, modifions la méthode de rendu du composant ==TBPostsListComponent==.
 
@@ -538,7 +536,7 @@ Une instance du composant ==TBCategoriesComponent== est ajoutée sur la page et 
 +Catégories afin de sélectionner les posts.>file://figures/categoriesUgly.png|width=75|label=ugly+
 
 
-!!Look et agencement
+!!!Look et agencement
 
 Nous allons maintenant agencer le composant ==TBPostsListComponent== en utilisant une mise en place d'un 'responsive design' pour la liste des posts. Cela veut dire que le style CSS va adapter les composants à l'espace disponible.
 
@@ -586,7 +584,7 @@ TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
 Bien que le code fonctionne, on ne doit pas laisser la méthode ==TBPostsListComponent >> renderContentOn: html== dans un tel état. Elle est bien trop longue et difficilement réutilisable. 
 Proposer une solution. 
 
-!!Notre solution: Plein de petites méthodes
+!!!Notre solution: Plein de petites méthodes
 
 [[[
 TBPostsListComponent >> renderContentOn: html
@@ -597,26 +595,30 @@ TBPostsListComponent >> renderContentOn: html
             showGrid;
             with: [ self renderCategoryColumnOn: html.
                   self renderPostColumnOn: html ] ]
-
+]]]
+[[[
 TBPostsListComponent >> renderCategoryColumnOn: html
    html tbsColumn
       extraSmallSize: 12;
       smallSize: 2;
       mediumSize: 4;
       with: [ self basicRenderCategoriesOn: html ]
-
+]]]
+[[[
 TBPostsListComponent >> basicRenderCategoriesOn: html
    ^ html render: (TBCategoriesComponent 
          categories: self blog allCategories 
          postsList: self)
-
+]]]
+[[[
 TBPostsListComponent >> renderPostColumnOn: html
    html tbsColumn
          extraSmallSize: 12;
          smallSize: 10;
          mediumSize: 8;
          with: [ self basicRenderPostsOn: html ] 
-
+]]]
+[[[
 TBPostsListComponent >> basicRenderPostsOn: html
    ^ self readSelectedPosts do: [ :p | 
         html render: (TBPostComponent new post: p) ]
@@ -627,7 +629,7 @@ Nous voici prêts à définir la partie administrative de l'application.
 
 +Final TinyBlog Public UI.>file://figures/finalPublicWebPage.png|width=85|label=final+
 
-!!Améliorations possibles
+!!!Améliorations possibles
 
 A titre d'exercice, vous pouvez :
 - trier les catégories par ordre alphabétique

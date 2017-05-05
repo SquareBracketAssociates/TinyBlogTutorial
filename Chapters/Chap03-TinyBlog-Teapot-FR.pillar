@@ -1,33 +1,11 @@
-{
-    "title":"Construire une interface Web avec Teapot pour TinyBlog"
-}
-
-!Une Interface Web avec Teapot pour TinyBlog
+!! Construire une interface Web avec Teapot pour TinyBlog
 
 
-!!Correction semaine précédente
-
-Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
-
-[[[
-Metacello new
-    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week2solution;
-    configuration: 'TinyBlog';
-    load
-]]]
-
-Après le chargement d'un package, il est recommandé d'exécuter les tests unitaires qu'il contient afin de vérifier le bon fonctionnement du code chargé.
-Pour cela, vous pouvez lancer l'outil TestRunner (World menu > Test Runner), chercher le package TinyBlog-Tests et lancer tous les tests unitaires de la classe ==TBBlogTest== en cliquant sur le bouton "Run Selected". Tous les tests doivent être verts. Une alternative est de presser l'icone verte qui se situe à coté de la class ==TBBlogTest==. 
-
-Ouvrez maintenant un browser de code pour regarder le code des classes ==TBBlog== et ==TBBlogTest== et compléter votre propre code si nécessaire.
-Avant de poursuivre, n'oubliez pas de committer une nouvelle version dans votre dépôt sur Smalltalkhub ou SS3 si vous avez modifié votre application. 
-
-!!Une interface web avec Teapot
+!!!Une interface web avec Teapot
 
 Dans la suite, nous allons créer une première interface web pour TinyBlog en utilisant Teapot (*http://smalltalkhub.com/#!/~zeroflag/Teapot*). Nous verrons une solution bien plus complète avec Seaside par la suite.
 
-!!!La classe TBTeapotWebApp
+!!!!La classe TBTeapotWebApp
 
 Créer une classe nommée ==TBTeapotWebApp== ainsi:
 
@@ -52,7 +30,7 @@ TBTeapotWebApp >> initialize
        #debugMode -> true }.
 ]]]
 
-!!!La Page d'accueil
+!!!!La Page d'accueil
 Définissons une méthode ==homePage== dans le protocol 'html' qui retourne le code HTML de la page d'accueil de notre application web. Commençons par une version simple :
 
 [[[
@@ -60,7 +38,7 @@ TBTeapotWebApp >> homePage
     ^ '<html><body><h1>TinyBlog Web App</h1></body></html>'
 ]]]
 
-!!!Déclarer les URLs (routes)
+!!!!Déclarer les URLs (routes)
 
 Ajouter maintenant une méthode ==start== pour que l'objet teapot réponde à des URLs particulières. Commençons par répondre à l'URL ==/== lorsqu'elle est accédée en GET :
 
@@ -72,7 +50,7 @@ TBTeapotWebApp >> start
         start
 ]]]
 
-!!!Stopper l'application
+!!!!Stopper l'application
 
 Ajouter également une méthode pour stopper l'application :
 
@@ -81,7 +59,7 @@ TBTeapotWebApp >> stop
     teapot stop
 ]]]
 
-!!!Démarrage l'application 
+!!!!Démarrage l'application 
 
 Ajouter deux méthodes ==start== et ==stop== côté classe pour respectivement démarrer et arrêter l'application dans le protocol 'start/stop'. Ces méthodes utilisent la variable de class ==Server== pour implanter un Singleton. 
 
@@ -97,7 +75,7 @@ TBTeapotWebApp class >> stop
 
 +Une première page servie par notre application.>file://figures/homepage.png|width=60|label=fighome+
 
-!!Tester votre application
+!!!Tester votre application
 Maintenant nous pouvons lancer notre application en exécutant le code suivant pour démarrer votre application :
 
 [[[
@@ -109,7 +87,7 @@ Avec un navigateur web, vous pouvez accéder à l'application via l'URL *http://
 
 +Afficher la liste des titres de posts.>file://figures/withPosts.png|width=60|label=figposts+
 
-!!Afficher la liste des posts
+!!!Afficher la liste des posts
 
 On souhaite maintenant modifier le code de la méthode ==homePage== pour que la page d'accueil affiche la liste de tous les posts visibles.
 Pour rappel, tous les posts peuvent être obtenus via ==TBBlog current allVisibleBlogPosts==.
@@ -153,9 +131,9 @@ Tester l'application dans un navigateur web, vous devez maintenant voir la liste
 TBBlog createDemoPosts
 ]]]
 
-!!Détails d'un Post
+!!!Détails d'un Post
 
-!!!Ajouter une Nouvelle Page
+!!!!Ajouter une Nouvelle Page
 
 Améliorons notre application. On souhaite que l'URL *http://localhost:8081/post/1* permette de voir le post numéro 1. 
 
@@ -205,7 +183,7 @@ Dans le code ci-dessus, on peut voir que le nombre passé dans l'URL est utilis�
 Cette solution est simple mais fragile puisque si l'ordre des posts dans la collection change, une même URL ne désignera plus le même post.
 
 
-!!!Ajouter des liens vers les posts
+!!!!Ajouter des liens vers les posts
 
 Modifions la méthode ==homePage== pour que les titres des posts soient des liens vers leur page respective.
 
@@ -227,7 +205,7 @@ TBTeapotWebApp >> homePage
 
 Maintenant, la page d'accueil de l'application affiche bien une liste de lien vers les posts.
 
-!!Amélioration possibles
+!!!Amélioration possibles
 
 Cette application est un exemple pédagogique à travers lequel vous avez manipulé des collections, des flôts (Streams), etc. 
 

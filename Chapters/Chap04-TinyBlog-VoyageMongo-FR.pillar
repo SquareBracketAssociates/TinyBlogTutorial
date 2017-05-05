@@ -1,42 +1,9 @@
-{
-    "title":"Persistance des données de TinyBlog avec Voyage et Mongo"
-}
-!Persistance des données de TinyBlog avec Voyage et Mongo
 
-!!Correction semaine précédente
+!!Persistance des données de TinyBlog avec Voyage et Mongo
 
-Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
-
-[[[
-Metacello new
-    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week3solution;
-    configuration: 'TinyBlog';
-    load
-]]]
-
-Puis, testez le code en exécutant:
-
-[[[
-	TBTeapotWebApp start
-]]]
-
-Attention, vérifiez d'abord que votre propre serveur HTTP ne soit pas déjà lancé sur le même port . Si c'est le cas, arrêtez votre application ou changez son port. 
-
-Vous devez ajouter des posts dans le blog pour voir quelquechose. 
-
-[[[
-	TBBlog reset ; createDemoPosts
-]]]
-
-Avant de passer à la suite, stoppez votre serveur Teapot:
-
-[[[
-	TBTeapotWebApp stop
-]]]
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-!!Préparation de sauvegarde extérieure avec Voyage
+!!!Préparation de sauvegarde extérieure avec Voyage
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Avoir un modèle d'objets en mémoire fonctionne bien, et sauvegarder l'image Pharo sauve aussi ces objets. Toutefois, il est préférable de pouvoir sauver les objets dans une base de données extérieure. Voyage permet de sauver les objets dans une base de donnée Mongo. Voyage est un frameworks qui propose la même API a plusieurs bases de données documents comme Mongo ou UnQLite.
@@ -45,7 +12,7 @@ Avoir un modèle d'objets en mémoire fonctionne bien, et sauvegarder l'image Ph
 C'est ce que nous allons voir. Dans un premier temps, nous allons utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second temps, nous installerons une base de données Mongo et nous y accéderons à travers Voyage. 
 
 
-!!Configurer Voyage pour sauvegarder des objets TBBlog
+!!!Configurer Voyage pour sauvegarder des objets TBBlog
 
 Grâce à la méthode de classe ==isVoyageRoot==, nous déclarons que les objets de la classe ==TBBlog== doivent être sauvés dans la base en tant qu'objets racines.
 
@@ -98,7 +65,7 @@ TBBlog class >> current
 La variable ==uniqueInstance== qui servait auparavant à stocker le singleton ==TBBlog== peut être enlevée.
 
 
-!!Sauvegarde d'un blog
+!!!Sauvegarde d'un blog
 
 Nous devons maintenant modifier la méthode ==writeBlogPost:== pour sauver le blog lors de l'ajout d'un post.
 
@@ -118,7 +85,7 @@ TBBlog >> removeAllPosts
 ]]]
 
 
-!!Utilisation de la base
+!!!Utilisation de la base
 
 Alors même que la base est en mémoire et bien que nous pouvons accéder au blog en utilisant le singleton de la classe ==TBBlog==,
 nous allons montrer l'API offerte par Voyage. C'est la même API que nous pourrons utiliser pour accéder à une base mongo.
@@ -154,7 +121,7 @@ Vous pouvez voir l'API de Voyage en parcourant
 
 Ces queries sont plus pertinentes quand on a plus d'objets mais nous ferions exactement les mêmes. 
 
-!!Si nous devions sauvegarder les posts
+!!!Si nous devions sauvegarder les posts
 
 Cette section n'est pas à implémenter et elle est juste donnée à titre d'exemple plus d'explications sont données dans le chapitre sur Voyage dans Enterprise Pharo disponible a *http://www.pharo.org*. Nous voulons illustrer que déclarer une classe comme une racine Voyage a une influence sur comment une instance de cette classe est sauvée et rechargée. En particulier car elle ne fait plus partie de l'objet qui lui faisait référence : dans la base elle n'est plus une souspartie du document représentant l'objet qui la référence mais un document autonome.  
 
@@ -163,7 +130,7 @@ Nous pourrions définir qu'un post soit un élément qui peut être sauvegardé 
 
 Lorsqu'un post n'est pas une racine, vous n'avez pas la certitude d'unicité de celui-ci lors du chargement depuis la base. En effet, lors du chargement (et ce qui peut être contraire à la situation du graphe d'objet avant la sauvegarde) un post n'est alors pas partagé entre deux instances de blogs. Si avant la sauvegarde en base un post était partagé entre deux blogs, après le chargement depuis la base, ce post sera dupliqué car recréé à partir de la définition du blog (et le blog contient alors complètement le post).
 
-!!! Post comme racine = Unicité
+!!!! Post comme racine = Unicité
 Si vous désirez qu'un post soit partagé et unique entre plusieurs instances de blog, alors les objets ==TBPost== doivent être déclarés comme une racine dans la base. Lorsque c'est le cas, les posts sont sauvés comme des entités autonomes et les instances de ==TBBlog== feront référence à ces entités au lieu que leurs définitions soient incluses dans celle des blogs. Cela a pour effet qu'un post donné devient unique et partageable via une référence depuis le blog. 
 
 Pour cela on nous définirions les méthodes suivantes:
@@ -195,13 +162,13 @@ TBBlog >> removeAllPosts
 Ici dans la méthode ==removeAllPosts== nous enlevons chaque posts puis nous remettons à jour la collection.
 
 
-!!Tester avec une base Mongo
+!!!Tester avec une base Mongo
 
 Nous allons maintenant utiliser une base Mongo externe à Pharo. 
 En utilisant Voyage nous pouvons rapidement sauver nos posts dans une base de données Mongo. Cette section explique rapidement la mise en oeuvre et les quelques modifications que nous devons apporter à notre projet Pharo pour y parvenir. 
 
 
-!!Installation de Mongo
+!!!Installation de Mongo
 
 Quel que soit votre système d'exploitation (Linux, Mac OSX ou Windows), vous pouvez installer un serveur Mongo localement sur votre machine. Cela est pratique pour tester votre application sans avoir besoin d'une connexion Internet. Nous ne détaillons pas ici comment installer Mongo sur votre système, référez-vous à la documentation Mongo. 
 
@@ -210,7 +177,7 @@ Quel que soit votre système d'exploitation (Linux, Mac OSX ou Windows), vous po
 Cependant vous devez créer une base de données nommée 'tinyblog'. 
 Lorsque, vous avez installé et lancé un serveur Mongo localement, vous pouvez y accéder depuis Pharo.
 
-!!Connexion à un serveur local
+!!!Connexion à un serveur local
 
 Nous définissions les méthodes ==initializeLocalhostMongoDB== pour établir la connexion vers la base de données.
 
@@ -228,7 +195,7 @@ TBBlog class >> reset
    self initializeLocalhostMongoDB
 ]]]
 
-!!!En cas de problème
+!!!!En cas de problème
 
 Notez que si vous avez besoin de réinitialiser la base extérieure complètement, vous pouvez utiliser la méthode ==dropDatabase==.
 
@@ -239,7 +206,7 @@ Notez que si vous avez besoin de réinitialiser la base extérieure complètemen
 ]]]
 
 
-!!!Attention : Changements de TBBlog
+!!!!Attention : Changements de TBBlog
 
 Si vous utilisez une base locale plutôt qu'une base en mémoire, à chaque fois que vous ajoutez une nouvelle racine d'objets ou modifiez la définition d'une classe racine (ajout, retrait, modification d'attribut) il est capital de réinitializer le cache maintenu par Voyage.  La réinitialisation se fait comme suit:
 
@@ -248,6 +215,6 @@ Si vous utilisez une base locale plutôt qu'une base en mémoire, à chaque fois
 ]]]
 
 
-!!Conclusion
+!!!Conclusion
 
 Voyage propose une API sympathique pour gérer de manière transparente la sauvegarde d'objets soit en mémoire soit dans une base de données document. Votre application peut maintenant être sauvée dans la base et vous êtes donc prêt pour construire son interface web. 

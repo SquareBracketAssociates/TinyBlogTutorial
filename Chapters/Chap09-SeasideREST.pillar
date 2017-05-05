@@ -1,16 +1,10 @@
-{
-"title":"Une interface REST pour TinyBlog"
-}
-
-! Une interface REST pour TinyBlog
+!! Une interface REST pour TinyBlog
 
 Ce chapitre décrit comment doter notre application TinyBlog d'une interface REST (REpresentational State Transfer).
-
 Le code est placé dans un package =='TinyBlog-Rest'== car l'utilisation de REST est optionnelle.
-
 Les tests seront dans le package =='TinyBlog-Rest-Tests'==.
 
-!!Notions de base sur REST
+!!!Notions de base sur REST
 
 REST se base sur les verbes HTTP pour décrire l'accès aux ressources HTTP (https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html). Les principaux verbes ont la signification suivante:
 
@@ -25,7 +19,7 @@ Une autre notion importante est le respect des formats de données acceptés par
 
 La réussite ou l'échec d'une opération est basée sur les codes de statut du protocole HTTP (https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html). Par exemple,si une opération réussi, le serveur doit répondre un code 200 (OK). De même, si une ressource demandé par le client n'existe pas, il doit retourner un code 404 (Not Found). Il est très important de respecter la signification de ces codes de statut afin de mettre en place un dialogue compréhensible et normalisé entre le client et le serveur.
 
-!!Définir un filtre REST
+!!!Définir un filtre REST
 
 Pour regrouper les différents services REST de TinyBlog, il est préférable de créer un paquet dédié, nommé TinyBlog-REST. L'installation de ces services REST sera ainsi optionnelle. Si le paquet TinyBlog-REST est présent, le serveur TinyBlog autorisera:
 * l'obtention des l'ensemble des posts existants,
@@ -39,7 +33,7 @@ L'élément central de REST est un objet destiné à filtrer les requêtes HTTP 
 WARestfulFilter subclass: #TBRestfulFilter
 	instanceVariableNames: ''
 	classVariableNames: ''
-	category: 'TinyBlog-REST'
+	package: 'TinyBlog-REST'
 ]]]
 
 Pour l'utiliser, il nous faut le déclarer au sein de l'application TinyBlog. Pour cela, éditez la méthode de classe ==initialize== de la classe ==TBApplicationRootComponent== pour ajouter une instance de ==TBRestfulFilter==.
@@ -67,7 +61,7 @@ TBApplicationRootComponent initialize
 
 A partir de maintenant, nous pouvons commencer à implémenter les différents services REST.
 
-!!Obtenir la liste des posts
+!!!Obtenir la liste des posts
 
 Le premier service proposé sera destiné à récupérer la liste des posts. Il s'agit d'une opération de lecture et elle utilisera donc le verbe GET du protocole HTTP. La réponse sera produite au format JSON. La méthode ==listAll== est marquée comme étant un point d'entrée REST à l'aide des annotations ==<get>== et ==<produces:>==.
 
@@ -83,9 +77,9 @@ TBRestfulFilter >> listAll
 
 Afin de faciliter l'utilisation d'un service REST, il est préférable de préciser finement la ou les ressources manipulées. Dans le cas présent, le nom de la méthode ==listAll== ne précise pas au client quelles sont les ressources qui seront retournées. Certes, nous savons que ce sont les posts mais après tout, cela pourrait également être des rubriques. Il faut donc être plus explicite dans la formalisation de l'URL afin de lui donner une réelle signification sémantique. C'est d'ailleur la principale difficulté dans la mise en place des services REST. La meilleure méthode est de faire simple et de s'efforcer d'être cohérent dans la désignation des chemins d'accès aux ressources. Si nous voulons la liste des posts, il nous suffit de demander la liste des posts. L'URL doit donc avoir la forme suivante:
 
-[[
+[[[
 http://localhost:8080/TinyBlog/Posts
-]]
+]]]
 
 Pour obtenir cela, nous pouvons renommer la méthode ==listAll== ou préciser le chemin d'accès qui appellera cette méthode. Cette seconde approche est plus souple puisqu'elle permet de réorganiser les appels aux services REST sans nécessiter de refactoriser le code.
 
@@ -108,6 +102,8 @@ TBRestfulFilter >> listAll
 
 	TBRestServiceListAll new applyServiceWithContext: (self requestContext)	
 ]]]
+
+!!! Créer des Services
 
 Ce contexte d'exécution sera utile pour l'ensemble de services REST de TinyBlog. Cela signifie donc que nous devons trouver une solution pour éviter la copie de sections de code identiques au sein des différents services. Pour cela, la solution évidente en programmation objet consiste à mettre en oeuvre un mécanisme d'héritage. Chaque service REST héritera d'un service commun nommé ici TBRestService. Ce service dispose de deux variables d'instance. ==context== contiendra le contexte d'exécution et ==result== recevra les éléments de réponse devant être transmis au client.
 
@@ -226,7 +222,7 @@ Les posts sont enregistrés dans un fichier nommé ==posts== qui contient les do
 
 Une autre approche, plus confortable et adaptée à la mise au point de vos services REST, consiste à utiliser un client graphique. Il en existe un grand nombre sur tous systèmes d'exploitation. Certains proposent des fonctionnalités avancées telles qu'un éditeur de requêtes HTTP ou HTTPS, la gestion de bibliothèques de requêtes ou encore la mise en place de tests unitaires. Nous vous recommandons de vous intéresser plus particulièrement à des produits fonctionnant directement avec des technologies web, sous la forme d'applications ou d'extensions intégrées à votre navigateur web. 
 
-							IMAGE GRAPHIQUE D'UN CLIENT 
+@todo IMAGE GRAPHIQUE D'UN CLIENT 
 
 !!!! Avec Zinc
 
@@ -272,7 +268,9 @@ TBRestServiceSearch >> title
 
 TBRestServiceSearch >> title: anObject
 	title := anObject
+]]]
 
+[[[
 TBRestServiceSearch >> execute
 	| post |
 
@@ -301,7 +299,7 @@ TBRestfulFilter >> search: aTitle
 		applyServiceWithContext: self requestContext	
 ]]]
 
-!!!!Chercher selon une période
+!!!Chercher selon une période
 
 Une autre méthode intéressante pour lancer une recherche consiste à extraire l'ensemble des posts créés entre deux dates qui définissent ainsi une période. Pour cette raison, la méthode ==searchDateFrom:to:== reçoit deux arguments qui sont également définis dans la syntaxe de l'URL.
 
@@ -318,7 +316,7 @@ La partie métier est implémentée au sein de l'objet ==TBRestServiceSearchDate
 TBRestService subclass: #TBRestServiceSearchDate
 	instanceVariableNames: 'from to'
 	classVariableNames: ''
-	category: 'TinyBlog-Rest'
+	package: 'TinyBlog-Rest'
 
 TBRestServiceSearchDate >> from
 	^from

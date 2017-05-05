@@ -1,8 +1,4 @@
-{
-    "title":"Maîtriser les feuilles de styles avec RenoirSt"
-}
-
-! Maîtriser les feuilles de styles avec RenoirSt
+!! Maîtriser les feuilles de styles avec RenoirSt
 
 Les feuilles de styles (Cascading Style Sheet) dont devenues un élément incontournable du web. Elles permettent de séparer le fond de la forme en fournissant de puissants outils destinés à gérer l'apparence d'une page HTML. Grâce à elles, il n'est plus utile d'insérer des attributs définissant l'apparence d'un élément au sein même des balises HTML. L'ensemble des ces attributs est déporté au sein d'une ou plusieurs feuilles de styles attachées ou intégrées au document HTML. Il est ainsi aisé de modifier l'apparence des titres, de choisir la justification d'un paragraphe ou encore la couleur des boutons.
 
@@ -10,11 +6,11 @@ Pharo dispose d'un framework dédié à la définition de feuilles de styles. Il
 
 Notez que l'utilisation de RenoirST est optionelle et que vous pouvez aussi utiliser des fichiers CSS de manière plus traditionelle.
 
-!! Installation de RenoirSt
+!!! Installation de RenoirSt
 
 Le framework RenoirSt est disponible dans le catalogue Pharo. Il vous suffit donc d'ouvrir le Catalog Browser et de sélectionner RenoirSt. Pour développer avec Seaside, il est recommandé d'installer également ==RenoirStPlusSeaside== qui comprend RenoirSt ainsi que le code nécessaire à une intégration correcte au serveur d'applications de Pharo.
 
-!! Principe de fonctionnement
+!!! Principe de fonctionnement
 
 RenoirSt est un générateur de code CSS. L'exécution d'une section de code Pharo déclenche la construction de la section CSS équivalente. Le résultat obtenu est une chaine de caractères.
 
@@ -40,7 +36,7 @@ p.resume
 
 Utiliser Pharo pour construire la feuille CSS de votre application permet évidemment de la générer dynamiquement. Une feuille de style est un document statique dans lequel il vous est nécessaire d'anticiper vos besoins. RenoirSt est l'outil parfait pour générer la présentation de votre application et l'adapter selon les situations rencontrées par votre application durant son fonctionnement.
 
-!! Intégrer une feuille de style dans TinyBlog
+!!! Intégrer une feuille de style dans TinyBlog
 
 Vous allez maintenant améliorer l'apparence visuelle de TinyBlog en modifiant la partie publique du logiciel.
 
@@ -50,7 +46,7 @@ Pour éviter que la feuille de style soit reconstruite systématiquement à chaq
 WAComponent subclass: #TBApplicationRootComponent
 	instanceVariableNames: 'main css'
 	classVariableNames: ''
-	category: 'TinyBlog-Components'
+	package: 'TinyBlog-Components'
 ]]]
 
 La méthode ==TBApplicationRootComponent >> styleSheet== contiendra la définition de la feuille de styles et est appelée par la méthode ==initialize==. Pour l'instant, contentez vous de retourner une chaine vide.
@@ -67,7 +63,7 @@ TBApplicationRootComponent >> initialize
 
 A partir de maintenant, vous avez la possibilité de modifier l'apparence de TinyBlog.
 
-!! Améliorer le visuel
+!!! Améliorer le visuel
 
 Jusqu'ici, TinyBlog n'a pas été spécialement soigné visuellement. Il utilise le style de base fourni par le framework BootStrap et c'est vrai, il n'est pas toujours très sexy. Grâce à la feuille de styles construite à l'aide de RenoirSt, vous allez lui donner un look plus travaillé.
 
@@ -104,6 +100,7 @@ TBApplicationRootComponent >> styleSheet
 		build) asString
 ]]]
 
+
 Le titre peut être amélioré en faisant en sorte que le premier caractère soit mis en valeur. Il sera plus grand et obligatoirement écrit à l'aide d'une lettre majuscule. Le titre est souligné à l'aide d'un trait fin. 
 
 [[[
@@ -131,6 +128,9 @@ TBApplicationRootComponent >> styleSheet
 ]]]
 
 +Amélioration de l'apparence de TinyBlog>file://figures/newlook.png|width=75|label=nicer+
+
+
+!!! Faciliter la maintenance
 
 A ce stade, il est important de se poser la question de la maintenance de ce code. Il est évident que nous pouvons le refactoriser en regroupant la définition des attributs.
 
@@ -236,6 +236,6 @@ TBApplicationRootComponent >> styleSheet
 
 Le résultat est beaucoup plus lisible et surtout bien plus facile à maintenir. Des styles peut être définis et utilisés sur différents éléments de la feuilles de styles.
 
-!! Conclusion
+!!! Conclusion
 
 L'utilisation de feuilles de styles autorise la modification profonde de l'aspect visuel de TinyBlog. A l'aide de RenoirSt, il ne vous est pas utile de connaître les détails de la syntaxe des CSS et vous utilisez uniquement la langage Pharo pour développer votre application. Par contre, une connaissance des mécanismes et du fonctionnement des CSS est requise pour exploiter correctement l'ensemble des possibilités de RenoirSt.

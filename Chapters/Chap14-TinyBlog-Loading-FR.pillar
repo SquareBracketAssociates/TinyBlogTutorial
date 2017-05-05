@@ -1,10 +1,129 @@
-{
-    "title":"Charger le code des chapitres"
-}
+!! Charger le code des chapitres
+
+!!! Chapitre : Modèle 
+
+Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant :
+
+[[[
+Metacello new
+    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+    version: #week1solution;
+    configuration: 'TinyBlog';
+    load
+]]]
+
+Vous pouvez ouvrir un browser de code sur la classe ==TBPost==.
+Maintenant que vous avez la correction, vous pouvez compléter le code de votre application TinyBlog si nécessaire.
 
 
 
-!! Chapitre Deploiement
+!!! Chapitre : Extension du modèle et tests unitaires
+
+Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
+
+[[[
+Metacello new
+    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+    version: #week2solution;
+    configuration: 'TinyBlog';
+    load
+]]]
+
+Après le chargement d'un package, il est recommandé d'exécuter les tests unitaires qu'il contient afin de vérifier le bon fonctionnement du code chargé.
+Pour cela, vous pouvez lancer l'outil TestRunner (World menu > Test Runner), chercher le package TinyBlog-Tests et lancer tous les tests unitaires de la classe ==TBBlogTest== en cliquant sur le bouton "Run Selected". Tous les tests doivent être verts. Une alternative est de presser l'icone verte qui se situe à coté de la class ==TBBlogTest==. 
+
+Ouvrez maintenant un browser de code pour regarder le code des classes ==TBBlog== et ==TBBlogTest== et compléter votre propre code si nécessaire.
+Avant de poursuivre, n'oubliez pas de committer une nouvelle version dans votre dépôt sur Smalltalkhub ou SS3 si vous avez modifié votre application. 
+
+
+!!! Chapitre : Une Interface Web avec Teapot pour TinyBlog
+
+Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
+
+[[[
+Metacello new
+    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+    version: #week3solution;
+    configuration: 'TinyBlog';
+    load
+]]]
+
+Assurez vous que votre serveur Teapot est bien stoppé.
+[[[
+	TBTeapotWebApp stop
+]]]
+%Puis, testez le code en exécutant:
+%[[[
+%	TBTeapotWebApp start
+%]]]
+% Attention, vérifiez d'abord que votre propre serveur HTTP ne soit pas déjà lancé sur le port 8081.
+
+
+
+!!! Chapitre :Construction d'une interface Web en Seaside pour TinyBlog
+
+Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
+
+[[[
+Metacello new
+    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+    version: #week3solution;
+    configuration: 'TinyBlog';
+    load
+]]]
+
+Puis, testez le code en exécutant:
+
+[[[
+	TBTeapotWebApp start
+]]]
+
+Attention, vérifiez d'abord que votre propre serveur HTTP ne soit pas déjà lancé sur le même port . Si c'est le cas, arrêtez votre application ou changez son port. 
+
+Vous devez ajouter des posts dans le blog pour voir quelquechose. 
+
+[[[
+	TBBlog reset ; createDemoPosts
+]]]
+
+Avant de passer à la suite, stoppez votre serveur Teapot:
+
+[[[
+	TBTeapotWebApp stop
+]]]
+
+
+
+!!! Chapitre : Persistance des données de TinyBlog avec Voyage et Mongo
+
+
+Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
+
+[[[
+Metacello new
+    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+    version: #week4solution;
+    configuration: 'TinyBlog';
+    load
+]]]
+
+Pour tester le code, vous devez lancer le serveur HTTP pour Seaside  avec l'outil Seaside Control Panel (cf. sujet semaine précédente) ou avec le code suivant :
+
+[[[
+ZnZincServerAdaptor startOn: 8080.
+]]]
+
+Vous devrez également faire :
+
+[[[
+TBBlog reset ;
+    createDemoPosts
+]]]
+
+
+!!! Chapitre : Interface Web d'administration pour TinyBlog
+
+
 
 Vous pouvez charger l'application complète TinyBlog en exécutant :
 
