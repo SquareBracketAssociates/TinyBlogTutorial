@@ -10,7 +10,8 @@ CHAPTERS = \
 	Chapters/Chap10-TinyBlog-RenoirST-FR \
 	Chapters/Chap11-TinyBlog-Mustache-FR \
 	Chapters/Chap12-TinyBlog-Export \
-	Chapters/Chap13-TinyBlog-Deployment-FR 
+	Chapters/Chap13-TinyBlog-Deployment-FR \
+	Chapters/Chap14-TinyBlog-Loading-FR
 
 OUTPUTDIRECTORY = build
 LATEXTEMPLATE = support/templates/main.latex.mustache

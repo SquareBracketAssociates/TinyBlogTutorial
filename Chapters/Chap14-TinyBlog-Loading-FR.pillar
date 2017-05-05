@@ -1,0 +1,30 @@
+{
+    "title":"Charger le code des chapitres"
+}
+
+
+
+!! Chapitre Deploiement
+
+Vous pouvez charger l'application complète TinyBlog en exécutant :
+
+[[[
+Metacello new
+    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+    configuration: 'TinyBlog';
+    load
+]]]
+
+Pour tester le code, vous devez lancer le serveur HTTP pour Seaside:
+
+[[[
+ZnZincServerAdaptor startOn: 8080.
+]]]
+
+Si vous avez besoin de créer quelques posts initiaux:
+
+[[[
+TBBlog reset ; createDemoPosts
+]]]
+
+Complétez ou terminez ""votre"" application et commitez votre code dans votre dépôt sur Smalltalkhub.
