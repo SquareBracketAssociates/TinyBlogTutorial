@@ -1,3 +1,5 @@
+! The Core Tutorial
+
 ${inputFile:Chapters/Chap01-TinyBlog-Model-FR.pillar}$
 
 ${inputFile:Chapters/Chap02-TinyBlog-ModelExtensionTests-FR.pillar}$
@@ -10,13 +12,15 @@ ${inputFile:Chapters/Chap05-TinyBlog-Seaside-FR.pillar}$
 
 ${inputFile:Chapters/Chap06-TinyBlog-SeasideAdmin-FR.pillar}$
 
-${inputFile:Chapters/Chap12-TinyBlog-Deployment-FR.pillar}$
+${inputFile:Chapters/Chap13-TinyBlog-Deployment-FR.pillar}$
 
-! Optional Part
+! Optional Parts
 
 ${inputFile:Chapters/Chap09-SeasideREST.pillar}$
 
 ${inputFile:Chapters/Chap10-TinyBlog-RenoirST-FR.pillar}$
 
 ${inputFile:Chapters/Chap11-TinyBlog-Mustache-FR.pillar}$
+
+${inputFile:Chapters/Chap12-TinyBlog-Export.pillar}$
 
