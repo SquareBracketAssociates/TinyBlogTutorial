@@ -12,12 +12,27 @@
 %%%
 %%% Page layout
 %%%
-\newcommand\stockustrade{\setstocksize{9in}{6in}}
-\newcommand\setbleed[1]{%
+\newcommand{\stockustrade}{\setstocksize{9in}{6in}}
+\newcommand{\setbleed}[1]{%
     \settrimmedsize{\stockheight}{\stockwidth}{*}%
     \settrims{#1}{#1}%
     \advance\stockheight 2\trimtop
     \advance\stockwidth  2\trimedge}
+\newcommand{\paperbackpage}{
+  \stockustrade
+  \setbleed{.125in}
+  % \setbinding{5mm}
+  \setlrmarginsandblock{.85in}{.65in}{*}
+  \setulmarginsandblock{.75in}{.75in}{*}}
+\newcommand{\spiralboundpage}{
+  \setstocksize{11in}{210mm}% hybrid between A4 and US Letter
+  \setbleed{.125in}
+  \setlrmarginsandblock{1.5in}{1in}{*}
+  \setulmarginsandblock{1in}{1in}{*}}
+\newcommand{\pagelayout}[1]{
+  \providecommand{\setuppage}{#1}% set default page layout
+  \setuppage\checkandfixthelayout
+  \typeoutlayout}
 
 \settypeoutlayoutunit{mm}
 
@@ -43,7 +58,7 @@
   Scale=MatchLowercase
 ]{Fira Mono}%{Hack}
 \let\codefamily\ttfamily
-\let\textcode\texttt
+\newcommand\textcode[1]{\texttt{#1}}
 
 \noindentafterchapter
 \setlength{\parindent}{1.5em}
