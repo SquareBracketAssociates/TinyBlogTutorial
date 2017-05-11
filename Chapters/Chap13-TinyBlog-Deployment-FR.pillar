@@ -1,33 +1,7 @@
-{
-    "title":"Déploiement de TinyBlog"
-}
-! TinyBlog: Déploiement
-!!Correction semaine précédente
 
-Vous pouvez charger l'application complète TinyBlog en exécutant :
+!! Déploiement de TinyBlog
 
-[[[
-Metacello new
-    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    configuration: 'TinyBlog';
-    load
-]]]
-
-Pour tester le code, vous devez lancer le serveur HTTP pour Seaside:
-
-[[[
-ZnZincServerAdaptor startOn: 8080.
-]]]
-
-Si vous avez besoin de créer quelques posts initiaux:
-
-[[[
-TBBlog reset ; createDemoPosts
-]]]
-
-Complétez ou terminez ""votre"" application et commitez votre code dans votre dépôt sur Smalltalkhub.
-
-!!Déployer dans le cloud
+!!!Déployer dans le cloud
 
 Maintenant que vous avez développé votre application web TinyBlog, nous allons voir comment la déployer sur un serveur dans le cloud.
 Si vous souhaitez déployer votre application sur un serveur que vous administrez, nous conseillons la lecture du dernier chapitre du livre "Enterprise Pharo: a Web Perspective" (*http://books.pharo.org*).
