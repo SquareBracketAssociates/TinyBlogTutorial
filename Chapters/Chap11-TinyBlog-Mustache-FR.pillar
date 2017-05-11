@@ -1,14 +1,10 @@
-{
-    "title":"Utiliser des modèles de mise en page avec Mustache"
-}
-
-! Utiliser des modèles de mise en page avec Mustache
+!! Utiliser des modèles de mise en page avec Mustache
 
 Poursuivons l'amélioration de TinyBlog en nous intéressant à l'utilisation de modèles pour l'affichage des données de TinyBlog. Les modèles sont particulièrement utiles pour le développement web car ils permettent de mixer aisément des chaînes de caractères avec des balises HTML et ceci, sans avoir recours à de toujours pénibles manipulations des chaînes de caractères. Ils facilitent également la lecture et la maintenance du code. Ils sont très utiles pour la localisation des applications. Si votre logiciel doit être traduit en plusieurs langues, vous apprécierez forcément les modèles.
 
 Parmi les technologies web, il existe de nombreux moteurs de gestion des modèles. Avec Pharo, vous disposez de l'adaptation de Mustache (https://mustache.github.io/) qui est un produit reconnu. L'installation est rapide puisque le framework Mustache est disponible dans le catalogue Pharo.
 
-!!Ajouter un bas de page
+!!!Ajouter un bas de page
 
 L'objectif est d'ajouter un bas de page à l'écran principal de TinyBlog. Cette zone est généralement destinée à recevoir les mentions légales d'un site, des liens, les noms des auteurs et de nombreuses autres informations.
 
@@ -76,11 +72,11 @@ TBApplicationRootComponent >> footerStyleOn: aStyle
 
 Vous pouvez maintenant ajouter du contenu et pour cela, vous aller utiliser Mustache.
 
-!!Ajouter du contenu dans le bas de page
+!!!Ajouter du contenu dans le bas de page
 
-Pour ajouter des élément dans le bas de page, vous allez utiliser certains fonctionnalités de Mustache qui facilitent grandement la substitution d'éléments au sein de modèles. Avec Mustache, il est aîsé de manipuler des éléments textuels statiques mais également des textes générés dynamiquement.
+Pour ajouter des élément dans le bas de page, vous allez utiliser certaines fonctionnalités de Mustache qui facilitent grandement la substitution d'éléments au sein de modèles. Avec Mustache, il est aîsé de manipuler des éléments textuels statiques mais également des textes générés dynamiquement.
 
-!!!Utiliser du texte statique
+!!!Utiliser de texte statique
 
 Le premier modèle doit afficher les principales technologies utilisées dans TinyBlog. Pour cela, définissez une méthode ==renderPoweredByOn:== dans la classe ==TBPostListComponent==. Un dictionaire contient les données qui sont insérées au sein du modèle. Celui-ci est défini par une chaîne de caractères dans laquelle les éléments devant être substitués sont encadrés par les caractères "{{" et "}}". 
 
@@ -126,7 +122,7 @@ TBPostListComponent >> renderFooterOn: html
 
 +Le bas de page>file://figures/footer.png|width=75|label=nicer+
 
-!!Conclusion
+!!!Conclusion
 
 Nous n'avons ici qu'effleurer le potentiel de Mustache. Il simplifie réellement la construction d'éléments au sein d'une application web. Ce framework propose de nombreuses autres fonctionnalités. Pour en savoir plus et explorer toutes ses possibilités, nous vous invitons à consulter le chapitre qui lui est consacré au sein du livre "Enterprise Pharo".
 
