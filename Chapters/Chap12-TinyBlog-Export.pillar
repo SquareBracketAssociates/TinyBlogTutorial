@@ -4,20 +4,20 @@
 
 ! Exportation de données
 
-Tout bon logiciel se doit de disposer de fonctionnalités permettant l'exportation des données qu'il manipule. Dans le cadre de TinyBlog, il est ainsi intéressant de proposer à l'utilisateur d'exporter en PDF un billet afin d'en conserver la trace. Il pourra également l'imprimer aisément avec une mise en page adaptée. 
+Tout bon logiciel se doit de disposer de fonctionnalités permettant l'exportation des données qu'il manipule. Dans le cadre de TinyBlog, il est ainsi intéressant de proposer à l'utilisateur d'exporter en PDF un post afin d'en conserver la trace. Il pourra également l'imprimer aisément avec une mise en page adaptée. 
 Pour l'administrateur du blog, il est utile de proposer des fonctionnalités d'exportation en CSV et en XML afin de faciliter la sauvegarde du contenu du blog. En cas d'altération de la base de données, l'administrateur dispose alors d'une solution de secours pour remettre en ordre son instance de l'application dans les plus brefs délais. Proposer des fonctionnalités d'exportation permet également d'assouplir l'utilisation d'un logiciel en favorisant l'interopérabilité, c'est à dire l'échange des données avec d'autres logiciels. Il n'y a rien de pire qu'un logiciel fermé ne sachant communiquer avec personne.
  
 !! Exporter un article en PDF
 
-Le format PDF (Portable Document Format) a été créé par la société Adobe en 1992. C'est un langage de description de pages permettant de spécifier la mise en forme d'un document ainsi que son contenu. Il est particulièrement utile pour les documents électroniques et pour l'impression puisqu'un document PDF conserve sa mise en forme lorsqu'il est imprimé. Vous allez justement mettre à profit cette propriété en ajoutant à TinyBlog la possibilité d'exporter un billet sous la forme d'un fichier PDF.
+Le format PDF (Portable Document Format) a été créé par la société Adobe en 1992. C'est un langage de description de pages permettant de spécifier la mise en forme d'un document ainsi que son contenu. Il est particulièrement utile pour concevoir des documents électroniques, des eBooks et dans le cadre de l'impression puisqu'un document PDF conserve sa mise en forme lorsqu'il est imprimé. Vous allez justement mettre à profit cette propriété en ajoutant à TinyBlog la possibilité d'exporter un post sous la forme d'un fichier PDF.
 
 !!! Artefact
 
-La construction d'un document PDF avec Pharo est grandement simplifiée à l'aide d'un framework nommé Artefact (https://sites.google.com/site/artefactpdf). Pour l'installer, il vous suffit de le sélectionner dans le catalogue Pharo. 
+La construction d'un document PDF avec Pharo est grandement simplifiée à l'aide d'un framework nommé Artefact (https://sites.google.com/site/artefactpdf/). Pour l'installer, il vous suffit de le sélectionner dans le catalogue Pharo. 
 
 !!! Intégrer l'exportation dans la liste des posts
 
-Pour exporter un billet en PDF, l'utilisateur doit disposer d'un lien sur chaque billet. Pour cela, vous devez modifier la méthode ==TBPostComponent >> renderContentOn:==. 
+Pour pouvoir exporter un post en PDF, l'utilisateur doit disposer d'un lien sur chaque post. Pour cela, vous devez modifier la méthode ==TBPostComponent >> renderContentOn:==. 
 
 [[[
 renderContentOn: html
@@ -31,11 +31,11 @@ renderContentOn: html
 
 +Chaque post peut être exporté en PDF>file://figures/posttopdf.png|width=75|label=nicer+
 
-Lorsque l'utilisateur clique sur le lien, une instance de la classe ==TBPostPDFExport== est créée. Cette classe aura la responsabilité de construire et d'envoyer le document PDF à l'utilisateur. C'est pour cette raison qu'elle a besoin de deux paramètres qui sont le contexte HTTP et le billet sélectionné.
+Lorsque l'utilisateur clique sur le lien, une instance de la classe ==TBPostPDFExport== est créée. Cette classe aura la responsabilité de construire et d'envoyer le document PDF à l'utilisateur. C'est pour cette raison qu'elle a besoin de deux paramètres qui sont le contexte HTTP et le post sélectionné.
 
 !!! Construction du document PDF
 
-Vous allez maintenant implémenter la classe ==TBPostPDFExport==. Celle ci nécessite deux variables d'instance qui sont ==post== contenant le billet sélectionné et ==pdfdoc== pour stocker le document PDF généré.
+Vous allez maintenant implémenter la classe ==TBPostPDFExport==. Celle ci nécessite deux variables d'instance qui sont ==post== contenant le post sélectionné et ==pdfdo== pour stocker le document PDF généré.
 
 [[[
 Object subclass: #TBPostPDFExport
@@ -64,10 +64,81 @@ TBPostPDFExport class >> context: anHTTPContext post: aPost
 
 !! Exportation des posts au format CSV
 
+Vous allez poursuivre l'amélioration de TinyBlog en ajoutant une option dans la partie "Administration" de l'application. Celle ci doit permettre l'exportation de l'ensemble des billets du blog dans un fichier CSV. Ce format (Comma-separated values) est un format bien connu des utilisateurs de tableurs qui l'utilisent souvent pour importer ou exporter des données. Il s'agit d'un fichier texte dans lequel les données sont formatés et séparées les unes des autres à l'aide d'un caractère séparateur qui est le plus souvent une virgule. Le fichier est donc composé de lignes et chaque ligne contient un nombre identique de colonnes. Une ligne se termine par un un caractère de fin de ligne (CRLF).
+
+Pour gérer le format CSV dans Pharo, vous disposez du framework NeoCSV installable à l'aide du catalogue.
+
+!!! Ajouter l'option d'exportation
+
+L'utilisateur doit disposer d'un lien pour déclencher l'exportation des billets au format CSV. Ce lien est ajouté sur la page d'administration, juste en dessous du tableau référençant les billets publiés. Vous devez donc éditer la méthode ==TBPostsReport>>renderContentOn:== afin d'ajouter une ancre et un callback.
+
+[[[
+TBPostsReport>>renderContentOn: html
+	html tbsGlyphIcon perform: #iconPencil.
+   	html anchor
+   		callback: [ self addPost ];
+      	with: 'Add post'.
+	
+	super renderContentOn: html.
+	
+	html tbsGlyphIcon perform: #iconCloudDownload.
+   	html anchor
+   		callback: [ self exportToCSV ];
+      	with: 'Export to CSV'. 	
+]]]
+
+Cette méthode devient un peu trop longue. Il est temps de la fragmenter.
+
+[[[
+TBPostsReport>>renderAddPostAnchor: html
+	html tbsGlyphIcon perform: #iconPencil.
+	html anchor
+		callback: [ self addPost ];
+		with: 'Add post'
+
+TBPostsReport>>renderExportToCSVAnchor: html
+	html tbsGlyphIcon perform: #iconCloudDownload.
+	html anchor
+		callback: [ self exportToCSV ];
+		with: 'Export to CSV'
+
+TBPostsReport>>renderContentOn: html
+	self renderAddPostAnchor: html.
+	super renderContentOn: html.
+	self renderExportToCSVAnchor: html		
+]]]
+
+Il vous faut maintenant implémenter la méthode ==TBPostsReport>>exportToCSV==.  Celle ci génère une instance de la classe ==TBPostsCSVExport==. Cette classe doit transmettre au client un fichier CSV et doit donc connaître le contexte HTTP afin de pouvoir répondre. Il faut également lui transmettre le blog à exporter.
+
+[[[
+TBPostsReportexportToCSV
+	TBPostsCSVExport context: self requestContext blog: self blog	
+]]]
+
+!!! Implémentation de la classe TBPostsCSVExport
+
+La méthode de classe ==context:blog:== initialize une instance de ==TBPostsCSVExport== et appelle la méthode ==TBPostsCSVExport>>sendPostsToCSVFrom:to:==.
+
+[[[
+Object subclass: #TBPostsCSVExport
+	instanceVariableNames: ''
+	classVariableNames: ''
+	category: 'TinyBlog-Export'
+
+TBPostsCSVExport class >> context: anHTTPContext blog: aBlog
+	^ self new
+		sendPostsToCSVFrom: aBlog to: anHTTPContext 
+		yourself	
+]]]
+
+Cette méthode lit le contenu de la base et génère grâce à NeoCSV le document CSV. 
+
+
+
 !! Exportation des posts au format XML
 
 !!Amélioration possibles
 
-Il existe de nombreux autres formats utiles pour l'exportation des données. Pour améliorer TinyBlog, nous vous proposons d'ajouter le format JSON à la boîte à outils de TinyBlog. Pharo dispose du framework NeoJSON permettant de lire ou de produire un fichier au format JSON. 
+Il existe de nombreux autres formats utiles pour l'exportation des données. Nous vous proposons d'ajouter le format JSON à la boîte à outils de TinyBlog. 
 
-Une autre amélioration consiste à écrire un outil d'importation permettant de charger le contenu d'un fichier CSV ou XML dans la base de données de TinyBlog afin de restaurer son contenu.
+Une autre amélioration consiste à écrire un outil d'importation permettant de charger le contenu d'un fichier CSV ou XML dans la base de données de TinyBlog.
