@@ -131,9 +131,39 @@ TBPostsCSVExport class >> context: anHTTPContext blog: aBlog
 		yourself	
 ]]]
 
-Cette méthode lit le contenu de la base et génère grâce à NeoCSV le document CSV. 
+Cette méthode lit le contenu de la base et génère grâce à NeoCSV le document CSV. La première étape consiste à déclarer un flux binaire qui sera par la suite transmis au client.
 
+[[[
+TBPostsCSVExport >> sendPostsToCSVFrom: aBlog to: anHTTPContext	
+	| outputStream |
+	
+	outputStream := (MultiByteBinaryOrTextStream on: (OrderedCollection new)) binary.
+]]]
 
+La partie importante de la méthode utilise NeoCSV pour insérer dans le flux de sortie chaque billet converti au format CSV. Le titre, la date de publication et le contenu du billet sont séparés par une virgule. Lorsque cela est necessaire (titre et contenu), NeoCSV utilise des guillemets pour indiquer que la donnée est une chaine de caractères. La méthode ==nextPut:== permet d'insérer au début du fichier les noms des colonnes. La méthode ==addObjectFields:== sélectionne les données ajoutées au fichier et récoltées à l'aide de la méthode ==allBlogPosts==.
+
+[[[
+	outputStream nextPutAll: (String streamContents: [ :stream | 
+		(NeoCSVWriter on: stream)
+			nextPut: #('Title' 'Date' 'Content');
+			addObjectFields: { 
+				[ :post | post title ].
+				[ :post | post date ].
+				[ :post | post text ] }; 
+			nextPutAll: (aBlog allBlogPosts)
+	]).
+]]]
+
+Il ne vous reste plus qu'à transmettre les données au navigateur du poste client. Pour cela, il vous faut produire une réponse dans le contexte HTTP de la requête. Le type MIME (text/csv) et l'encodage (UTF-8) sont déclarés au navigateur.
+
+[[[
+	anHTTPContext respond: [:response | 
+		response 
+			contentType: 'text/csv; charset=UTF-8';
+			binary;
+			nextPutAll: (outputStream reset contents)
+	]
+]]]
 
 !! Exportation des posts au format XML
 
