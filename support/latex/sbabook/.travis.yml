@@ -6,7 +6,7 @@ before_install:
   - docker pull dpollet/texlive
 
 script:
-  - docker run --tty --rm --volume $PWD:/work dpollet/texlive latexmk
+  - docker run --tty --rm --volume $PWD:/work dpollet/texlive:base latexmk
 
 deploy:
   provider: releases

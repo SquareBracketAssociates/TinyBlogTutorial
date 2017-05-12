@@ -1,14 +1,12 @@
-#TinyBlog
+# TinyBlog
 
-TinyBlog is a tutorial for [Pharo](www.pharo.org). It explains how to create a simple blog engine with Pharo's web stack (Seaside,Magritte, Voyage, Bootstrap, etc.).
+[![Build status][badge]][travis]
 
-**Downloading the development version**
+TinyBlog is a tutorial (in French) for [Pharo](www.pharo.org).
+It explains how to create a simple blog engine with Pharo's web stack (Seaside, Magritte, Voyage, Bootstrap, etc.).
 
-```
-wget https://raw.githubusercontent.com/pillar-markup/pillar/master/download.sh
-chmod +x download.sh
-./download.sh
-```
+`FirstVersion` contains the original version prior to the MOOC version.
+`MoocVersion` contains the MOOC version (that is the basis for the final version).
 
-FirstVersion contains the original version prior to the mooc version.
-MoocVersion contains the mooc version (that is the basis for the final version).
+[travis]: https://travis-ci.org/SquareBracketAssociates/TinyBlogTutorial
+[badge]: https://travis-ci.org/SquareBracketAssociates/TinyBlogTutorial.svg?branch=master

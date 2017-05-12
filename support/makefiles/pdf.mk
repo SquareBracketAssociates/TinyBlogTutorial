@@ -55,5 +55,5 @@ $(foreach fmt,$(ALTERNATEPRINTFORMATS),\
 # LaTeX compilation via sub-make
 # (required because of the paths in the *.d dependency files)
 $(OUTPUTDIRECTORY)/%.pdf: $(OUTPUTDIRECTORY)/%.tex
-	ln -f support/makefiles/pdf.sub.mk $(@D)/Makefile
+	cp support/makefiles/pdf.sub.mk $(@D)/Makefile
 	make --directory=$(@D) $(@F)

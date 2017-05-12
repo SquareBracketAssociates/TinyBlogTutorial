@@ -1,8 +1,7 @@
 *~
 /crash.dmp
 .DS_Store
-/Pharo.changes
-/Pharo.image
+/Pharo.*
 /pharo-vm
 /pharo-ui
 /vm.sh
@@ -13,7 +12,7 @@ files/
 /package-cache
 stderr
 stdout
-/book-result/
+/build
 */figures/Thumbs.db
 /pillarPostExport.sh
 /play-cache

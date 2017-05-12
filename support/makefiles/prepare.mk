@@ -46,4 +46,4 @@ $(OUTPUTDIRECTORY)/gitHeadLocal.gin: $(OUTPUTDIRECTORY)
 # computing relative paths is… complicated)
 $(FIGURES:%=$(OUTPUTDIRECTORY)/%): $(OUTPUTDIRECTORY)/% : %
 	@mkdir -p $(dir $@)
-	ln -f $< $@
+	cp $< $@
