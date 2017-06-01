@@ -64,7 +64,7 @@ TBPostPDFExport class >> context: anHTTPContext post: aPost
 
 !! Exportation des posts au format CSV
 
-Vous allez poursuivre l'amélioration de TinyBlog en ajoutant une option dans la partie "Administration" de l'application. Celle ci doit permettre l'exportation de l'ensemble des billets du blog dans un fichier CSV. Ce format (Comma-separated values) est un format bien connu des utilisateurs de tableurs qui l'utilisent souvent pour importer ou exporter des données. Il s'agit d'un fichier texte dans lequel les données sont formatés et séparées les unes des autres à l'aide d'un caractère séparateur qui est le plus souvent une virgule. Le fichier est donc composé de lignes et chaque ligne contient un nombre identique de colonnes. Une ligne se termine par un un caractère de fin de ligne (CRLF).
+Vous allez poursuivre l'amélioration de TinyBlog en ajoutant une option dans la partie "Administration" de l'application. Celle ci doit permettre l'exportation de l'ensemble des billets du blog dans un fichier CSV. Ce format (Comma-separated values) est un format bien connu des utilisateurs de tableurs qui l'exploitent souvent pour importer ou exporter des données. Il s'agit d'un fichier texte dans lequel les données sont formatés et distinctes les unes des autres à l'aide d'un caractère séparateur qui est le plus souvent une virgule. Le fichier est donc composé de lignes et chacune d'entre elles contient un nombre identique de colonnes. Une ligne se termine par un un caractère de fin de ligne (CRLF).
 
 Pour gérer le format CSV dans Pharo, vous disposez du framework NeoCSV installable à l'aide du catalogue.
 
@@ -87,7 +87,7 @@ TBPostsReport>>renderContentOn: html
       	with: 'Export to CSV'. 	
 ]]]
 
-Cette méthode devient un peu trop longue. Il est temps de la fragmenter.
+Cette méthode devient un peu trop longue. Il est temps de la fragmenter et d'isoler les différents éléments composant l'interface utilisateur.
 
 [[[
 TBPostsReport>>renderAddPostAnchor: html
@@ -108,7 +108,7 @@ TBPostsReport>>renderContentOn: html
 	self renderExportToCSVAnchor: html		
 ]]]
 
-Il vous faut maintenant implémenter la méthode ==TBPostsReport>>exportToCSV==.  Celle ci génère une instance de la classe ==TBPostsCSVExport==. Cette classe doit transmettre au client un fichier CSV et doit donc connaître le contexte HTTP afin de pouvoir répondre. Il faut également lui transmettre le blog à exporter.
+Il vous faut maintenant implémenter la méthode ==TBPostsReport>>exportToCSV==. Celle ci génère une instance de la classe ==TBPostsCSVExport==. Cette classe doit transmettre au client un fichier CSV et doit donc connaître le contexte HTTP afin de pouvoir répondre. Il faut également lui transmettre le blog à exporter. 
 
 [[[
 TBPostsReportexportToCSV
@@ -154,18 +154,116 @@ La partie importante de la méthode utilise NeoCSV pour insérer dans le flux de
 	]).
 ]]]
 
-Il ne vous reste plus qu'à transmettre les données au navigateur du poste client. Pour cela, il vous faut produire une réponse dans le contexte HTTP de la requête. Le type MIME (text/csv) et l'encodage (UTF-8) sont déclarés au navigateur.
+Il ne vous reste plus qu'à transmettre les données au navigateur du poste client. Pour cela, il vous faut produire une réponse dans le contexte HTTP de la requête. Le type MIME (text/csv) et l'encodage (UTF-8) sont déclarés au navigateur. La méthode ==attachmentWithFileName:== permet de spécifier un nom de fichier au navigateur.
 
 [[[
 	anHTTPContext respond: [:response | 
 		response 
 			contentType: 'text/csv; charset=UTF-8';
+			attachmentWithFileName: 'posts.xml';
 			binary;
 			nextPutAll: (outputStream reset contents)
 	]
 ]]]
 
 !! Exportation des posts au format XML
+
+XML est un autre format populaire pour exporter des informations et ajouter cette fonctionnalité à TinyBlog ne sera pas difficile car Pharo dispose d'un excellent support du format XML. Pour installer le framework permettant de générer du XML, sélectionner ==XMLWriter== dans le catalogue Pharo. Les classes sont regroupées dans le paquet ==XML-Writer-Core==.
+
+Ici encore, vous allez ajouter une fonctionnalité afin d'exporter dans un fichier XML l'ensemble des billets contenus dans la base. Il faut donc ajouter un lien sur la page d'administration.
+
+[[[
+TBPostsReport >> renderExportToXMLAnchor: html
+	html tbsGlyphIcon perform: #iconCloudDownload.
+	html anchor
+		callback: [ self exportToXML ];
+		with: 'Export to XML'
+
+TBPostsReport >> renderContentOn: html
+	self renderAddPostAnchor: html.
+	super renderContentOn: html.
+	self renderExportToCSVAnchor: html.
+	self renderExportToXMLAnchor: html
+]]]
+
+Factorisons le code pour regrouper les deux fonctionnalités d'exportation au sein d'un seule méthode. Un caractère séparateur sera également judicieux pour améliorer l'affichage en évitant que les deux liens soient collés l'un à l'autre.
+
+[[[
+TBPostsReport >>  renderExportOptionsOn: html
+	self renderExportToCSVAnchor: html.
+	html text: ' '.
+	self renderExportToXMLAnchor: html
+
+TBPostsReport >> renderContentOn: html
+	self renderAddPostAnchor: html.
+	super renderContentOn: html.
+	self renderExportOptionsOn: html	
+]]]
+
+La nouvelle méthode ==exportToXML== instancie l'objet TBPostsXMLExport qui a la responsabilité de générer le document XML.
+
+[[[
+TBPostsReport >> exportToXML
+	TBPostsXMLExport context: self requestContext blog: self blog
+]]]
+
+Il vous faut maintenant implémenter la classe ==TBPostsXMLExport==. Celle ci contient une méthode de classe ==context:blog:== qui reçoit le contexte de la requête HTTP et la liste des billets.
+
+[[[
+Object subclass: #TBPostsXMLExport
+	instanceVariableNames: ''
+	classVariableNames: ''
+	category: 'TinyBlog-Export'
+
+TBPostsXMLExport class >> context: anHTTPContext blog: aBlog
+	^ self new
+		sendPostsToXMLFrom: aBlog to: anHTTPContext 
+		yourself	
+]]]
+
+La méthode d'instance ==sendPostsToXMLFrom:to:== prend en charge la conversion des instances ==TBPost== vers le format XML. Pour cela, vous avez besoin d'instancier la classe ==XMLWriter== et de sauvegarder l'instance dans la variable locale ==xml==. Celle ci contiendra le fichier XML produit.
+
+[[[
+TBPostsXMLExport >> sendPostsToXMLFrom: aBlog to: anHTTPContext	
+	| xml |
+
+	xml := XMLWriter new enablePrettyPrinting.
+]]]
+
+La message ==enabledPrettyPrinting== modifie le comportement du générateur XML en forçant l'insertion de retour à la ligne entre les différentes balises. Ceci facilite la lecture d'un fichier XML par un être humain. Si le document généré est volumeux, ne pas utiliser cette option permet de réduire la taille du fichier.
+
+Vous pouvez maintenant construire le fichier XML lui-même. La méthode ==xml== permet d'insérer un entête au tout début des données. Chaque billet est placé au sein d'une balise ==post== et l'ensemble des billets est stocké au sein de la balise ==posts==. Pour celle ci, un espace de nommage ==TinyBlog== est défini et pointe sur le domaine ==pharo.org==. Chaque balise ==post== est définie au sein du parcours de la collection retournée par la méthode ==allBlogPosts==. Le titre est conservé tel quel, par contre la date est convertie au format anglosaxon (year-month-day). Notez le traitement particulier appliqué sur le texte du billet. Celui ci est encadré par une section ==CDATA== afin de gérer correctement les caractères spéciaux pouvant s'y trouver (retour à la ligne, lettres accentuées, etc.).
+
+[[[
+xml writeWith: [ :writer | 
+		writer xml.
+		writer tag 
+			name: 'posts';
+			xmlnsAt: 'TinyBlog' put: 'www.pharo.org/tinyblog';
+			with: [  
+				aBlog allBlogPosts do: [ :post | 
+					writer tag: 'post' with: [
+						writer tag: 'title' with: post title.
+						writer tag: 'date' with: (post date yyyymmdd).
+						writer tag: 'text' with: [ writer cdata: post text ].
+					] 
+				]
+			]
+	].
+]]]
+
+La dernière étape consiste à retourner le document XML au client. Le type MIME utilisé ici est ==text/xml==. Le fichier généré porte le nom de ==posts.xml==.
+
+[[[
+anHTTPContext respond: [:response | 
+	response 
+		contentType: 'application/xml; charset=UTF-8';
+		attachmentWithFileName: 'posts.xml';
+		nextPutAll: (xml contents)
+	]	
+]]]
+
+
 
 !!Amélioration possibles
 
