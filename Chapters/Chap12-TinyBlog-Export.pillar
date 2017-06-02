@@ -170,6 +170,8 @@ Il ne vous reste plus qu'à transmettre les données au navigateur du poste clie
 
 XML est un autre format populaire pour exporter des informations. Ajouter cette fonctionnalité à TinyBlog ne sera pas difficile car Pharo dispose d'un excellent support du format XML. Pour installer le framework permettant de générer du XML, sélectionnez ==XMLWriter== dans le catalogue Pharo. Les classes sont regroupées dans le paquet ==XML-Writer-Core==.
 
+!!! Mise à jour de l'interface utilisateur
+
 Vous allez ajouter une fonctionnalité afin d'exporter dans un fichier XML l'ensemble des billets contenus dans la base. Il faut donc ajouter un lien sur la page d'administration.
 
 [[[
@@ -199,6 +201,8 @@ TBPostsReport >> renderContentOn: html
 	super renderContentOn: html.
 	self renderExportOptionsOn: html	
 ]]]
+
+!!! Génération des données XML
 
 La nouvelle méthode ==exportToXML== instancie l'objet ==TBPostsXMLExport== qui a la responsabilité de générer le document XML.
 
@@ -265,7 +269,7 @@ anHTTPContext respond: [:response |
 
 Quelques dizaines de lignes de code ont permis d'implémenter l'exportation en XML des billets. Votre moteur de blog dispose maintenant de fonctionnalités d'exportation et d'archivage des données.
 
-!!Amélioration possibles
+!! Amélioration possibles
 
 Il existe de nombreux autres formats utiles pour l'exportation des données. Nous vous proposons d'ajouter le format JSON à la boîte à outils de TinyBlog. Pour cela, nous vous recommandons d'utiliser le framework NeoJSON disponible dans le catalogue Pharo. 
 
