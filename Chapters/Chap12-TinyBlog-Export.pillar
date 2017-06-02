@@ -168,9 +168,9 @@ Il ne vous reste plus qu'à transmettre les données au navigateur du poste clie
 
 !! Exportation des posts au format XML
 
-XML est un autre format populaire pour exporter des informations et ajouter cette fonctionnalité à TinyBlog ne sera pas difficile car Pharo dispose d'un excellent support du format XML. Pour installer le framework permettant de générer du XML, sélectionner ==XMLWriter== dans le catalogue Pharo. Les classes sont regroupées dans le paquet ==XML-Writer-Core==.
+XML est un autre format populaire pour exporter des informations. Ajouter cette fonctionnalité à TinyBlog ne sera pas difficile car Pharo dispose d'un excellent support du format XML. Pour installer le framework permettant de générer du XML, sélectionnez ==XMLWriter== dans le catalogue Pharo. Les classes sont regroupées dans le paquet ==XML-Writer-Core==.
 
-Ici encore, vous allez ajouter une fonctionnalité afin d'exporter dans un fichier XML l'ensemble des billets contenus dans la base. Il faut donc ajouter un lien sur la page d'administration.
+Vous allez ajouter une fonctionnalité afin d'exporter dans un fichier XML l'ensemble des billets contenus dans la base. Il faut donc ajouter un lien sur la page d'administration.
 
 [[[
 TBPostsReport >> renderExportToXMLAnchor: html
@@ -186,10 +186,10 @@ TBPostsReport >> renderContentOn: html
 	self renderExportToXMLAnchor: html
 ]]]
 
-Factorisons le code pour regrouper les deux fonctionnalités d'exportation au sein d'un seule méthode. Un caractère séparateur sera également judicieux pour améliorer l'affichage en évitant que les deux liens soient collés l'un à l'autre.
+Factorisons le code pour regrouper les deux fonctionnalités d'exportation au sein d'un seule méthode. Un caractère séparateur sera également judicieux pour améliorer l'affichage en évitant que les deux liens ne soient collés l'un à l'autre.
 
 [[[
-TBPostsReport >>  renderExportOptionsOn: html
+TBPostsReport >> renderExportOptionsOn: html
 	self renderExportToCSVAnchor: html.
 	html text: ' '.
 	self renderExportToXMLAnchor: html
@@ -200,7 +200,7 @@ TBPostsReport >> renderContentOn: html
 	self renderExportOptionsOn: html	
 ]]]
 
-La nouvelle méthode ==exportToXML== instancie l'objet TBPostsXMLExport qui a la responsabilité de générer le document XML.
+La nouvelle méthode ==exportToXML== instancie l'objet ==TBPostsXMLExport== qui a la responsabilité de générer le document XML.
 
 [[[
 TBPostsReport >> exportToXML
@@ -221,7 +221,7 @@ TBPostsXMLExport class >> context: anHTTPContext blog: aBlog
 		yourself	
 ]]]
 
-La méthode d'instance ==sendPostsToXMLFrom:to:== prend en charge la conversion des instances ==TBPost== vers le format XML. Pour cela, vous avez besoin d'instancier la classe ==XMLWriter== et de sauvegarder l'instance dans la variable locale ==xml==. Celle ci contiendra le fichier XML produit.
+La méthode d'instance ==sendPostsToXMLFrom:to:== prend en charge la conversion des données contenues dans les instances de ==TBPost== vers le format XML. Pour cela, vous avez besoin d'instancier la classe ==XMLWriter== et de sauvegarder l'instance dans la variable locale ==xml==. Celle ci contiendra le fichier XML produit.
 
 [[[
 TBPostsXMLExport >> sendPostsToXMLFrom: aBlog to: anHTTPContext	
@@ -230,9 +230,9 @@ TBPostsXMLExport >> sendPostsToXMLFrom: aBlog to: anHTTPContext
 	xml := XMLWriter new enablePrettyPrinting.
 ]]]
 
-La message ==enabledPrettyPrinting== modifie le comportement du générateur XML en forçant l'insertion de retour à la ligne entre les différentes balises. Ceci facilite la lecture d'un fichier XML par un être humain. Si le document généré est volumeux, ne pas utiliser cette option permet de réduire la taille du fichier.
+La message ==enabledPrettyPrinting== modifie le comportement du générateur XML en forçant l'insertion de retour à la ligne entre les différentes balises. Ceci facilite la lecture d'un fichier XML par un être humain. Si le document généré est volumeux, ne pas utiliser cette option permet de réduire la taille des données.
 
-Vous pouvez maintenant construire le fichier XML lui-même. La méthode ==xml== permet d'insérer un entête au tout début des données. Chaque billet est placé au sein d'une balise ==post== et l'ensemble des billets est stocké au sein de la balise ==posts==. Pour celle ci, un espace de nommage ==TinyBlog== est défini et pointe sur le domaine ==pharo.org==. Chaque balise ==post== est définie au sein du parcours de la collection retournée par la méthode ==allBlogPosts==. Le titre est conservé tel quel, par contre la date est convertie au format anglosaxon (year-month-day). Notez le traitement particulier appliqué sur le texte du billet. Celui ci est encadré par une section ==CDATA== afin de gérer correctement les caractères spéciaux pouvant s'y trouver (retour à la ligne, lettres accentuées, etc.).
+Vous pouvez maintenant formater les données en XML. La message ==xml== permet d'insérer un entête au tout début des données. Chaque billet est placé au sein d'une balise ==post== et l'ensemble des billets est stocké au sein de la balise ==posts==. Pour celle ci, un espace de nommage ==TinyBlog== est défini et pointe sur le domaine ==pharo.org==. Chaque balise ==post== est définie au sein du parcours de la collection retournée par la méthode ==allBlogPosts==. Le titre est conservé tel quel, par contre la date est convertie au format anglosaxon (year-month-day). Notez le traitement particulier appliqué sur le texte du billet. Celui ci est encadré par une section ==CDATA== afin de gérer correctement les caractères spéciaux pouvant s'y trouver (retour à la ligne, lettres accentuées, etc.).
 
 [[[
 xml writeWith: [ :writer | 
@@ -263,10 +263,10 @@ anHTTPContext respond: [:response |
 	]	
 ]]]
 
-
+Quelques dizaines de lignes de code ont permis d'implémenter l'exportation en XML des billets. Votre moteur de blog dispose maintenant de fonctionnalités d'exportation et d'archivage des données.
 
 !!Amélioration possibles
 
-Il existe de nombreux autres formats utiles pour l'exportation des données. Nous vous proposons d'ajouter le format JSON à la boîte à outils de TinyBlog. 
+Il existe de nombreux autres formats utiles pour l'exportation des données. Nous vous proposons d'ajouter le format JSON à la boîte à outils de TinyBlog. Pour cela, nous vous recommandons d'utiliser le framework NeoJSON disponible dans le catalogue Pharo. 
 
-Une autre amélioration consiste à écrire un outil d'importation permettant de charger le contenu d'un fichier CSV ou XML dans la base de données de TinyBlog.
+Une autre amélioration consiste à écrire un outil d'importation permettant de charger le contenu d'un fichier CSV ou XML dans la base de données de TinyBlog. Cette fonctionnalité vous permettra de restaurer le contenu de la base de données si un problème technique survient.
