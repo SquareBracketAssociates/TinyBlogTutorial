@@ -10,3 +10,9 @@ It explains how to create a simple blog engine with Pharo's web stack (Seaside, 
 
 [travis]: https://travis-ci.org/SquareBracketAssociates/TinyBlogTutorial
 [badge]: https://travis-ci.org/SquareBracketAssociates/TinyBlogTutorial.svg?branch=master
+
+## Todos
+
+Les fichiers pillar contiennent des notes sur ce qu'il faut fixer/faire.
+
+	grep -rni @todo Chapters
