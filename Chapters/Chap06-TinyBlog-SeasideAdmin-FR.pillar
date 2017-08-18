@@ -96,13 +96,13 @@ TBAuthentificationComponent >> account
    ^ account
 
 TBAuthentificationComponent >> account: anObject
-   ^ account := anObject
+   account := anObject
 
 TBAuthentificationComponent >> password
    ^ password
 
 TBAuthentificationComponent >> password: anObject
-   ^ password := anObject
+   password := anObject
 
 TBAuthentificationComponent >> component
    ^ component
@@ -336,9 +336,9 @@ TBAdminComponent >> renderContentOn: html
       html render: self report ]
 ]]]
 
-Par défaut, le rapport affiche l'intégralité des données présentes dans chaque posts mais certaines colonnes ne sont pas utiles. Il faut donc filtrer les colonnes. Nous ne retiendrons ici que le titre, la catégorie et la date de rédaction.
+Par défaut, le rapport affiche l'intégralité des données présentes dans chaque post mais certaines colonnes ne sont pas utiles. Il faut donc filtrer les colonnes. Nous ne retiendrons ici que le titre, la catégorie et la date de rédaction.
 
-Nous ajoutons une méthode de classe pour la sélection des colonnes et modifier ensuite la méthode ==from:== pour en tirer parti.
+Nous ajoutons une méthode de classe pour la sélection des colonnes et modifions ensuite la méthode ==from:== pour en tirer parti.
 
 [[[
 TBPostsReport class >> filteredDescriptionsFrom: aBlogPost
