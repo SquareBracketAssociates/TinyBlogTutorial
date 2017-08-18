@@ -18,7 +18,7 @@ Grâce à la méthode de classe ==isVoyageRoot==, nous déclarons que les objets
 
 [[[
 TBBlog class >> isVoyageRoot
-   "Indicates that instances of this class are top level document in noSQL databases"
+   "Indicates that instances of this class are top level documents in noSQL databases"
    ^ true
 ]]]
 
@@ -126,7 +126,7 @@ Ces queries sont plus pertinentes quand on a plus d'objets mais nous ferions exa
 Cette section n'est pas à implémenter et elle est juste donnée à titre d'exemple plus d'explications sont données dans le chapitre sur Voyage dans Enterprise Pharo disponible a *http://www.pharo.org*. Nous voulons illustrer que déclarer une classe comme une racine Voyage a une influence sur comment une instance de cette classe est sauvée et rechargée. En particulier car elle ne fait plus partie de l'objet qui lui faisait référence : dans la base elle n'est plus une souspartie du document représentant l'objet qui la référence mais un document autonome.  
 
 
-Nous pourrions définir qu'un post soit un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Par contre, si nous représentions les commentaires d'un post nous ne les déclarerions pas non plus comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
+Nous pourrions définir qu'un post soit un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Par contre, si nous représentions les commentaires d'un post, nous ne les déclarerions pas non plus comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
 
 Lorsqu'un post n'est pas une racine, vous n'avez pas la certitude d'unicité de celui-ci lors du chargement depuis la base. En effet, lors du chargement (et ce qui peut être contraire à la situation du graphe d'objet avant la sauvegarde) un post n'est alors pas partagé entre deux instances de blogs. Si avant la sauvegarde en base un post était partagé entre deux blogs, après le chargement depuis la base, ce post sera dupliqué car recréé à partir de la définition du blog (et le blog contient alors complètement le post).
 
@@ -137,7 +137,7 @@ Pour cela on nous définirions les méthodes suivantes:
 
 [[[
 TBPost class >> isVoyageRoot
-   "Indicates that instances of this class are top level document in noSQL databases"
+   "Indicates that instances of this class are top level documents in noSQL databases"
    ^ true
 ]]]
 
