@@ -468,16 +468,16 @@ TBCategoriesComponent >> selectCategory: aCategory
 Nous avons donc besoin d'ajouter une variable d'instance pour stocker la catégorie courante dans ==TBPostsListComponent==.
 
 [[[
-TBScreenComponent subclass: #TBPostsListComponent
+TBPostsListComponent subclass: #TBPostsListComponent
    instanceVariableNames: 'currentCategory'
    classVariableNames: ''
    package: 'TinyBlog-Components'
 ]]]
 [[[
-TBScreenComponent >> currentCategory
+TBPostsListComponent >> currentCategory
    ^ currentCategory
    
-TBScreenComponent >> currentCategory: anObject
+TBPostsListComponent >> currentCategory: anObject
    currentCategory := anObject
 ]]]
 
