@@ -1,10 +1,8 @@
 {
-"title":"L'application TinyBlog : présentation et modèle"
+	"title" : "L'application TinyBlog : présentation et modèle"
 }
 
 !! L'application TinyBlog : présentation et modèle
-
-
 
 Tout au long de ce projet, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs (voir l'état final de l'application dans la Figure *@TinyBlogOnPharoCloud*). L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
 
@@ -17,24 +15,22 @@ Notre objectif n'est pas d'être exhaustif. Nous montrons une façon de faire ce
 
 !!!Installation de Pharo
 
-Attention, dans ce tutoriel nous supposons que vous utilisez Pharo 6.0 avec une image spéciale avec des packages pré-chargés. Dans TinyBlog, nous allons également utiliser des bibliothèques et frameworks supplémentaires pour le développement d'applications Web: Seaside, Magritte, Bootstrap, Voyage, VoyageMongo, ... 
-
-Nous vous suggérons de toujours utiliser l'image avec tous les packages web chargés que vous trouvez sur HERE car cette image contient tous les packages nécessaires.
+Dans ce tutoriel, nous supposons que vous utilisez Pharo 6.0 (*http://pharo.org/download*) avec une image dans laquelle ont été chargés des bibliothèques et des frameworks spécifiques pour le développement d'applications Web: Seaside, Magritte, Bootstrap, Voyage, VoyageMongo, ... 
+Pour développer votre application TinyBlog et suivre ce tutoriel, nous vous suggérons de toujours utiliser l'image disponible à l'adresse suivante: *https://ci.inria.fr/pharo-contribution/job/PharoWeb/PHARO=60,VERSION=stable,VM=vm/lastSuccessfulBuild/artifact/PharoWeb.zip* car elle contient tous les packages nécessaires.
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-!!! Le modèle des posts
+!!! Règles de nommage
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Le modèle de TinyBlog est extrêmement simple. Nous commençons ici par la classe ==TBPost==.
 
 Dans la suite, nous préfixons tous les noms de classe par ==TB== (pour TinyBlog).
-Il serait préférable que choisissiez un autre préfixe (par exemple ==TBM==) afin de pouvoir ensuite charger la correction dans la même image Pharo et la comparer à votre propre classe. 
+Vous pouvez:
+- soit choisir un autre préfixe (par exemple ==TBM==) afin de pouvoir ensuite charger la correction dans la même image Pharo et la comparer à votre propre implémetation,
+- soit choisir le même préfixe afin de pouvoir fusionner les solutions avec votre code. L'outil de merge vous montrera les différences et vous permettra d'apprendre des changements. Cette solution est toutefois plus contraingnante si implémentez des fonctionnalités supplémentaires par rapport aux corrections ou même différemment ce qui est fort probable.
 
-Si vous êtes familier avec la fusion (merge) de code, vous pouvez utiliser le préfixe ==TB== et fusionner les solutions avec votre code. L'outil de merge vous montrera les différences et vous permettra d'apprendre des changements.
 
 !!!La classe TBPost
 
-Définissez la classe ==TBPost== comme suit:
+Le modèle de TinyBlog est extrêmement simple. Nous commençons ici par la classe ==TBPost== définie ainsi:
 
 [[[
 Object subclass: #TBPost
@@ -42,8 +38,6 @@ Object subclass: #TBPost
    classVariableNames: ''
    package: 'TinyBlog'
 ]]]
-
-!!!Description d'un post
 
 Nous utilisons cinq variables d'instance pour décrire un post sur le blog.
 
@@ -55,7 +49,7 @@ Nous utilisons cinq variables d'instance pour décrire un post sur le blog.
 |visible       |Post visible ou pas ?        |
 
 
-Ces variables ont des méthodes accesseurs dans le protocole 'accessing'.
+Cette classe est également dotée de méthodes d'accès (aussi appelées accesseurs) à ces variables d'instances dans le protocole 'accessing'.
 
 [[[
 TBPost >> title
@@ -100,7 +94,7 @@ TBPost >> category: anObject
 
 !!!Gérer la visibilité d'un post
 
-Il faut avoir la possibilité d'indiquer qu'un post est visible ou pas. Il faut également pouvoir demander à un post s'il est visible. Les méthodes sont définies dans le protocole 'action'.
+Ajoutons dans le protocole 'action' des méthodes pour indiquer qu'un post est visible ou pas.
 
 [[[
 TBPost >> beVisible
@@ -109,11 +103,6 @@ TBPost >> beVisible
 [[[
 TBPost >> notVisible
    self visible: false
-]]]
-
-[[[
-TBPost >> isVisible
-   ^ self visible
 ]]]
 
 
@@ -126,10 +115,11 @@ TBPost class >> unclassifiedTag
    ^ 'Unclassified'
 ]]]
 
-Attention la méthode ==unclassifiedTag== est définie au niveau de la classe (cliquer le bouton classe pour la définir). Les autres méthodes sont des méthodes d'instances c'est-à-dire qu'elles seront exécutées sur des instances de la classe ==TBPost==. 
+Attention la méthode ==unclassifiedTag== est définie au niveau de la classe (cliquer le bouton 'Class' pour la définir). Les autres méthodes sont des méthodes d'instances c'est-à-dire qu'elles seront exécutées sur des instances de la classe ==TBPost==. 
 
 [[[
 TBPost >> initialize
+	super initialize.
    self category: TBPost unclassifiedTag.
    self date: Date today.
    self notVisible
@@ -137,11 +127,9 @@ TBPost >> initialize
 
 Dans la solution proposée ci-dessus pour la méthode ==initialize==, il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==. 
 
-
-
 !!!Méthodes de création
 
-Coté classe, on spécifie des méthodes pour faciliter la création de post appartenant ou pas à une catégorie.
+Coté classe, on définit des méthodes (dans la catégorie 'instance creation') pour faciliter la création de post appartenant ou pas à une catégorie.
 
 [[[
 TBPost class >> title: aTitle text: aText
@@ -158,10 +146,9 @@ TBPost class >> title: aTitle text: aText category: aCategory
             yourself
 ]]]
 
-
 !!!Création de posts
 
-Vous pouvez dès maintenant créer des posts. Ouvrez l'outil Playground et exécutez l'expression suivante :
+Vous pouvez maintenant créer des posts. Ouvrez l'outil Playground et recopiez l'expression suivante :
 
 [[[
 TBPost 
@@ -170,26 +157,27 @@ TBPost
 	category: 'TinyBlog'
 ]]]
 
-Si vous inspectez le code ci-dessus (clique droit sur l'expression et "inspect"), vous allez obtenir un inspecteur sur l'objet post nouvellement créé.
+Si vous inspectez le code ci-dessus (clic droit sur l'expression et "Inspect it"), vous allez obtenir un inspecteur sur l'objet post nouvellement créé comme représenté sur la Figure *@inspectorOnTBPost*.
 
++Inspecteur sur une instance de TBPost>figures/inspectorOnTBPost.png|width=100|label=inspectorOnTBPost+
 
-@@todo add a screenshot of the inspector
+!!! Interrogation d'un post
 
-!!!Test
-
-Nous définissons une méthode afin de savoir si un post est classé dans une catégorie.
+Dans le protocole 'testing', définissez les deux méthodes suivantes permettant respectivement de demander à un post s'il est visible et s'il est classé dans une catégorie.
 
 [[[
+TBPost >> isVisible
+   ^ self visible
+
 TBPost >> isUnclassified
    ^ self category = TBPost unclassifiedTag
 ]]]
 
-De même il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==.
+De même il serait préférable de ne pas faire une référence en dur à la classe ==TBPost== dans le code d'une méthode.
 
 !!! Conclusion
 
-Nous avons maintenant une première partie du modèle et nous vous suggèrons 
-de sauver votre image Pharo (menu item 'save'). Lors de la prochaine séance nous vous montrerons comment sauver votre code (package) avec le système de version de Pharo. 
+Nous avons maintenant une première partie du modèle et nous vous suggérons de sauver votre image Pharo (clic gauche sur le fond de Pharo pour accéder au menu world et sélectionner 'save'). Lors de la prochaine séance nous vous montrerons comment sauver votre code (package) avec le système de version de Pharo. 
 
 Notez que des videos sont disponibles dans le Mooc Pharo qui montre la procédure pour sauver du code: *http://mooc.pharo.org*.
 
