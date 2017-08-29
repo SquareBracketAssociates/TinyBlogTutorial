@@ -1,9 +1,28 @@
 sudo: required
 services:
-  - docker
+- docker
 
 before_install:
-  - docker pull dpollet/texlive:pillar
+- docker pull dpollet/texlive:pillar
 
-script:
-  - docker run --tty --rm --volume $PWD:/work dpollet/texlive:pillar make spiralbook
+script: |
+  docker run --tty --rm --volume $PWD:/work dpollet/texlive:pillar bash -c "\
+    wget --quiet --output-document=- 'https://raw.githubusercontent.com/pillar-markup/pillar/master/download.sh' | bash \
+    && make spiralbook"
+
+deploy:
+- provider: bintray
+  file: .bintray.json
+  on:
+    repo: SquareBracketAssociates/TinyBlogTutorialcd 
+  skip_cleanup: true
+  user: ducasse
+  key:
+    secure: BlZBb9mGchGpn4d/znCUVTg2ZIPbEDs0flLnBPM/ftFzJf8glkKf639287NmTa59/k3BSoEbOF8gF8Xxw/Bj9gaR6fJwIZlA+ltlfq22aNZDkqf34oPY8d7q6t3GW/blK0fykDpqeSS7YhyCiO/ldVvpgjUfDxLitEoC/dDVUeNZ4qTvifmmtXzwRE24jiyaXR/Dvo8Mgsktu5hRkPgThYou0ls0sb2CPA2OH1zEKGBCWZF2F1hZsDD2kF57sfj6WBisbJIGtH3qDMrtt0RMDsDEAyZaR7o3r5+DpzEyshd28vaHPdDwYxRaC1qvXCf9tJyPFNGlydKdYeioLk7K87kWiw5LfzP/kaVtqGgF8+9dSxw6F4KJz+vMHZfdFDTG5gzc7qfvkNbGmWR1wwTRY5cSEkYs23qY4dc8M47RBpUA1Xoui13rRExvdpCFmpdN3mWhiaXfeEB+uihYfn1JoelkMufePrbbUANzVpbztcQWfsQ5fKgcqtwqF1Q1mGkFBaMoDnu6PipGl5dIFo7iN1apMHVFtWg1bq06KEG66A9dXvfDiRPWg2WagAK0UQwatsK3HR34OOGmIGKaIQyiVpgSjeMWR3kDNM0MMas3igBClWUXv0iCo5B7SB8OGY5Su1E1zy/RJviai/sVLoOvjiEl8+mnNwsqGnQwoaS65WY=
+- provider: releases
+  file: build/book.pdf
+  on:
+    tags: true
+  skip_cleanup: true
+  api_key:
+    secure: pRfu3fr35BzqQDi1ul0SubPSwO8zcyIidqLRZPz3XIrH4qoy1Zgnq785dmB7ziNQqH+VJyh7askSFY3JLxL0d4P0eUgj2ZDIOhJsUQQ/ihevOBWbxlMOoEPjQfzA11l8WrNCQ566KrcYiISRi7bCg698kPTWSRwOmmvqXOJe5zGkuUbVmMNUV2oxaNV4JC8kVyVWHYy0nNMLEX/hzRZRh1+8K34/ds+fZ7irLrbDWMbKGHCyuLCSqv+zJJdu99nWLTclrCxFzK4DEHaMlFiO7wkUpyQLwZ38EDnb3E7iv045jSqCx3XB+DMRG1Da2/9BIXl0mho5ELdEvfGVAbjI2no5FWd0H1cs4/banAePCFnM7ZscJBaPWgVajB7EzrcADJUoxpmU6+6n1aIC3CnjscfAHqSAKGv8CO/Jh+Uirc8ATRpSqa73f2Nnj9tRCqwCOnFOCEzu0w5l3Ppz2Qpif04P+QbebZehSVaBJ4W01R2i8Rac3IuZDhZVaek1X24HFxUOd/rvHpbhz8eeANdnsWCTkAm+0sD+iKsWKICRMxFZfCK/SPldAcjXZsOsEMTqfx7ZWyCc7GeesQWcmW+z3shziyQd9tdeArJWLwacly3hH3WeyuUD5JyPF9klvDBtHgTVajdU4yp+3oXsrtTmetnBz+RESxQGdLgZRlQBQog=

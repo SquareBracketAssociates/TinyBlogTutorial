@@ -1,0 +1,27 @@
+{
+    "package": {
+        "name": "Loop",
+        "repo": "wip",
+        "subject": "squarebracketassociates",
+        "desc": "Tiny Blog: Un tutorial web",
+        "licenses": ["MIT"],
+        "website_url": "https://github.com/SquareBracketAssociates/TinyBlogTutorial",
+        "issue_tracker_url": "https://github.com/SquareBracketAssociates/TinyBlogTutorial/issues",
+        "vcs_url": "https://github.com/SquareBracketAssociates/TinyBlogTutorial.git",
+        "labels": ["work-in-progress"]
+    },
+
+    "version": {
+        "name": "latest",
+        "desc": "Latest successful build"
+    },
+
+    "files": [
+        {
+            "includePattern": "build/(book).spiral.pdf",
+            "uploadPattern": "$1TinyBlogFR-wip.pdf",
+            "matrixParams": { "override": 1 }
+        }
+    ],
+    "publish": true
+}
