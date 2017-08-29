@@ -14,7 +14,7 @@ deploy:
 - provider: bintray
   file: .bintray.json
   on:
-    repo: SquareBracketAssociates/TinyBlogTutorialcd 
+    repo: SquareBracketAssociates/TinyBlogTutorial
   skip_cleanup: true
   user: ducasse
   key:
