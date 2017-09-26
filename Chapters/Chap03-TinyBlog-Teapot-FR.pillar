@@ -1,9 +1,8 @@
 !! Construire une interface Web avec Teapot pour TinyBlog
 
-
-!!!Une interface web avec Teapot
-
-Dans la suite, nous allons créer une première interface web pour TinyBlog en utilisant Teapot (*http://smalltalkhub.com/#!/~zeroflag/Teapot*). Nous verrons une solution bien plus complète avec Seaside par la suite.
+Ce chapitre optionnel peut être réalisé juste après le chapitre *@chapModelExtensionAndUnitTests*.
+Il vous guide dans la réalisation d'une première interface web pour TinyBlog en utilisant Teapot (*http://smalltalkhub.com/#!/~zeroflag/Teapot*). 
+Nous verrons une solution bien plus complète avec Seaside par la suite.
 
 !!!!La classe TBTeapotWebApp
 
