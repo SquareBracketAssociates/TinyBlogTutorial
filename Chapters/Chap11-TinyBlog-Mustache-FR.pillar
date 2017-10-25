@@ -68,9 +68,9 @@ TBApplicationRootComponent >> footerStyleOn: aStyle
 		yourself
 ]]]
 
-+Le bas de page>file://figures/emptyfooter.png|width=75|label=nicer+
++Le bas de page>file://figures/emptyfooter.png|width=75|label=nicer11+
 
-Vous pouvez maintenant ajouter du contenu et pour cela, vous aller utiliser Mustache.
+Vous pouvez maintenant ajouter du contenu et pour cela, vous allez utiliser Mustache.
 
 !!!Ajouter du contenu dans le bas de page
 
@@ -120,7 +120,7 @@ TBPostListComponent >> renderFooterOn: html
 	]
 ]]]
 
-+Le bas de page>file://figures/footer.png|width=75|label=nicer+
++Le bas de page>file://figures/footer.png|width=75|label=nicer112+
 
 !!!Conclusion
 

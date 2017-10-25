@@ -102,7 +102,7 @@ TBPost >> initialize
    self notVisible
 ]]]
 
-Dans la solution proposée ci-dessus pour la méthode ==initialize==, il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==. 
+Dans la solution proposée ci-dessus pour la méthode ==initialize==, il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==. Proposez une solution. 
 
 !!!Méthodes de création
 

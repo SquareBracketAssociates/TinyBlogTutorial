@@ -101,7 +101,7 @@ TBApplicationRootComponent >> styleSheet
 ]]]
 
 
-Le titre peut être amélioré en faisant en sorte que le premier caractère soit mis en valeur. Il sera plus grand et obligatoirement écrit à l'aide d'une lettre majuscule. Le titre est souligné à l'aide d'un trait fin. 
+Le titre peut être amélioré en faisant en sorte que le premier caractère soit mis en valeur. Il sera plus grand et obligatoirement écrit à l'aide d'une lettre majuscule. Le titre est souligné à l'aide d'un trait fin comme afficher dans la figure *@nicer10*. 
 
 [[[
 TBApplicationRootComponent >> styleSheet
@@ -127,7 +127,7 @@ TBApplicationRootComponent >> styleSheet
 		build) asString
 ]]]
 
-+Amélioration de l'apparence de TinyBlog>file://figures/newlook.png|width=75|label=nicer+
++Amélioration de l'apparence de TinyBlog>file://figures/newlook.png|width=75|label=nicer10+
 
 
 !!! Faciliter la maintenance
