@@ -1,32 +1,9 @@
-{
-	"title" : "L'application TinyBlog : présentation et modèle"
-}
-
 !! L'application TinyBlog : présentation et modèle
 
-Tout au long de ce projet, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs (voir l'état final de l'application dans la Figure *@TinyBlogOnPharoCloud*). L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
+Tout au long de ce projet, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs (voir  la Figure *@TinyBlogOnPharoCloud*). L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
 
-TinyBlog est une application à but pédagogique qui va vous montrer comment définir et déployer une application en utilisant Pharo/Seaside/Mongo ainsi que des frameworks disponibles en Pharo comme NeoJSON.
-Dans une seconde partie,  nous présenterons aussi comment exposer votre application via un serveur REST. 
-Les solutions proposées dans ce tutoriel sont parfois non optimales afin de vous faire réagir et que vous puissiez proposer d'autres solutions et des améliorations.
-Notre objectif n'est pas d'être exhaustif. Nous montrons une façon de faire cependant nous invitons le lecteur à lire les références sur les autres chapitres, livres et tutoriaux Pharo afin d'approfondir son expertise et enrichir son application.
 
-+Final state of the TinyBlog application>figures/TinyBlogOnPharoCloud.png|width=100|label=TinyBlogOnPharoCloud+
-
-!!!Installation de Pharo
-
-Dans ce tutoriel, nous supposons que vous utilisez Pharo 6.0 (*http://pharo.org/download*) avec une image dans laquelle ont été chargés des bibliothèques et des frameworks spécifiques pour le développement d'applications Web: Seaside, Magritte, Bootstrap, Voyage, VoyageMongo, ... 
-Pour développer votre application TinyBlog et suivre ce tutoriel, nous vous suggérons de toujours utiliser l'image disponible à l'adresse suivante: *https://ci.inria.fr/pharo-contribution/job/PharoWeb/PHARO=60,VERSION=stable,VM=vm/lastSuccessfulBuild/artifact/PharoWeb.zip* car elle contient tous les packages nécessaires.
-
-% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-!!! Règles de nommage
-% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Dans la suite, nous préfixons tous les noms de classe par ==TB== (pour TinyBlog).
-Vous pouvez:
-- soit choisir un autre préfixe (par exemple ==TBM==) afin de pouvoir ensuite charger la correction dans la même image Pharo et la comparer à votre propre implémetation,
-- soit choisir le même préfixe afin de pouvoir fusionner les solutions avec votre code. L'outil de merge vous montrera les différences et vous permettra d'apprendre des changements. Cette solution est toutefois plus contraingnante si implémentez des fonctionnalités supplémentaires par rapport aux corrections ou même différemment ce qui est fort probable.
-
++L'application TinyBlog.>figures/TinyBlogOnPharoCloud.png|width=100|label=TinyBlogOnPharoCloud+
 
 !!!La classe TBPost
 
@@ -179,10 +156,7 @@ De même il serait préférable de ne pas faire une référence en dur à la cla
 
 Nous avons maintenant une première partie du modèle et nous vous suggérons de sauver votre image Pharo (clic gauche sur le fond de Pharo pour accéder au menu world et sélectionner 'save'). Lors de la prochaine séance nous vous montrerons comment sauver votre code (package) avec le système de version de Pharo. 
 
-Notez que des videos sont disponibles dans le Mooc Pharo qui montre la procédure pour sauver du code: *http://mooc.pharo.org*.
-
-@@todo put better link
-
+Notez que des videos sont disponibles dans le Mooc Pharo qui montre la procédure pour sauver du code: *http://mooc.pharo.org* et en particulier la video de la semaine 1 qui montre comment développer et sauver le compteur: *http://W1/C019-W1S-Videos-Redo-Counter-Traditional-FR-v4.mp4*.
 % !Le modèle des auteurs
 %
 % Un post est écrit par un auteur.

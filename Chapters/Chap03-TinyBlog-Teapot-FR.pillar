@@ -1,8 +1,8 @@
 !! Construire une interface Web avec Teapot pour TinyBlog
 
 Ce chapitre optionnel peut être réalisé juste après le chapitre *@chapModelExtensionAndUnitTests*.
-Il vous guide dans la réalisation d'une première interface web pour TinyBlog en utilisant Teapot (*http://smalltalkhub.com/#!/~zeroflag/Teapot*). 
-Nous verrons une solution bien plus complète avec Seaside par la suite.
+Il vous guide dans la réalisation d'une interface web pour TinyBlog en utilisant Teapot (*http://smalltalkhub.com/#!/~zeroflag/Teapot*). 
+Teapot est un serveur REST au dessus de Zinc - Un chapitre plus complet est disponible dans le livre ''Entreprise Pharo: a Web perspective'' (*http://books.pharo.org*). Il est plus primitif que Seaside qui permet de générer des éléments graphiques. 
 
 !!!!La classe TBTeapotWebApp
 

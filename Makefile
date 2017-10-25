@@ -1,5 +1,6 @@
 MAIN = book
 CHAPTERS = \
+        Chapters/Chap00-TinyBlog-Introduction-FR \
 	Chapters/Chap01-TinyBlog-Model-FR \
 	Chapters/Chap02-TinyBlog-ModelExtensionTests-FR \
 	Chapters/Chap03-TinyBlog-Teapot-FR \

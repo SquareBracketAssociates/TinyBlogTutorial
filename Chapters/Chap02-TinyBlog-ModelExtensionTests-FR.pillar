@@ -36,7 +36,9 @@ Il existent plusieurs serveurs en ligne permettant d'héberger vos dépôts de c
 - Indiquez une description pour votre commit et sauver. Votre code vient d'être envoyé sur le serveur.
 
 Le code de votre application TinyBlog est maintenant sauvegardé dans votre dépôt sur Smalltalkhub. Il est donc maintenant possible de charger votre code dans une nouvelle image Pharo. 
-Pour rappel, dans le cadre de ce tutoriel, nous vous suggérons de toujours utiliser l'image avec tous les packages web chargés que vous trouvez sur *https://ci.inria.fr/pharo-contribution/job/PharoWeb/PHARO=60,VERSION=stable,VM=vm/lastSuccessfulBuild/artifact/PharoWeb.zip*. Cela vous permettra de pouvoir recharger votre package sans devoir vous soucier des dépendances sur d'autres packages. 
+Pour rappel, dans le cadre de ce tutoriel, nous vous suggérons de toujours utiliser l'image avec tous les packages web chargés que vous trouvez sur *http://files.pharo.org/mooc/image/PharoWeb-60.zip*. Cela vous permettra de pouvoir recharger votre package sans devoir vous soucier des dépendances sur d'autres packages. 
+
+
 
 !!!A propos de dépendances
 

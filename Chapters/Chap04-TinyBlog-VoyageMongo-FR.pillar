@@ -2,9 +2,8 @@
 !!Persistance des données de TinyBlog avec Voyage et Mongo
 
 
-% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!!Préparation de sauvegarde extérieure avec Voyage
-% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 Avoir un modèle d'objets en mémoire fonctionne bien, et sauvegarder l'image Pharo sauve aussi ces objets. Toutefois, il est préférable de pouvoir sauver les objets dans une base de données extérieure. Voyage permet de sauver les objets dans une base de données Mongo. Voyage est un frameworks qui propose la même API a plusieurs bases de données documents comme Mongo ou UnQLite.
 
