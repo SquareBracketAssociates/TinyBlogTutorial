@@ -1,26 +1,5 @@
 !! Construction d'une interface Web en Seaside pour TinyBlog
 
-!!!Correction semaine précédente
-
-Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
-
-[[[
-Metacello new
-    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week3solution;
-    configuration: 'TinyBlog';
-    load
-]]]
-
-Assurez vous que votre serveur Teapot est bien stoppé.
-[[[
-	TBTeapotWebApp stop
-]]]
-%Puis, testez le code en exécutant:
-%[[[
-%	TBTeapotWebApp start
-%]]]
-% Attention, vérifiez d'abord que votre propre serveur HTTP ne soit pas déjà lancé sur le port 8081.
 
 !!!Une interface Web pour TinyBlog en Seaside
 

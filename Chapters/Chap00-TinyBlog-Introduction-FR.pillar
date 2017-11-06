@@ -1,12 +1,12 @@
-!! A propos de ce tutoriel 
+!! A propos de ce livre 
 
 Tout au long de ce projet, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs (voir l'état final de l'application dans la Figure *@TinyBlogOnPharoCloudHere*). L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
 
 !!! Structure
 
-Dans la première partie, vous allez développer et déployer, TinyBlog, une  application et son administration en utilisant Pharo/Seaside/Mongo.
+Dans la première partie appelée "Tutoriel de base", vous allez développer et déployer, TinyBlog, une  application et son administration en utilisant Pharo/Seaside/Mongo.
 
-Dans une seconde partie,  nous présenterons aussi comment exposer votre application via un serveur REST. 
+Dans une seconde partie, nous abordons des aspects optionnels tel que l'export de données, l'utilisation de template comme Mustache ou comment exposer votre application via un serveur REST.
 
 Les solutions proposées dans ce tutoriel sont parfois non optimales afin de vous faire réagir et que vous puissiez proposer d'autres solutions et des améliorations. Notre objectif n'est pas d'être exhaustif. Nous montrons une façon de faire cependant nous invitons le lecteur à lire les références sur les autres chapitres, livres et tutoriaux Pharo afin d'approfondir son expertise et enrichir son application.
 

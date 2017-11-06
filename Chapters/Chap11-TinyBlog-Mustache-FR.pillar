@@ -2,7 +2,7 @@
 
 Poursuivons l'amélioration de TinyBlog en nous intéressant à l'utilisation de modèles pour l'affichage des données de TinyBlog. Les modèles sont particulièrement utiles pour le développement web car ils permettent de mixer aisément des chaînes de caractères avec des balises HTML et ceci, sans avoir recours à de toujours pénibles manipulations des chaînes de caractères. Ils facilitent également la lecture et la maintenance du code. Ils sont très utiles pour la localisation des applications. Si votre logiciel doit être traduit en plusieurs langues, vous apprécierez forcément les modèles.
 
-Parmi les technologies web, il existe de nombreux moteurs de gestion des modèles. Avec Pharo, vous disposez de l'adaptation de Mustache (https://mustache.github.io/) qui est un produit reconnu. L'installation est rapide puisque le framework Mustache est disponible dans le catalogue Pharo.
+Parmi les technologies web, il existe de nombreux moteurs de gestion des modèles. Avec Pharo, vous disposez de l'adaptation de Mustache (*https://mustache.github.io/*) qui est un produit reconnu. L'installation est rapide puisque le framework Mustache est disponible dans le catalogue Pharo.
 
 !!!Ajouter un bas de page
 

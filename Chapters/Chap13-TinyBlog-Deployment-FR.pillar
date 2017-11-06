@@ -1,8 +1,6 @@
-
 !! Déploiement de TinyBlog
 
-!!!Déployer dans le cloud
-
+!!! Déployer dans le cloud
 Maintenant que vous avez développé votre application web TinyBlog, nous allons voir comment la déployer sur un serveur dans le cloud.
 Si vous souhaitez déployer votre application sur un serveur que vous administrez, nous conseillons la lecture du dernier chapitre du livre "Enterprise Pharo: a Web Perspective" (*http://books.pharo.org*).
 Dans la suite, nous détaillons une solution plus simple fournie par PharoCloud.

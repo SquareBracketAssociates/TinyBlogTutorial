@@ -1,60 +1,9 @@
 !! L'application TinyBlog : extension du modèle et tests unitaires
 @chapModelExtensionAndUnitTests
 
-!!! Correction semaine précédente
-Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant :
-
-[[[
-Metacello new
-    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week1solution;
-    configuration: 'TinyBlog';
-    load
-]]]
-
-Vous pouvez ouvrir un browser de code sur la classe ==TBPost==.
-Maintenant que vous avez la correction, vous pouvez compléter le code de votre application TinyBlog si nécessaire.
-
-!!! Sauvegarder votre code 
-
-Lorsque vous sauvez l'image Pharo, celle-ci contient tous les objets du système et donc les classes elles-même.
-Nous allons vous montrer comment les pharoers sauvent leur code sous forme de packages sur un serveur dédié à l'aide de Monticello: le gestionnaire de versions de Pharo. 
-Il existent plusieurs serveurs en ligne permettant d'héberger vos dépôts de code gratuitement comme Smalltalkhub *http://smalltalkhub.com* ou SS3 *http://ss3.gemstone.com*. 
-
-!!!!Créer un dépôt de code
-
-- Créer un compte sur le site  *http://smalltalkhub.com/*.
-- Se connecter au site. 
-- Créer un projet nommé "TinyBlog" (si vous rencontrez des problèmes de connexion car le site est en version beta, essayez avec un autre navigateur ; si les problèmes persistent utilisez *http://ss3.gemstone.com*).
-
-!!!!Sauver votre package
-
-- Dans Pharo, ouvrez l'outil Monticello Browser via le menu du monde (clic gauche sur le fond de Pharo).
-- Ajoutez un dépôt (repository) de type SmalltalkHub ou HTTP pour *http://ss3.gemstone.com*.
-- Sélectionnez ce dépôt et dans son menu contextuel (clic droit), sélectionnez l'item 'Add to package...' pour ajouter ce dépôt au package TinyBlog.
-- Sélectionnez maintenant votre package et pressez le bouton 'Save'. 
-- Indiquez une description pour votre commit et sauver. Votre code vient d'être envoyé sur le serveur.
-
-Le code de votre application TinyBlog est maintenant sauvegardé dans votre dépôt sur Smalltalkhub. Il est donc maintenant possible de charger votre code dans une nouvelle image Pharo. 
-Pour rappel, dans le cadre de ce tutoriel, nous vous suggérons de toujours utiliser l'image avec tous les packages web chargés que vous trouvez sur *http://files.pharo.org/mooc/image/PharoWeb-60.zip*. Cela vous permettra de pouvoir recharger votre package sans devoir vous soucier des dépendances sur d'autres packages. 
+Dans ce chapitre nous étendons le modèle et ajoutons des tests. 
 
 
-
-!!!A propos de dépendances
-
-Les bonnes pratiques lors de développements en Pharo sont de spécifier clairement les dépendances sur les packages utilisés afin d'avoir une reproductibilité complète d'un projet. Une telle reproducibilité permet alors l'utilisation de serveur de construction tel Travis ou Jenkins. 
-Pour cela, une configuration (une classe spéciale) définit d'une part l'architecture du projet (dependances et packages du projet) et les versions des packages versionnés. 
-
-Dans le cadre de ce projet, nous n'abordons pas ce point plus avancé. Un chapitre entier sur l'expression de configuration dans le livre Deep Into Pharo (cf. *http://books.pharo.org*) est consacré à ce point. 
- 
-%!!!!! Optionel. 
-%Si vous voulez essayer de créer une configuration, vous pouvez utiliser Versionner. 
-%Dans votre image Pharo, ouvrez l'outil Versionner depuis le menu 'Tools':
-%%- Créez un nouveau projet nommé "TinyBlog",
-%- Indiquez que votre projet dépend de PharoWeb (dépendance entre projets),
-%- Dans Packages, ajoutez le paquet TinyBlog,
-%- Définissez le dépôt de votre projet: 'http://smalltalkhub.com/mc/XXX/TinyBlog/main'
-%- Cliquez sur le bouton "Save to development" (pour générer la nouvelle structure %d'architecture et dépendances), "Release" (pour créer une nouvelle vetsion) et Commit (pour sauver le code sur le serveur).
 
 
 
