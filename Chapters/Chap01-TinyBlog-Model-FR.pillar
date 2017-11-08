@@ -1,32 +1,9 @@
-{
-	"title" : "L'application TinyBlog : présentation et modèle"
-}
-
 !! L'application TinyBlog : présentation et modèle
 
-Tout au long de ce projet, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs (voir l'état final de l'application dans la Figure *@TinyBlogOnPharoCloud*). L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
+Tout au long de ce projet, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs (voir  la Figure *@TinyBlogOnPharoCloud*). L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
 
-TinyBlog est une application à but pédagogique qui va vous montrer comment définir et déployer une application en utilisant Pharo/Seaside/Mongo ainsi que des frameworks disponibles en Pharo comme NeoJSON.
-Dans une seconde partie,  nous présenterons aussi comment exposer votre application via un serveur REST. 
-Les solutions proposées dans ce tutoriel sont parfois non optimales afin de vous faire réagir et que vous puissiez proposer d'autres solutions et des améliorations.
-Notre objectif n'est pas d'être exhaustif. Nous montrons une façon de faire cependant nous invitons le lecteur à lire les références sur les autres chapitres, livres et tutoriaux Pharo afin d'approfondir son expertise et enrichir son application.
 
-+Final state of the TinyBlog application>figures/TinyBlogOnPharoCloud.png|width=100|label=TinyBlogOnPharoCloud+
-
-!!!Installation de Pharo
-
-Dans ce tutoriel, nous supposons que vous utilisez Pharo 6.0 (*http://pharo.org/download*) avec une image dans laquelle ont été chargés des bibliothèques et des frameworks spécifiques pour le développement d'applications Web: Seaside, Magritte, Bootstrap, Voyage, VoyageMongo, ... 
-Pour développer votre application TinyBlog et suivre ce tutoriel, nous vous suggérons de toujours utiliser l'image disponible à l'adresse suivante: *https://ci.inria.fr/pharo-contribution/job/PharoWeb/PHARO=60,VERSION=stable,VM=vm/lastSuccessfulBuild/artifact/PharoWeb.zip* car elle contient tous les packages nécessaires.
-
-% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-!!! Règles de nommage
-% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Dans la suite, nous préfixons tous les noms de classe par ==TB== (pour TinyBlog).
-Vous pouvez:
-- soit choisir un autre préfixe (par exemple ==TBM==) afin de pouvoir ensuite charger la correction dans la même image Pharo et la comparer à votre propre implémetation,
-- soit choisir le même préfixe afin de pouvoir fusionner les solutions avec votre code. L'outil de merge vous montrera les différences et vous permettra d'apprendre des changements. Cette solution est toutefois plus contraingnante si implémentez des fonctionnalités supplémentaires par rapport aux corrections ou même différemment ce qui est fort probable.
-
++L'application TinyBlog.>figures/TinyBlogOnPharoCloud.png|width=100|label=TinyBlogOnPharoCloud+
 
 !!!La classe TBPost
 
@@ -125,7 +102,7 @@ TBPost >> initialize
    self notVisible
 ]]]
 
-Dans la solution proposée ci-dessus pour la méthode ==initialize==, il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==. 
+Dans la solution proposée ci-dessus pour la méthode ==initialize==, il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==. Proposez une solution. 
 
 !!!Méthodes de création
 
@@ -168,21 +145,63 @@ Dans le protocole 'testing', définissez les deux méthodes suivantes permettant
 [[[
 TBPost >> isVisible
    ^ self visible
-
+]]]
+[[[
 TBPost >> isUnclassified
    ^ self category = TBPost unclassifiedTag
 ]]]
 
 De même il serait préférable de ne pas faire une référence en dur à la classe ==TBPost== dans le code d'une méthode.
 
+
+!!! Sauvegarder votre code 
+
+Lorsque vous sauvez l'image Pharo, celle-ci contient tous les objets du système et donc les classes elles-même.
+Nous allons vous montrer comment les pharoers sauvent leur code sous forme de packages sur un serveur dédié à l'aide de Monticello: le gestionnaire de versions de Pharo. 
+Il existent plusieurs serveurs en ligne permettant d'héberger vos dépôts de code gratuitement comme Smalltalkhub *http://smalltalkhub.com* ou SS3 *http://ss3.gemstone.com*. 
+
+!!!!Créer un dépôt de code
+
+- Créer un compte sur le site  *http://smalltalkhub.com/*.
+- Se connecter au site. 
+- Créer un projet nommé "TinyBlog" (si vous rencontrez des problèmes de connexion car le site est en version beta, essayez avec un autre navigateur ; si les problèmes persistent utilisez *http://ss3.gemstone.com*).
+
+!!!!Sauver votre package
+
+- Dans Pharo, ouvrez l'outil Monticello Browser via le menu du monde (clic gauche sur le fond de Pharo).
+- Ajoutez un dépôt (repository) de type SmalltalkHub ou HTTP pour *http://ss3.gemstone.com*.
+- Sélectionnez ce dépôt et dans son menu contextuel (clic droit), sélectionnez l'item 'Add to package...' pour ajouter ce dépôt au package TinyBlog.
+- Sélectionnez maintenant votre package et pressez le bouton 'Save'. 
+- Indiquez une description pour votre commit et sauver. Votre code vient d'être envoyé sur le serveur.
+
+Le code de votre application TinyBlog est maintenant sauvegardé dans votre dépôt sur Smalltalkhub. Il est donc maintenant possible de charger votre code dans une nouvelle image Pharo. 
+Pour rappel, dans le cadre de ce tutoriel, nous vous suggérons de toujours utiliser l'image avec tous les packages web chargés que vous trouvez sur *http://files.pharo.org/mooc/image/PharoWeb-60.zip*. Cela vous permettra de pouvoir recharger votre package sans devoir vous soucier des dépendances sur d'autres packages. 
+
+
+
+!!!A propos de dépendances
+
+Les bonnes pratiques lors de développements en Pharo sont de spécifier clairement les dépendances sur les packages utilisés afin d'avoir une reproductibilité complète d'un projet. Une telle reproducibilité permet alors l'utilisation de serveur de construction tel Travis ou Jenkins. 
+Pour cela, une configuration (une classe spéciale) définit d'une part l'architecture du projet (dependances et packages du projet) et les versions des packages versionnés. 
+
+Dans le cadre de ce projet, nous n'abordons pas ce point plus avancé. Un chapitre entier sur l'expression de configuration dans le livre Deep Into Pharo (cf. *http://books.pharo.org*) est consacré à ce point. 
+ 
+%!!!!! Optionel. 
+%Si vous voulez essayer de créer une configuration, vous pouvez utiliser Versionner. 
+%Dans votre image Pharo, ouvrez l'outil Versionner depuis le menu 'Tools':
+%%- Créez un nouveau projet nommé "TinyBlog",
+%- Indiquez que votre projet dépend de PharoWeb (dépendance entre projets),
+%- Dans Packages, ajoutez le paquet TinyBlog,
+%- Définissez le dépôt de votre projet: 'http://smalltalkhub.com/mc/XXX/TinyBlog/main'
+%- Cliquez sur le bouton "Save to development" (pour générer la nouvelle structure %d'architecture et dépendances), "Release" (pour créer une nouvelle vetsion) et Commit (pour sauver le code sur le serveur).
+
+
+
 !!! Conclusion
 
 Nous avons maintenant une première partie du modèle et nous vous suggérons de sauver votre image Pharo (clic gauche sur le fond de Pharo pour accéder au menu world et sélectionner 'save'). Lors de la prochaine séance nous vous montrerons comment sauver votre code (package) avec le système de version de Pharo. 
 
-Notez que des videos sont disponibles dans le Mooc Pharo qui montre la procédure pour sauver du code: *http://mooc.pharo.org*.
-
-@@todo put better link
-
+Notez que des videos sont disponibles dans le Mooc Pharo qui montre la procédure pour sauver du code: *http://mooc.pharo.org* et en particulier la video de la semaine 1 qui montre comment développer et sauver le compteur: *http://W1/C019-W1S-Videos-Redo-Counter-Traditional-FR-v4.mp4*.
 % !Le modèle des auteurs
 %
 % Un post est écrit par un auteur.

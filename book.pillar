@@ -1,3 +1,5 @@
+${inputFile:Chapters/Chap00-TinyBlog-Introduction-FR.pillar}$
+
 ! Tutoriel de base
 
 ${inputFile:Chapters/Chap01-TinyBlog-Model-FR.pillar}$

@@ -1,7 +1,6 @@
 !! Charger le code des chapitres
 
 !!! Chapitre : Modèle 
-
 Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant :
 
 [[[
@@ -14,7 +13,6 @@ Metacello new
 
 Vous pouvez ouvrir un browser de code sur la classe ==TBPost==.
 Maintenant que vous avez la correction, vous pouvez compléter le code de votre application TinyBlog si nécessaire.
-
 
 
 !!! Chapitre : Extension du modèle et tests unitaires
@@ -36,27 +34,6 @@ Ouvrez maintenant un browser de code pour regarder le code des classes ==TBBlog=
 Avant de poursuivre, n'oubliez pas de committer une nouvelle version dans votre dépôt sur Smalltalkhub ou SS3 si vous avez modifié votre application. 
 
 
-!!! Chapitre : Une Interface Web avec Teapot pour TinyBlog
-
-Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
-
-[[[
-Metacello new
-    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week3solution;
-    configuration: 'TinyBlog';
-    load
-]]]
-
-Assurez vous que votre serveur Teapot est bien stoppé.
-[[[
-	TBTeapotWebApp stop
-]]]
-%Puis, testez le code en exécutant:
-%[[[
-%	TBTeapotWebApp start
-%]]]
-% Attention, vérifiez d'abord que votre propre serveur HTTP ne soit pas déjà lancé sur le port 8081.
 
 
 
@@ -91,7 +68,6 @@ Avant de passer à la suite, stoppez votre serveur Teapot:
 [[[
 	TBTeapotWebApp stop
 ]]]
-
 
 
 !!! Chapitre : Persistance des données de TinyBlog avec Voyage et Mongo
@@ -147,3 +123,25 @@ TBBlog reset ; createDemoPosts
 ]]]
 
 Complétez ou terminez ""votre"" application et commitez votre code dans votre dépôt sur Smalltalkhub.
+
+!!! Chapitre : Une Interface Web avec Teapot pour TinyBlog
+
+Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
+
+[[[
+Metacello new
+    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+    version: #week3solution;
+    configuration: 'TinyBlog';
+    load
+]]]
+
+Assurez vous que votre serveur Teapot est bien stoppé.
+[[[
+	TBTeapotWebApp stop
+]]]
+%Puis, testez le code en exécutant:
+%[[[
+%	TBTeapotWebApp start
+%]]]
+% Attention, vérifiez d'abord que votre propre serveur HTTP ne soit pas déjà lancé sur le port 8081.
