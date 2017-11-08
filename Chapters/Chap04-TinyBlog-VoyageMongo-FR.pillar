@@ -1,16 +1,11 @@
-
 !!Persistance des données de TinyBlog avec Voyage et Mongo
 
 
-% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!!Préparation de sauvegarde extérieure avec Voyage
-% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Avoir un modèle d'objets en mémoire fonctionne bien, et sauvegarder l'image Pharo sauve aussi ces objets. Toutefois, il est préférable de pouvoir sauver les objets dans une base de données extérieure. Voyage permet de sauver les objets dans une base de données Mongo. Voyage est un frameworks qui propose la même API a plusieurs bases de données documents comme Mongo ou UnQLite.
+Avoir un modèle d'objets en mémoire fonctionne bien, et sauvegarder l'image Pharo sauve aussi ces objets. Toutefois, il est préférable de pouvoir sauver les objets dans une base de données extérieure. Voyage permet de sauver les objets dans une base de données Mongo. Voyage est un framework qui propose une API unifiée permettant d'accéder à différentes bases de données documents comme Mongo ou UnQLite.
 
-
-C'est ce que nous allons voir. Dans un premier temps, nous allons utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second temps, nous installerons une base de données Mongo et nous y accéderons à travers Voyage. 
-
+Dans ce chapitre, nous allons commencer par utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second temps, nous installerons une base de données Mongo et nous y accéderons à travers Voyage. 
 
 !!!Configurer Voyage pour sauvegarder des objets TBBlog
 
@@ -105,7 +100,7 @@ TBBlog count
 De la même manière, nous pouvons sélectionner tous les objets sauvés. 
 
 [[[
-TBBlog selectAll
+TBBlog selectAll	
 ]]]
 
 On peut supprimer un objet racine.
