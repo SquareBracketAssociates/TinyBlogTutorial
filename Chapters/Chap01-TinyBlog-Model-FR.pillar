@@ -1,6 +1,6 @@
 !! L'application TinyBlog : présentation et modèle
 
-Tout au long de ce projet, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs (voir  la Figure *@TinyBlogOnPharoCloud*). L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
+Tout au long de ce livre, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs (voir  la Figure *@TinyBlogOnPharoCloud*). L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
 
 
 +L'application TinyBlog.>figures/TinyBlogOnPharoCloud.png|width=100|label=TinyBlogOnPharoCloud+
@@ -156,11 +156,15 @@ De même il serait préférable de ne pas faire une référence en dur à la cla
 
 !!! Sauvegarder votre code 
 
-Lorsque vous sauvez l'image Pharo, celle-ci contient tous les objets du système et donc les classes elles-même.
+Lorsque vous sauvez l'image Pharo (clic gauche sur le fond de Pharo pour accéder au menu world et sélectionner 'save'), celle-ci contient tous les objets du système et donc les classes elles-même.
+Cette solution est pratique mais peu pérenne.  
 Nous allons vous montrer comment les pharoers sauvent leur code sous forme de packages sur un serveur dédié à l'aide de Monticello: le gestionnaire de versions de Pharo. 
-Il existent plusieurs serveurs en ligne permettant d'héberger vos dépôts de code gratuitement comme Smalltalkhub *http://smalltalkhub.com* ou SS3 *http://ss3.gemstone.com*. 
+
+Notez que des videos sont disponibles dans le Mooc Pharo qui montrent la procédure pour sauver du code: *http://mooc.pharo.org* et en particulier la video de la semaine 1 qui montre comment développer et sauver le code d'une application compteur: *http://W1/C019-W1S-Videos-Redo-Counter-Traditional-FR-v4.mp4*.
 
 !!!!Créer un dépôt de code
+
+Il existent plusieurs serveurs en ligne permettant d'héberger vos dépôts de code gratuitement comme Smalltalkhub *http://smalltalkhub.com* ou SS3 *http://ss3.gemstone.com*. 
 
 - Créer un compte sur le site  *http://smalltalkhub.com/*.
 - Se connecter au site. 
@@ -176,7 +180,6 @@ Il existent plusieurs serveurs en ligne permettant d'héberger vos dépôts de c
 
 Le code de votre application TinyBlog est maintenant sauvegardé dans votre dépôt sur Smalltalkhub. Il est donc maintenant possible de charger votre code dans une nouvelle image Pharo. 
 Pour rappel, dans le cadre de ce tutoriel, nous vous suggérons de toujours utiliser l'image avec tous les packages web chargés que vous trouvez sur *http://files.pharo.org/mooc/image/PharoWeb-60.zip*. Cela vous permettra de pouvoir recharger votre package sans devoir vous soucier des dépendances sur d'autres packages. 
-
 
 
 !!!A propos de dépendances
@@ -199,9 +202,8 @@ Dans le cadre de ce projet, nous n'abordons pas ce point plus avancé. Un chapit
 
 !!! Conclusion
 
-Nous avons maintenant une première partie du modèle et nous vous suggérons de sauver votre image Pharo (clic gauche sur le fond de Pharo pour accéder au menu world et sélectionner 'save'). Lors de la prochaine séance nous vous montrerons comment sauver votre code (package) avec le système de version de Pharo. 
+Nous avons développé une première partie du modèle et appris à sauver notre code en utilisant Monticello.
 
-Notez que des videos sont disponibles dans le Mooc Pharo qui montre la procédure pour sauver du code: *http://mooc.pharo.org* et en particulier la video de la semaine 1 qui montre comment développer et sauver le compteur: *http://W1/C019-W1S-Videos-Redo-Counter-Traditional-FR-v4.mp4*.
 % !Le modèle des auteurs
 %
 % Un post est écrit par un auteur.
