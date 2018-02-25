@@ -3,13 +3,13 @@
 
 !!!Préparation de sauvegarde extérieure avec Voyage
 
-Avoir un modèle d'objets en mémoire fonctionne bien, et sauvegarder l'image Pharo sauve aussi ces objets. Toutefois, il est préférable de pouvoir sauver les objets (les posts) dans une base de données extérieure. Voyage permet de sauver les objets dans une base de données Mongo. Voyage est un framework qui propose une API unifiée permettant d'accéder à différentes bases de données documents comme Mongo ou UnQLite.
+Avoir un modèle d'objets en mémoire fonctionne bien, et sauvegarder l'image Pharo sauve aussi ces objets. Toutefois, il est préférable de pouvoir sauver les objets (les posts) dans une base de données extérieure. Pharo offre plusieurs sérialiseurs d'objets (Fuel en format binaire et STON en format texte). Ces sérialiseurs d'objets sont très puissants et pratiques. Dans ce chapitre, nous voulons vous présenter une troisième option : la sauvegarde dans une base de donnée documents telle que Mongo. Voyage permet de sauver les objets dans une base de données Mongo. Voyage est un framework qui propose une API unifiée permettant d'accéder à différentes bases de données documents comme Mongo ou UnQLite.
 
 Dans ce chapitre, nous allons commencer par utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second temps, nous installerons une base de données Mongo et nous y accéderons à travers Voyage. 
 
 !!!Configurer Voyage pour sauvegarder des objets TBBlog
 
-Grâce à la méthode de classe ==isVoyageRoot==, nous déclarons que les objets de la classe ==TBBlog== doivent être sauvés dans la base en tant qu'objets racines.
+Grâce à la méthode de classe ==isVoyageRoot==, nous déclarons que les objets de la classe ==TBBlog== doivent être sauvés dans la base en tant qu'objets racines. Cela veut dire que nous aurons autant de documents que d'objets instance de cette classe.
 
 [[[
 TBBlog class >> isVoyageRoot
@@ -20,7 +20,7 @@ TBBlog class >> isVoyageRoot
 Nous devons ensuite soit créer une connexion sur une base de données réelle soit travailler en mémoire. C'est cette dernière option que nous choisissons pour l'instant en utilisant cette expression. 
 
 [[[
-VOMemoryRepository new enableSingleton. 
+VOMemoryRepository new enableSingleton.
 ]]]
 
 Le message ==enableSingleton== indique à Voyage que nous n'utilisons qu'une seule base de donnée ce qui nous permet de ne pas avoir à préciser avec laquelle nous travaillons. 
@@ -66,17 +66,17 @@ Nous devons maintenant modifier la méthode ==writeBlogPost:== pour sauver le bl
 
 [[[
 TBBlog >> writeBlogPost: aPost
-   "Write the blog post in database"
+	"Write the blog post in database"
 	self allBlogPosts add: aPost.
-   self save
+	self save
 ]]]
 
 Nous pouvons aussi modifier la méthode ==remove== afin de sauver le nouvel état d'un blog. 
 
 [[[
 TBBlog >> removeAllPosts
-   posts := OrderedCollection new.
-   self save.
+	posts := OrderedCollection new.
+	self save.
 ]]]
 
 
@@ -103,12 +103,7 @@ De la même manière, nous pouvons sélectionner tous les objets sauvés.
 TBBlog selectAll	
 ]]]
 
-On peut supprimer un objet racine.
-
-[[[
-TBBlog current remove
-]]]
-
+On peut supprimer un objet racine en lui envoyant le message ==remove==.
 
 Vous pouvez voir l'API de Voyage en parcourant
 - la classe ==Class==, et 
@@ -118,10 +113,10 @@ Ces queries sont plus pertinentes quand on a plus d'objets mais nous ferions exa
 
 !!!Si nous devions sauvegarder les posts
 
-Cette section n'est pas à implémenter et elle est juste donnée à titre d'exemple plus d'explications sont données dans le chapitre sur Voyage dans Enterprise Pharo disponible a *http://www.pharo.org*. Nous voulons illustrer que déclarer une classe comme une racine Voyage a une influence sur comment une instance de cette classe est sauvée et rechargée. En particulier car elle ne fait plus partie de l'objet qui lui faisait référence : dans la base elle n'est plus une souspartie du document représentant l'objet qui la référence mais un document autonome.  
+Cette section n'est pas à implémenter et elle est juste donnée à titre d'exemple.  Plus d'explications sont données dans le chapitre sur Voyage dans le livre ''Enterprise Pharo: a Web Perspective'' disponible a *http://books.pharo.org*. Nous voulons illustrer que déclarer une classe comme une racine Voyage a une influence sur comment une instance de cette classe est sauvée et rechargée. En particulier declarer un post comme une racine
+ a comme effet que les objets posts seront des documents a part entière et ne seront plus une souspartie d'un blog.
 
-
-Nous pourrions définir qu'un post soit un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Par contre, si nous représentions les commentaires d'un post, nous ne les déclarerions pas non plus comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
+Nous pourrions définir qu'un post soit un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Par contre, si nous représentions les commentaires d'un post, nous ne les déclarerions pas   comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
 
 Lorsqu'un post n'est pas une racine, vous n'avez pas la certitude d'unicité de celui-ci lors du chargement depuis la base. En effet, lors du chargement (et ce qui peut être contraire à la situation du graphe d'objet avant la sauvegarde) un post n'est alors pas partagé entre deux instances de blogs. Si avant la sauvegarde en base un post était partagé entre deux blogs, après le chargement depuis la base, ce post sera dupliqué car recréé à partir de la définition du blog (et le blog contient alors complètement le post).
 
@@ -159,7 +154,9 @@ Ici dans la méthode ==removeAllPosts== nous enlevons chaque posts puis nous rem
 
 !!!Tester avec une base Mongo
 
-Nous allons maintenant utiliser une base Mongo externe à Pharo. 
+Nous allons maintenant montrer comment utiliser une base Mongo externe à Pharo. 
+Dans le cadre de ce tutorial, vous pouvez ne pas le faire et passer à la suite.
+
 En utilisant Voyage nous pouvons rapidement sauver nos posts dans une base de données Mongo. Cette section explique rapidement la mise en oeuvre et les quelques modifications que nous devons apporter à notre projet Pharo pour y parvenir. 
 
 
@@ -203,7 +200,7 @@ Notez que si vous avez besoin de réinitialiser la base extérieure complètemen
 
 !!!!Attention : Changements de TBBlog
 
-Si vous utilisez une base locale plutôt qu'une base en mémoire, à chaque fois que vous ajoutez une nouvelle racine d'objets ou modifiez la définition d'une classe racine (ajout, retrait, modification d'attribut) il est capital de réinitializer le cache maintenu par Voyage.  La réinitialisation se fait comme suit:
+Si vous utilisez une base locale plutôt qu'une base en mémoire, à chaque fois que vous déclarez une nouvelle racine d'objets ou modifiez la définition d'une classe racine (ajout, retrait, modification d'attribut) il est capital de réinitializer le cache maintenu par Voyage.  La réinitialisation se fait comme suit:
 
 [[[
    VORepository current reset
