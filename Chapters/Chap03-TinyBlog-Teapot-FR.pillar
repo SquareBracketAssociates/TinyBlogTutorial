@@ -132,7 +132,7 @@ TBBlog createDemoPosts
 
 !!!Détails d'un Post
 
-!!!!Ajouter une Nouvelle Page
+!!!!Ajouter une nouvelle page
 
 Améliorons notre application. On souhaite que l'URL *http://localhost:8081/post/1* permette de voir le post numéro 1. 
 
