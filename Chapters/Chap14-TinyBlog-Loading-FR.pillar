@@ -14,6 +14,7 @@ Metacello new
 Vous pouvez ouvrir un browser de code sur la classe ==TBPost==.
 Maintenant que vous avez la correction, vous pouvez compléter le code de votre application TinyBlog si nécessaire.
 
+%% full code at: 9c87f4b8abb956469e145d2ba8afeba8b66159d2
 
 !!! Chapitre : Extension du modèle et tests unitaires
 
@@ -27,13 +28,15 @@ Metacello new
     load
 ]]]
 
+
+
 Après le chargement d'un package, il est recommandé d'exécuter les tests unitaires qu'il contient afin de vérifier le bon fonctionnement du code chargé.
 Pour cela, vous pouvez lancer l'outil TestRunner (World menu > Test Runner), chercher le package TinyBlog-Tests et lancer tous les tests unitaires de la classe ==TBBlogTest== en cliquant sur le bouton "Run Selected". Tous les tests doivent être verts. Une alternative est de presser l'icone verte qui se situe à coté de la class ==TBBlogTest==. 
 
 Ouvrez maintenant un browser de code pour regarder le code des classes ==TBBlog== et ==TBBlogTest== et compléter votre propre code si nécessaire.
 Avant de poursuivre, n'oubliez pas de committer une nouvelle version dans votre dépôt sur Smalltalkhub ou SS3 si vous avez modifié votre application. 
 
-
+%% full code at: 35785aaaf1284f1a472980f07522fc7d0d4743e6
 
 
 
