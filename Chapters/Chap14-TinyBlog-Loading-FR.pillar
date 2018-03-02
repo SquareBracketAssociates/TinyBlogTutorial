@@ -38,6 +38,31 @@ Avant de poursuivre, n'oubliez pas de committer une nouvelle version dans votre 
 
 %% full code at: 35785aaaf1284f1a472980f07522fc7d0d4743e6
 
+!!! Chapitre : Persistance des données de TinyBlog avec Voyage et Mongo
+
+%% full code cbd5b53135ec2404f791c1aba497c5ce9d1eb661
+Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
+
+[[[
+Metacello new
+    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+    version: #week4solution;
+    configuration: 'TinyBlog';
+    load
+]]]
+
+Pour tester le code, vous devez lancer le serveur HTTP pour Seaside  avec l'outil Seaside Control Panel (cf. sujet semaine précédente) ou avec le code suivant :
+
+[[[
+ZnZincServerAdaptor startOn: 8080.
+]]]
+
+Vous devrez également faire :
+
+[[[
+TBBlog reset ;
+    createDemoPosts
+]]]
 
 
 !!! Chapitre : Construction d'une interface Web en Seaside pour TinyBlog
@@ -73,31 +98,6 @@ Avant de passer à la suite, stoppez votre serveur Teapot:
 ]]]
 
 
-!!! Chapitre : Persistance des données de TinyBlog avec Voyage et Mongo
-
-
-Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
-
-[[[
-Metacello new
-    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week4solution;
-    configuration: 'TinyBlog';
-    load
-]]]
-
-Pour tester le code, vous devez lancer le serveur HTTP pour Seaside  avec l'outil Seaside Control Panel (cf. sujet semaine précédente) ou avec le code suivant :
-
-[[[
-ZnZincServerAdaptor startOn: 8080.
-]]]
-
-Vous devrez également faire :
-
-[[[
-TBBlog reset ;
-    createDemoPosts
-]]]
 
 
 !!! Chapitre : Interface Web d'administration pour TinyBlog
