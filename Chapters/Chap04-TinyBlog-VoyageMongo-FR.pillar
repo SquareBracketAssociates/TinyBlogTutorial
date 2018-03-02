@@ -1,11 +1,11 @@
 !!Persistance des données de TinyBlog avec Voyage et Mongo
 
 
-!!!Préparation de sauvegarde extérieure avec Voyage
-
 Avoir un modèle d'objets en mémoire fonctionne bien, et sauvegarder l'image Pharo sauve aussi ces objets. Toutefois, il est préférable de pouvoir sauver les objets (les posts) dans une base de données extérieure. Pharo offre plusieurs sérialiseurs d'objets (Fuel en format binaire et STON en format texte). Ces sérialiseurs d'objets sont très puissants et pratiques. Dans ce chapitre, nous voulons vous présenter une troisième option : la sauvegarde dans une base de donnée documents telle que Mongo. Voyage permet de sauver les objets dans une base de données Mongo. Voyage est un framework qui propose une API unifiée permettant d'accéder à différentes bases de données documents comme Mongo ou UnQLite.
 
-Dans ce chapitre, nous allons commencer par utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second temps, nous installerons une base de données Mongo et nous y accéderons à travers Voyage. 
+Dans ce chapitre, nous allons commencer par utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second temps, nous installerons une base de données Mongo et nous y accéderons à travers Voyage.
+
+%% cbd5b53135ec2404f791c1aba497c5ce9d1eb661
 
 !!!Configurer Voyage pour sauvegarder des objets TBBlog
 
@@ -45,6 +45,8 @@ TBBlog class >> initialize
       self reset
 ]]]
 
+N'oubliez pas d'exécuter la méthode ==initialize== une fois la méthode définie en exécutant expression ==TBBlog initialize==.
+
 Le cas de de la méthode ==current== est plus délicat. Avant l'utilisation de Mongo, nous avions un singleton tout simple. Cependant utiliser un Singleton 
 ne fonctionne plus car imaginons que nous ayons sauvé notre blog et que le serveur s'éteigne par accident ou que nous rechargions une nouvelle version du code. Ceci conduirait à une réinitialisation et création d'une nouvelle instance. Nous pouvons donc nous retrouver avec une instance différente de celle sauvée. 
 
@@ -59,6 +61,10 @@ TBBlog class >> current
 
 La variable ==uniqueInstance== qui servait auparavant à stocker le singleton ==TBBlog== peut être enlevée.
 
+[[[
+TBBlog class
+	instanceVariableNames: ''
+]]]
 
 !!!Sauvegarde d'un blog
 
@@ -111,7 +117,7 @@ Vous pouvez voir l'API de Voyage en parcourant
 
 Ces queries sont plus pertinentes quand on a plus d'objets mais nous ferions exactement les mêmes. 
 
-!!!Si nous devions sauvegarder les posts
+!!!Si nous devions sauvegarder les posts [Optionnel]
 
 Cette section n'est pas à implémenter et elle est juste donnée à titre d'exemple.  Plus d'explications sont données dans le chapitre sur Voyage dans le livre ''Enterprise Pharo: a Web Perspective'' disponible a *http://books.pharo.org*. Nous voulons illustrer que déclarer une classe comme une racine Voyage a une influence sur comment une instance de cette classe est sauvée et rechargée. En particulier declarer un post comme une racine
  a comme effet que les objets posts seront des documents a part entière et ne seront plus une souspartie d'un blog.
@@ -152,7 +158,7 @@ TBBlog >> removeAllPosts
 Ici dans la méthode ==removeAllPosts== nous enlevons chaque posts puis nous remettons à jour la collection.
 
 
-!!!Tester avec une base Mongo
+!!! Tester avec une base Mongo [Optionnel]
 
 Nous allons maintenant montrer comment utiliser une base Mongo externe à Pharo. 
 Dans le cadre de ce tutorial, vous pouvez ne pas le faire et passer à la suite.
