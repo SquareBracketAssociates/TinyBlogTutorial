@@ -23,6 +23,15 @@ Dans ce tutoriel, nous supposons que vous utilisez Pharo 6.0 (*http://pharo.org/
 
 Pour développer votre application TinyBlog et suivre ce tutoriel, nous vous suggérons de toujours utiliser l'image disponible à l'adresse suivante: *http://mooc.pharo.org/image/PharoWeb-60.zip* car elle contient tous les packages nécessaires.
 
+Vous pouvez construire l'image que nous utilisons à l'aide de ce script à exécuter dans une image Pharo 6.1
+
+[[[
+	Metacello new 
+	 baseline: 'PharoWebApp';
+	 repository: 'github://pharo-project/app-images'; 
+	 load	
+]]]
+
 
 !!! Règles de nommage
 
