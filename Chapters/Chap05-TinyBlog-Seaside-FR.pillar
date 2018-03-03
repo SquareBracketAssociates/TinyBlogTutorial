@@ -300,11 +300,13 @@ TBApplicationRootComponent >> main: aComponent
 +TinyBlog avec une liste de posts plutot élémentaire.>file://figures/ElementaryListPost.png|width=75|label=elementary+
 
 
-!!!Le composant post
+!!!Le composant Post
 
 Nous allons maintenant définir le composant ==TBPostComponent== qui affiche le contenu d'un post.
 
-Chaque post du blog sera représenté visuellement par une instance de  ==TBPostComponent== qui affiche le titre, la date et le contenu d'un post.
+Chaque post du blog sera représenté visuellement par une instance de  ==TBPostComponent== qui affiche le titre, la date et le contenu d'un post. Nous allons obtenir la situation décrite par la figure *@compt3*.
+
++Ajout du composant Post.>file://figures/ComponentRelationship3.pdf|width=75|label=compt3+
 
 [[[
 WAComponent subclass: #TBPostComponent
@@ -346,7 +348,7 @@ TBPostComponent >> renderContentOn: html
 
 !!!!A propos des formulaires
 
-Dans le chapitre et celui sur l'interface d'administration et qui utilise Magritte , nous montrerons qu'il est rare de définir un composant de manière aussi manuelle. En effet, Magritte permet de décrire les données manipulées et offre ensuite la possibilité de générer automatiquement des composants Seaside. Le code équivalent serait comme suit: 
+Dans le chapitre sur l'interface d'administration et qui utilise Magritte, nous montrerons qu'il est rare de définir un composant de manière aussi manuelle. En effet, Magritte permet de décrire les données manipulées et offre ensuite la possibilité de générer automatiquement des composants Seaside. Le code équivalent serait comme suit: 
 
 [[[
 TBPostComponent >> renderContentOn: html
@@ -401,8 +403,8 @@ Nous allons utiliser Bootstrap pour rendre la liste un peu plus jolie en utilisa
 TBPostsListComponent >> renderContentOn: html
    super renderContentOn: html.
    html tbsContainer: [ 
-   self blog allVisibleBlogPosts do: [ :p |
-      html render: (TBPostComponent new post: p) ] ]
+      self blog allVisibleBlogPosts do: [ :p |
+          html render: (TBPostComponent new post: p) ] ]
 ]]]
 
 Rafraichissez la page et vous devez obtenir la Figure *@container*.
@@ -417,7 +419,9 @@ Nous allons créer un composant pour gérer une liste de catégories nommée: ==
 
 !!!!Definition d'un composant pour les catégories
 
-Nous avons besoin d'un composant qui affiche la liste des catégories présentes dans la base et permet d'en sélectionner une. Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui communiquer la catégorie courante.
+Nous avons besoin d'un composant qui affiche la liste des catégories présentes dans la base et permet d'en sélectionner une. Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui communiquer la catégorie courante. La situation est décrite par la figure *@compt4*.
+
++Ajout du composant Categories.>file://figures/ComponentRelationship4.pdf|width=75|label=compt4+
 
 [[[
 WAComponent subclass: #TBCategoriesComponent
@@ -446,21 +450,16 @@ TBCategoriesComponent class >> categories: aCollectionOfCategories postsList: aT
    ^ self new categories: aCollectionOfCategories; postsList: aTBScreen 
 ]]]
 
-La méthode ==selectCategory:== (protocole 'action') communique au composant ==TBPostsListComponent== la nouvelle catégorie courante.
-
-[[[
-TBCategoriesComponent >> selectCategory: aCategory
-   postsList currentCategory: aCategory
-]]]
 
 Nous avons donc besoin d'ajouter une variable d'instance pour stocker la catégorie courante dans ==TBPostsListComponent==.
 
 [[[
-TBPostsListComponent subclass: #TBPostsListComponent
+TBScreenComponent subclass: #TBPostsListComponent
    instanceVariableNames: 'currentCategory'
    classVariableNames: ''
    package: 'TinyBlog-Components'
 ]]]
+
 [[[
 TBPostsListComponent >> currentCategory
    ^ currentCategory
@@ -468,6 +467,17 @@ TBPostsListComponent >> currentCategory
 TBPostsListComponent >> currentCategory: anObject
    currentCategory := anObject
 ]]]
+
+
+!!!! La méthode selectCategory:
+La méthode ==selectCategory:== (protocole 'action') communique au composant ==TBPostsListComponent== la nouvelle catégorie courante.
+
+[[[
+TBCategoriesComponent >> selectCategory: aCategory
+   postsList currentCategory: aCategory
+]]]
+
+
 
 !!! Rendu des catégories
 Nous pouvons maintenant ajouter une méthode (protocole 'rendering') pour afficher les catégories sur la page. En particulier pour chaque catégorie nous définissons le fait que cliquer sur la catégorie la sélectionne comme la catégorie courante.
