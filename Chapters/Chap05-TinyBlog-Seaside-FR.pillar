@@ -622,17 +622,30 @@ TBPostsListComponent >> basicRenderPostsOn: html
         html render: (TBPostComponent new post: p) ]
 ]]]
 
-
 Nous voici prêts à définir la partie administrative de l'application.
 
 +Final TinyBlog Public UI.>file://figures/finalPublicWebPage.png|width=85|label=final+
 
-!!!Améliorations possibles
+L'application finale devrait ressembler à la figure *@final*.
+
+!!! Conclusion
+Avec Seaside, le programmeur n'a pas à se soucier de gérer les requêtes web. Il définit des composants qui sont proches 
+de composants pour des applications desktop. 
+
+Un composant Seaside est responsable d'assurer son rendu en spécialisant la méthode ==renderContentOn:==.
+De plus un composant doit retourné ces sous-composants en spécialisant la méthode ==children==.
+
+Nous avons défini une interface pour notre blog en utilisant un ensemble de composants définissant chacun
+leur propre état et leurs responsibilités. Maintenant il faut remarquer que de très nombreuses applications se construisent de la même manière donc vous avez les bases pour définir de nombreuses applications. Dans le chapitre suivant nous allons vous montrer un aspect avancé qui permet la définition automatique de formulaires ou d'objets ayant de nombreux champs. 
+
+!!!! Améliorations possibles
 
 A titre d'exercice, vous pouvez :
 - trier les catégories par ordre alphabétique
-- ajouter un lien nommé 'All' dans la liste des catégories permettant d'afficher toutes les posts visible quelque soit leur catégorie
+- ajouter un lien nommé 'All' dans la liste des catégories permettant d'afficher toutes les posts visible quelque soit leur catégorie.
 
-L'application finale devrait ressembler à la figure *@final*.
+
+
+
 
 
