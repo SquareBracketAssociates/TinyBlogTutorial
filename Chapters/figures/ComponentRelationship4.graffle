@@ -119,7 +119,7 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2018-03-03 08:40:25 +0000</string>
+	<string>2018-03-03 08:47:47 +0000</string>
 	<key>Modifier</key>
 	<string>ducasse</string>
 	<key>MovementHandleVisible</key>
@@ -239,7 +239,7 @@
 					<key>Points</key>
 					<array>
 						<string>{304.01575078987696, 290.29134102599824}</string>
-						<string>{102.75590644413091, 297.29134102599824}</string>
+						<string>{102.75590644413091, 290.29134102599824}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -276,7 +276,7 @@
 					<array>
 						<dict>
 							<key>Bounds</key>
-							<string>{{31.181102645115601, 262.29134102599824}, {143.14960759803063, 14}}</string>
+							<string>{{31.181102645115601, 255.29134102599824}, {143.14960759803063, 14}}</string>
 							<key>Class</key>
 							<string>ShapedGraphic</string>
 							<key>FitText</key>
@@ -316,7 +316,7 @@
 						</dict>
 						<dict>
 							<key>Bounds</key>
-							<string>{{31.181102645115601, 276.29134102599824}, {143.14960759803063, 28}}</string>
+							<string>{{31.181102645115601, 269.29134102599824}, {143.14960759803063, 28}}</string>
 							<key>Class</key>
 							<string>ShapedGraphic</string>
 							<key>FitText</key>
@@ -359,7 +359,7 @@ categories}</string>
 						</dict>
 						<dict>
 							<key>Bounds</key>
-							<string>{{31.181102645115601, 304.29134102599824}, {143.14960759803063, 28}}</string>
+							<string>{{31.181102645115601, 297.29134102599824}, {143.14960759803063, 28}}</string>
 							<key>Class</key>
 							<string>ShapedGraphic</string>
 							<key>FitText</key>
