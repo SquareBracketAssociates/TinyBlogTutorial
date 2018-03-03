@@ -1,13 +1,9 @@
-!! Construction d'une interface Web en Seaside pour TinyBlog
-
-
-!!!Une interface Web pour TinyBlog en Seaside
-
-Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
+!! Une interface Web en Seaside pour TinyBlog
 
 Nous commençons par définir une interface telle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera.
 Nous allons définir des composants Seaside *http://www.seaside.st* dont l'ouvrage de référence est disponible en ligne à *http://book.seaside.st*.
 
+Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
 
 +Lancer le serveur.>file://figures/RunningSeaside.png|width=50|label=RunningSeaside+
 
@@ -37,8 +33,6 @@ WAComponent subclass: #TBApplicationRootComponent
    classVariableNames: ''
    package: 'TinyBlog-Components'
 ]]]
-
-
 
 
 Nous déclarons l'application au serveur Seaside, en définissant coté classe, dans le protocole =='initialization'== la méthode ==initialize== suivante. On en profite pour intégrer les dépendances du framework Bootstrap (les fichiers css et js seront stockés dans l'application).
@@ -137,6 +131,14 @@ Dans le futur, lorsque nous gérerons les utilisateurs et le fait qu'un utilisat
 
 +Accès à la bibliothèque Bootstrap.>file://figures/SeasideBootstrap.png|width=75|label=bootstrap+
 
+!!!! Pattern de définition  de composants
+
+Nous allons souvent utiliser la même façon de procéder:
+- Nous définissons d'abord la classe et le comportement d'un nouveau composant 
+- Puis nous allons y faire référence depuis la class racine. 
+- En particulier nous exprimons la relation entre un composant et un sous composant en redéfinissant la méthode ==children==.
+
+
 !!!Bootstrap for Seaside
 
 La bibliothèque Bootstrap est totalement accessible depuis Seaside comme nous allons le montrer.
@@ -154,7 +156,9 @@ Une démo en ligne est disponible à l'adresse : *http://pharo.pharocloud.com/bo
 
 !!!Définition du composant TBHeaderComponent
 
-Profitons de ce composant pour insérer dans la partie supérieure de chaque composant, l'instance d'un composant représentant l'entête de l'application.
+Profitons de ce composant, pour insérer dans la partie supérieure de chaque composant l'instance d'un composant représentant l'entête de l'application. Nous appliquons le schéma présenté avant: définition d'une classe, référence depuis la class utilisatrice, redéfinition de la méthode ==children==.
+
+Nous définissons d'abord sa classe, puis nous allons y faire référence depuis la class racine. Ce faisant nous allons montrer comment un composant exprime sa relation à un sous composant. 
 
 [[[
 WAComponent subclass: #TBHeaderComponent
@@ -182,7 +186,7 @@ Le nom du blog devrait être paramétrable à l'aide d'une variable d'instance d
 et le header pourrait afficher ce titre.
 
 
-!!!Utilisation du header
+!!!Utilisation du composant header
 
 Il n'est pas souhaitable d'instancier systématiquement le composant à chaque fois qu'un composant est appelé. Créons une variable d'instance ==header== dans ==TBScreenComponent== que nous initialisons.
 
@@ -190,7 +194,7 @@ Il n'est pas souhaitable d'instancier systématiquement le composant à chaque f
 WAComponent subclass: #TBScreenComponent
    instanceVariableNames: 'header'
    classVariableNames: ''
-   package: 'TinyBlog'
+   package: 'TinyBlog-Components'
 ]]]
 
 Créons une méthode ==initialize== dans le protocole 'initialize-release':
@@ -223,7 +227,10 @@ TBScreenComponent >> renderContentOn: html
 !!!Utilisation du composant Screen
 
 Bien que le composant ==TBScreenComponent== n'ait pas vocation à être utilisé directement, nous allons l'utiliser de manière temporaire pendant que nous développons les autres composants. 
-Nous ajoutons ==main== comme variable d'instance dans la classe ==TBApplicationRootComponent==. Nous l'initialisons dans la méthode ==initialize== suivante. 
+Nous ajoutons ==main== comme variable d'instance dans la classe ==TBApplicationRootComponent==. Nous l'initialisons dans la méthode ==initialize== suivante. Nous obtenons la situation décrite par la figure *@compt1*.
+
++Le composant ==ApplicationRootComponent== utilise de manière temporaire le composant ==ScreenComponent== qui a un ==HeaderComponent==.>file://figures/ComponentRelationship1.pdf|width=75|label=compt1+
+
 
 [[[
 TBApplicationRootComponent >> initialize
@@ -272,7 +279,9 @@ TBPostsListComponent >> renderContentOn: html
    html text: 'Blog Posts here !!!'
 ]]]
 
-Nous pouvons maintenant dire au composant de l'application d'utiliser ce composant. Pour cela nous modifions-la ainsi: 
++Le composant ==ApplicationRootComponent== utilise le composant ==PostsListComponent==.>file://figures/ComponentRelationship2.pdf|width=75|label=compt2+
+
+Nous pouvons maintenant dire au composant de l'application d'utiliser ce composant comme illustré dans la figure *@compt2*. Pour cela nous modifions-la ainsi: 
 
 [[[
 TBApplicationRootComponent >> initialize
