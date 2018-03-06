@@ -411,6 +411,51 @@ Rafraichissez la page et vous devez obtenir la Figure *@container*.
 +TinyBlog avec une liste de posts élémentaire.>file://figures/ContainerList.png|width=75|label=container+
 
 
+!!! Relation composite composants
+
+Alors que la solution fonctionne, Seaside nécessite que les composants (ici TBPostComponent) d'un composite (ici TBPostsListComponent) soient accessibles via la méthode ==children==. Nous allons donc transformer
+la solution précédente pour suivre le framework.
+
+Nous ajoutons une variable d'instance ==postComponents==.
+
+[[[
+TBScreenComponent subclass: #TBPostsListComponent
+	instanceVariableNames: 'postComponents'
+	classVariableNames: ''
+	package: 'TinyBlog-Components'
+]]]
+
+[[[
+TBPostsListComponent >> initialize
+	super initialize.
+	postComponents := OrderedCollection new.
+]]]
+
+La méthode ==postComponents== calcule et rend les composants pour les bulletins. 
+
+[[[
+TBPostsListComponent >> postComponents 
+	postComponents := self readSelectedPosts
+			collect: [ :each | TBPostComponent new post: each ].
+	^ postComponents 
+]]]
+
+[[[
+TBPostsListComponent >> children 
+	^ self postComponents
+]]]
+
+Et nous redéfinissons la méthode ==renderContentOn:== pour utiliser les méthodes définies avant.
+[[[
+TBPostsListComponent >> renderContentOn: html
+	super renderContentOn: html.
+	html tbsContainer: [ 
+		self postComponents do: [ :p |
+				html render: p ] ]
+]]]
+
+
+
 !!!Affichage des posts par catégorie
 
 Les posts sont classés par catégorie. Par défaut, si aucune catégorie n'a été précisée, ils sont rangés dans une catégorie spéciale dénommée "Unclassified".
@@ -429,16 +474,23 @@ WAComponent subclass: #TBCategoriesComponent
    classVariableNames: ''
    package: 'TinyBlog-Components'
 ]]]
+
 [[[
 TBCategoriesComponent >> categories
    ^ categories
+]]]
 
+[[[
 TBCategoriesComponent >> categories: aCollection
    categories := aCollection
+]]]
 
+[[[
 TBCategoriesComponent >> postsList: aComponent
       postsList := aComponent
+]]]
 
+[[[
 TBCategoriesComponent >> postsList
    ^ postsList
 ]]]
@@ -455,7 +507,7 @@ Nous avons donc besoin d'ajouter une variable d'instance pour stocker la catégo
 
 [[[
 TBScreenComponent subclass: #TBPostsListComponent
-   instanceVariableNames: 'currentCategory'
+   instanceVariableNames: 'currentCategory postComponents'
    classVariableNames: ''
    package: 'TinyBlog-Components'
 ]]]
@@ -463,7 +515,9 @@ TBScreenComponent subclass: #TBPostsListComponent
 [[[
 TBPostsListComponent >> currentCategory
    ^ currentCategory
-   
+]]]
+
+[[[
 TBPostsListComponent >> currentCategory: anObject
    currentCategory := anObject
 ]]]
@@ -481,6 +535,7 @@ TBCategoriesComponent >> selectCategory: aCategory
 
 !!! Rendu des catégories
 Nous pouvons maintenant ajouter une méthode (protocole 'rendering') pour afficher les catégories sur la page. En particulier pour chaque catégorie nous définissons le fait que cliquer sur la catégorie la sélectionne comme la catégorie courante.
+Nous utilisons un callback (message ==callback:==): l'argument d'un callback est un block et peut contenir n'importe quelle expression. Cela illustre la puissance de Seaside.
 
 [[[
 TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
@@ -497,16 +552,16 @@ TBCategoriesComponent >> renderContentOn: html
       html tbsListGroupItem
          with: [  html strong: 'Categories' ].
       categories do: [ :cat | 
-         self renderCategoryLinkOn: html with: cat ]]
+         self renderCategoryLinkOn: html with: cat ] ]
 ]]]
 
 Nous avons presque fini mais il faut encore afficher la liste des catégories et mettre à jour la liste des posts en fonction de la catégorie courante. 
 
 !!!Mise à jour des Posts
 
-Pour cela, modifions la méthode de rendu du composant ==TBPostsListComponent==.
+Nous devons mettre à jours les bulletins, pour cela, modifions la méthode de rendu du composant ==TBPostsListComponent==.
 
-La méthode ==readSelectedPosts== récupère dans la base les posts à afficher. Si elle vaut ==nil==, l'utilisateur n'a pas encore sélectionné une catégorie et l'ensemble des posts visibles de la base est affiché. Si elle contient une valeur autre que ==nil==, l'utilisateur a sélectionné une catégorie et l'application affiche alors la liste des posts attachés à la catégorie.
+La méthode ==readSelectedPosts== récupère dans la base les bulletins à afficher. Si elle vaut ==nil==, l'utilisateur n'a pas encore sélectionné une catégorie et l'ensemble des bulletins visibles de la base est affiché. Si elle contient une valeur autre que ==nil==, l'utilisateur a sélectionné une catégorie et l'application affiche alors la liste des bulletins attachés à la catégorie.
 
 [[[
 TBPostsListComponent >> readSelectedPosts
@@ -515,6 +570,16 @@ TBPostsListComponent >> readSelectedPosts
       ifNotNil: [ self blog allVisibleBlogPostsFromCategory: self currentCategory ]
 ]]]
 
+Nous redéfinissons la méthode ==postComponents== pour utiliser la méthode ==readSelectedPosts==.
+
+[[[
+TBPostsListComponent >> postComponents
+	postComponents := self readSelectedPosts
+			collect: [ :each | TBPostComponent new post: each ] ].
+	^ postComponents 
+]]]
+
+
 
 Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des posts:
 
@@ -522,11 +587,11 @@ Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des p
 TBPostsListComponent >> renderContentOn: html
    super renderContentOn: html.
    html render: (TBCategoriesComponent
-               categories: (self blog allCategories)
+               categories: self blog allCategories
                postsList: self).
    html tbsContainer: [ 
-      self readSelectedPosts do: [ :p |
-         html render: (TBPostComponent new post: p) ] ]
+		self postComponents do: [ :p |
+				html render: p ] ]
 ]]]
 
 Une instance du composant ==TBCategoriesComponent== est ajoutée sur la page et permet de sélectionner la catégorie courante (voir la figure *@ugly*).
@@ -542,25 +607,25 @@ Nous allons maintenant agencer le composant ==TBPostsListComponent== en utilisan
 
 [[[
 TBPostsListComponent >> renderContentOn: html
-   super renderContentOn: html.
-   html tbsContainer: [
-      html tbsRow showGrid;
-         with: [
-            html tbsColumn
-               extraSmallSize: 12;
-               smallSize: 2;
-               mediumSize:  4;
-               with: [
-                  html render: (TBCategoriesComponent
-                    categories: (self blog allCategories)
-                    postsList: self) ].
-      html tbsColumn
-               extraSmallSize: 12;
-               smallSize: 10;
-               mediumSize: 8;
-               with: [
-         self readSelectedPosts do: [ :p |
-             html render: (TBPostComponent new post: p) ] ] ] ]
+
+	super renderContentOn: html.
+	html
+		tbsContainer: [ html tbsRow
+				showGrid;
+				with: [ html tbsColumn
+						extraSmallSize: 12;
+						smallSize: 2;
+						mediumSize: 4;
+						with: [ html
+								render:
+									(TBCategoriesComponent 
+										categories: self blog allCategories 
+										postsList: self) ].
+					html tbsColumn
+						extraSmallSize: 12;
+						smallSize: 10;
+						mediumSize: 8;
+						with: [ self postComponents do: [ :p | html render: p ] ] ] ]
 ]]]
 
 Vous devez obtenir une application proche de celle représentée figure *@nicer5*.
@@ -579,10 +644,10 @@ TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
       with: aCategory
 ]]]
 
-Bien que le code fonctionne, on ne doit pas laisser la méthode ==TBPostsListComponent >> renderContentOn: html== dans un tel état. Elle est bien trop longue et difficilement réutilisable. 
-Proposer une solution. 
+Bien que le code fonctionne, on ne doit pas laisser la méthode ==TBPostsListComponent >> renderContentOn: html== dans un tel état. Elle est bien trop longue et difficilement réutilisable. Proposer une solution. 
 
 !!!Notre solution: Plein de petites méthodes
+Nous allons découper la méthode en plusieurs petites méthodes. 
 
 [[[
 TBPostsListComponent >> renderContentOn: html
@@ -594,6 +659,7 @@ TBPostsListComponent >> renderContentOn: html
             with: [ self renderCategoryColumnOn: html.
                   self renderPostColumnOn: html ] ]
 ]]]
+
 [[[
 TBPostsListComponent >> renderCategoryColumnOn: html
    html tbsColumn
@@ -602,12 +668,14 @@ TBPostsListComponent >> renderCategoryColumnOn: html
       mediumSize: 4;
       with: [ self basicRenderCategoriesOn: html ]
 ]]]
+
 [[[
 TBPostsListComponent >> basicRenderCategoriesOn: html
-   ^ html render: (TBCategoriesComponent 
+   html render: (TBCategoriesComponent 
          categories: self blog allCategories 
          postsList: self)
 ]]]
+
 [[[
 TBPostsListComponent >> renderPostColumnOn: html
    html tbsColumn
@@ -618,8 +686,7 @@ TBPostsListComponent >> renderPostColumnOn: html
 ]]]
 [[[
 TBPostsListComponent >> basicRenderPostsOn: html
-   ^ self readSelectedPosts do: [ :p | 
-        html render: (TBPostComponent new post: p) ]
+   self postComponents do: [ :p | html render: p ]
 ]]]
 
 Nous voici prêts à définir la partie administrative de l'application.
