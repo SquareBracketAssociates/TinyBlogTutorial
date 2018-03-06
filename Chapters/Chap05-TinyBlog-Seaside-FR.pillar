@@ -684,6 +684,7 @@ TBPostsListComponent >> renderPostColumnOn: html
          mediumSize: 8;
          with: [ self basicRenderPostsOn: html ] 
 ]]]
+
 [[[
 TBPostsListComponent >> basicRenderPostsOn: html
    self postComponents do: [ :p | html render: p ]
