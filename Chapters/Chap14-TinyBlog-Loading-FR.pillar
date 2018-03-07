@@ -67,6 +67,7 @@ TBBlog reset ;
 
 !!! Chapitre : Construction d'une interface Web en Seaside pour TinyBlog
 
+%full code 5d9935e0712e8cb9a78bc96c82143ef888496e3e
 Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
 
 [[[
