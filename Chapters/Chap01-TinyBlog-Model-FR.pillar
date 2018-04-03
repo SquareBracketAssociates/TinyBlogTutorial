@@ -1,4 +1,5 @@
 !! L'application TinyBlog : présentation et modèle
+% full code at: 9c87f4b8abb956469e145d2ba8afeba8b66159d2
 
 Tout au long de ce livre, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs (voir  la Figure *@TinyBlogOnPharoCloud*). L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
 
@@ -26,7 +27,7 @@ Nous utilisons cinq variables d'instance pour décrire un post sur le blog.
 |visible       |Post visible ou pas ?        |
 
 
-Cette classe est également dotée de méthodes d'accès (aussi appelées accesseurs) à ces variables d'instances dans le protocole 'accessing'.
+Cette classe est également dotée de méthodes d'accès (aussi appelées accesseurs) à ces variables d'instances dans le protocole 'accessing'. Vous pouvez utiliser un refactoring pour créer automatiquement toutes les méthodes suivantes: 
 
 [[[
 TBPost >> title
@@ -78,7 +79,7 @@ TBPost >> beVisible
    self visible: true
 ]]]
 [[[
-TBPost >> notVisible
+TBPost >> beNotVisible
    self visible: false
 ]]]
 
@@ -99,7 +100,7 @@ TBPost >> initialize
 	super initialize.
    self category: TBPost unclassifiedTag.
    self date: Date today.
-   self notVisible
+   self beNotVisible
 ]]]
 
 Dans la solution proposée ci-dessus pour la méthode ==initialize==, il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==. Proposez une solution. 
@@ -136,7 +137,7 @@ TBPost
 
 Si vous inspectez le code ci-dessus (clic droit sur l'expression et "Inspect it"), vous allez obtenir un inspecteur sur l'objet post nouvellement créé comme représenté sur la Figure *@inspectorOnTBPost*.
 
-+Inspecteur sur une instance de TBPost>figures/inspectorOnTBPost.png|width=100|label=inspectorOnTBPost+
++Inspecteur sur une instance de TBPost.>figures/inspectorOnTBPost.png|width=100|label=inspectorOnTBPost+
 
 !!! Interrogation d'un post
 
@@ -151,14 +152,14 @@ TBPost >> isUnclassified
    ^ self category = TBPost unclassifiedTag
 ]]]
 
-De même il serait préférable de ne pas faire une référence en dur à la classe ==TBPost== dans le code d'une méthode.
+De même il serait préférable de ne pas faire une référence en dur à la classe ==TBPost== dans le code d'une méthode. Proposer une solution.
 
 
 !!! Sauvegarder votre code 
 
 Lorsque vous sauvez l'image Pharo (clic gauche sur le fond de Pharo pour accéder au menu world et sélectionner 'save'), celle-ci contient tous les objets du système et donc les classes elles-même.
 Cette solution est pratique mais peu pérenne.  
-Nous allons vous montrer comment les pharoers sauvent leur code sous forme de packages sur un serveur dédié à l'aide de Monticello: le gestionnaire de versions de Pharo. 
+Nous allons vous montrer comment les pharoers sauvent leur code sous forme de packages sur un serveur dédié à l'aide de Monticello: le gestionnaire de versions de Pharo.
 
 Notez que des videos sont disponibles dans le Mooc Pharo qui montrent la procédure pour sauver du code: *http://mooc.pharo.org* et en particulier la video de la semaine 1 qui montre comment développer et sauver le code d'une application compteur: *http://W1/C019-W1S-Videos-Redo-Counter-Traditional-FR-v4.mp4*.
 
@@ -179,7 +180,7 @@ Il existent plusieurs serveurs en ligne permettant d'héberger vos dépôts de c
 - Indiquez une description pour votre commit et sauver. Votre code vient d'être envoyé sur le serveur.
 
 Le code de votre application TinyBlog est maintenant sauvegardé dans votre dépôt sur Smalltalkhub. Il est donc maintenant possible de charger votre code dans une nouvelle image Pharo. 
-Pour rappel, dans le cadre de ce tutoriel, nous vous suggérons de toujours utiliser l'image avec tous les packages web chargés que vous trouvez sur *http://files.pharo.org/mooc/image/PharoWeb-60.zip*. Cela vous permettra de pouvoir recharger votre package sans devoir vous soucier des dépendances sur d'autres packages. 
+Pour rappel, dans le cadre de ce tutoriel, nous vous suggérons de toujours utiliser l'image avec tous les packages web chargés que nous avons mentionné dans le premier chapitre. Cela vous permettra de pouvoir recharger votre package sans devoir vous soucier des dépendances sur d'autres packages. 
 
 
 !!!A propos de dépendances

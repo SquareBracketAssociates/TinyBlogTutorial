@@ -1,6 +1,214 @@
 
 !! Interface Web d'administration pour TinyBlog
 
+Dans le chapitre précédent nous avons vu comment développer l'embryon d'une application : nous avons défini des
+composants qui interagissent entre eux. Chaque composant est alors responsable son état et de son rendu graphique. 
+Alors que le chapitre précédent décrit l'essentiel du développement avec Seaside dans ce chapitre nous voulons 
+vous montrer que l'on peut aller encore plus loin et générer des composants Seaside à partir de la description d'objets
+en utilisant le frameworks Magritte. Nous allons tout d'abord définir un composant d'identification : cette définition de composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances d'un composant ainsi que l'invocation de composants.
+
+
+
+!!!Administration de TinyBlog
+
+Nous allons aborder maintenant l'administration de TinyBlog. Cet exercice va nous permettre de montrer comment utiliser des informations de session ainsi que Magritte pour la définition de rapports.
+
+Le scénario assez classique que nous allons développer est le suivant : l'utilisateur doit s'authentifier pour accéder à la partie administration de TinyBlog. Il le fait à l'aide d'un compte et d'un mot de passe. Le lien permettant d'afficher le composant d'authentification sera placé sous la liste des catégories.
+
+!!! Composant d'identification
+
+Nous allons commencer par développer un composant d'identification qui lorsqu'il sera invoqué ouvrira une boite de dialogue pour demander les informations d'identification. Le résultat que nous voulons obtenir est montré dans la figure *@authentification*. Remarquer qu'une telle fonctionnalité devrait faire partie d'une bibliothèque de composants de base en Seaside. Le projet Heimdal disponible sur *http://www.github.com/DuneSt/* offre cette fonctionnalité.
+
++Authentification avec un meilleur agencement.>file://figures/Authentification.png|width=75|label=authentification+
+
+Ce composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances du composant.
+
+!!!! Définition du composant
+Nous définissons une nouvelle clsss sousclasses de la classe ==WAComponent== et des accesseurs.
+Ce composant contient un compte d'administration, le mot de passe associé ainsi que le composant a invoqué pour 
+accéder à l'administration.
+
+[[[
+WAComponent subclass: #TBAuthentificationComponent
+   instanceVariableNames: 'password account component'
+   classVariableNames: ''
+   package: 'TinyBlog-Components'
+]]]
+[[[
+TBAuthentificationComponent >> account
+   ^ account
+]]]
+[[[
+TBAuthentificationComponent >> account: anObject
+   account := anObject
+]]]
+[[[
+TBAuthentificationComponent >> password
+   ^ password
+]]]
+[[[
+TBAuthentificationComponent >> password: anObject
+   password := anObject
+]]]
+[[[
+TBAuthentificationComponent >> component
+   ^ component
+]]]
+[[[
+TBAuthentificationComponent >> component: anObject
+   component := anObject
+]]]
+
+La variable d'instance ==component== est initialisée par la méthode de classe suivante :
+
+[[[
+TBAuthentificationComponent class >> from: aComponent
+   ^ self new
+      component: aComponent;
+      yourself
+]]]
+
+
+!!!! Rendu du composant. 
+La méthode ==renderContentOn:== définit le contenu d'une boite de dialogue modale.
+Il est composé d'un header et d'un corps.
+
+[[[
+TBAuthentificationComponent >> renderContentOn: html
+   html tbsModal
+      id: 'myAuthDialog';
+      with: [
+         html tbsModalDialog: [
+            html tbsModalContent: [
+               self renderHeaderOn: html.
+               self renderBodyOn: html ] ] ]
+]]]
+
+Le header affiche un titre avec de larges fontes. 
+
+[[[
+TBAuthentificationComponent >> renderHeaderOn: html
+   html
+      tbsModalHeader: [
+         html tbsModalCloseIcon.
+         html tbsModalTitle
+            level: 4;
+            with: 'Authentication' ]
+]]]
+
+Le corps du composant affiche une masque de saisie pour l'identifiant, le mot de passe
+et finalement des boutons.
+[[[
+TBAuthentificationComponent >> renderBodyOn: html
+    html
+        tbsModalBody: [
+            html tbsForm: [
+                self renderAccountFieldOn: html.
+                self renderPasswordFieldOn: html.
+                html tbsModalFooter: [ self renderButtonsOn: html ] ] ]
+]]]
+
+
+La méthode ==renderAccountFieldOn:== montre comment la valeur d'un input field est passée puis stockeé dans une variable d'instance d'une instance du composant quand l'utilisateur confirme sa saisie. L'argument du ==callback:== est un block avec un argument et c'est cet argument qui représente la valeur du text input.
+
+[[[
+TBAuthentificationComponent >> renderAccountFieldOn: html
+   html
+      tbsFormGroup: [ html label with: 'Account'.
+         html textInput
+            tbsFormControl;
+            callback: [ :value | account := value ];
+            value: account ]
+]]]
+
+Le même procédé est utilisé pour le mot de passe.
+
+[[[
+TBAuthentificationComponent >> renderPasswordFieldOn: html
+   html tbsFormGroup: [
+      html label with: 'Password'.
+      html passwordInput
+         tbsFormControl;
+         callback: [ :value | password := value ];
+         value: password ]
+]]]
+
+
+Les boutons définissent par défaut le bouton nommé =='SignIn'== et son action est de vérifier l'adéquation 
+entre le mot de passe et le compte.
+
+[[[
+TBAuthentificationComponent >> renderButtonsOn: html
+   html tbsSubmitButton value: 'Cancel'.
+   html tbsSubmitButton
+      bePrimary;
+      callback: [ self validate ];
+      value: 'SignIn'
+]]]
+
+
+
+Lorsque l'utilisateur clique sur le bouton 'SignIn', le message ==validate== est envoyé: il vérifie que l'utilisateur a bien le compte 'admin' et a saisi le mot de passe 'password'.
+
+[[[
+TBAuthentificationComponent >> validate
+   (self account = 'admin' and: [ self password = 'password' ])
+      ifTrue: [ self gotoAdministration ]
+]]]
+
+[[[
+TBAuthentificationComponent >> gotoAdministration
+	
+]]]
+
+!!!!! Améliorations.
+Rechercher une autre méthode pour réaliser l'authentification de l'utilisateur (utilisation d'un backend de type base de données, LDAP ou fichier texte). En tout cas, ce n'est pas à la boite de login de faire ce travail, il faut le déléguer à un objet métier qui saura consulter le backend et authentifier l'utilisateur.
+
+De plus le composant ==TBAuthentificationComponent== pourrait afficher l'utilisateur lorsque celui-ci est logué.
+
+!!!Intégration de l'authentification
+
+Il faut maintenant intégrer le lien qui déclenchera l'affichage de la boite modale d'authentification. Au tout début de la méthode ==renderContentOn:== du composant ==TBPostsListComponent==, on ajoute le rendu du composant d'authentification. Ce composant reçoit en paramètre la référence vers le composant affichant les posts. C'est depuis ce component (==TBPostsListComponent==) que nous donnerons acces à l'administration.
+
+[[[
+TBPostsListComponent >> renderContentOn: html
+   super renderContentOn: html.
+   html render: (TBAuthentificationComponent from: self).
+   html
+      tbsContainer: [
+         html tbsRow
+            showGrid;
+            with: [ self renderCategoryColumnOn: html.
+                  self renderPostColumnOn: html ] ]
+]]]
+
+@@todo Why here we do not see the component. I do not get it 
+
+ On définit maintenant une méthode qui affiche un pictogramme clé et un lien 'SignIn'.
+
+[[[
+TBPostsListComponent >> renderSignInOn: html
+   html tbsGlyphIcon perform: #iconLock.
+   html html: '<a data-toggle="modal" href="#myAuthDialog" class="link">SignIn</a>'
+]]]
+
+Nous ajoutons le composant d'authentification dessous la liste de categories.
+[[[
+TBPostsListComponent >> renderCategoryColumnOn: html
+   html tbsColumn
+      extraSmallSize: 12;
+      smallSize: 2;
+      mediumSize: 4;
+      with: [
+           self basicRenderCategoriesOn: html.
+         self renderSignInOn: html ]
+]]]
+
+
+Lorsque nous pressons sur le lien SignIn nous obtenons la figure *@authentification*.
+
+
+
 
 !!!Décrire les données métiers avec Magritte
 
@@ -8,14 +216,15 @@ Magritte est une bibliothèque qui permet une fois les données décrites de gé
 
 Un chapitre dans le livre sur Seaside (*http://book.seaside.st*) est disponible sur Magritte ainsi qu'un tutoriel sur *https://github.com/SquareBracketAssociates/Magritte*.
 
-Dans ce chapitre, nous allons décrire les cinq variables d'instance de l'objet ==TBPost== à l'aide de Magritte. Dans le chapitre suivant, nous tirerons avantage de ces descriptions pour générer automatiquement des composants Seaside.
+Dans ce chapitre, nous allons décrire les cinq variables d'instance de l'objet ==TBPost== à l'aide de Magritte. Ensuite, nous
+en tirerons avantage pour générer automatiquement des composants Seaside.
 
 !!!!Descriptions
 
 Les cinq méthodes suivantes sont dans le protocole 'descriptions' de la classe ==TBPost==.
 Noter que le nom des méthodes n'est pas important mais que nous suivons une convention. C'est le pragma ==<magritteDescription>== qui permet à Magritte d'identifier les descriptions.
 
-Le titre d'un post est une chaine de caractères devant être obligatoirement complétée.
+Le titre d'un bulletin est une chaine de caractères devant être obligatoirement complétée.
 
 [[[
 TBPost >> descriptionTitle
@@ -26,7 +235,7 @@ TBPost >> descriptionTitle
       yourself
 ]]]
 
-Le texte d'un post est une chaine de caractères multi-lignes devant être obligatoirement complétée.
+Le texte d'un bulletin est une chaine de caractères multi-lignes devant être obligatoirement complétée.
 
 [[[
 TBPost >> descriptionText
@@ -37,7 +246,7 @@ TBPost >> descriptionText
       yourself
 ]]]
 
-La catégorie d'un post est une chaine de caractères qui peut ne pas être renseignée. Dans ce cas, le post sera de toute manière rangé dans la catégorie 'Unclassified'.
+La catégorie d'un bulletin est une chaine de caractères qui peut ne pas être renseignée. Dans ce cas, le post sera de toute manière rangé dans la catégorie 'Unclassified'.
 
 [[[
 TBPost >> descriptionCategory
@@ -47,7 +256,7 @@ TBPost >> descriptionCategory
       yourself
 ]]]
 
-La date de création d'un post est importante car elle permet de définir l'ordre de tri pour l'affichage des posts. C'est donc une variable d'instance contenant obligatoirement une date.
+La date de création d'un bulletin est importante car elle permet de définir l'ordre de tri pour l'affichage des posts. C'est donc une variable d'instance contenant obligatoirement une date.
 
 [[[
 TBPost >> descriptionDate
@@ -70,169 +279,7 @@ TBPost >> descriptionVisible
       yourself
 ]]]
 
-Nous pourrions enrichir les descriptions pour qu'il ne soit pas possible de poster un post ayant une date antérieure à celle du jour. Nous pourrions changer la description d'une catégorie pour que ses valeurs possibles soient définies par l'ensemble des catégories existantes. Tout cela permettrait de produire des interfaces plus complètes et toujours aussi simplement.
-
-
-!!!Administration de TinyBlog
-
-Nous allons aborder maintenant l'administration de TinyBlog. Cet exercice va nous permettre de montrer comment utiliser des informations de session ainsi que Magritte pour la définition de rapports.
-
-Le scénario assez classique que nous allons développer est le suivant : l'utilisateur doit s'authentifier pour accéder à la partie administration de TinyBlog. Il le fait à l'aide d'un compte et d'un mot de passe. Le lien permettant d'afficher le composant d'authentification sera placé sous la liste des catégories.
-
-
-!!!!Composant d'identification
-
-Nous allons commencer par développer un composant d'identification qui lorsqu'il sera invoqué ouvrira une boite de dialogue pour demander les informations d'identification. Remarquer qu'une telle fonctionnalité devrait faire partie d'une bibliothèque de composants de base en Seaside.
-
-Ce composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances du composant.
-
-[[[
-WAComponent subclass: #TBAuthentificationComponent
-   instanceVariableNames: 'password account component'
-   classVariableNames: ''
-   package: 'TinyBlog-Components'
-
-TBAuthentificationComponent >> account
-   ^ account
-
-TBAuthentificationComponent >> account: anObject
-   account := anObject
-
-TBAuthentificationComponent >> password
-   ^ password
-
-TBAuthentificationComponent >> password: anObject
-   password := anObject
-
-TBAuthentificationComponent >> component
-   ^ component
-
-TBAuthentificationComponent >> component: anObject
-   component := anObject
-]]]
-
-La variable d'instance ==component== est initialisée par la méthode de classe suivante :
-
-[[[
-TBAuthentificationComponent class >> from: aComponent
-   ^ self new
-      component: aComponent;
-      yourself
-]]]
-
-La méthode ==renderContentOn:== définit le contenu d'une boite de dialogue modale.
-
-[[[
-TBAuthentificationComponent >> renderContentOn: html
-   html tbsModal
-      id: 'myAuthDialog';
-      with: [
-         html tbsModalDialog: [
-            html tbsModalContent: [
-               self renderHeaderOn: html.
-               self renderBodyOn: html ] ] ]
-]]]
-[[[
-TBAuthentificationComponent >> renderHeaderOn: html
-   html
-      tbsModalHeader: [
-         html tbsModalCloseIcon.
-         html tbsModalTitle
-            level: 4;
-            with: 'Authentication' ]
-]]]
-
-[[[
-TBAuthentificationComponent >> renderBodyOn: html
-    html
-        tbsModalBody: [
-            html tbsForm: [
-                self renderAccountFieldOn: html.
-                self renderPasswordFieldOn: html.
-                html tbsModalFooter:    [ self renderButtonsOn: html ] ] ]
-]]]
-
-[[[
-TBAuthentificationComponent >> renderButtonsOn: html
-   html tbsSubmitButton value: 'Cancel'.
-   html tbsSubmitButton
-      bePrimary;
-      callback: [ self validate ];
-      value: 'SignIn'
-]]]
-
-[[[
-TBAuthentificationComponent >> renderAccountFieldOn: html
-   html
-      tbsFormGroup: [ html label with: 'Account'.
-         html textInput
-            tbsFormControl;
-            callback: [ :value | account := value ];
-            value: account ]
-]]]
-
-[[[
-TBAuthentificationComponent >> renderPasswordFieldOn: html
-   html tbsFormGroup: [
-      html label with: 'Password'.
-      html passwordInput
-         tbsFormControl;
-         callback: [ :value | password := value ];
-         value: password ]
-]]]
-
-Lorsque l'utilisateur clique sur le bouton 'SignIn', le message ==validate== est envoyé et vérifie que l'utilisateur a bien le compte 'admin' et a saisi le mot de passe 'password'.
-
-[[[
-TBAuthentificationComponent >> validate
-   (self account = 'admin' and: [ self password = 'password' ])
-      ifTrue: [ ... ]
-]]]
-
-Rechercher une autre méthode pour réaliser l'authentification de l'utilisateur (utilisation d'un backend de type base de données, LDAP ou fichier texte). En tout cas, ce n'est pas à la boite de login de faire ce travail, il faut le déléguer à un objet métier qui saura consulter le backend et authentifier l'utilisateur.
-
-De plus le composant ==TBAuthentificationComponent== pourrait afficher l'utilisateur lorsque celui-ci est logué.
-
-!!!Intégration de l'authentification
-
-Il faut maintenant intégrer le lien qui déclenchera l'affichage de la boite modale d'authentification. Au tout début de la méthode ==renderContentOn:== du composant ==TBPostsListComponent==, on ajoute le rendu du composant d'authentification. Ce composant reçoit en paramètre la référence vers le composant affichant les posts.
-
-[[[
-TBPostsListComponent >> renderContentOn: html
-   super renderContentOn: html.
-   html render: (TBAuthentificationComponent from: self).
-   html
-      tbsContainer: [
-         html tbsRow
-            showGrid;
-            with: [ self renderCategoryColumnOn: html.
-                  self renderPostColumnOn: html ] ]
-]]]
-
- On définit maintenant une méthode qui affiche un pictogramme clé et un lien 'SignIn'.
-
-[[[
-TBPostsListComponent >> renderSignInOn: html
-   html tbsGlyphIcon perform: #iconLock.
-   html html: '<a data-toggle="modal" href="#myAuthDialog" class="link">SignIn</a>'.
-]]]
-
-Nous ajoutons le composant d'authentification dessous la liste de categories.
-[[[
-TBPostsListComponent >> renderCategoryColumnOn: html
-   html tbsColumn
-      extraSmallSize: 12;
-      smallSize: 2;
-      mediumSize: 4;
-      with: [
-           self basicRenderCategoriesOn: html.
-         self renderSignInOn: html ]
-]]]
-
-
-Lorsque nous pressons sur le lien SignIn nous obtenons la figure *@authentification*.
-
-+Avec un meilleur agencement.>file://figures/Authentification.png|width=75|label=authentification+
+Nous pourrions enrichir les descriptions pour qu'il ne soit pas possible de poster un bulletin ayant une date antérieure à celle du jour. Nous pourrions changer la description d'une catégorie pour que ses valeurs possibles soient définies par l'ensemble des catégories existantes. Tout cela permettrait de produire des interfaces plus complètes et toujours aussi simplement.
 
 
 !!!Administration des posts
@@ -279,7 +326,16 @@ Pour tester, identifiez-vous sur l'application et vous devez obtenir la situatio
 +Un composant d'administration vide.>file://figures/BlogAdminSimple.png|width=75|label=adminSimple+
 
 
-!!!Le composant PostsReport
+
+
+
+
+
+
+
+
+
+!!! Le composant PostsReport
 
 La liste des posts est affichée à l'aide d'un rapport généré dynamiquement par le framework Magritte. Nous utilisons ce framework pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
 

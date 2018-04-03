@@ -1,7 +1,8 @@
 !! L'application TinyBlog : extension du modèle et tests unitaires
 @chapModelExtensionAndUnitTests
 
-Dans ce chapitre nous étendons le modèle et ajoutons des tests. 
+% full hash of full code 35785aaaf1284f1a472980f07522fc7d0d4743e6
+Dans ce chapitre nous étendons le modèle et ajoutons des tests. Notez qu'un bon développeur de méthodologies agiles tel que Test-Driven Development aurait commencé par écrire des tests. En plus, avec Pharo, nous aurions aussi codé dans le débuggeur pour être encore plus productif. Nous ne l'avons pas fait car le modèle est simpliste et expliquer comment coder dans le débuggeur demande plus de description textuelle. Vous pouvez voir cette pratique dans les vidéos du Mooc de la second semaine et lire le livre ''Learning Object-Oriented Programming, Design with TDD in Pharo'' disponible a *http://books.pharo.org*.
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!!La classe TBBlog
@@ -25,9 +26,9 @@ TBBlog >> initialize
 
 !!!Un seul blog
 
-Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. Dans le futur, vous pourrez ajouter la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant, nous utilisons donc un singleton pour la classe ==TBBlog==.
+Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. Dans le futur, vous pourrez ajouter la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant, nous utilisons donc un singleton pour la classe ==TBBlog==. Faites attention car le schéma de conception Singleton est rarement bien utilisé et peut rendre votre conception rapidement de mauvaise qualité. En effet, un singleton est souvent une sorte de variable globale et rend votre conception moins modulaire. Donc ne généralisez pas ce que nous faisons ici.
 
-Comme la gestion du singleton est un comportement de classe, ces méthodes sont définies sur le coté class de la classe ==TBBlog==. 
+Comme la gestion du singleton est un comportement de classe, ces méthodes sont définies sur le coté class de la classe ==TBBlog==.
 
 [[[
 TBBlog class

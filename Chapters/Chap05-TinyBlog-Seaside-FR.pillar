@@ -1,13 +1,9 @@
-!! Construction d'une interface Web en Seaside pour TinyBlog
-
-
-!!!Une interface Web pour TinyBlog en Seaside
-
-Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
+!! Une interface Web en Seaside pour TinyBlog
 
 Nous commençons par définir une interface telle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera.
 Nous allons définir des composants Seaside *http://www.seaside.st* dont l'ouvrage de référence est disponible en ligne à *http://book.seaside.st*.
 
+Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
 
 +Lancer le serveur.>file://figures/RunningSeaside.png|width=50|label=RunningSeaside+
 
@@ -37,8 +33,6 @@ WAComponent subclass: #TBApplicationRootComponent
    classVariableNames: ''
    package: 'TinyBlog-Components'
 ]]]
-
-
 
 
 Nous déclarons l'application au serveur Seaside, en définissant coté classe, dans le protocole =='initialization'== la méthode ==initialize== suivante. On en profite pour intégrer les dépendances du framework Bootstrap (les fichiers css et js seront stockés dans l'application).
@@ -137,6 +131,14 @@ Dans le futur, lorsque nous gérerons les utilisateurs et le fait qu'un utilisat
 
 +Accès à la bibliothèque Bootstrap.>file://figures/SeasideBootstrap.png|width=75|label=bootstrap+
 
+!!!! Pattern de définition  de composants
+
+Nous allons souvent utiliser la même façon de procéder:
+- Nous définissons d'abord la classe et le comportement d'un nouveau composant 
+- Puis nous allons y faire référence depuis la class racine. 
+- En particulier nous exprimons la relation entre un composant et un sous composant en redéfinissant la méthode ==children==.
+
+
 !!!Bootstrap for Seaside
 
 La bibliothèque Bootstrap est totalement accessible depuis Seaside comme nous allons le montrer.
@@ -154,7 +156,9 @@ Une démo en ligne est disponible à l'adresse : *http://pharo.pharocloud.com/bo
 
 !!!Définition du composant TBHeaderComponent
 
-Profitons de ce composant pour insérer dans la partie supérieure de chaque composant, l'instance d'un composant représentant l'entête de l'application.
+Profitons de ce composant, pour insérer dans la partie supérieure de chaque composant l'instance d'un composant représentant l'entête de l'application. Nous appliquons le schéma présenté avant: définition d'une classe, référence depuis la class utilisatrice, redéfinition de la méthode ==children==.
+
+Nous définissons d'abord sa classe, puis nous allons y faire référence depuis la class racine. Ce faisant nous allons montrer comment un composant exprime sa relation à un sous composant. 
 
 [[[
 WAComponent subclass: #TBHeaderComponent
@@ -182,7 +186,7 @@ Le nom du blog devrait être paramétrable à l'aide d'une variable d'instance d
 et le header pourrait afficher ce titre.
 
 
-!!!Utilisation du header
+!!!Utilisation du composant header
 
 Il n'est pas souhaitable d'instancier systématiquement le composant à chaque fois qu'un composant est appelé. Créons une variable d'instance ==header== dans ==TBScreenComponent== que nous initialisons.
 
@@ -190,7 +194,7 @@ Il n'est pas souhaitable d'instancier systématiquement le composant à chaque f
 WAComponent subclass: #TBScreenComponent
    instanceVariableNames: 'header'
    classVariableNames: ''
-   package: 'TinyBlog'
+   package: 'TinyBlog-Components'
 ]]]
 
 Créons une méthode ==initialize== dans le protocole 'initialize-release':
@@ -223,7 +227,10 @@ TBScreenComponent >> renderContentOn: html
 !!!Utilisation du composant Screen
 
 Bien que le composant ==TBScreenComponent== n'ait pas vocation à être utilisé directement, nous allons l'utiliser de manière temporaire pendant que nous développons les autres composants. 
-Nous ajoutons ==main== comme variable d'instance dans la classe ==TBApplicationRootComponent==. Nous l'initialisons dans la méthode ==initialize== suivante. 
+Nous ajoutons ==main== comme variable d'instance dans la classe ==TBApplicationRootComponent==. Nous l'initialisons dans la méthode ==initialize== suivante. Nous obtenons la situation décrite par la figure *@compt1*.
+
++Le composant ==ApplicationRootComponent== utilise de manière temporaire le composant ==ScreenComponent== qui a un ==HeaderComponent==.>file://figures/ComponentRelationship1.pdf|width=75|label=compt1+
+
 
 [[[
 TBApplicationRootComponent >> initialize
@@ -272,7 +279,9 @@ TBPostsListComponent >> renderContentOn: html
    html text: 'Blog Posts here !!!'
 ]]]
 
-Nous pouvons maintenant dire au composant de l'application d'utiliser ce composant. Pour cela nous modifions-la ainsi: 
++Le composant ==ApplicationRootComponent== utilise le composant ==PostsListComponent==.>file://figures/ComponentRelationship2.pdf|width=75|label=compt2+
+
+Nous pouvons maintenant dire au composant de l'application d'utiliser ce composant comme illustré dans la figure *@compt2*. Pour cela nous modifions-la ainsi: 
 
 [[[
 TBApplicationRootComponent >> initialize
@@ -291,11 +300,13 @@ TBApplicationRootComponent >> main: aComponent
 +TinyBlog avec une liste de posts plutot élémentaire.>file://figures/ElementaryListPost.png|width=75|label=elementary+
 
 
-!!!Le composant post
+!!!Le composant Post
 
 Nous allons maintenant définir le composant ==TBPostComponent== qui affiche le contenu d'un post.
 
-Chaque post du blog sera représenté visuellement par une instance de  ==TBPostComponent== qui affiche le titre, la date et le contenu d'un post.
+Chaque post du blog sera représenté visuellement par une instance de  ==TBPostComponent== qui affiche le titre, la date et le contenu d'un post. Nous allons obtenir la situation décrite par la figure *@compt3*.
+
++Ajout du composant Post.>file://figures/ComponentRelationship3.pdf|width=75|label=compt3+
 
 [[[
 WAComponent subclass: #TBPostComponent
@@ -337,7 +348,7 @@ TBPostComponent >> renderContentOn: html
 
 !!!!A propos des formulaires
 
-Dans le chapitre et celui sur l'interface d'administration et qui utilise Magritte , nous montrerons qu'il est rare de définir un composant de manière aussi manuelle. En effet, Magritte permet de décrire les données manipulées et offre ensuite la possibilité de générer automatiquement des composants Seaside. Le code équivalent serait comme suit: 
+Dans le chapitre sur l'interface d'administration et qui utilise Magritte, nous montrerons qu'il est rare de définir un composant de manière aussi manuelle. En effet, Magritte permet de décrire les données manipulées et offre ensuite la possibilité de générer automatiquement des composants Seaside. Le code équivalent serait comme suit: 
 
 [[[
 TBPostComponent >> renderContentOn: html
@@ -392,12 +403,57 @@ Nous allons utiliser Bootstrap pour rendre la liste un peu plus jolie en utilisa
 TBPostsListComponent >> renderContentOn: html
    super renderContentOn: html.
    html tbsContainer: [ 
-   self blog allVisibleBlogPosts do: [ :p |
-      html render: (TBPostComponent new post: p) ] ]
+      self blog allVisibleBlogPosts do: [ :p |
+          html render: (TBPostComponent new post: p) ] ]
 ]]]
 
 Rafraichissez la page et vous devez obtenir la Figure *@container*.
 +TinyBlog avec une liste de posts élémentaire.>file://figures/ContainerList.png|width=75|label=container+
+
+
+!!! Relation composite composants
+
+Alors que la solution fonctionne, Seaside nécessite que les composants (ici TBPostComponent) d'un composite (ici TBPostsListComponent) soient accessibles via la méthode ==children==. Nous allons donc transformer
+la solution précédente pour suivre le framework.
+
+Nous ajoutons une variable d'instance ==postComponents==.
+
+[[[
+TBScreenComponent subclass: #TBPostsListComponent
+	instanceVariableNames: 'postComponents'
+	classVariableNames: ''
+	package: 'TinyBlog-Components'
+]]]
+
+[[[
+TBPostsListComponent >> initialize
+	super initialize.
+	postComponents := OrderedCollection new.
+]]]
+
+La méthode ==postComponents== calcule et rend les composants pour les bulletins. 
+
+[[[
+TBPostsListComponent >> postComponents 
+	postComponents := self readSelectedPosts
+			collect: [ :each | TBPostComponent new post: each ].
+	^ postComponents 
+]]]
+
+[[[
+TBPostsListComponent >> children 
+	^ self postComponents
+]]]
+
+Et nous redéfinissons la méthode ==renderContentOn:== pour utiliser les méthodes définies avant.
+[[[
+TBPostsListComponent >> renderContentOn: html
+	super renderContentOn: html.
+	html tbsContainer: [ 
+		self postComponents do: [ :p |
+				html render: p ] ]
+]]]
+
 
 
 !!!Affichage des posts par catégorie
@@ -408,7 +464,9 @@ Nous allons créer un composant pour gérer une liste de catégories nommée: ==
 
 !!!!Definition d'un composant pour les catégories
 
-Nous avons besoin d'un composant qui affiche la liste des catégories présentes dans la base et permet d'en sélectionner une. Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui communiquer la catégorie courante.
+Nous avons besoin d'un composant qui affiche la liste des catégories présentes dans la base et permet d'en sélectionner une. Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui communiquer la catégorie courante. La situation est décrite par la figure *@compt4*.
+
++Ajout du composant Categories.>file://figures/ComponentRelationship4.pdf|width=75|label=compt4+
 
 [[[
 WAComponent subclass: #TBCategoriesComponent
@@ -416,16 +474,23 @@ WAComponent subclass: #TBCategoriesComponent
    classVariableNames: ''
    package: 'TinyBlog-Components'
 ]]]
+
 [[[
 TBCategoriesComponent >> categories
    ^ categories
+]]]
 
+[[[
 TBCategoriesComponent >> categories: aCollection
    categories := aCollection
+]]]
 
+[[[
 TBCategoriesComponent >> postsList: aComponent
       postsList := aComponent
+]]]
 
+[[[
 TBCategoriesComponent >> postsList
    ^ postsList
 ]]]
@@ -437,6 +502,28 @@ TBCategoriesComponent class >> categories: aCollectionOfCategories postsList: aT
    ^ self new categories: aCollectionOfCategories; postsList: aTBScreen 
 ]]]
 
+
+Nous avons donc besoin d'ajouter une variable d'instance pour stocker la catégorie courante dans ==TBPostsListComponent==.
+
+[[[
+TBScreenComponent subclass: #TBPostsListComponent
+   instanceVariableNames: 'currentCategory postComponents'
+   classVariableNames: ''
+   package: 'TinyBlog-Components'
+]]]
+
+[[[
+TBPostsListComponent >> currentCategory
+   ^ currentCategory
+]]]
+
+[[[
+TBPostsListComponent >> currentCategory: anObject
+   currentCategory := anObject
+]]]
+
+
+!!!! La méthode selectCategory:
 La méthode ==selectCategory:== (protocole 'action') communique au composant ==TBPostsListComponent== la nouvelle catégorie courante.
 
 [[[
@@ -444,24 +531,11 @@ TBCategoriesComponent >> selectCategory: aCategory
    postsList currentCategory: aCategory
 ]]]
 
-Nous avons donc besoin d'ajouter une variable d'instance pour stocker la catégorie courante dans ==TBPostsListComponent==.
 
-[[[
-TBPostsListComponent subclass: #TBPostsListComponent
-   instanceVariableNames: 'currentCategory'
-   classVariableNames: ''
-   package: 'TinyBlog-Components'
-]]]
-[[[
-TBPostsListComponent >> currentCategory
-   ^ currentCategory
-   
-TBPostsListComponent >> currentCategory: anObject
-   currentCategory := anObject
-]]]
 
 !!! Rendu des catégories
 Nous pouvons maintenant ajouter une méthode (protocole 'rendering') pour afficher les catégories sur la page. En particulier pour chaque catégorie nous définissons le fait que cliquer sur la catégorie la sélectionne comme la catégorie courante.
+Nous utilisons un callback (message ==callback:==): l'argument d'un callback est un block et peut contenir n'importe quelle expression. Cela illustre la puissance de Seaside.
 
 [[[
 TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
@@ -478,16 +552,16 @@ TBCategoriesComponent >> renderContentOn: html
       html tbsListGroupItem
          with: [  html strong: 'Categories' ].
       categories do: [ :cat | 
-         self renderCategoryLinkOn: html with: cat ]]
+         self renderCategoryLinkOn: html with: cat ] ]
 ]]]
 
 Nous avons presque fini mais il faut encore afficher la liste des catégories et mettre à jour la liste des posts en fonction de la catégorie courante. 
 
 !!!Mise à jour des Posts
 
-Pour cela, modifions la méthode de rendu du composant ==TBPostsListComponent==.
+Nous devons mettre à jours les bulletins, pour cela, modifions la méthode de rendu du composant ==TBPostsListComponent==.
 
-La méthode ==readSelectedPosts== récupère dans la base les posts à afficher. Si elle vaut ==nil==, l'utilisateur n'a pas encore sélectionné une catégorie et l'ensemble des posts visibles de la base est affiché. Si elle contient une valeur autre que ==nil==, l'utilisateur a sélectionné une catégorie et l'application affiche alors la liste des posts attachés à la catégorie.
+La méthode ==readSelectedPosts== récupère dans la base les bulletins à afficher. Si elle vaut ==nil==, l'utilisateur n'a pas encore sélectionné une catégorie et l'ensemble des bulletins visibles de la base est affiché. Si elle contient une valeur autre que ==nil==, l'utilisateur a sélectionné une catégorie et l'application affiche alors la liste des bulletins attachés à la catégorie.
 
 [[[
 TBPostsListComponent >> readSelectedPosts
@@ -496,6 +570,16 @@ TBPostsListComponent >> readSelectedPosts
       ifNotNil: [ self blog allVisibleBlogPostsFromCategory: self currentCategory ]
 ]]]
 
+Nous redéfinissons la méthode ==postComponents== pour utiliser la méthode ==readSelectedPosts==.
+
+[[[
+TBPostsListComponent >> postComponents
+	postComponents := self readSelectedPosts
+			collect: [ :each | TBPostComponent new post: each ] ].
+	^ postComponents 
+]]]
+
+
 
 Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des posts:
 
@@ -503,11 +587,11 @@ Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des p
 TBPostsListComponent >> renderContentOn: html
    super renderContentOn: html.
    html render: (TBCategoriesComponent
-               categories: (self blog allCategories)
+               categories: self blog allCategories
                postsList: self).
    html tbsContainer: [ 
-      self readSelectedPosts do: [ :p |
-         html render: (TBPostComponent new post: p) ] ]
+		self postComponents do: [ :p |
+				html render: p ] ]
 ]]]
 
 Une instance du composant ==TBCategoriesComponent== est ajoutée sur la page et permet de sélectionner la catégorie courante (voir la figure *@ugly*).
@@ -523,25 +607,25 @@ Nous allons maintenant agencer le composant ==TBPostsListComponent== en utilisan
 
 [[[
 TBPostsListComponent >> renderContentOn: html
-   super renderContentOn: html.
-   html tbsContainer: [
-      html tbsRow showGrid;
-         with: [
-            html tbsColumn
-               extraSmallSize: 12;
-               smallSize: 2;
-               mediumSize:  4;
-               with: [
-                  html render: (TBCategoriesComponent
-                    categories: (self blog allCategories)
-                    postsList: self) ].
-      html tbsColumn
-               extraSmallSize: 12;
-               smallSize: 10;
-               mediumSize: 8;
-               with: [
-         self readSelectedPosts do: [ :p |
-             html render: (TBPostComponent new post: p) ] ] ] ]
+
+	super renderContentOn: html.
+	html
+		tbsContainer: [ html tbsRow
+				showGrid;
+				with: [ html tbsColumn
+						extraSmallSize: 12;
+						smallSize: 2;
+						mediumSize: 4;
+						with: [ html
+								render:
+									(TBCategoriesComponent 
+										categories: self blog allCategories 
+										postsList: self) ].
+					html tbsColumn
+						extraSmallSize: 12;
+						smallSize: 10;
+						mediumSize: 8;
+						with: [ self postComponents do: [ :p | html render: p ] ] ] ]
 ]]]
 
 Vous devez obtenir une application proche de celle représentée figure *@nicer5*.
@@ -560,10 +644,10 @@ TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
       with: aCategory
 ]]]
 
-Bien que le code fonctionne, on ne doit pas laisser la méthode ==TBPostsListComponent >> renderContentOn: html== dans un tel état. Elle est bien trop longue et difficilement réutilisable. 
-Proposer une solution. 
+Bien que le code fonctionne, on ne doit pas laisser la méthode ==TBPostsListComponent >> renderContentOn: html== dans un tel état. Elle est bien trop longue et difficilement réutilisable. Proposer une solution. 
 
 !!!Notre solution: Plein de petites méthodes
+Nous allons découper la méthode en plusieurs petites méthodes. 
 
 [[[
 TBPostsListComponent >> renderContentOn: html
@@ -575,6 +659,7 @@ TBPostsListComponent >> renderContentOn: html
             with: [ self renderCategoryColumnOn: html.
                   self renderPostColumnOn: html ] ]
 ]]]
+
 [[[
 TBPostsListComponent >> renderCategoryColumnOn: html
    html tbsColumn
@@ -583,12 +668,14 @@ TBPostsListComponent >> renderCategoryColumnOn: html
       mediumSize: 4;
       with: [ self basicRenderCategoriesOn: html ]
 ]]]
+
 [[[
 TBPostsListComponent >> basicRenderCategoriesOn: html
-   ^ html render: (TBCategoriesComponent 
+   html render: (TBCategoriesComponent 
          categories: self blog allCategories 
          postsList: self)
 ]]]
+
 [[[
 TBPostsListComponent >> renderPostColumnOn: html
    html tbsColumn
@@ -597,23 +684,35 @@ TBPostsListComponent >> renderPostColumnOn: html
          mediumSize: 8;
          with: [ self basicRenderPostsOn: html ] 
 ]]]
+
 [[[
 TBPostsListComponent >> basicRenderPostsOn: html
-   ^ self readSelectedPosts do: [ :p | 
-        html render: (TBPostComponent new post: p) ]
+   self postComponents do: [ :p | html render: p ]
 ]]]
-
 
 Nous voici prêts à définir la partie administrative de l'application.
 
 +Final TinyBlog Public UI.>file://figures/finalPublicWebPage.png|width=85|label=final+
 
-!!!Améliorations possibles
+L'application finale devrait ressembler à la figure *@final*.
+
+!!! Conclusion
+Avec Seaside, le programmeur n'a pas à se soucier de gérer les requêtes web, ni l'état de l'aplication. Il définit des composants qui sont créés et sont proches des composants pour applications de bureau.
+
+Un composant Seaside est responsable d'assurer son rendu en spécialisant la méthode ==renderContentOn:==.
+De plus un composant doit retourné ses sous-composants en spécialisant la méthode ==children==.
+
+Nous avons défini une interface pour notre blog en utilisant un ensemble de composants définissant chacun
+leur propre état et leurs responsibilités. Maintenant il faut remarquer que de très nombreuses applications se construisent de la même manière. Donc vous avez les bases pour définir de nombreuses applications web. Dans le chapitre suivant nous allons vous montrer un aspect avancé qui permet la définition automatique de formulaires ou d'objets ayant de nombreux champs.
+
+!!!! Améliorations possibles
 
 A titre d'exercice, vous pouvez :
 - trier les catégories par ordre alphabétique
-- ajouter un lien nommé 'All' dans la liste des catégories permettant d'afficher toutes les posts visible quelque soit leur catégorie
+- ajouter un lien nommé 'All' dans la liste des catégories permettant d'afficher toutes les posts visible quelque soit leur catégorie.
 
-L'application finale devrait ressembler à la figure *@final*.
+
+
+
 
 
