@@ -5,7 +5,8 @@ Notre idée est que par la suite vous pourrez réutiliser cette infrastructure p
 
 !!! Structure
 
-Dans la première partie appelée "Tutoriel de base", vous allez développer et déployer, TinyBlog, une  application et son administration en utilisant Pharo/Seaside/Mongo.
+Dans la première partie appelée "Tutoriel de base", vous allez développer et déployer, TinyBlog, une  application et son administration en utilisant Pharo/Seaside/Mongo.\
+Le deployement en utilisant Mongo reste optionnel mais vous permet de voir que Voyage offre Mongo comme une alternative élégante et facile de mise en oeuvre. 
 
 Dans une seconde partie, nous abordons des aspects optionnels tel que l'export de données, l'utilisation de template comme Mustache ou comment exposer votre application via un serveur REST.
 

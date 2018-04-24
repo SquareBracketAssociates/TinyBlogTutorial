@@ -85,6 +85,9 @@ TBBlog >> removeAllPosts
 	self save.
 ]]]
 
+!!! Revision des tests
+
+@@todo Ce faisant nous avons casse les tests car nous accedons et modifions la base directement.
 
 !!!Utilisation de la base
 
@@ -158,7 +161,7 @@ TBBlog >> removeAllPosts
 Ici dans la méthode ==removeAllPosts== nous enlevons chaque posts puis nous remettons à jour la collection.
 
 
-!!! Tester avec une base Mongo [Optionnel]
+!!! Deployer avec une base Mongo [Optionnel]
 
 Nous allons maintenant montrer comment utiliser une base Mongo externe à Pharo. 
 Dans le cadre de ce tutorial, vous pouvez ne pas le faire et passer à la suite.
@@ -166,7 +169,7 @@ Dans le cadre de ce tutorial, vous pouvez ne pas le faire et passer à la suite.
 En utilisant Voyage nous pouvons rapidement sauver nos posts dans une base de données Mongo. Cette section explique rapidement la mise en oeuvre et les quelques modifications que nous devons apporter à notre projet Pharo pour y parvenir. 
 
 
-!!!Installation de Mongo
+!!!!Installation de Mongo
 
 Quel que soit votre système d'exploitation (Linux, Mac OSX ou Windows), vous pouvez installer un serveur Mongo localement sur votre machine. Cela est pratique pour tester votre application sans avoir besoin d'une connexion Internet. Nous ne détaillons pas ici comment installer Mongo sur votre système, référez-vous à la documentation Mongo. 
 
@@ -175,7 +178,7 @@ Quel que soit votre système d'exploitation (Linux, Mac OSX ou Windows), vous po
 Cependant vous devez créer une base de données nommée 'tinyblog'. 
 Lorsque, vous avez installé et lancé un serveur Mongo localement, vous pouvez y accéder depuis Pharo.
 
-!!!Connexion à un serveur local
+!!!!Connexion à un serveur local
 
 Nous définissions les méthodes ==initializeLocalhostMongoDB== pour établir la connexion vers la base de données.
 
