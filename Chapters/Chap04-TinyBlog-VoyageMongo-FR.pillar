@@ -89,6 +89,23 @@ TBBlog >> removeAllPosts
 
 @@todo Ce faisant nous avons casse les tests car nous accedons et modifions la base directement.
 
+[[[
+setUp
+	oldRepository := VORepository current.
+	VORepository setRepository: VOMemoryRepository new.
+]]]
+
+[[[
+tearDown
+	VORepository setRepository: oldRepository
+]]]
+
+
+(and you could use it to create a mongo database in case you want to test there, etc.)
+
+
+
+
 !!!Utilisation de la base
 
 Alors même que la base est en mémoire et bien que nous pouvons accéder au blog en utilisant le singleton de la classe ==TBBlog==,
