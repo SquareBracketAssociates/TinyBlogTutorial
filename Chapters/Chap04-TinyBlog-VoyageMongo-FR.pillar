@@ -34,15 +34,12 @@ TBBlog class >> initializeVoyageOnMemoryDB
 
 Ici nous n'avons pas besoin de stocker la base dans une variable d'instance car nous n'avons qu'une seule base de donnée en mode singleton. 
 
-Nous redéfinissons les méthodes de classe ==reset== et ==initialize== pour nous assurer que l'endroit où la base est sauvée est réinitialisé lorsque l'on charge le code. 
+Nous redéfinissons la méthode de classe ==reset== pour nous assurer que l'endroit où la base est sauvée est réinitialisé lorsque l'on charge le code. 
 
 La méthode ==reset== réinitialize la base. 
 [[[
 TBBlog class >> reset
-      self initializeVoyageOnMemoryDB
-      
-TBBlog class >> initialize
-      self reset
+	self initializeVoyageOnMemoryDB
 ]]]
 
 N'oubliez pas d'exécuter la méthode ==initialize== une fois la méthode définie en exécutant expression ==TBBlog initialize==.
@@ -60,10 +57,16 @@ TBBlog class >> current
 ]]]
 
 La variable ==uniqueInstance== qui servait auparavant à stocker le singleton ==TBBlog== peut être enlevée.
+Mais pour que l'initialisation de classe ==TBBlog== continue à fonctionner correctement ==reset== doit être mis à jour.
 
 [[[
 TBBlog class
 	instanceVariableNames: ''
+
+TBBlog class >> reset
+	"self reset"
+	self current remove.
+	self initializeLocalhostMongoDB
 ]]]
 
 !!!Sauvegarde d'un blog

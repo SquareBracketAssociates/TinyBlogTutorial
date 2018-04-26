@@ -24,8 +24,8 @@ Nous allons commencer par développer un composant d'identification qui lorsqu'i
 Ce composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances du composant.
 
 !!!! Définition du composant
-Nous définissons une nouvelle clsss sousclasses de la classe ==WAComponent== et des accesseurs.
-Ce composant contient un compte d'administration, le mot de passe associé ainsi que le composant a invoqué pour 
+Nous définissons une nouvelle sousclasse de la classe ==WAComponent== et des accesseurs.
+Ce composant contient un compte d'administration, le mot de passe associé ainsi que le composant à invoquer pour 
 accéder à l'administration.
 
 [[[
@@ -366,7 +366,7 @@ TBAdminComponent >> report: aReport
    report := aReport
 ]]]
 
-Comme le rapport est un composant fils du composant admin nous n'oublions pas de redéfinir la méthode ==children== comme suit.
+Comme le rapport est un composant fils du composant admin nous n'oublions pas de définir la méthode ==children== comme suit.
 
 [[[
 TBAdminComponent >> children
@@ -478,10 +478,10 @@ TBSMagritteReport subclass: #TBPostsReport
     classVariableNames: ''
     package: 'TinyBlog-Components'
 
-TBSMagritteReport >> blog
+TBPostsReport >> blog
    ^ blog
 
-TBSMagritteReport >> blog: aTBBlog
+TBPostsReport >> blog: aTBBlog
    blog := aTBBlog
 ]]]
 
@@ -508,6 +508,13 @@ TBPostsReport >> renderContentOn: html
       callback: [ self addPost ];
       with: 'Add post'.
    super renderContentOn: html
+]]]
+
+Les dates sont affichées de manière étrange. Ceci est dû au fait que les dates sont en fait des instance de DateAndTime donc nous les convertissons dans date comme suit.
+
+[[[
+TBPost >> date
+	^ date asDate
 ]]]
 
 Identifiez-vous à nouveau et vous devez obtenir la situation telle que représentée par la figure *@RapportNewLookActions*.
@@ -539,7 +546,7 @@ TBPostsReport >> addPost
 La méthode ==addPost== pour sa part, affiche le composant rendu par la méthode ==renderAddPostForm:== et lorsque qu'un nouveau post est créé, elle l'ajoute au blog.
 
 
-Enregistrez-vous et vous devez obtenir la situation telle que représentée par la figure *@addAPost*.
+Identifiez-vous et en cliquant sur le nouvel élément que nous venons d'ajouter, vous devez obtenir la situation telle que représentée par la figure *@addAPost*.
 +Ajout d'un post.>file://figures/AddAPost.png|width=75|label=addAPost+
 
 
