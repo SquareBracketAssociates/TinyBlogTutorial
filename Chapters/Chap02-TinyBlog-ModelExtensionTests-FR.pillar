@@ -8,7 +8,7 @@ Dans ce chapitre nous étendons le modèle et ajoutons des tests. Notez qu'un bo
 !!!La classe TBBlog
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Nous allons développer classe ==TBBlog== qui contient des posts, en écrivant des tests puis en les implémentant.
+Nous allons développer la classe ==TBBlog== qui contient des posts, en écrivant des tests puis en les implémentant.
 
 [[[
 Object subclass: #TBBlog
@@ -104,7 +104,7 @@ TBBlogTest >> testAddBlogPost
    self assert: blog size equals: 2
 ]]]
 
-Ce test ne passe pas (n'est pas vert) car nous n'avons pas défini les méthodes: ==writeBlogPost:== et ==removeAllPosts==.
+Ce test ne passe pas (n'est pas vert) car nous n'avons pas défini les méthodes: ==writeBlogPost:==, ==removeAllPosts== et ==size==.
 Ajoutons-les.
 
 [[[
@@ -112,7 +112,6 @@ TBBlog >> removeAllPosts
    posts := OrderedCollection new
 
 TBBlog >> writeBlogPost: aPost
-   "Write the blog post in database"
    posts add: aPost
 
 TBBlog >> size

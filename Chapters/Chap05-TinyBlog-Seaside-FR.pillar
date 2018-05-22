@@ -48,9 +48,7 @@ TBApplicationRootComponent class >> initialize
       addLibrary: TBSDeploymentLibrary
 ]]]
 
-Exécuter ==TBApplicationRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. En effet les méthodes ==initialize== de classe ne sont automatiquement exécutées que l'on du chargement de la classe. Ici nous venons juste de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices.
-
-Les méthodes de classe ==initialize== sont invoquées automatiquement lors du chargement de la classe.
+Exécuter ==TBApplicationRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. En effet les méthodes ==initialize== de classe ne sont automatiquement exécutées que lors du chargement de la classe. Ici nous venons juste de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices.
 
 Ajoutons également la méthode ==canBeRoot== afin de préciser que la classe ==TBApplicationRootComponent== n'est pas qu'un simple composant Seaside mais qu'elle représente notre application Web.
 Elle sera donc instanciée dès qu'un utilisateur se connecte sur l'application.
@@ -101,7 +99,7 @@ Nous sommes maintenant prêts à définir les composants visuels de notre applic
 Les premiers chapitres de *http://book.seaside.st* peuvent vous y aider et compléter efficacement ce tutoriel.
 
 
-La figure *@ComponentOverview* montre les différents composants que nous allons développer et ou ils se situent. 
+La figure *@ComponentOverview* montre les différents composants que nous allons développer et où ils se situent. 
 
 +Les composants composant l'application TinyBlog.>file://figures/ComponentOverview.pdf|width=75|label=ComponentOverview+
 
@@ -549,7 +547,7 @@ Reste maintenant à écrire la méthode de rendu du composant: On itère sur tou
 [[[
 TBCategoriesComponent >> renderContentOn: html
    html tbsListGroup: [
-      html tbsListGroupItem
+      html tbsListGroupItem beActive;
          with: [  html strong: 'Categories' ].
       categories do: [ :cat | 
          self renderCategoryLinkOn: html with: cat ] ]
@@ -575,7 +573,7 @@ Nous redéfinissons la méthode ==postComponents== pour utiliser la méthode ==r
 [[[
 TBPostsListComponent >> postComponents
 	postComponents := self readSelectedPosts
-			collect: [ :each | TBPostComponent new post: each ] ].
+			collect: [ :each | TBPostComponent new post: each ].
 	^ postComponents 
 ]]]
 

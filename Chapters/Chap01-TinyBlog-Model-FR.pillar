@@ -185,7 +185,7 @@ Pour rappel, dans le cadre de ce tutoriel, nous vous suggérons de toujours util
 
 !!!A propos de dépendances
 
-Les bonnes pratiques lors de développements en Pharo sont de spécifier clairement les dépendances sur les packages utilisés afin d'avoir une reproductibilité complète d'un projet. Une telle reproducibilité permet alors l'utilisation de serveur de construction tel Travis ou Jenkins. 
+Les bonnes pratiques lors de développements en Pharo sont de spécifier clairement les dépendances sur les packages utilisés afin d'avoir une reproductibilité complète d'un projet. Une telle reproductibilité permet alors l'utilisation de serveur de construction tel Travis ou Jenkins. 
 Pour cela, une configuration (une classe spéciale) définit d'une part l'architecture du projet (dependances et packages du projet) et les versions des packages versionnés. 
 
 Dans le cadre de ce projet, nous n'abordons pas ce point plus avancé. Un chapitre entier sur l'expression de configuration dans le livre Deep Into Pharo (cf. *http://books.pharo.org*) est consacré à ce point. 
