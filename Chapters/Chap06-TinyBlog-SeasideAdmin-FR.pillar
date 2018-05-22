@@ -1,13 +1,6 @@
-
 !! Interface Web d'administration pour TinyBlog
 
-Dans le chapitre précédent nous avons vu comment développer l'embryon d'une application : nous avons défini des
-composants qui interagissent entre eux. Chaque composant est alors responsable son état et de son rendu graphique. 
-Alors que le chapitre précédent décrit l'essentiel du développement avec Seaside dans ce chapitre nous voulons 
-vous montrer que l'on peut aller encore plus loin et générer des composants Seaside à partir de la description d'objets
-en utilisant le frameworks Magritte. Nous allons tout d'abord définir un composant d'identification : cette définition de composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances d'un composant ainsi que l'invocation de composants.
-
-
+Dans le chapitre précédent nous avons vu comment développer l'embryon d'une application : nous avons défini des composants qui interagissent entre eux. Chaque composant est alors responsable son état et de son rendu graphique.  Alors que le chapitre précédent décrit l'essentiel du développement avec Seaside dans ce chapitre nous voulons vous montrer que l'on peut aller encore plus loin et générer des composants Seaside à partir de la description d'objets en utilisant le frameworks Magritte. Nous allons tout d'abord définir un composant d'identification : cette définition de composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances d'un composant ainsi que l'invocation de composants.
 
 !!!Administration de TinyBlog
 
@@ -24,9 +17,8 @@ Nous allons commencer par développer un composant d'identification qui lorsqu'i
 Ce composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances du composant.
 
 !!!! Définition du composant
-Nous définissons une nouvelle clsss sousclasses de la classe ==WAComponent== et des accesseurs.
-Ce composant contient un compte d'administration, le mot de passe associé ainsi que le composant a invoqué pour 
-accéder à l'administration.
+Nous définissons une nouvelle classe comme sousclasses de la classe ==WAComponent== et des accesseurs.
+Ce composant contient un compte d'administration, le mot de passe associé ainsi que le composant a invoqué pour accéder à l'administration.
 
 [[[
 WAComponent subclass: #TBAuthentificationComponent
@@ -34,26 +26,32 @@ WAComponent subclass: #TBAuthentificationComponent
    classVariableNames: ''
    package: 'TinyBlog-Components'
 ]]]
+
 [[[
 TBAuthentificationComponent >> account
    ^ account
 ]]]
+
 [[[
 TBAuthentificationComponent >> account: anObject
    account := anObject
 ]]]
+
 [[[
 TBAuthentificationComponent >> password
    ^ password
 ]]]
+
 [[[
 TBAuthentificationComponent >> password: anObject
    password := anObject
 ]]]
+
 [[[
 TBAuthentificationComponent >> component
    ^ component
 ]]]
+
 [[[
 TBAuthentificationComponent >> component: anObject
    component := anObject
