@@ -110,7 +110,7 @@ TBBlogTest >> setUp
 	post := (TBPost title: 'Another title' text: 'Another text' category: 'Second Category') beVisible
 ]]]
 
-Dans la méthode ==tearDown==, à la fin de l'execution, nous réinstallons le répositoire sauver avant l'exécution
+Dans la méthode ==tearDown==, à la fin de l'execution, nous réinstallons le répositoire sauver avant l'exécution.
 
 [[[
 TBBlogTest >> tearDown
