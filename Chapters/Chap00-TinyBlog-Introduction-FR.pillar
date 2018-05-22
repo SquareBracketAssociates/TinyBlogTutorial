@@ -15,7 +15,7 @@ Les solutions proposées dans ce tutoriel sont parfois non optimales afin de vou
 Finalement, afin de vous permettre de ne pas abandonner si vous ne trouvez pas une erreur, le dernier chapitre vous permet de charger 
 le code de chacun des chapitres. 
 
-+L'application TinyBlog application>figures/TinyBlogOnPharoCloud.png|width=100|label=TinyBlogOnPharoCloudHere+
++L'application TinyBlog application.>figures/TinyBlogOnPharoCloud.png|width=100|label=TinyBlogOnPharoCloudHere+
 
 
 !!!Installation de Pharo
@@ -39,7 +39,7 @@ Vous pouvez construire l'image que nous utilisons à l'aide de ce script à exé
 Dans la suite, nous préfixons tous les noms de classe par ==TB== (pour TinyBlog).
 Vous pouvez:
 - soit choisir un autre préfixe (par exemple ==TBM==) afin de pouvoir ensuite charger la correction dans la même image Pharo et la comparer à votre propre implémetation,
-- soit choisir le même préfixe afin de pouvoir fusionner les solutions avec votre code. L'outil de merge vous montrera les différences et vous permettra d'apprendre des changements. Cette solution est toutefois plus contraingnante si implémentez des fonctionnalités supplémentaires par rapport aux corrections ou même différemment ce qui est fort probable.
+- soit choisir le même préfixe afin de pouvoir fusionner les solutions avec votre code. L'outil de merge vous montrera les différences et vous permettra d'apprendre des changements. Cette solution est toutefois plus contraingnante si vous implémentez des fonctionnalités supplémentaires par rapport aux corrections ou même différemment ce qui est fort probable.
 
 
 !!! Ressources
