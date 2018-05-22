@@ -238,6 +238,11 @@ Notez que si vous avez besoin de réinitialiser la base extérieure complètemen
    database: 'tinyblog') dropDatabase
 ]]]
 
+Si vous ne pouvez pas le faire depuis Pharo, vous pouvez le faire lorsque mongod est en cours d'exécution avec l'expression suivante : 
+
+[[[
+mongo tinyblog --eval "db.dropDatabase()"
+]]]
 
 !!!!Attention : Changements de TBBlog
 
