@@ -8,7 +8,17 @@ Notez que l'utilisation de RenoirST est optionelle et que vous pouvez aussi util
 
 !!! Installation de RenoirSt
 
-Le framework RenoirSt est disponible dans le catalogue Pharo. Il vous suffit donc d'ouvrir le Catalog Browser et de sélectionner RenoirSt. Pour développer avec Seaside, il est recommandé d'installer également ==RenoirStPlusSeaside== qui comprend RenoirSt ainsi que le code nécessaire à une intégration correcte au serveur d'applications de Pharo.
+RenoirSt fait partie de la pile web autour du projet Willow *https://github.com/ba-st/Willow*. Vous pouvez charger le code comme suit:
+
+[[[
+Metacello new
+  baseline: 'RenoirSt';
+  repository: 'github://ba-st/RenoirSt:stable-pharo-50/source';
+  load: #Development
+]]]
+
+ Pour développer avec Seaside, il est recommandé d'installer également ==RenoirStPlusSeaside== qui comprend RenoirSt ainsi que le code nécessaire à une intégration correcte au serveur d'applications de Pharo.
+
 
 !!! Principe de fonctionnement
 

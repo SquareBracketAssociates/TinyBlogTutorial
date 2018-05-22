@@ -1,12 +1,12 @@
 !! A propos de ce livre 
 
-Tout au long de ce projet, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs (voir l'état final de l'application dans la Figure *@TinyBlogOnPharoCloudHere*). L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
+Tout au long de ce projet, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs. La Figure *@TinyBlogOnPharoCloudHere* montre l'état final de l'application. L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
 Notre idée est que par la suite vous pourrez réutiliser cette infrastructure pour de multiples autres applications.
 
 !!! Structure
 
-Dans la première partie appelée "Tutoriel de base", vous allez développer et déployer, TinyBlog, une  application et son administration en utilisant Pharo/Seaside/Mongo.\
-Le deployement en utilisant Mongo reste optionnel mais vous permet de voir que Voyage offre Mongo comme une alternative élégante et facile de mise en oeuvre. 
+Dans la première partie appelée "Tutoriel de base", vous allez développer et déployer, TinyBlog, une  application et son administration en utilisant Pharo/Seaside/Voyage(Mongo)/Magritte.\
+Le d\'eployement en utilisant Mongo est optionnel mais vous permet de voir que Voyage offre Mongo comme une alternative élégante et facile de mise en oeuvre.
 
 Dans une seconde partie, nous abordons des aspects optionnels tel que l'export de données, l'utilisation de template comme Mustache ou comment exposer votre application via un serveur REST.
 
@@ -46,6 +46,7 @@ Vous pouvez:
 
 Pharo possède de bonnes ressources pédagogique ainsi qu'une communauté d'utilisateurs accueillante. Voici quelques informations qui peuvent vous être utiles. 
 
-- *http://books.pharo.org* contient des ouvrages autour de Pharo. Pharo by Example peut vous aider dans les aspects de découverte du langage et des bibliothèques de base. 
+- *http://books.pharo.org* contient des ouvrages autour de Pharo. Pharo by Example peut vous aider dans les aspects de découverte du langage et des bibliothèques de base.
+- *http://book.seaside.st* est un des ouvrages sur Seaside. Il est en cours de migration en livre open-source sur *https://github.com/SquareBracketAssociates/DynamicWebDevelopmentWithSeaside*.
 - *http://mooc.pharo.org* propose un excellent Mooc (cours en ligne) comprenant plus de 90 videos expliquant des points de syntaxes mais aussi de conception objet.
 - *http://discord.gg/Sj2rhxn* est le channel discord où nombre de Pharoers échangent et s'entraident. 
