@@ -87,23 +87,38 @@ TBBlog >> removeAllPosts
 
 !!! Revision des tests
 
-@@todo Ce faisant nous avons casse les tests car nous accedons et modifions la base directement.
+Maintenant que nous sauvons les blogs dans une base (quelle soit en mémoire ou dans une base mongo), nous devons faire attention car si un test modifie la base, notre base courante (hors test) sera elle aussi modifiée : Cette situation est clairement dangereuse. Un test ne doit pas modifier l'état du système.
+
+Nous ajoutons la variable d'instance ==previousRepository== à la classe ==TBBLogTest==.
 
 [[[
-setUp
-	oldRepository := VORepository current.
+TestCase subclass: #TBBlogTest
+	instanceVariableNames: 'blog post first previousRepository'
+	classVariableNames: ''
+	package: 'TinyBlog-Tests'
+]]]
+
+Ensuite, nous modifions donc la méthode ==setUp== pour sauver le repositoire avant l'exécution du test. Nous créons un répositoire temporaire qui sera celui qui sera modifié par le test.
+
+[[[
+TBBlogTest >> setUp
+	previousRepository := VORepository current.
 	VORepository setRepository: VOMemoryRepository new.
+	blog := TBBlog current.
+	first := TBPost title: 'A title' text: 'A text' category: 'First Category'.
+	blog writeBlogPost: first.
+	post := (TBPost title: 'Another title' text: 'Another text' category: 'Second Category') beVisible
 ]]]
+
+Dans la méthode ==tearDown==, à la fin de l'execution, nous réinstallons le répositoire sauver avant l'exécution.
 
 [[[
-tearDown
-	VORepository setRepository: oldRepository
+TBBlogTest >> tearDown
+	VORepository setRepository: previousRepository
 ]]]
 
 
-(and you could use it to create a mongo database in case you want to test there, etc.)
-
-
+Notez que les méthodes ==setUp== et ==tearDown== sont executées avant et aprés l'exécution de chaque test.
 
 
 !!!Utilisation de la base
@@ -223,6 +238,11 @@ Notez que si vous avez besoin de réinitialiser la base extérieure complètemen
    database: 'tinyblog') dropDatabase
 ]]]
 
+Si vous ne pouvez pas le faire depuis Pharo, vous pouvez le faire lorsque mongod est en cours d'exécution avec l'expression suivante : 
+
+[[[
+mongo tinyblog --eval "db.dropDatabase()"
+]]]
 
 !!!!Attention : Changements de TBBlog
 

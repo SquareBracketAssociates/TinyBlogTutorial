@@ -2,13 +2,14 @@
 @chapModelExtensionAndUnitTests
 
 % full hash of full code 35785aaaf1284f1a472980f07522fc7d0d4743e6
-Dans ce chapitre nous étendons le modèle et ajoutons des tests. Notez qu'un bon développeur de méthodologies agiles tel que Test-Driven Development aurait commencé par écrire des tests. En plus, avec Pharo, nous aurions aussi codé dans le débuggeur pour être encore plus productif. Nous ne l'avons pas fait car le modèle est simpliste et expliquer comment coder dans le débuggeur demande plus de description textuelle. Vous pouvez voir cette pratique dans les vidéos du Mooc de la second semaine et lire le livre ''Learning Object-Oriented Programming, Design with TDD in Pharo'' disponible a *http://books.pharo.org*.
+
+Dans ce chapitre nous étendons le modèle et ajoutons des tests. Notez qu'un bon développeur de méthodologies agiles tel que Test-Driven Development aurait commencé par écrire des tests. En plus, avec Pharo, nous aurions aussi codé dans le débuggeur pour être encore plus productif. Nous ne l'avons pas fait car le modèle est simpliste et expliquer comment coder dans le débuggeur demande plus de description textuelle. Vous pouvez voir cette pratique dans les vidéos du Mooc de la seconde semaine et lire le livre ''Learning Object-Oriented Programming, Design with TDD in Pharo'' disponible a *http://books.pharo.org*.
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!!La classe TBBlog
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Nous allons développer classe ==TBBlog== qui contient des posts, en écrivant des tests puis en les implémentant.
+Nous allons développer la classe ==TBBlog== qui contient des posts, en écrivant des tests puis en les implémentant.
 
 [[[
 Object subclass: #TBBlog
@@ -104,17 +105,20 @@ TBBlogTest >> testAddBlogPost
    self assert: blog size equals: 2
 ]]]
 
-Ce test ne passe pas (n'est pas vert) car nous n'avons pas défini les méthodes: ==writeBlogPost:== et ==removeAllPosts==.
-Ajoutons-les.
+Ce test ne passe pas (n'est pas vert) car nous n'avons pas défini les méthodes: ==writeBlogPost:==,  ==removeAllPosts== et ==size==. Ajoutons-les.
 
 [[[
 TBBlog >> removeAllPosts
    posts := OrderedCollection new
+]]]
 
+[[[
 TBBlog >> writeBlogPost: aPost
-   "Write the blog post in database"
+   "Add the blog post to the list of posts."
    posts add: aPost
+]]]
 
+[[[
 TBBlog >> size
    ^ posts size
 ]]]
@@ -126,7 +130,9 @@ Ecrivons d'autres tests pour couvrir les fonctionalités que nous venons de dév
 [[[
 TBBlogTest >> testSize
    self assert: blog size equals: 1
-	
+]]]
+
+[[[
 TBBlogTest >> testRemoveAllBlogPosts
    blog removeAllPosts.
    self assert: blog size equals: 0

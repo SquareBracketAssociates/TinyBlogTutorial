@@ -27,7 +27,7 @@ Pour regrouper les différents services REST de TinyBlog, il est préférable de
 * la recherche parmi les posts en fonction du titre,
 * la recherche parmi les posts en fonction d'une période.
 
-L'élément central de REST est un objet destiné à filtrer les requêtes HTTP reçues par le serveur et à déclencher les différents traitements. Si l'on C'est un quelque sorte une gare de triage permettant d'aiguiller la requête du client vers le code apte à le gérer. Cet objet, nommé ==TBRestfulFilter==, hérite de la classe WARestfulFilter.
+L'élément central de REST est un objet destiné à filtrer les requêtes HTTP reçues par le serveur et à déclencher les différents traitements. C'est en quelque sorte une gare de triage permettant d'aiguiller la requête du client vers le code apte à le gérer. Cet objet, nommé ==TBRestfulFilter==, hérite de la classe WARestfulFilter.
 
 [[[
 WARestfulFilter subclass: #TBRestfulFilter
