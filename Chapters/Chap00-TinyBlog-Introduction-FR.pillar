@@ -20,9 +20,9 @@ le code de chacun des chapitres.
 
 !!!Installation de Pharo
 
-Dans ce tutoriel, nous supposons que vous utilisez Pharo 6.0 (*http://pharo.org/download*) avec une image dans laquelle ont été chargés des bibliothèques et des frameworks spécifiques pour le développement d'applications Web: Seaside, Magritte, Bootstrap, Voyage, VoyageMongo, ... 
+Dans ce tutoriel, nous supposons que vous utilisez Pharo 6.1 (*http://pharo.org/download*) avec une image dans laquelle ont été chargés des bibliothèques et des frameworks spécifiques pour le développement d'applications Web: Seaside, Magritte, Bootstrap, Voyage, VoyageMongo, ... 
 
-Pour développer votre application TinyBlog et suivre ce tutoriel, nous vous suggérons de toujours utiliser l'image disponible à l'adresse suivante: *http://mooc.pharo.org/image/PharoWeb-60.zip* car elle contient tous les packages nécessaires.
+Pour développer votre application TinyBlog et suivre ce tutoriel, nous vous suggérons de toujours utiliser l'image disponible à l'adresse suivante: *http://mooc.pharo.org/image/PharoWeb-61.zip* car elle contient tous les packages nécessaires.
 
 Vous pouvez construire l'image que nous utilisons à l'aide de ce script à exécuter dans une image Pharo 6.1:
 
