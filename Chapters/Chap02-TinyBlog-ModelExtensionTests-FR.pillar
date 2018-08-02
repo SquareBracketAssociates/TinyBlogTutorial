@@ -3,7 +3,7 @@
 
 % full hash of full code 35785aaaf1284f1a472980f07522fc7d0d4743e6
 
-Dans ce chapitre nous étendons le modèle et ajoutons des tests. Notez qu'un bon développeur de méthodologies agiles tel que Test-Driven Development aurait commencé par écrire des tests. En plus, avec Pharo, nous aurions aussi codé dans le débuggeur pour être encore plus productif. Nous ne l'avons pas fait car le modèle est simpliste et expliquer comment coder dans le débuggeur demande plus de description textuelle. Vous pouvez voir cette pratique dans les vidéos du Mooc de la seconde semaine et lire le livre ''Learning Object-Oriented Programming, Design with TDD in Pharo'' disponible a *http://books.pharo.org*.
+Dans ce chapitre nous étendons le modèle et ajoutons des tests. Notez qu'un bon développeur de méthodologies agiles tel que Test-Driven Development aurait commencé par écrire des tests. En plus, avec Pharo, nous aurions aussi codé dans le débuggeur pour être encore plus productif. Nous ne l'avons pas fait car le modèle est simpliste et expliquer comment coder dans le débuggeur demande plus de description textuelle. Vous pouvez voir cette pratique dans la vidéo du Mooc intitulée ''Coding a Counter in the Debugger'' (*http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_26.html*) et lire le livre ''Learning Object-Oriented Programming, Design with TDD in Pharo'' (*http://books.pharo.org*).
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!!La classe TBBlog

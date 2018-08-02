@@ -79,7 +79,7 @@ TBPost >> beVisible
    self visible: true
 ]]]
 [[[
-TBPost >> beNotVisible
+TBPost >> hide
    self visible: false
 ]]]
 
@@ -100,10 +100,10 @@ TBPost >> initialize
 	super initialize.
    self category: TBPost unclassifiedTag.
    self date: Date today.
-   self beNotVisible
+   self hide
 ]]]
 
-Dans la solution proposée ci-dessus pour la méthode ==initialize==, il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==. Proposez une solution. 
+Dans la solution proposée ci-dessus pour la méthode ==initialize==, il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==. Proposer une solution. La séquence 3 de la semaine 6 du MOOC peut vous aider à mieux comprendre pourquoi (*http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_67.html*) il faut éviter de référencer des classes directement et comment faire. 
 
 !!!Méthodes de création
 
