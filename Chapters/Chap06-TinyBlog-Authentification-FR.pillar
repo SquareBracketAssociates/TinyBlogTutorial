@@ -1,9 +1,6 @@
 !! Authentification et Session 
 
-
-!! Interface Web d'administration pour TinyBlog
-
-Dans le chapitre précédent nous avons vu comment développer l'embryon d'une application : nous avons défini des composants qui interagissent entre eux. Chaque composant est alors responsable son état et de son rendu graphique.  Alors que le chapitre précédent décrit l'essentiel du développement avec Seaside dans ce chapitre nous voulons vous montrer que l'on peut aller encore plus loin et générer des composants Seaside à partir de la description d'objets en utilisant le frameworks Magritte. Nous allons tout d'abord définir un composant d'identification : cette définition de composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances d'un composant ainsi que l'invocation de composants.
+ Nous allons tout d'abord définir un composant d'identification : cette définition de composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances d'un composant ainsi que l'invocation de composants.
 
 !!!Administration de TinyBlog
 
@@ -209,5 +206,96 @@ TBPostsListComponent >> renderCategoryColumnOn: html
 Lorsque nous pressons sur le lien SignIn nous obtenons la figure *@authentification*.
 
 
+!!!Gestion de session
+
+Un objet session est attribué à chaque instance de l'application. Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants. Une session est pratique pour gérer les informations de l'utilisateur en cours (identifié).  Nous allons voir comment nous l'utilisons pour gérer une connexion.
+
+L'administrateur du blog peut vouloir voyager entre la partie privée et la partie publique de TinyBlog.
+
+Nous définissons une nouvelle sous-classe de ==WASession== nommée ==TBSession==. Pour savoir si l'utilisateur s'est authentifié, nous devons définir un objet session et ajouter une variable d'instance contenant une valeur booléenne précisant l'état de l'utilisateur.
+
+[[[
+WASession subclass: #TBSession
+    instanceVariableNames: 'logged'
+    classVariableNames: ''
+    package: 'TinyBlog-Components'
+]]]
+
+[[[
+TBSession >> logged
+    ^ logged
+
+TBSession >> logged: anObject
+    logged := anObject
+
+TBSession >> isLogged
+    ^ self logged
+]]]
+
+Il faut ensuite initialiser à `false` cette variable d'instance à la création d'une session.
+
+[[[
+TBSession >> initialize
+    super initialize.
+    self logged: false.
+]]]
+
+Dans la partie privée de TinyBlog, ajoutons un lien permettant le retour à la partie publique. Nous utilisons ici le message ==answer== puisque le composant d'administration a été appelé à l'aide du message ==call:==.
+
+[[[
+TBAdminComponent >> renderContentOn: html
+    super renderContentOn: html.
+    html tbsContainer: [
+        html heading: 'Blog Admin'.
+        html tbsGlyphIcon perform: #iconEyeOpen.
+        html anchor
+            callback: [ self answer ];
+            with: 'Public Area'.
+        html horizontalRule.
+        html render: self report.
+    ]
+]]]
+
+Dans l'espace public, il nous faut modifier le comportement du lien permettant d'accéder à l'administration. Il doit provoquer l'affichage de la boite d'authentification uniquement si l'utilisateur ne s'est pas encore connecté.
+
+[[[
+TBPostsListComponent >> renderSignInOn: html
+    self session isLogged
+        ifFalse: [
+            html tbsGlyphIcon perform: #iconLock.
+            html html: '<a data-toggle="modal" href="#myAuthDialog" class="link">SignIn</a>' ]
+        ifTrue: [
+            html tbsGlyphIcon perform: #iconUser.
+            html anchor callback: [ self gotoAdministration ]; with: 'Private area' ]
+]]]
+
+Enfin, le composant ==TBAuthentificationComponent== doit mettre à jour la variable d'instance ==logged== de la session si l'utilisateur est bien un administrateur.
+
+[[[
+TBAuthentificationComponent >> validate
+   (self account = 'admin' and: [ self password = 'password' ])
+      ifTrue: [
+         self session logged: true.
+         component gotoAdministration ]
+]]]
+
+
+Il vous faut maintenant spécifier à Seaside qu'il doit utiliser l'objet ==TBSession== comme objet de session courant pour l'application TinyBlog.
+Cette initialisation s'effectue dans la méthode ==initialize== de la classe ==TBApplicationRootComponent== que l'on modifie ainsi:
+
+[[[
+TBApplicationRootComponent class >> initialize
+      "self initialize"
+      | app |
+      app := WAAdmin register: self asApplicationAt: 'TinyBlog'.
+      app
+         preferenceAt: #sessionClass put: TBSession.
+      app
+         addLibrary: JQDeploymentLibrary;
+         addLibrary: JQUiDeploymentLibrary;
+         addLibrary: TBSDeploymentLibrary
+]]]
+
+Pensez à exécuter cette méthode via ==TBApplicationRootComponent initialize== avant de tester à nouveau l'application.
 
 
