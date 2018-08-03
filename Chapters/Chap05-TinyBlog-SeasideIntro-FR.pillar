@@ -21,6 +21,25 @@ Dans le menu contextuel de cet outil (clic droit), cliquez sur "add adaptor..." 
 
 +Vérification que Seaside fonctionne.>file://figures/SeasideWebStart.png|width=75|label=SeasideWebStart+
 
++Accès à la bibliothèque Bootstrap.>file://figures/SeasideBootstrap.png|width=75|label=bootstrap+
+
+!!!Bootstrap for Seaside
+
+La bibliothèque Bootstrap est totalement accessible depuis Seaside comme nous allons le montrer.
+Pour parcourir les nombreux exemples, cliquer sur le lien ""bootstrap"" dans la liste des applications servies par Seaside ou pointer votre navigateur sur le lien *http://localhost:8080/bootstrap*. Vous devez obtenir l'écran de la figure *@bootstrap*.
+
+Cliquer sur le lien ""Examples"" au bas de la page et vous pouvez ainsi voir les éléments graphiques ainsi que le code pour les obtenir comme montré par la figure *@examplebootstrap*. 
+
++Comprendre un élément et son code en Bootstrap.>file://figures/TBSAlert.png|width=75|label=examplebootstrap+
+
+
+
+!!!!Bootstrap
+
+Le repository pour le source et la documentation est 
+*http://smalltalkhub.com/#!/~TorstenBergmann/Bootstrap*.
+Une démo en ligne est disponible à l'adresse : *http://pharo.pharocloud.com/bootstrap*. Cette bibliothèque a déjà été chargée dans l'image PharoWeb utilisée dans ce tutoriel.
+
 
 !!!Point d'entrée de l'application
 
@@ -90,7 +109,6 @@ TBApplicationRootComponent >> updateRoot: anHtmlRoot
 Le message ==title:== permet de configurer le titre du document affiché dans la fenêtre du navigateur. Le composant ==TBApplicationRootComponent== est le composant principal de l'application, il ne fait que du rendu graphique limité.
 Dans le futur, il contiendra des composants et les affichera :
 Comme par exemple, les composants principaux de l'application permettant l'affichage des posts pour les lecteurs du blog mais également des composants pour administrer le blog et ses posts. 
-
 
 
 !!! Architecture
