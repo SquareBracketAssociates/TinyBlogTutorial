@@ -5,8 +5,7 @@ Notre idée est que par la suite vous pourrez réutiliser cette infrastructure p
 
 !!! Structure
 
-Dans la première partie appelée "Tutoriel de base", vous allez développer et déployer, TinyBlog, une  application et son administration en utilisant Pharo/Seaside/Voyage(Mongo)/Magritte.\
-Le d\'eployement en utilisant Mongo est optionnel mais vous permet de voir que Voyage offre Mongo comme une alternative élégante et facile de mise en oeuvre.
+Dans la première partie appelée "Tutoriel de base", vous allez développer et déployer, TinyBlog, une  application et son administration en utilisant Pharo/Seaside/Voyage(Mongo)/Magritte.Le déployement en utilisant Mongo est optionnel mais vous permet de voir que Voyage offre Mongo comme une alternative élégante et facile de mise en oeuvre.
 
 Dans une seconde partie, nous abordons des aspects optionnels tel que l'export de données, l'utilisation de template comme Mustache ou comment exposer votre application via un serveur REST.
 
@@ -20,7 +19,7 @@ le code de chacun des chapitres.
 
 !!!Installation de Pharo
 
-Dans ce tutoriel, nous supposons que vous utilisez Pharo 6.1 (*http://pharo.org/download*) avec une image dans laquelle ont été chargés des bibliothèques et des frameworks spécifiques pour le développement d'applications Web: Seaside, Magritte, Bootstrap, Voyage, VoyageMongo, ... 
+Dans ce tutoriel, nous supposons que vous utilisez Pharo 6.1 (*http://pharo.org/download*) avec une image dans laquelle ont été chargés des bibliothèques et des frameworks spécifiques pour le développement d'applications Web: Seaside (le serveur d'application web à base de composants), Magritte (un framework de description pour la génération automatique de rapport), Bootstrap (la bibliothèque de rendu web), Voyage (un framework pour sauver vos objets) , ... 
 
 Pour développer votre application TinyBlog et suivre ce tutoriel, nous vous suggérons de toujours utiliser l'image disponible à l'adresse suivante: *http://mooc.pharo.org/image/PharoWeb-61.zip* car elle contient tous les packages nécessaires.
 
@@ -45,7 +44,7 @@ Vous pouvez:
 
 Pharo possède de bonnes ressources pédagogique ainsi qu'une communauté d'utilisateurs accueillante. Voici quelques informations qui peuvent vous être utiles. 
 
-- *http://books.pharo.org* contient des ouvrages autour de Pharo. Pharo by Example peut vous aider dans les aspects de découverte du langage et des bibliothèques de base.
+- *http://books.pharo.org* contient des ouvrages autour de Pharo. Pharo by Example peut vous aider dans les aspects de découverte du langage et des bibliothèques de base. En particulier Entreprise Pharo: a Web Perspective presente d'autres aspects utiles pour le développement web.
 - *http://book.seaside.st* est un des ouvrages sur Seaside. Il est en cours de migration en livre open-source sur *https://github.com/SquareBracketAssociates/DynamicWebDevelopmentWithSeaside*.
 - *http://mooc.pharo.org* propose un excellent Mooc (cours en ligne) comprenant plus de 90 videos expliquant des points de syntaxes mais aussi de conception objet.
 - *http://discord.gg/Sj2rhxn* est le channel discord où nombre de Pharoers échangent et s'entraident. 
