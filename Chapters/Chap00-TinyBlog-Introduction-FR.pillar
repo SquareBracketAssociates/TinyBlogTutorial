@@ -3,6 +3,9 @@
 Tout au long de ce projet, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs. La Figure *@TinyBlogOnPharoCloudHere* montre l'état final de l'application. L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
 Notre idée est que par la suite vous pourrez réutiliser cette infrastructure pour de multiples autres applications.
 
+
+
+
 !!! Structure
 
 Dans la première partie appelée "Tutoriel de base", vous allez développer et déployer, TinyBlog, une  application et son administration en utilisant Pharo/Seaside/Voyage(Mongo)/Magritte.Le déployement en utilisant Mongo est optionnel mais vous permet de voir que Voyage offre Mongo comme une alternative élégante et facile de mise en oeuvre.

@@ -5,6 +5,8 @@ Avoir un modèle d'objets en mémoire fonctionne bien, et sauvegarder l'image Ph
 
 Dans ce chapitre, nous allons commencer par utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second temps, nous installerons une base de données Mongo et nous y accéderons à travers Voyage.
 
+Comme pour chacun des chapitres précédents vous pouvez charger le code comme indiqué dans le dernier chapitre.
+
 %% cbd5b53135ec2404f791c1aba497c5ce9d1eb661
 
 !!!Configurer Voyage pour sauvegarder des objets TBBlog
