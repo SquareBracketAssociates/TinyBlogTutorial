@@ -1,7 +1,7 @@
 !!Persistance des données de TinyBlog avec Voyage et Mongo
 
 
-Avoir un modèle d'objets en mémoire fonctionne bien, et sauvegarder l'image Pharo sauve aussi ces objets. Toutefois, il est préférable de pouvoir sauver les objets (les posts) dans une base de données extérieure. Pharo offre plusieurs sérialiseurs d'objets (Fuel en format binaire et STON en format texte). Ces sérialiseurs d'objets sont très puissants et pratiques. Dans ce chapitre, nous voulons vous présenter une troisième option : la sauvegarde dans une base de donnée documents telle que Mongo. Voyage permet de sauver les objets dans une base de données Mongo. Voyage est un framework qui propose une API unifiée permettant d'accéder à différentes bases de données documents comme Mongo ou UnQLite.
+Avoir un modèle d'objets en mémoire fonctionne bien, et sauvegarder l'image Pharo sauve aussi ces objets. Toutefois, il est préférable de pouvoir sauver les objets (les posts) dans une base de données extérieure. Pharo offre plusieurs sérialiseurs d'objets (Fuel en format binaire et STON en format texte). Ces sérialiseurs d'objets sont très puissants et pratiques. Dans ce chapitre, nous voulons vous présenter une troisième option : la sauvegarde dans une base de donnée documents telle que Mongo (*https://www.mongodb.com*). Voyage est un framework qui propose une API unifiée permettant d'accéder à différentes bases de données documents comme Mongo ou UnQLite afin d'y stocker des objets.
 
 Dans ce chapitre, nous allons commencer par utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second temps, nous installerons une base de données Mongo et nous y accéderons à travers Voyage.
 
@@ -205,12 +205,29 @@ En utilisant Voyage nous pouvons rapidement sauver nos posts dans une base de do
 
 !!!!Installation de Mongo
 
-Quel que soit votre système d'exploitation (Linux, Mac OSX ou Windows), vous pouvez installer un serveur Mongo localement sur votre machine. Cela est pratique pour tester votre application sans avoir besoin d'une connexion Internet. Nous ne détaillons pas ici comment installer Mongo sur votre système, référez-vous à la documentation Mongo. 
+Quel que soit votre système d'exploitation (Linux, Mac OSX ou Windows), vous pouvez installer un serveur Mongo localement sur votre machine. Cela est pratique pour tester votre application sans avoir besoin d'une connexion Internet. 
+Une solution consiste à installer directement un serveur Mongo sur votre système (cf. *https://www.mongodb.com*). 
+Toutefois, nous vous conseillons plutôt d'installer Docker (*https://www.docker.com*) sur votre machine et à lancer un conteneur  qui exécute un serveur Mongo grâce à la ligne de commande suivante:
 
-@@note Le serveur Mongo ne doit pas utiliser d'authentification car la nouvelle méthode de chiffrement SCRAM utilisée par MongoDB 3.0 n'est actuellement pas supportée par Voyage.
+[[[
+	docker run --name mongo -p 27017:27017 -d mongo
+]]]
 
-Cependant vous devez créer une base de données nommée 'tinyblog'. 
-Lorsque, vous avez installé et lancé un serveur Mongo localement, vous pouvez y accéder depuis Pharo.
+@@note Le serveur Mongo ne doit pas utiliser d'authentification (ce n'est pas le cas avec une installation locale par défaut) car la nouvelle méthode de chiffrement SCRAM utilisée par MongoDB 3.0 n'est actuellement pas supportée par Voyage.
+
+Quelques commandes utiles pour la suite :
+
+[[[
+	# pour stoper votre conteneur
+	docker stop mongo
+	
+	# pour re-démarrer votre conteneur
+	docker start mongo
+	
+	# pour détruire votre conteneur. Ce dernier doit être stoppé avant.
+	docker rm mongo
+]]]
+
 
 !!!!Connexion à un serveur local
 
@@ -230,6 +247,13 @@ TBBlog class >> reset
    self initializeLocalhostMongoDB
 ]]]
 
+Vous pouvez maintenant re-créer vos posts de démo, et ils seront automatiquement sauvegardés dans votre base Mongo:
+
+[[[
+TBBlog reset.
+TBBlog createDemoPosts 
+]]]
+
 !!!!En cas de problème
 
 Notez que si vous avez besoin de réinitialiser la base extérieure complètement, vous pouvez utiliser la méthode ==dropDatabase==.
@@ -246,12 +270,18 @@ Si vous ne pouvez pas le faire depuis Pharo, vous pouvez le faire lorsque mongod
 mongo tinyblog --eval "db.dropDatabase()"
 ]]]
 
+ou dans le conteneur docker :
+
+[[[
+docker exec -it mongo bash -c 'mongo tinyblog --eval "db.dropDatabase()"'
+]]]
+
 !!!!Attention : Changements de TBBlog
 
 Si vous utilisez une base locale plutôt qu'une base en mémoire, à chaque fois que vous déclarez une nouvelle racine d'objets ou modifiez la définition d'une classe racine (ajout, retrait, modification d'attribut) il est capital de réinitializer le cache maintenu par Voyage.  La réinitialisation se fait comme suit:
 
 [[[
-   VORepository current reset
+VORepository current reset
 ]]]
 
 

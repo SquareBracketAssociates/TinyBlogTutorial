@@ -13,19 +13,21 @@
 		  ./loadAllSolutions.sh
 		  => produces 1 image per solution
 
-[NOT WORKING] bash scripts in TinyBlogImages6 creating TinyBlog solution images in PharoWeb6
+[DONE] bash scripts in TinyBlogImages6 creating TinyBlog solution images in PharoWeb6
+			thanks to Guille and Pablo to have fixed Iceberg hell
+ 		  cd TinyBlogImages6
+ 		  ./loadAllSolutions.sh
+ 		  => produces 1 image per solution
+
+[DONE] added  Mongo3 + docker install in Chap04
+			tested with Pharo + Voyage
 
 
 - Tester PharoCloud
 
 - Postmark email 
 
-
-
 - Chap installation Pharo 61.
 
 
-- Mongo3 + docker
-docker run --name mongo -p 27017:27017 -d mongo
-robot3T on localhost:27017
 
