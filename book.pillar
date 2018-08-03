@@ -8,10 +8,11 @@ ${inputFile:Chapters/Chap02-TinyBlog-ModelExtensionTests-FR.pillar}$
 
 ${inputFile:Chapters/Chap04-TinyBlog-VoyageMongo-FR.pillar}$
 
+${inputFile:Chapters/Chap05-TinyBlog-SeasideIntro-FR.pillar}$
 ${inputFile:Chapters/Chap05-TinyBlog-Seaside-FR.pillar}$
 
+${inputFile:Chapters/Chap06-TinyBlog-Authentification-FR.pillar}$
 ${inputFile:Chapters/Chap06-TinyBlog-SeasideAdmin-FR.pillar}$
-% Stef finished his pass
 
 ${inputFile:Chapters/Chap13-TinyBlog-Deployment-FR.pillar}$
 
