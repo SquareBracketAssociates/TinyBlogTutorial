@@ -215,6 +215,20 @@ Toutefois, nous vous conseillons plutôt d'installer Docker (*https://www.docker
 
 @@note Le serveur Mongo ne doit pas utiliser d'authentification (ce n'est pas le cas avec une installation locale par défaut) car la nouvelle méthode de chiffrement SCRAM utilisée par MongoDB 3.0 n'est actuellement pas supportée par Voyage.
 
+Quelques commandes utiles pour la suite :
+
+[[[
+	# pour stoper votre conteneur
+	docker stop mongo
+	
+	# pour re-démarrer votre conteneur
+	docker start mongo
+	
+	# pour détruire votre conteneur. Ce dernier doit être stoppé avant.
+	docker rm mongo
+]]]
+
+
 !!!!Connexion à un serveur local
 
 Nous définissions les méthodes ==initializeLocalhostMongoDB== pour établir la connexion vers la base de données.
