@@ -20,12 +20,10 @@
 
 - Postmark email 
 
-
-
 - Chap installation Pharo 61.
 
 
 - Mongo3 + docker
-docker run --name mongo -p 27017:27017 -d mongo
+docker run --name mongo -p 27017:27017 -d mongo:latest
 robot3T on localhost:27017
 
