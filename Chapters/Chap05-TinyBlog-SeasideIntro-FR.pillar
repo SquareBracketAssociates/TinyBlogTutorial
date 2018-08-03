@@ -1,8 +1,6 @@
 !! Une interface Web en Seaside pour TinyBlog
 
-Nous commençons par définir une interface telle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera.
-Nous allons définir des composants Seaside *http://www.seaside.st* dont l'ouvrage de référence est disponible en ligne à *http://book.seaside.st*.
-Les premiers chapitres de *http://book.seaside.st* peuvent vous y aider et compléter efficacement ce tutoriel.
+Nous commençons par définir une interface telle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera. Nous allons définir des composants Seaside *http://www.seaside.st* dont l'ouvrage de référence est disponible en ligne à *http://book.seaside.st*. Les premiers chapitres de *http://book.seaside.st* peuvent vous aider et compléter efficacement ce tutoriel.
 
 Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
 Comme pour chacun des chapitres précédents vous pouvez charger le code comme indiqué dans le dernier chapitre.
@@ -12,8 +10,7 @@ Comme pour chacun des chapitres précédents vous pouvez charger le code comme i
 
 
 !!!Démarrer Seaside
-
-Il existe deux façons pour démarrer Seaside. La première consiste à exécuter le code suivant :
+Seaside est déjà chargé dans l'image Pharo, sinon relisez le premier chapitre. Il existe deux façons pour démarrer Seaside. La première consiste à exécuter le code suivant :
 
 [[[
 ZnZincServerAdaptor startOn: 8080.
@@ -25,10 +22,9 @@ Dans le menu contextuel de cet outil (clic droit), cliquez sur "add adaptor..." 
 +Vérification que Seaside fonctionne.>file://figures/SeasideWebStart.png|width=75|label=SeasideWebStart+
 
 
-
 !!!Point d'entrée de l'application
 
-Créez la classe ==TBApplicationRootComponent== qui est le point d'entrée de l'application. Elle sert à l'initialisation de l'application.
+Créez la classe ==TBApplicationRootComponent== qui est le point d'entrée de l'application. Elle sert à l'enregistrement de l'application au sein du serveur d'application Seaside.
 
 [[[
 WAComponent subclass: #TBApplicationRootComponent
@@ -53,7 +49,7 @@ TBApplicationRootComponent class >> initialize
 
 Exécuter ==TBApplicationRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. En effet les méthodes ==initialize== de classe ne sont automatiquement exécutées que l'on du chargement de la classe. Ici nous venons juste de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices.
 
-En effet, les méthodes de classe ==initialize== ne sont invoquées automatiquement que lors du chargement de la classe.
+Les méthodes de classe ==initialize== ne sont invoquées automatiquement que lors du chargement de la classe.
 
 Ajoutons également la méthode ==canBeRoot== afin de préciser que la classe ==TBApplicationRootComponent== n'est pas qu'un simple composant Seaside mais qu'elle représente notre application Web.
 Elle sera donc instanciée dès qu'un utilisateur se connecte sur l'application.
@@ -92,20 +88,43 @@ TBApplicationRootComponent >> updateRoot: anHtmlRoot
 
 
 Le message ==title:== permet de configurer le titre du document affiché dans la fenêtre du navigateur. Le composant ==TBApplicationRootComponent== est le composant principal de l'application, il ne fait que du rendu graphique limité.
-Dans le futur, il contiendra des composants et les affichera.
-Par exemple, les composants principaux de l'application permettant l'affichage des posts pour les lecteurs du blog mais également des composants pour administrer le blog et ses posts. 
-
-Pour cela, nous avons décidé que le composant ==TBApplicationRootComponent== contiendra des composants héritant tous de la classe abstraite ==TBScreenComponent== que nous allons définir dans le prochain chapitre. 
+Dans le futur, il contiendra des composants et les affichera :
+Comme par exemple, les composants principaux de l'application permettant l'affichage des posts pour les lecteurs du blog mais également des composants pour administrer le blog et ses posts. 
 
 
-!!!Architecture composants
 
-Nous sommes maintenant prêts à définir les composants visuels de notre application Web.
-Les premiers chapitres de *http://book.seaside.st* peuvent vous y aider et compléter efficacement ce tutoriel.
+!!! Architecture
 
+Nous sommes maintenant prêts à définir les composants visuels de notre application Web. Afin de vous donner une vision d'ensemble nous montrons comment chaque composant est responsable d'une partie de l'application (Figure *@ComponentOverview*) et comment ces composants s'intègre au sein de l'architecture (simple) du système (Figure *@ApplicationArchitecture*).
+
+!!!! Premier apercu des composants
 
 La figure *@ComponentOverview* montre les différents composants que nous allons développer et où ils se situent.
 
-+Les composants composant l'application TinyBlog.>file://figures/ComponentOverview.pdf|width=75|label=ComponentOverview+
++Les composants composant l'application TinyBlog (en mode non admin).>file://figures/ComponentOverview.pdf|width=75|label=ComponentOverview+
+
+!!!! Eléments
+
+Pour vous permettre de suivre le développement incrémental 
+de l'application, nous décrivons son architecture dans la figure *@ApplicationArchitecture*.
+
++Architecture de TinyBlog.>file://figures/ApplicationArchitecture.pdf|width=75|label=ApplicationArchitecture+
+
+- ==ApplicationRootComponent==. le composant ==TBApplicationRootComponent== contiendra des composants héritant tous de la classe abstraite ==ScreenComponent== que nous allons définir dans le prochain chapitre. 
+
+- ==ScreenComponent== est la racine d'héritage des composants utilisateurs ou admin. Il est composé d'un header et aussi est conceptuellemment en contact avec l'authentification. 
+
+- ==PostsListComponent== est le composant principal affichant les blogs (il est composé d'instance de  ==PostComponent==), il gère aussi les catégories. 
+
+- ==AdminComponent== est le composant principal gérant les aspects d'administration. Il créera des rapports instance de ==PostsReport== en utilisant Magritte.
+
+
+!!! Conclusion 
+
+Nous sommes prêts à développer les composants décrits. Comme le processus est un peu linéaire n'hésitez pas à revenir sur cette architecture afin de comprendre 
+le composant que vous nous proposons de développer. 
+
+
+
 
 
