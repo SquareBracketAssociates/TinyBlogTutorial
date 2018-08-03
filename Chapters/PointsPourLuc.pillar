@@ -1,11 +1,11 @@
 
 [DONE] Fix PharoWeb on CI
 
-[DONE] CI automatically push PharoWeb-50.zip and PharoWeb-61.zip to OVH (scp)
-[TODO]	but why isn't it immediate?
-			cf dates
-			http://files.pharo.org/mooc/image/PharoWeb-50.zip
-			accesible from the http://mooc.pharo.org page
+[DONE] 			CI automatically push PharoWeb-50.zip and PharoWeb-61.zip to OVH (scp)
+[cf. Marcus?]	but why isn't it immediate?
+					cf dates
+					http://files.pharo.org/mooc/image/PharoWeb-50.zip
+					accesible from the http://mooc.pharo.org page
 
 [DONE]  bash scripts in TinyBlogImages5 to load TinyBlog solutions
 		  Example :
@@ -22,9 +22,11 @@
 [DONE] added  Mongo3 + docker install in Chap04
 			tested with Pharo + Voyage
 
+[DONE] Tester PharoCloud
+			Chapitre  deploiement révisé et testé avec PharoWeb5 et 6
 
-[TODO] Tester PharoCloud
 
+			
 [TODO] Postmark email 
 
 [TODO] Chap installation Pharo 61.
