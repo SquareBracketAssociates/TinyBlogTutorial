@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-PHARO_VM="./pharo"
-test -f $PHARO_VM || PHARO_VM="../pharo"
-
 PHAROWEB_IMAGE=PharoWeb.image
 test -f $PHAROWEB_IMAGE || ./getPharoWeb.sh
+
+PHARO_VM="./pharo"
+test -f $PHARO_VM || (echo "VM is missing" && exit -1)
 
 weekNumber="2"
 

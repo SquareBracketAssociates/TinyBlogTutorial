@@ -1,1 +1,22 @@
-Chap installation Pharo 61.
+
+[DONE] Fix PharoWeb on CI
+
+[DONE] CI automatically push PharoWeb-50.zip and PharoWeb-61.zip to OVH (scp)
+[TODO]	but why isn't it immediate?
+			cf dates
+			http://files.pharo.org/mooc/image/PharoWeb-50.zip
+			accesible from the http://mooc.pharo.org page
+
+
+- Chap installation Pharo 61.
+
+- Scripts Load TinyBlogImages5
+- Scripts Load TinyBlogImages6
+
+- Tester PharoCloud
+
+- Mongo3 + docker
+docker run --name mongo -p 27017:27017 -d mongo
+robot3T on localhost:27017
+
+- Postmark email 
