@@ -2,6 +2,7 @@
 
 Nous commençons par définir une interface telle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera.
 Nous allons définir des composants Seaside *http://www.seaside.st* dont l'ouvrage de référence est disponible en ligne à *http://book.seaside.st*.
+Les premiers chapitres de *http://book.seaside.st* peuvent vous y aider et compléter efficacement ce tutoriel.
 
 Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
 Comme pour chacun des chapitres précédents vous pouvez charger le code comme indiqué dans le dernier chapitre.

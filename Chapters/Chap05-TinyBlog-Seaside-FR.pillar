@@ -1,5 +1,8 @@
-
 !! Composants web
+
+
+Need intro 
+
 
 Nous commençons par définir une interface telle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera.
 Nous allons définir des composants Seaside *http://www.seaside.st* dont l'ouvrage de référence est disponible en ligne à *http://book.seaside.st*.
@@ -17,8 +20,6 @@ Comme pour chacun des chapitres précédents vous pouvez charger le code comme i
 !!!Composants visuels pour TinyBlog
 
 Nous sommes maintenant prêts à définir les composants visuels de notre application Web.
-Les premiers chapitres de *http://book.seaside.st* peuvent vous y aider et compléter efficacement ce tutoriel.
-
 
 La figure *@ComponentOverview* montre les différents composants que nous allons développer et où ils se situent.
 
