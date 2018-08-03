@@ -23,11 +23,16 @@
 			tested with Pharo + Voyage
 
 
-- Tester PharoCloud
+[TODO] Tester PharoCloud
 
-- Postmark email 
+[TODO] Postmark email 
 
-- Chap installation Pharo 61.
+[TODO] Chap installation Pharo 61.
+
+[TODO] revoir l'authentification pour stocker l'utilisateur courant en session
+
+[TODO] changer le code de chargement des solutions 
+			week par chapter
 
 
 
