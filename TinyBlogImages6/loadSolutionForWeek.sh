@@ -23,4 +23,4 @@ set -f
 
 ./pharo "$PHAROWEB_IMAGE" save $TINYBLOG_IMAGE
 
-exec "$PHARO_VM" "${TINYBLOG_IMAGE}.image" eval --save "Metacello new smalltalkhubUser: 'PharoMooc' project: 'TinyBlog'; version: #week${weekNumber}solution; configuration: 'TinyBlog'; load"
+exec "$PHARO_VM" "${TINYBLOG_IMAGE}.image" eval --save "Metacello new smalltalkhubUser: 'PharoMooc' project: 'TinyBlog'; version: #week${weekNumber}solution; configuration: 'TinyBlog'; load. DisplayScreen hostWindowSize: 2000@1300"
