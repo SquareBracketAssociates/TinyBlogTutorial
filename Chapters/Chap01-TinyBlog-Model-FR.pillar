@@ -1,4 +1,5 @@
 !! L'application TinyBlog : présentation et modèle
+@cha:model
 % full code at: 9c87f4b8abb956469e145d2ba8afeba8b66159d2
 
 Tout au long de ce livre, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs (voir  la Figure *@TinyBlogOnPharoCloud*). L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.

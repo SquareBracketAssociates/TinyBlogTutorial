@@ -43,22 +43,18 @@ En inspectant l'objet blog retourné par ==TBBlog current==, vérifier qu'il con
 Dans le futur, lorsque nous gérerons les utilisateurs et le fait qu'un utilisateur puisse avoir plusieurs blogs nous modifierons cette méthode pour utiliser des informations stockées dans la session active (Voir ==TBSession== dans le chapitre suivant).
 
 
-
-!!!! Pattern de définition  de composants
+!!!!Pattern de définition  de composants
 
 Nous allons souvent utiliser la même façon de procéder:
-- Nous définissons d'abord la classe et le comportement d'un nouveau composant 
-- Puis nous allons y faire référence depuis la class racine. 
+- Nous définissons d'abord la classe et le comportement d'un nouveau composant .
+- Puis nous allons y faire référence depuis la classe qui utilisera ce composant pour satisfaire les contraintes de Seaside.
 - En particulier nous exprimons la relation entre un composant et un sous composant en redéfinissant la méthode ==children==.
-
-
-
 
 !!!Définition du composant TBHeaderComponent
 
-Profitons de ce composant, pour insérer dans la partie supérieure de chaque composant l'instance d'un composant représentant l'entête de l'application. Nous appliquons le schéma présenté avant: définition d'une classe, référence depuis la class utilisatrice, redéfinition de la méthode ==children==.
+Profitons de ce composant, pour insérer dans la partie supérieure de chaque composant (==TBPostsListComponent== par exemple) l'instance d'un composant représentant l'entête de l'application. Nous appliquons le schéma présenté avant: définition d'une classe, référence depuis la class utilisatrice, redéfinition de la méthode ==children==.
 
-Nous définissons d'abord sa classe, puis nous allons y faire référence depuis la class racine. Ce faisant nous allons montrer comment un composant exprime sa relation à un sous composant. 
+Nous définissons d'abord sa classe, puis nous allons y faire référence depuis la classe qui l'utilise. Ce faisant nous allons montrer comment un composant exprime sa relation à un sous composant. 
 
 [[[
 WAComponent subclass: #TBHeaderComponent
@@ -77,7 +73,7 @@ TBHeaderComponent >> renderContentOn: html
          with: 'TinyBlog' ]
 ]]]
 
-L'entête  (header) est affichée à l'aide d'une barre de navigation Bootstrap (voir la figure *@navBlog*)
+L'entête (header) est affichée à l'aide d'une barre de navigation Bootstrap (voir la figure *@navBlog*)
 
 Par défaut dans une barre de navigation Bootstrap, il y a un lien sur tbsNavbarBrand qui est ici inutile (sur le titre de l'application). Ici nous l'initialisons avec une ancre =='#'== de façon à ce que si l'utilisateur clique sur le titre, il ne se passe rien. En général, cliquer sur le titre de l'application permet de revenir à la page de départ du site. 
 
@@ -85,9 +81,10 @@ Par défaut dans une barre de navigation Bootstrap, il y a un lien sur tbsNavbar
 Le nom du blog devrait être paramétrable à l'aide d'une variable d'instance dans la classe ==TBBlog==
 et le header pourrait afficher ce titre.
 
++TinyBlog avec une barre de navigation.>file://figures/navBlog.png|width=75|label=navBlog+
 
 !!!Utilisation du composant header
-
+Bien que la class ==TBScreenComponent== soit une classe abstraite dans l'architecture finale, nous allons l'utiliser pour le moment.
 Il n'est pas souhaitable d'instancier systématiquement le composant à chaque fois qu'un composant est appelé. Créons une variable d'instance ==header== dans ==TBScreenComponent== que nous initialisons.
 
 [[[
@@ -105,15 +102,14 @@ TBScreenComponent >> initialize
    header := TBHeaderComponent new.
 ]]]
 
-+TinyBlog avec une barre de navigation.>file://figures/navBlog.png|width=75|label=navBlog+
 
 !!!Relation composite-composant
 
-En Seaside, les sous-composants d'un composant doivent être retournés par le composite en réponse au message ==children==. Définissons que l'instance du composant ==TBHeaderComponent== est un enfant de ==TBScreenComponent== dans la hiérarchie des composants Seaside (et non entre classes Pharo). Nous faisons cela en spécialisant la méthode ==children==.
+En Seaside, les sous-composants d'un composant doivent être retournés par le composite en réponse au message ==children==. Définissons que l'instance du composant ==TBHeaderComponent== est un enfant de ==TBScreenComponent== dans la hiérarchie des composants Seaside (et non entre classes Pharo). Nous faisons cela en spécialisant la méthode ==children== pour quelle retourne tous les composants enfants (ici seulement l'instance de ==TBHeaderComponent== référencer depuis la variable ==header==).
 
 [[[
 TBScreenComponent >> children
-   ^ OrderedCollection with: header
+   ^ { header }
 ]]]
 
 Affichons maintenant le composant dans la méthode ==renderContentOn:== (protocole 'rendering'):
@@ -127,7 +123,7 @@ TBScreenComponent >> renderContentOn: html
 !!!Utilisation du composant Screen
 
 Bien que le composant ==TBScreenComponent== n'ait pas vocation à être utilisé directement, nous allons l'utiliser de manière temporaire pendant que nous développons les autres composants. 
-Nous ajoutons ==main== comme variable d'instance dans la classe ==TBApplicationRootComponent==. Nous l'initialisons dans la méthode ==initialize== suivante. Nous obtenons la situation décrite par la figure *@compt1*.
+Nous ajoutons la variable d'instance ==main== dans la classe ==TBApplicationRootComponent==. Nous l'initialisons dans la méthode ==initialize== suivante. Nous obtenons la situation décrite par la figure *@compt1*.
 
 +Le composant ==ApplicationRootComponent== utilise de manière temporaire le composant ==ScreenComponent== qui a un ==HeaderComponent==.>file://figures/ComponentRelationship1.pdf|width=75|label=compt1+
 
@@ -158,8 +154,7 @@ Le nom du blog doit être particularisable en utilisant par exemple une variable
 
 !!!Liste des posts
 
-Nous allons afficher la liste des posts - ce qui reste d'ailleurs le but d'un blog. Ici nous parlons de l'accès public offert aux lecteurs du blog. Dans le futur, nous  proposerons une interface d'administration des posts.
-
+Nous allons afficher la liste des posts - ce qui reste d'ailleurs le but d'un blog. Ici nous parlons de l'accès public offert aux lecteurs du blog. 
 
 Créons un composant ==TBPostsListComponent== qui hérite de ==TBScreenComponent==:
 
@@ -196,14 +191,14 @@ TBApplicationRootComponent >> main: aComponent
    main := aComponent
 ]]]
 
-+TinyBlog avec une liste de posts plutot élémentaire.>file://figures/ElementaryListPost.png|width=75|label=elementary+
++TinyBlog avec une liste de bulletins plutot élémentaire.>file://figures/ElementaryListPost.png|width=65|label=elementary+
 
 
 !!!Le composant Post
 
-Nous allons maintenant définir le composant ==TBPostComponent== qui affiche le contenu d'un post.
+Nous allons maintenant définir le composant ==TBPostComponent== qui affiche le contenu d'un bulletin (post).
 
-Chaque post du blog sera représenté visuellement par une instance de  ==TBPostComponent== qui affiche le titre, la date et le contenu d'un post. Nous allons obtenir la situation décrite par la figure *@compt3*.
+Chaque bulletin du blog sera représenté visuellement par une instance de  ==TBPostComponent== qui affiche le titre, la date et le contenu d'un bulletin. Nous allons obtenir la situation décrite par la figure *@compt3*.
 
 +Ajout du composant Post.>file://figures/ComponentRelationship3.pdf|width=75|label=compt3+
 
@@ -256,11 +251,11 @@ TBPostComponent >> renderContentOn: html
 ]]]
 
 
-!!!Afficher les posts
+!!!Afficher les bulletins (posts)
 
 Maintenant nous pouvons afficher des posts présents dans la base.
 
-Il ne reste plus qu'à modifier la méthode ==TBPostsListComponent >> renderContentOn:== pour afficher l'ensemble des blogs visibles présents dans la base.
+Il ne reste plus qu'à modifier la méthode ==renderContentOn:== de la classe ==TBPostsListComponent== pour afficher l'ensemble des bulletin visibles présents dans la base.
 
 [[[
 TBPostsListComponent >> renderContentOn: html
@@ -296,7 +291,7 @@ Vous pouvez ajouter cette méthode dans le debugger avec le bouton ==Create==. Q
 
 !!!Affichage de la liste des posts avec Bootstrap
 
-Nous allons utiliser Bootstrap pour rendre la liste un peu plus jolie en utilisant un container. 
+Nous allons utiliser Bootstrap pour rendre la liste un peu plus jolie à l'aide d'un container en utilisant le message ==tbsContainer: == comme suit :
 
 [[[
 TBPostsListComponent >> renderContentOn: html
@@ -312,8 +307,7 @@ Rafraichissez la page et vous devez obtenir la Figure *@container*.
 
 !!! Relation composite composants
 
-Alors que la solution fonctionne, Seaside nécessite que les composants (ici TBPostComponent) d'un composite (ici TBPostsListComponent) soient accessibles via la méthode ==children==. Nous allons donc transformer
-la solution précédente pour suivre le framework.
+Alors que la solution fonctionne, Seaside nécessite que les enfants (ici ==TBPostComponent==) d'un composite (ici ==TBPostsListComponent==) soient accessibles via la méthode ==children==. Nous allons donc transformer la solution précédente pour suivre le framework.
 
 Nous ajoutons une variable d'instance ==postComponents==.
 
@@ -365,7 +359,19 @@ Nous allons créer un composant pour gérer une liste de catégories nommée: ==
 
 Nous avons besoin d'un composant qui affiche la liste des catégories présentes dans la base et permet d'en sélectionner une. Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui communiquer la catégorie courante. La situation est décrite par la figure *@compt4*.
 
+Rappellez-vous qu'une categorie est simplement exprimée comme une chaine dans le modèle défini dans le Chapitre *@cha:model* et comme l'illustre le test suivant.
+
+[[[
+testAllBlogPostsFromCategory
+	self assert: (blog allBlogPostsFromCategory: 'First Category') size equals: 1
+]]]
+
+
 +Ajout du composant Categories.>file://figures/ComponentRelationship4.pdf|width=75|label=compt4+
+
+
+Nous définissons un nouveau composant nommé ==TBCategoriesComponent==. Ce composant va garder une liste
+de chaines pour chacune des catégories ainsi qu'un pointeur sur le composant postsList associé.
 
 [[[
 WAComponent subclass: #TBCategoriesComponent
@@ -373,6 +379,8 @@ WAComponent subclass: #TBCategoriesComponent
    classVariableNames: ''
    package: 'TinyBlog-Components'
 ]]]
+
+Nous définissons les accesseurs associés.
 
 [[[
 TBCategoriesComponent >> categories
@@ -397,12 +405,12 @@ TBCategoriesComponent >> postsList
 Nous définissons aussi une méthode de création au niveau classe.
 
 [[[
-TBCategoriesComponent class >> categories: aCollectionOfCategories postsList: aTBScreen
-   ^ self new categories: aCollectionOfCategories; postsList: aTBScreen 
+TBCategoriesComponent class >> categories: categories postsList: aTBScreen
+   ^ self new categories: categories; postsList: aTBScreen 
 ]]]
 
 
-Nous avons donc besoin d'ajouter une variable d'instance pour stocker la catégorie courante dans ==TBPostsListComponent==.
+Nous avons donc besoin d'ajouter une variable d'instance pour stocker la catégorie courante dans la classe ==TBPostsListComponent==.
 
 [[[
 TBScreenComponent subclass: #TBPostsListComponent
@@ -411,6 +419,7 @@ TBScreenComponent subclass: #TBPostsListComponent
    package: 'TinyBlog-Components'
 ]]]
 
+Nous définissons les accesseurs associés.
 [[[
 TBPostsListComponent >> currentCategory
    ^ currentCategory
@@ -430,11 +439,14 @@ TBCategoriesComponent >> selectCategory: aCategory
    postsList currentCategory: aCategory
 ]]]
 
+Notez que si nous voulions avoir un effet visuel plus avancé le composant catégories devrait peut être lui aussi garder trace de la 
+catégorie couramment sélectionnée. 
+
 
 
 !!! Rendu des catégories
 Nous pouvons maintenant ajouter une méthode (protocole 'rendering') pour afficher les catégories sur la page. En particulier pour chaque catégorie nous définissons le fait que cliquer sur la catégorie la sélectionne comme la catégorie courante.
-Nous utilisons un callback (message ==callback:==): l'argument d'un callback est un block et peut contenir n'importe quelle expression. Cela illustre la puissance de Seaside.
+Nous utilisons un callback (message ==callback:==): l'argument d'un callback est un block Pharo et peut contenir n'importe quelle expression. Cela illustre la puissance de Seaside.
 
 [[[
 TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
@@ -479,15 +491,21 @@ TBPostsListComponent >> postComponents
 ]]]
 
 
+Nous définissons une méthode créant le composant catégorie
 
-Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des posts:
+[[[
+TBPostsListComponent >> categoriesComponent
+	^ (TBCategoriesComponent
+           categories: self blog allCategories
+            postsList: self).
+]]]
+
+Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des bulletins :
 
 [[[
 TBPostsListComponent >> renderContentOn: html
    super renderContentOn: html.
-   html render: (TBCategoriesComponent
-               categories: self blog allCategories
-               postsList: self).
+   html render: self categoriesComponent
    html tbsContainer: [ 
 		self postComponents do: [ :p |
 				html render: p ] ]
@@ -500,9 +518,9 @@ Une instance du composant ==TBCategoriesComponent== est ajoutée sur la page et 
 
 !!!Look et agencement
 
-Nous allons maintenant agencer le composant ==TBPostsListComponent== en utilisant une mise en place d'un 'responsive design' pour la liste des posts. Cela veut dire que le style CSS va adapter les composants à l'espace disponible.
+Nous allons maintenant agencer le composant ==TBPostsListComponent== en utilisant une mise en place d'un 'responsive design' pour la liste des bulletins. Cela veut dire que le style CSS va adapter les composants à l'espace disponible.
 
- Les composants sont placés dans un container Bootstrap puis agencés sur une ligne avec deux colonnes. La dimension des colonnes est déterminée en fonction de la résolution (viewport) du terminal utilisé. Les 12 colonnes de Bootstrap sont réparties entre la liste des catégories et la liste des posts. Dans le cas d'une résolution faible, la liste des catégories est placée au dessus de la liste des posts (chaque élément occupant 100\% de la largeur du container).
+Les composants sont placés dans un container Bootstrap puis agencés sur une ligne avec deux colonnes. La dimension des colonnes est déterminée en fonction de la résolution (viewport) du terminal utilisé. Les 12 colonnes de Bootstrap sont réparties entre la liste des catégories et la liste des posts. Dans le cas d'une résolution faible, la liste des catégories est placée au dessus de la liste des posts (chaque élément occupant 100\% de la largeur du container).
 
 [[[
 TBPostsListComponent >> renderContentOn: html
@@ -515,11 +533,7 @@ TBPostsListComponent >> renderContentOn: html
 						extraSmallSize: 12;
 						smallSize: 2;
 						mediumSize: 4;
-						with: [ html
-								render:
-									(TBCategoriesComponent 
-										categories: self blog allCategories 
-										postsList: self) ].
+						with: [ html render: self categoriesComponent ].
 					html tbsColumn
 						extraSmallSize: 12;
 						smallSize: 10;
@@ -570,9 +584,7 @@ TBPostsListComponent >> renderCategoryColumnOn: html
 
 [[[
 TBPostsListComponent >> basicRenderCategoriesOn: html
-   html render: (TBCategoriesComponent 
-         categories: self blog allCategories 
-         postsList: self)
+   html render: self categoriesComponent 
 ]]]
 
 [[[
