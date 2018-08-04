@@ -2,10 +2,7 @@
 @cha:model
 % full code at: 9c87f4b8abb956469e145d2ba8afeba8b66159d2
 
-Tout au long de ce livre, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs (voir  la Figure *@TinyBlogOnPharoCloud*). L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
-
-
-+L'application TinyBlog.>figures/TinyBlogOnPharoCloud.png|width=100|label=TinyBlogOnPharoCloud+
+Dans ce premier chapitre, nous allons commencer à développer la partie modèle de l'application Tinyblog. 
 
 !!!La classe TBPost
 
@@ -20,7 +17,7 @@ Object subclass: #TBPost
 
 Nous utilisons cinq variables d'instance pour décrire un post sur le blog.
 
-|!Variable |!Signification |
+|!Variable 		|!Signification |
 |title         |Titre du post                |
 |text          |Texte du post                |
 |date          |Date de redaction            |
@@ -87,7 +84,7 @@ TBPost >> hide
 
 !!!Initialisation
 
-La méthode ==initialize== (protocole 'initialization') fixe la date à celle du jour et la visibilité à faux. L'utilisateur devra par la suite activer la visibilité ce qui permet de rédiger des brouillons et de publier lorsque le post est terminé. Un post est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe.  La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
+La méthode ==initialize== (protocole 'initialization') fixe la date à celle du jour et la visibilité à faux. L'utilisateur devra par la suite activer la visibilité. Cela permet de rédiger des brouillons et de ne publier un post que lorsque celui-ci est terminé. Un post est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe.  La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
 
 [[[
 TBPost class >> unclassifiedTag
@@ -142,7 +139,7 @@ Si vous inspectez le code ci-dessus (clic droit sur l'expression et "Inspect it"
 
 !!! Interrogation d'un post
 
-Dans le protocole 'testing', définissez les deux méthodes suivantes permettant respectivement de demander à un post s'il est visible et s'il est classé dans une catégorie.
+Dans le protocole 'testing', définissez les deux méthodes suivantes qui permettent respectivement, de demander à un post s'il est visible, et s'il est classé dans une catégorie.
 
 [[[
 TBPost >> isVisible
@@ -174,7 +171,7 @@ Il existent plusieurs serveurs en ligne permettant d'héberger vos dépôts de c
 
 !!!!Sauver votre package
 
-- Dans Pharo, ouvrez l'outil Monticello Browser via le menu du monde (clic gauche sur le fond de Pharo).
+- Dans Pharo, ouvrez l'outil Monticello Browser via le menu principal (clic gauche sur le fond de Pharo).
 - Ajoutez un dépôt (repository) de type SmalltalkHub ou HTTP pour *http://ss3.gemstone.com*.
 - Sélectionnez ce dépôt et dans son menu contextuel (clic droit), sélectionnez l'item 'Add to package...' pour ajouter ce dépôt au package TinyBlog.
 - Sélectionnez maintenant votre package et pressez le bouton 'Save'. 
@@ -186,10 +183,10 @@ Pour rappel, dans le cadre de ce tutoriel, nous vous suggérons de toujours util
 
 !!!A propos de dépendances
 
-Les bonnes pratiques lors de développements en Pharo sont de spécifier clairement les dépendances sur les packages utilisés afin d'avoir une reproductibilité complète d'un projet. Une telle reproducibilité permet alors l'utilisation de serveur de construction tel Travis ou Jenkins.
-Pour cela, une configuration (une classe spéciale) définit d'une part l'architecture du projet (dependances et packages du projet) et les versions des packages versionnés. 
+Les bonnes pratiques lors de développements en Pharo sont de spécifier clairement les dépendances sur les packages utilisés afin d'avoir une reproductibilité complète d'un projet. Une telle reproductibilité permet alors l'utilisation de serveur de construction tels que Travis ou Jenkins.
+Pour cela, une configuration (une classe spéciale) définit d'une part l'architecture du projet (dépendances et packages du projet) et les versions des packages versionnés. 
 
-Dans le cadre de ce projet, nous n'abordons pas ce point plus avancé. Un chapitre entier sur l'expression de configuration dans le livre Deep Into Pharo (cf. *http://books.pharo.org*) est consacré à ce point. 
+Dans le cadre de ce projet, nous n'abordons pas ce point plus avancé. Un chapitre entier est consacré à l'expression de configurations dans le livre intitulé "Deep Into Pharo" (cf. *http://books.pharo.org*). 
  
 %!!!!! Optionel. 
 %Si vous voulez essayer de créer une configuration, vous pouvez utiliser Versionner. 
@@ -201,34 +198,6 @@ Dans le cadre de ce projet, nous n'abordons pas ce point plus avancé. Un chapit
 %- Cliquez sur le bouton "Save to development" (pour générer la nouvelle structure %d'architecture et dépendances), "Release" (pour créer une nouvelle vetsion) et Commit (pour sauver le code sur le serveur).
 
 
-
 !!! Conclusion
 
-Nous avons développé une première partie du modèle et appris à sauver notre code en utilisant Monticello.
-
-% !Le modèle des auteurs
-%
-% Un post est écrit par un auteur.
-% Ajouter maintenant une classe nommée ==TBAuthor== sachant qu'un auteur est caractérisé par son pseudo (affiché publiquement dans le post), son login et son mot de passe.
-%
-% De même que pour les posts, ajoutez des accesseurs et des méthodes de création côté classe.
-% Nous souhaitons pouvoir écrire dans un playground :
-%
-% [[[
-% 	luc := TBAuthor pseudo: 'LucF' login: 'luc' password: 'topsecret'
-% ]]]
-%
-% Ajouter un champs ==author== dans la classe ==TBPost== ainsi que des accesseurs.
-% Dans un playground, on souhaite pouvoir écrire :
-%
-% [[[
-% 	|luc|
-% 	luc := TBAuthor pseudo: 'LucF' login: 'luc' password: 'topsecret'.
-% 	(TBPost
-% 		title: 'Welcome in TinyBlog'
-% 		text: 'TinyBlog is a small blog engine made with Pharo.'
-% 		category: 'TinyBlog')
-% 		author: luc ;
-% 		yourself
-% ]]]
-
+Nous avons développé une première partie du modèle (la classe ==TBPost==) et appris à sauver notre code en utilisant Monticello.

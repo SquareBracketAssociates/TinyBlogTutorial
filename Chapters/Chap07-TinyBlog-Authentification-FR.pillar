@@ -2,6 +2,40 @@
 
  Nous allons tout d'abord définir un composant d'identification : cette définition de composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances d'un composant ainsi que l'invocation de composants.
 
+%  Avant cela, il faut enrichir notre modèle de Tinyblog avec la notion d'auteur.
+%  Le ou les auteur(s) associés à un blog pourront s'identifier pour administrer les posts.
+%
+% !!!Le modèle des Auteurs
+%
+%  Le blog possède des auteurs qui peuvent écrire des posts. Un post n'a qu'un seul auteur (son créateur) même si tous les auteurs peuvent ensuite accéder et modifier n'importe quel post.
+%
+%  Ajouter maintenant une classe nommée ==TBAuthor== sachant qu'un auteur est caractérisé par son pseudo (affiché publiquement dans le post), son login et son mot de passe.
+%
+%  De même que pour les posts, ajoutez des accesseurs et des méthodes de création côté classe.
+%  Nous souhaitons pouvoir écrire dans un playground :
+%
+%  [[[
+%  	luc := TBAuthor pseudo: 'Luke' login: 'luc' password: 'topsecret'
+%  ]]]
+%
+%  Ajouter un champs ==author== dans la classe ==TBPost== ainsi que des accesseurs.
+%  Dans un playground, on souhaite pouvoir écrire :
+%
+%  [[[
+%  	|luc|
+%  	luc := TBAuthor pseudo: 'Luke' login: 'luc' password: 'topsecret'.
+%  	(TBPost
+%  		title: 'Welcome in TinyBlog'
+%  		text: 'TinyBlog is a small blog engine made with Pharo.'
+%  		category: 'TinyBlog')
+%  		author: luc ;
+%  		yourself
+%  ]]]
+%
+%  Dans la classe ==TBBlog==, ajouter une accesseur permettant de récupérer l'ensemble des auteurs du
+%
+% @todo : to finish 
+
 !!!Administration de TinyBlog
 
 Nous allons aborder maintenant l'administration de TinyBlog. Cet exercice va nous permettre de montrer comment utiliser des informations de session ainsi que Magritte pour la définition de rapports.
