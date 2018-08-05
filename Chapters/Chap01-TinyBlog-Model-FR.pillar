@@ -70,6 +70,8 @@ TBPost >> category: anObject
    category := anObject
 ]]]
 
+
+
 !!!Gérer la visibilité d'un post
 
 Ajoutons dans le protocole 'action' des méthodes pour indiquer qu'un post est visible ou pas.
@@ -124,6 +126,45 @@ TBPost class >> title: aTitle text: aText category: aCategory
             yourself
 ]]]
 
+!!! Ajout de quelques tests unitaires
+
+Bien que le modèle soit simple nous pouvons définir quelques tests. En mode Test Driven Developpement nous écrivons les tests
+en premier. Ici nous avons préféré vous laissez définir une petite classe pour vous familiariser avec l'IDE.
+Mais maintenant nous réparons ce manque. 
+
+[[[
+TestCase subclass: #TBPostTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'TinyBlog-Tests'
+]]]
+
+[[[
+TBPostTest >> testWithoutCategoryIsUnclassified
+
+	| post |
+	post := TBPost 
+		title: 'Welcome to TinyBlog' 
+		text: 'TinyBlog is a small blog engine made with Pharo.'.
+	self assert: post title equals: 'Welcome to TinyBlog' .
+	self assert: post isUnclassified.
+]]]
+
+
+[[[
+TBPostTest >> testPostIsCreatedCorrectly
+
+		| post |
+		post := TBPost 
+			title: 'Welcome to TinyBlog' 
+			text: 'TinyBlog is a small blog engine made with Pharo.' 
+			category: 'TinyBlog'.
+		self assert: post title equals: 'Welcome to TinyBlog' .
+		self assert: post text equals: 'TinyBlog is a small blog engine made with Pharo.' .
+]]]
+
+Vos tests doivent passer.
+
 !!!Création de posts
 
 Vous pouvez maintenant créer des posts. Ouvrez l'outil Playground et recopiez l'expression suivante :
@@ -153,6 +194,19 @@ TBPost >> isUnclassified
 ]]]
 
 De même il serait préférable de ne pas faire une référence en dur à la classe ==TBPost== dans le code d'une méthode. Proposer une solution.
+De plus, prenons le temps de mettre à jour notre test pour couvrir ce nouvel aspect.
+[[[
+TBPostTest >> testWithoutCategoryIsUnclassified
+
+	| post |
+	post := TBPost 
+		title: 'Welcome to TinyBlog' 
+		text: 'TinyBlog is a small blog engine made with Pharo.'.
+	self assert: post title equals: 'Welcome to TinyBlog' .
+	self assert: post isUnclassified.
+	self deny: post isVisible
+]]]
+
 
 
 !!! Sauvegarder votre code 
@@ -202,5 +256,5 @@ Dans le cadre de ce projet, nous n'abordons pas ce point plus avancé. Un chapit
 
 !!! Conclusion
 
-Nous avons développé une première partie du modèle (la classe ==TBPost==) et sauver notre code. Nous vous suggérons fortement 
-d'écrire quelques tests unitaires pour vérifier que même ce simple modèle fonctionne correctement.
+Nous avons développé une première partie du modèle (la classe ==TBPost==) et défini quelques tests. Nous vous suggérons fortement 
+d'écrire d'autres tests unitaires pour vérifier que même ce simple modèle fonctionne correctement.
