@@ -202,4 +202,5 @@ Dans le cadre de ce projet, nous n'abordons pas ce point plus avancé. Un chapit
 
 !!! Conclusion
 
-Nous avons développé une première partie du modèle (la classe ==TBPost==) et appris à sauver notre code en utilisant Monticello.
+Nous avons développé une première partie du modèle (la classe ==TBPost==) et sauver notre code. Nous vous suggérons fortement 
+d'écrire quelques tests unitaires pour vérifier que même ce simple modèle fonctionne correctement.
