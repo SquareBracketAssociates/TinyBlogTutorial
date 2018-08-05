@@ -2,11 +2,13 @@
 @cha:model
 % full code at: 9c87f4b8abb956469e145d2ba8afeba8b66159d2
 
-Dans ce premier chapitre, nous allons commencer à développer la partie modèle de l'application Tinyblog. 
+Dans ce premier chapitre, nous allons commencer à développer la partie modèle de l'application Tinyblog.
+Le modèle est particulièrement simple : il définit une liste de bulletin et un bulletin.
 
 !!!La classe TBPost
 
-Le modèle de TinyBlog est extrêmement simple. Nous commençons ici par la classe ==TBPost== définie ainsi:
+Le modèle de TinyBlog est extrêmement simple. Nous commençons ici par la représentation d'un bulletin avec 
+la classe ==TBPost== définie ainsi:
 
 [[[
 Object subclass: #TBPost
@@ -77,7 +79,7 @@ TBPost >> beVisible
    self visible: true
 ]]]
 [[[
-TBPost >> hide
+TBPost >> notVisible
    self visible: false
 ]]]
 
@@ -96,9 +98,9 @@ Attention la méthode ==unclassifiedTag== est définie au niveau de la classe (c
 [[[
 TBPost >> initialize
 	super initialize.
-   self category: TBPost unclassifiedTag.
-   self date: Date today.
-   self hide
+	self category: TBPost unclassifiedTag.
+	self date: Date today.
+	self notVisible
 ]]]
 
 Dans la solution proposée ci-dessus pour la méthode ==initialize==, il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==. Proposer une solution. La séquence 3 de la semaine 6 du MOOC peut vous aider à mieux comprendre pourquoi (*http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_67.html*) il faut éviter de référencer des classes directement et comment faire. 
