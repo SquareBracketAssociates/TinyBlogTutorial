@@ -1,5 +1,7 @@
 !! Charger le code des chapitres
 
+Ce chapitre contient les expressions pour charger le code de chacuns des chapitres afin de vous permettre de ne pas être bloqués.
+
 !!! Chapitre : Modèle 
 Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant :
 

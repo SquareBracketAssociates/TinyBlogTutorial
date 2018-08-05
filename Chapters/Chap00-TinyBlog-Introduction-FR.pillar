@@ -28,9 +28,9 @@ Vous pouvez construire l'image que nous utilisons à l'aide de ce script à exé
 
 [[[
 	Metacello new 
-	 baseline: 'PharoWebApp';
-	 repository: 'github://pharo-project/app-images'; 
-	 load	
+		baseline: 'PharoWebApp';
+		repository: 'github://pharo-project/app-images'; 
+		load
 ]]]
 
 !!! Règles de nommage
