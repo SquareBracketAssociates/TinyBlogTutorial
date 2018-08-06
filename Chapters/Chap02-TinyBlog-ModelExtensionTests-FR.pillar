@@ -1,9 +1,11 @@
 !! L'application TinyBlog : extension du modèle et tests unitaires
 @chapModelExtensionAndUnitTests
 
+% full hash of full code 35785aaaf1284f1a472980f07522fc7d0d4743e6
+
 Dans ce chapitre nous étendons le modèle et ajoutons des tests. Notez qu'un bon développeur de méthodologies agiles tel que Test-Driven Development aurait commencé par écrire des tests. En plus, avec Pharo, nous aurions aussi codé dans le débuggeur pour être encore plus productif. Nous ne l'avons pas fait car le modèle est simpliste et expliquer comment coder dans le débuggeur demande plus de description textuelle. Vous pouvez voir cette pratique dans la vidéo du Mooc intitulée ''Coding a Counter in the Debugger'' (*http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_26.html*) et lire le livre ''Learning Object-Oriented Programming, Design with TDD in Pharo'' (*http://books.pharo.org*).
 
-Comme pour chacun des chapitres précédents vous pouvez charger le code comme indiqué dans le dernier chapitre.
+Avant de commencer, reprenez votre code ou reportez-vous au dernier chapitre du livre pour charger le code du chapitre précédent.
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!!La classe TBBlog
@@ -55,7 +57,7 @@ TBBlog class >> initialize
 
 !!!Tester les règles métiers
 
-Nous allons écrire des tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premier puis en définissant les fonctionalités jusqu'à ce que les tests passent.
+Nous allons écrire des tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premier puis en définissant les fonctionnalités jusqu'à ce que les tests passent.
 
 Les tests unitaires sont regroupés dans une étiquette (tag) ==TinyBlog-Tests== qui contient la classe ==TBBlogTest== (voir menu item "Add Tag..."). Un tag est juste une étiquette qui permet de trier et grouper les classes à l'intérieur d'un package. Nous utilisons un tag ici pour ne pas avoir à gérer deux packages différents mais dans un projet réel vous définirions un package séparé pour les tests.
 
@@ -125,7 +127,7 @@ TBBlog >> size
 
 Le test précédent doit maintenant passer.
 
-Ecrivons d'autres tests pour couvrir les fonctionalités que nous venons de développer. 
+Ecrivons d'autres tests pour couvrir les fonctionnalités que nous venons de développer. 
 
 [[[
 TBBlogTest >> testSize

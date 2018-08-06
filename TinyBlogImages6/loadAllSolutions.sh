@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-for F in loadSolutionForWeek[0-9]\.sh; do 
+for F in loadSolutionForChapter[2-5]\.sh; do 
 	echo "$F"
 	./$F
 done

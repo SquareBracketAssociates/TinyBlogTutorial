@@ -3,7 +3,7 @@
 Nous commençons par définir une interface telle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera. Nous allons définir des composants Seaside *http://www.seaside.st* dont l'ouvrage de référence est disponible en ligne à *http://book.seaside.st*. Les premiers chapitres de *http://book.seaside.st* peuvent vous aider et compléter efficacement ce tutoriel.
 
 Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
-Comme pour chacun des chapitres précédents vous pouvez charger le code comme indiqué dans le dernier chapitre.
+Vous pouvez charger le code des chapitres précédents en suivant les instructions indiquées dans le dernier chapitre.
 
 
 +Lancer le serveur.>file://figures/RunningSeaside.png|width=50|label=RunningSeaside+
@@ -36,7 +36,7 @@ Cliquer sur le lien ""Examples"" au bas de la page et vous pouvez ainsi voir les
 
 !!!!Bootstrap
 
-Le repository pour le source et la documentation est 
+Le dépôt de code et la documentation de la bibliothèque Bootstrap pour Pharo est disponible ici: 
 *http://smalltalkhub.com/#!/~TorstenBergmann/Bootstrap*.
 Une démo en ligne est disponible à l'adresse : *http://pharo.pharocloud.com/bootstrap*. Cette bibliothèque a déjà été chargée dans l'image PharoWeb utilisée dans ce tutoriel.
 

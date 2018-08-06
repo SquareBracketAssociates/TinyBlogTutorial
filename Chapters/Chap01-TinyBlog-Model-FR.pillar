@@ -257,4 +257,4 @@ Dans le cadre de ce projet, nous n'abordons pas ce point plus avancé. Un chapit
 !!! Conclusion
 
 Nous avons développé une première partie du modèle (la classe ==TBPost==) et défini quelques tests. Nous vous suggérons fortement 
-d'écrire d'autres tests unitaires pour vérifier que même ce simple modèle fonctionne correctement.
+d'écrire d'autres tests unitaires pour vérifier que ce modèle fonctionne correctement même s'il est simple.

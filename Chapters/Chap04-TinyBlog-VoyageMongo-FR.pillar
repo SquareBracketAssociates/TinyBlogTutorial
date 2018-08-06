@@ -36,9 +36,9 @@ TBBlog class >> initializeVoyageOnMemoryDB
 
 Ici nous n'avons pas besoin de stocker la base dans une variable d'instance car nous n'avons qu'une seule base de donnée en mode singleton. 
 
-Nous redéfinissons les méthodes de classe ==reset== et ==initialize== pour nous assurer que l'endroit où la base est sauvée est réinitialisé lorsque l'on charge le code. 
+Nous définissons la méthode de classe ==reset== afin de réinitialiser la base de données.
+Nous redéfinissons également la méthode class ==initialize== pour réinitialiser la base de données lorsque l'on charge le code c'est-à-dire lorsque la classe TBBlog est chargée.
 
-La méthode ==reset== réinitialize la base. 
 [[[
 TBBlog class >> reset
       self initializeVoyageOnMemoryDB
@@ -89,7 +89,7 @@ TBBlog >> removeAllPosts
 
 !!! Revision des tests
 
-Maintenant que nous sauvons les blogs dans une base (quelle soit en mémoire ou dans une base mongo), nous devons faire attention car si un test modifie la base, notre base courante (hors test) sera elle aussi modifiée : Cette situation est clairement dangereuse. Un test ne doit pas modifier l'état du système.
+Maintenant que nous sauvons les blogs dans une base (quelle soit en mémoire ou dans une base Mongo), nous devons faire attention car si un test modifie la base, notre base courante (hors test) sera elle aussi modifiée : Cette situation est clairement dangereuse. Un test ne doit pas modifier l'état du système.
 
 Nous ajoutons la variable d'instance ==previousRepository== à la classe ==TBBLogTest==.
 
@@ -100,7 +100,7 @@ TestCase subclass: #TBBlogTest
 	package: 'TinyBlog-Tests'
 ]]]
 
-Ensuite, nous modifions donc la méthode ==setUp== pour sauver le repositoire avant l'exécution du test. Nous créons un répositoire temporaire qui sera celui qui sera modifié par le test.
+Ensuite, nous modifions donc la méthode ==setUp== pour sauver la base de données avant l'exécution du test. Nous créons un objet base de données temporaire qui sera celui qui sera modifié par le test.
 
 [[[
 TBBlogTest >> setUp
@@ -112,7 +112,7 @@ TBBlogTest >> setUp
 	post := (TBPost title: 'Another title' text: 'Another text' category: 'Second Category') beVisible
 ]]]
 
-Dans la méthode ==tearDown==, à la fin de l'execution, nous réinstallons le répositoire sauver avant l'exécution.
+Dans la méthode ==tearDown==, à la fin de l'exécution, nous réinstallons l'objet base données sauver avant l'exécution.
 
 [[[
 TBBlogTest >> tearDown
@@ -120,20 +120,20 @@ TBBlogTest >> tearDown
 ]]]
 
 
-Notez que les méthodes ==setUp== et ==tearDown== sont executées avant et aprés l'exécution de chaque test.
+Notez que les méthodes ==setUp== et ==tearDown== sont exécutées avant et après l'exécution de chaque test.
 
 
 !!!Utilisation de la base
 
 Alors même que la base est en mémoire et bien que nous pouvons accéder au blog en utilisant le singleton de la classe ==TBBlog==,
-nous allons montrer l'API offerte par Voyage. C'est la même API que nous pourrons utiliser pour accéder à une base mongo.
+nous allons montrer l'API offerte par Voyage. C'est la même API que nous pourrons utiliser pour accéder à une base Mongo.
 
 Nous créons des posts ainsi :
 [[[
 TBBlog createDemoPosts.
 ]]]
 
-Nous pouvons compter le nombre de blog sauvés. ==count== fait partie de l'API directe de Voyage. Ici nous obtenons 1 ce qui est normal puisque le blog est implémenté comme un singleton. 
+Nous pouvons compter le nombre de blog sauvés. ==count== fait partie de l'API directe de Voyage. Ici nous obtenons 1 ce qui est normal puisque le blog est implémentée comme un singleton. 
 
 [[[
 TBBlog count
@@ -152,12 +152,12 @@ Vous pouvez voir l'API de Voyage en parcourant
 - la classe ==Class==, et 
 - la classe ==VORepository== qui est la racine d'héritage des bases de données en mémoire ou extérieure.
 
-Ces queries sont plus pertinentes quand on a plus d'objets mais nous ferions exactement les mêmes. 
+Ces requêtes sont plus pertinentes quand on a plus d'objets mais nous ferions exactement les mêmes. 
 
 !!!Si nous devions sauvegarder les posts [Optionnel]
 
-Cette section n'est pas à implémenter et elle est juste donnée à titre d'exemple.  Plus d'explications sont données dans le chapitre sur Voyage dans le livre ''Enterprise Pharo: a Web Perspective'' disponible a *http://books.pharo.org*. Nous voulons illustrer que déclarer une classe comme une racine Voyage a une influence sur comment une instance de cette classe est sauvée et rechargée. En particulier declarer un post comme une racine
- a comme effet que les objets posts seront des documents a part entière et ne seront plus une souspartie d'un blog.
+Cette section n'est pas à implémenter et elle est juste donnée à titre d'exemple.  Plus d'explications sont données dans le chapitre sur Voyage dans le livre ''Enterprise Pharo: a Web Perspective'' disponible a *http://books.pharo.org*. Nous voulons illustrer que déclarer une classe comme une racine Voyage a une influence sur comment une instance de cette classe est sauvée et rechargée. En particulier, déclarer un post comme une racine
+ a comme effet que les objets posts seront des documents a part entière et ne seront plus une sous-parties d'un blog.
 
 Nous pourrions définir qu'un post soit un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Par contre, si nous représentions les commentaires d'un post, nous ne les déclarerions pas   comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
 
@@ -198,7 +198,7 @@ Ici dans la méthode ==removeAllPosts== nous enlevons chaque posts puis nous rem
 !!! Deployer avec une base Mongo [Optionnel]
 
 Nous allons maintenant montrer comment utiliser une base Mongo externe à Pharo. 
-Dans le cadre de ce tutorial, vous pouvez ne pas le faire et passer à la suite.
+Dans le cadre de ce tutoriel, vous pouvez ne pas le faire et passer à la suite.
 
 En utilisant Voyage nous pouvons rapidement sauver nos posts dans une base de données Mongo. Cette section explique rapidement la mise en oeuvre et les quelques modifications que nous devons apporter à notre projet Pharo pour y parvenir. 
 
@@ -264,7 +264,7 @@ Notez que si vous avez besoin de réinitialiser la base extérieure complètemen
    database: 'tinyblog') dropDatabase
 ]]]
 
-Si vous ne pouvez pas le faire depuis Pharo, vous pouvez le faire lorsque mongod est en cours d'exécution avec l'expression suivante : 
+Si vous ne pouvez pas le faire depuis Pharo, vous pouvez le faire lorsque ==mongod== est en cours d'exécution avec l'expression suivante : 
 
 [[[
 mongo tinyblog --eval "db.dropDatabase()"
@@ -278,7 +278,7 @@ docker exec -it mongo bash -c 'mongo tinyblog --eval "db.dropDatabase()"'
 
 !!!!Attention : Changements de TBBlog
 
-Si vous utilisez une base locale plutôt qu'une base en mémoire, à chaque fois que vous déclarez une nouvelle racine d'objets ou modifiez la définition d'une classe racine (ajout, retrait, modification d'attribut) il est capital de réinitializer le cache maintenu par Voyage.  La réinitialisation se fait comme suit:
+Si vous utilisez une base locale plutôt qu'une base en mémoire, à chaque fois que vous déclarez une nouvelle racine d'objets ou modifiez la définition d'une classe racine (ajout, retrait, modification d'attribut) il est capital de ré-initialiser le cache maintenu par Voyage.  La ré-initialisation se fait comme suit:
 
 [[[
 VORepository current reset

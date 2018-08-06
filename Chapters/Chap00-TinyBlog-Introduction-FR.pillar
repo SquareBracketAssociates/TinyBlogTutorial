@@ -27,10 +27,11 @@ Pour développer votre application TinyBlog et suivre ce tutoriel, nous vous sug
 Vous pouvez construire l'image que nous utilisons à l'aide de ce script à exécuter dans une image Pharo 6.1 (*http://pharo.org/download*):
 
 [[[
-	Metacello new 
-		baseline: 'PharoWebApp';
-		repository: 'github://pharo-project/app-images'; 
-		load
+   Metacello new 
+      smalltalkhubUser: 'PharoExtras' project: 'PharoWeb'; 
+      configuration: 'PharoWeb';
+      version: #stable;
+      load 
 ]]]
 
 !!! Règles de nommage
