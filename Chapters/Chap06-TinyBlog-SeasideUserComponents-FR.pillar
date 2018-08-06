@@ -168,7 +168,7 @@ TBScreenComponent >> renderContentOn: html
    html render: header
 ]]]
 
-Si vous faites un rafraichissement de l'application dans votre navigateur web vous devez voir la Figure *@navBlog*.
+Si vous faites un rafraichissement de l'application dans votre navigateur web vous devez voir la figure *@navBlog*.
 
 
 !!!!Amélioration possibles
@@ -188,15 +188,6 @@ TBScreenComponent subclass: #TBPostsListComponent
    package: 'TinyBlog-Components'
 ]]]
 
-Ajoutons une méthode ==renderContentOn:== (protocole rendering) provisoire pour tester l'avancement de notre application (voir Figure *@elementary*).
-
-[[[
-TBPostsListComponent >> renderContentOn: html
-   super renderContentOn: html.
-   html text: 'Blog Posts here !!!'
-]]]
-
-+Le composant ==ApplicationRootComponent== utilise le composant ==PostsListComponent==.>file://figures/ComponentRelationship2.pdf|width=75|label=compt2+
 
 Nous pouvons maintenant dire au composant de l'application d'utiliser ce composant comme illustré dans la figure *@compt2*. Pour cela nous modifions-la ainsi: 
 
@@ -213,6 +204,16 @@ de changer dynamiquement de composant dans le futur tout en gardant le composant
 TBApplicationRootComponent >> main: aComponent
    main := aComponent
 ]]]
+
+Ajoutons une méthode ==renderContentOn:== (protocole rendering) provisoire pour tester l'avancement de notre application (voir figure *@elementary*).
+
+[[[
+TBPostsListComponent >> renderContentOn: html
+   super renderContentOn: html.
+   html text: 'Blog Posts here !!!'
+]]]
+
++Le composant ==ApplicationRootComponent== utilise le composant ==PostsListComponent==.>file://figures/ComponentRelationship2.pdf|width=75|label=compt2+
 
 +TinyBlog avec une liste de bulletins plutot élémentaire.>file://figures/ElementaryListPost.png|width=65|label=elementary+
 
