@@ -1,14 +1,13 @@
 !! Des composants web pour TinyBlog
 
-Nous commençons par définir une interface telle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera.
+Dans ce chapitre, commençons par définir une interface publique permettant d'afficher les posts du blog. Dans un prochain chapitre, nous développerons une interface d'administration pour le ou les auteurs du blog.
 
-Si vous avez le sentiment d'etre un peu perdu la figure *@AssociationArchitectureUser* vous montre les composants sur lesquels nous allons travailler dans ce chapitre. 
+Si vous avez le sentiment d'être un peu perdu la figure *@AssociationArchitectureUser* vous montre les composants sur lesquels nous allons travailler dans ce chapitre. 
 
 +L'architecture des composants Users.>file://figures/ApplicationArchitectureUser.pdf|width=75|label=AssociationArchitectureUser+
 
 Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
-Comme pour chacun des chapitres précédents vous pouvez charger le code comme indiqué dans le dernier chapitre.
-
+Les instructions pour charger le code des chapitres précédents sont disponibles dans le dernier chapitre.
 
 !!! Composants visuels 
 
@@ -40,18 +39,19 @@ TBScreenComponent >> blog
 
 En inspectant l'objet blog retourné par ==TBBlog current==, vérifier qu'il contient bien des posts. Si ce n'est pas le cas, exécuter ==TBBlog createDemoPosts==.
 
-Dans le futur, lorsque nous gérerons les utilisateurs et le fait qu'un utilisateur puisse avoir plusieurs blogs nous modifierons cette méthode pour utiliser des informations stockées dans la session active (Voir ==TBSession== dans le chapitre suivant).
+Par la suite, si l'on souhaite étendre TinyBlog pour qu'un utilisateur puisse avoir plusieurs blogs, il suffira de modifier cette méthode pour utiliser des informations stockées dans la session active (Voir ==TBSession== dans le chapitre suivant).
 
+Définissez la méthode ==renderContentOn:== de ce composant comme suit temporairement. Notez que pour l'instant, nous n'affichons pas ce composant. 
 
 [[[
-TBApplicationRootComponent >> renderContentOn: html
-   ^ TBBlog current
+TBScreenComponent >> renderContentOn: html
+   html text: 'Hello from TBScreenComponent'
 ]]]
 
 !!!Utilisation du composant Screen
 
 Bien que le composant ==TBScreenComponent== n'ait pas vocation à être utilisé directement, nous allons l'utiliser de manière temporaire pendant que nous développons les autres composants. 
-Nous ajoutons la variable d'instance ==main== dans la classe ==TBApplicationRootComponent==. Nous l'initialisons dans la méthode ==initialize== suivante et redéfinissons la méthode ==childre==. Nous obtenons la situation décrite par la figure *@compt1*.
+Nous ajoutons la variable d'instance ==main== dans la classe ==TBApplicationRootComponent==. Nous l'initialisons dans la méthode ==initialize== suivante et redéfinissons la méthode ==children==. Nous obtenons la situation décrite par la figure *@compt1*.
 
 [[[
 WAComponent subclass: #TBApplicationRootComponent
@@ -80,30 +80,22 @@ TBApplicationRootComponent >> children
    ^ { main }
 ]]]
 
-Si vous rafraichissez votre browser, vous n'allez pas voir de changements car la classe ==TBScreenComponent== n'affiche rien. 
-
-Définissez la méthode ==renderContentOn:== comme suit et vous allez voir que ce composant est actif. 
-
-[[[
-TBScreenComponent >> renderContentOn: html
-   html text: 'Hello from TBScreenComponent'
-]]]
-
-
+Si vous rafraichissez votre browser, vous allez voir l'affichage produit par le sous-composant ==TBScreenComponent==. 
 
 !!!Pattern de définition  de composants
 
 Nous allons souvent utiliser la même façon de procéder:
-- Nous définissons d'abord la classe et le comportement d'un nouveau composant .
-- Puis nous allons y faire référence depuis la classe qui utilisera ce composant pour satisfaire les contraintes de Seaside.
-- En particulier nous exprimons la relation entre un composant et un sous composant en redéfinissant la méthode ==children==.
+- nous définissons d'abord la classe et le comportement d'un nouveau composant;
+- puis, nous allons y faire référence depuis la classe qui utilisera ce composant pour satisfaire les contraintes de Seaside;
+- en particulier, nous exprimons la relation entre un composant et un sous-composant en redéfinissant la méthode ==children==.
 
 
 !!!Définition du composant TBHeaderComponent
 
-Profitons de ce composant, pour insérer dans la partie supérieure de chaque composant (==TBPostsListComponent== par exemple) l'instance d'un composant représentant l'entête de l'application. Nous appliquons le schéma présenté avant: définition d'une classe, référence depuis la class utilisatrice, redéfinition de la méthode ==children==.
+Définissons une en-tête commune à toutes les pages Web de TinyBlog dans un composant nommé ==TBHeaderComponent==.
+Ce composant sera inséré dans la partie supérieure de chaque composant (==TBPostsListComponent== par exemple). Nous appliquons le schéma présenté avant: définition d'une classe, référence depuis la classe utilisatrice, redéfinition de la méthode ==children==.
 
-Nous définissons d'abord sa classe, puis nous allons y faire référence depuis la classe qui l'utilise. Ce faisant nous allons montrer comment un composant exprime sa relation à un sous composant. 
+Nous définissons d'abord sa classe, puis nous allons y faire référence depuis la classe qui l'utilise. Ce faisant nous allons montrer comment un composant exprime sa relation à un sous-composant. 
 
 [[[
 WAComponent subclass: #TBHeaderComponent
@@ -124,17 +116,18 @@ TBHeaderComponent >> renderContentOn: html
 
 L'entête (header) est affichée à l'aide d'une barre de navigation Bootstrap (voir la figure *@navBlog*)
 
-Par défaut dans une barre de navigation Bootstrap, il y a un lien sur tbsNavbarBrand qui est ici inutile (sur le titre de l'application). Ici nous l'initialisons avec une ancre =='#'== de façon à ce que si l'utilisateur clique sur le titre, il ne se passe rien. En général, cliquer sur le titre de l'application permet de revenir à la page de départ du site. 
+Par défaut dans une barre de navigation Bootstrap, il y a un lien sur ==tbsNavbarBrand== qui est ici inutile (sur le titre de l'application). Ici nous l'initialisons avec une ancre =='#'== de façon à ce que si l'utilisateur clique sur le titre, il ne se passe rien. En général, cliquer sur le titre de l'application permet de revenir à la page de départ du site. 
 
 !!!!Améliorations possibles
 Le nom du blog devrait être paramétrable à l'aide d'une variable d'instance dans la classe ==TBBlog==
-et le header pourrait afficher ce titre.
+et le l'en-tête pourrait afficher ce titre.
 
 +TinyBlog avec une barre de navigation.>file://figures/navBlog.png|width=75|label=navBlog+
 
 !!!Utilisation du composant header
-Bien que la class ==TBScreenComponent== soit une classe abstraite dans l'architecture finale, nous allons l'utiliser pour le moment.
-Il n'est pas souhaitable d'instancier systématiquement le composant à chaque fois qu'un composant est appelé. Créons une variable d'instance ==header== dans ==TBScreenComponent== que nous initialisons.
+
+Complétons maintenant la classe ==TBScreenComponent== qui est la super-classe abstraite (nous l'utilisons directement pour l'instant) dans l'architecture finale de tous nos composants afin qu'elle affiche une instance de ==TBHeaderComponent==.
+Pour éviter d'instancier systématiquement le composant ==TBHeaderComponent== à chaque fois qu'un composant est appelé, créons et initialisons une variable d'instance ==header== dans ==TBScreenComponent==.
 
 [[[
 WAComponent subclass: #TBScreenComponent
@@ -168,12 +161,9 @@ TBScreenComponent >> renderContentOn: html
    html render: header
 ]]]
 
-Si vous faites un rafraichissement de l'application dans votre navigateur web vous devez voir la Figure *@navBlog*.
+Si vous faites un rafraichissement de l'application dans votre navigateur web vous devez voir apparaitre l'en-tête comme sur le haut de la Figure *@navBlog*.
 
-
-!!!!Amélioration possibles
-
-Le nom du blog doit être particularisable en utilisant par exemple une variable d'instance de la classe ==TBBlog== et l'entête (header) pour afficher ce titre.
+@todo Luc here
 
 !!!Liste des posts
 
@@ -642,13 +632,13 @@ Nous voici prêts à définir la partie administrative de l'application.
 L'application finale devrait ressembler à la figure *@final*.
 
 !!! Conclusion
-Avec Seaside, le programmeur n'a pas à se soucier de gérer les requêtes web, ni l'état de l'aplication. Il définit des composants qui sont créés et sont proches des composants pour applications de bureau.
+Avec Seaside, le programmeur n'a pas à se soucier de gérer les requêtes web, ni l'état de l'application. Il définit des composants qui sont créés et sont proches des composants pour applications de bureau.
 
 Un composant Seaside est responsable d'assurer son rendu en spécialisant la méthode ==renderContentOn:==.
 De plus un composant doit retourné ses sous-composants en spécialisant la méthode ==children==.
 
 Nous avons défini une interface pour notre blog en utilisant un ensemble de composants définissant chacun
-leur propre état et leurs responsibilités. Maintenant il faut remarquer que de très nombreuses applications se construisent de la même manière. Donc vous avez les bases pour définir de nombreuses applications web. Dans le chapitre suivant nous allons vous montrer un aspect avancé qui permet la définition automatique de formulaires ou d'objets ayant de nombreux champs.
+leur propre état et leurs responsabilités. Maintenant il faut remarquer que de très nombreuses applications se construisent de la même manière. Donc vous avez les bases pour définir de nombreuses applications web. Dans le chapitre suivant nous allons vous montrer un aspect avancé qui permet la définition automatique de formulaires ou d'objets ayant de nombreux champs.
 
 !!!! Améliorations possibles
 
