@@ -322,6 +322,7 @@ Rafraichissez la page et vous devez obtenir la Figure *@container*.
 +TinyBlog avec une liste de posts élémentaire.>file://figures/ContainerList.png|width=75|label=container+
 
 
+@@todo Luc, non ce n'est pas nécessaire si l'on ré-instancie dans renderContentOn: à chaque fois
 !!! Relation composite composants
 
 Alors que la solution fonctionne, Seaside nécessite que les enfants (ici ==TBPostComponent==) d'un composite (ici ==TBPostsListComponent==) soient accessibles via la méthode ==super children , ==. Nous allons donc transformer la solution précédente pour suivre le framework.

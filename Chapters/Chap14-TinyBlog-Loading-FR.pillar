@@ -1,7 +1,6 @@
 !! Charger le code des chapitres
 
-Ce chapitre contient les expressions permettant de charger le code décrit dans chacun des chapitres.
-Par exemple, si vous commencer le chapitre 4, vous pouvez charger tout le code des chapitres précédents en suivant la procédure décrite dans la section Chapitre 4.
+Ce chapitre contient les expressions permettant de charger le code décrit dans chacun des chapitres. Ces expressions doivent être exécutées dans une image PharoWeb 5 (*http://files.pharo.org/mooc/image/PharoWeb-5.0.zip*) ou PharoWeb 6.1 (*http://files.pharo.org/mooc/image/PharoWeb-61.zip*). Ensuite, si vous commencer le chapitre 4 par exemple, vous pouvez charger tout le code des chapitres précédents (1, 2 et 3) en suivant la procédure décrite dans la section Chapitre 4 ci-après.
 
 Bien évidemment, nous vous conseillons de faire votre propre code mais cela vous permettra de ne pas rester bloqué le cas échéant.
 
