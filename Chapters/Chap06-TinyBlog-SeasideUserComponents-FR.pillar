@@ -136,7 +136,7 @@ WAComponent subclass: #TBScreenComponent
    package: 'TinyBlog-Components'
 ]]]
 
-Créons une méthode ==initialize== dans le protocole 'initialize-release':
+Créons une méthode ==initialize== dans le protocole 'initialization':
 
 [[[
 TBScreenComponent >> initialize
@@ -161,15 +161,14 @@ TBScreenComponent >> renderContentOn: html
    html render: header
 ]]]
 
-Si vous faites un rafraichissement de l'application dans votre navigateur web vous devez voir apparaitre l'en-tête comme sur le haut de la Figure *@navBlog*.
+Si vous faites un rafraichissement de l'application dans votre navigateur web vous devez voir apparaitre l'en-tête comme sur la Figure *@navBlog*.
 
 @todo Luc here
 
 !!!Liste des posts
 
-Nous allons afficher la liste des posts - ce qui reste d'ailleurs le but d'un blog. Ici nous parlons de l'accès public offert aux lecteurs du blog. 
-
-Créons un composant ==TBPostsListComponent== qui hérite de ==TBScreenComponent==:
+Créons un composant ==TBPostsListComponent== pour afficher la liste des posts - ce qui reste d'ailleurs le but d'un blog. Ce composant constitue la partie publique du blog offerte aux lecteurs du blog. 
+Pour cela, définissons une sous-classe de ==TBScreenComponent==:
 
 [[[
 TBScreenComponent subclass: #TBPostsListComponent
@@ -188,7 +187,7 @@ TBPostsListComponent >> renderContentOn: html
 
 +Le composant ==ApplicationRootComponent== utilise le composant ==PostsListComponent==.>file://figures/ComponentRelationship2.pdf|width=75|label=compt2+
 
-Nous pouvons maintenant dire au composant de l'application d'utiliser ce composant comme illustré dans la figure *@compt2*. Pour cela nous modifions-la ainsi: 
+Nous pouvons maintenant modifier le composant principal de l'application (==TBApplicationRootComponent==) pour qu'il affiche ce nouveau composant comme illustré dans la figure *@compt2*. Pour cela nous modifions sa méthode ==initialize== ainsi: 
 
 [[[
 TBApplicationRootComponent >> initialize
@@ -196,15 +195,17 @@ TBApplicationRootComponent >> initialize
    main := TBPostsListComponent new. 
 ]]]
 
-Editer cette méthode n'est pas une bonne pratique. Nous ajoutons une méthode setter qui nous permettra
-de changer dynamiquement de composant dans le futur tout en gardant le composant actuel pour une initialisation par défaut. 
+Si vous rafraichissez la page de TinyBlog dans votre navigateur, vous devriez obtenir la même chose que sur la figure *@elementary*.
+
++TinyBlog avec une liste de bulletins plutot élémentaire.>file://figures/ElementaryListPost.png|width=65|label=elementary+
+
+Ajoutons également une méthode setter (==main:==) qui nous permettra par la suite
+de changer dynamiquement le sous-composant à afficher tout en gardant le composant actuel (instance de ==TBPostsListComponent==) par défaut. 
 
 [[[
 TBApplicationRootComponent >> main: aComponent
    main := aComponent
 ]]]
-
-+TinyBlog avec une liste de bulletins plutot élémentaire.>file://figures/ElementaryListPost.png|width=65|label=elementary+
 
 
 !!!Le composant Post
@@ -255,7 +256,7 @@ TBPostComponent >> renderContentOn: html
 
 !!!!A propos des formulaires
 
-Dans le chapitre sur l'interface d'administration et qui utilise Magritte, nous montrerons qu'il est rare de définir un composant de manière aussi manuelle. En effet, Magritte permet de décrire les données manipulées et offre ensuite la possibilité de générer automatiquement des composants Seaside. Le code équivalent serait comme suit: 
+Dans le chapitre sur l'interface d'administration et qui utilise Magritte, nous montrerons qu'il est rare de définir un composant de manière aussi manuelle. En effet, Magritte permet de décrire les données manipulées et offre ensuite la possibilité de générer automatiquement des composants Seaside. Le code équivalent en Magritte serait comme suit: 
 
 [[[
 TBPostComponent >> renderContentOn: html
@@ -266,9 +267,13 @@ TBPostComponent >> renderContentOn: html
 
 !!!Afficher les bulletins (posts)
 
-Maintenant nous pouvons afficher des posts présents dans la base.
+Nous pouvons maintenant afficher les bulletins présents dans la base. N'oubliez pas de re-créer des bulletins de démonstration si vous avez re-chargé le code récemment :
 
-Il ne reste plus qu'à modifier la méthode ==renderContentOn:== de la classe ==TBPostsListComponent== pour afficher l'ensemble des bulletin visibles présents dans la base.
+[[[
+	TBBlog createDemoPosts 
+]]]
+
+Il ne reste plus qu'à modifier la méthode ==renderContentOn:== de la classe ==TBPostsListComponent== pour afficher l'ensemble des bulletins visibles présents dans la base.
 
 [[[
 TBPostsListComponent >> renderContentOn: html
@@ -277,7 +282,7 @@ TBPostsListComponent >> renderContentOn: html
       html render: (TBPostComponent new post: p) ]
 ]]]
 
-Rafraichissez la page de votre navigateur et vous devez obtenir un message d'erreur.
+Rafraichissez la page de votre navigateur et vous obtiendrez une page d'erreur.
 
 !!!Débugger les erreurs
 
@@ -295,7 +300,6 @@ L'analyse de la pile d'appels montre qu'il manque la méthode suivante :
 TBPostComponent >> post: aPost
    post := aPost
 ]]]
-
 
 Vous pouvez ajouter cette méthode dans le debugger avec le bouton ==Create==. Quand c'est fait, appuyez sur le bouton ==Proceed==. La page de votre navigateur doit maintenant montrer la même chose que la Figure *@better*.
 

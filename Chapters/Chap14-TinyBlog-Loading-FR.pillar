@@ -1,31 +1,35 @@
 !! Charger le code des chapitres
 
-Ce chapitre contient les expressions pour charger le code de chacuns des chapitres afin de vous permettre de ne pas être bloqués.
+Ce chapitre contient les expressions permettant de charger le code décrit dans chacun des chapitres.
+Par exemple, si vous commencer le chapitre 4, vous pouvez charger tout le code des chapitres précédents en suivant la procédure décrite dans la section Chapitre 4.
 
-!!! Chapitre : Modèle 
-Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant :
+Bien évidemment, nous vous conseillons de faire votre propre code mais cela vous permettra de ne pas rester bloqué le cas échéant.
+
+!!! Chapitre 3 : Extension du modèle et tests unitaires 
+
+Vous pouvez charger la correction du chapitre 2 en exécutant le code suivant :
 
 [[[
-Metacello new
-    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week1solution;
-    configuration: 'TinyBlog';
-    load
+Metacello new 
+	smalltalkhubUser: 'PharoMooc' project: 'TinyBlog'; 
+	version: #chapter2solution;
+	configuration: 'TinyBlog';
+	load.
 ]]]
 
 Vous pouvez ouvrir un browser de code sur la classe ==TBPost==.
 Maintenant que vous avez la correction, vous pouvez compléter le code de votre application TinyBlog si nécessaire.
 
-!!! Chapitre : Extension du modèle et tests unitaires
+!!! Chapitre 4: Persistance des données de TinyBlog avec Voyage et Mongo
 
-Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
+Vous pouvez charger la correction du chapitre 3 en exécutant le code suivant:
 
 [[[
-Metacello new
-    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week2solution;
-    configuration: 'TinyBlog';
-    load
+Metacello new 
+	smalltalkhubUser: 'PharoMooc' project: 'TinyBlog'; 
+	version: #chapter3solution;
+	configuration: 'TinyBlog';
+	load.
 ]]]
 
 Après le chargement d'un package, il est recommandé d'exécuter les tests unitaires qu'il contient afin de vérifier le bon fonctionnement du code chargé.
@@ -35,29 +39,29 @@ Ouvrez maintenant un browser de code pour regarder le code des classes ==TBBlog=
 Avant de poursuivre, n'oubliez pas de committer une nouvelle version dans votre dépôt sur Smalltalkhub ou SS3 si vous avez modifié votre application. 
 
 
-!!! Chapitre : Persistance des données de TinyBlog avec Voyage et Mongo
+!!! Chapitre 5: Commencer avec Seaside
 
-Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
+Vous pouvez charger la correction du chapitre 4 en exécutant le code suivant:
 
 [[[
-Metacello new
-    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week3solution;
-    configuration: 'TinyBlog';
-    load
+Metacello new 
+	smalltalkhubUser: 'PharoMooc' project: 'TinyBlog'; 
+	version: #chapter4solution;
+	configuration: 'TinyBlog';
+	load.
 ]]]
 
 Exécutez les tests.
 
-!!! Chapitre : Commencer avec Seaside
+!!! Chapitre 6: Des composants web pour TinyBlog
 
 
-Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
+Vous pouvez charger la correction des chapitres précédents en exécutant le code suivant:
 
 [[[
 Metacello new
     smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week4solution;
+    version: #chapter5solution;
     configuration: 'TinyBlog';
     load
 ]]]
@@ -70,15 +74,20 @@ ZnZincServerAdaptor startOn: 8080.
 
 Ouvrez votre browser sur ==http://localhost:8080/TinyBlog==
 
+Si vous avez besoin de créer quelques posts initiaux:
 
-!!! Chapitre : Des composants web pour TinyBlog
+[[[
+TBBlog reset ; createDemoPosts
+]]]
 
-Vous pouvez charger l'application complète TinyBlog en exécutant :
+!!! Chapitre 7: Authentification et Session
+
+Vous pouvez charger l'application TinyBlog avec la partie publique en exécutant :
 
 [[[
 Metacello new
     smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week5solution;
+    version: #chapter6solution;
     configuration: 'TinyBlog';
     load
 ]]]
@@ -89,57 +98,81 @@ Pour tester le code, vous devez lancer le serveur HTTP pour Seaside:
 ZnZincServerAdaptor startOn: 8080.
 ]]]
 
-Si vous avez besoin de créer quelques posts initiaux:
-
-[[[
-TBBlog reset ; createDemoPosts
-]]]
-
-Stef: J'en suis ici!
+!!! Chapitre 8: Interface Web d’administration et génération automatique
 
 
-!!! Chapitre : Authentification
-
-
-Vous pouvez charger l'application complète TinyBlog en exécutant :
+Vous pouvez charger l'application TinyBlog avec l'authentification en exécutant :
 
 [[[
 Metacello new
     smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week6solution;
+    version: #chapter7solution;
     configuration: 'TinyBlog';
     load
 ]]]
 
 
 
-!!! Chapitre : Interface Web d'administration pour TinyBlog
+!!! Chapitre 9: Déploiement de TinyBlog
 
 
-
-Vous pouvez charger l'application complète TinyBlog en exécutant :
+Vous pouvez charger l'application TinyBlog contenant la partie administration en exécutant :
 
 [[[
 Metacello new
     smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week6solution;
+    version: #chapter8solution;
     configuration: 'TinyBlog';
     load
 ]]]
 
-Pour tester le code, vous devez lancer le serveur HTTP pour Seaside:
+Vous devez également créer un compte du PharoCloud, reporter vos identifiants dans le code ci-dessous et l'exécuter:
 
 [[[
-ZnZincServerAdaptor startOn: 8080.
+	
+ephUser :='<your PharoCloud Ephemeric login>'.
+ephToken :='<your PharoCloud Ephemeric passwod>'.
+	
+"Seaside Deployment configuration"
+WAAdmin clearAll.
+WAAdmin applicationDefaults removeParent: WADevelopmentConfiguration instance.
+WAFileHandler default: WAFileHandler new.
+WAFileHandler default
+    preferenceAt: #fileHandlerListingClass
+    put: WAHtmlFileHandlerListing.
+WAAdmin defaultDispatcher
+    register: WAFileHandler default
+    at: 'files'.
+	 
+"Load TinyBlog"
+Gofer new
+   smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+   package: 'ConfigurationOfTinyBlog';
+   load.
+#ConfigurationOfTinyBlog asClass loadFinalApp.
+
+"Create Demo posts if needed"
+#TBBlog asClass createDemoPosts.
+
+"Tell Seaside to use TinyBlog as default app"
+WADispatcher default defaultName: 'TinyBlog'.
+
+"Register TinyBlog on Seaside"
+TBApplicationRootComponent initialize.
+
+Metacello new 	
+	smalltalkhubUser: 'mikefilonov' project: 'EphemericCloudAPI';
+	configuration: 'EphemericCloudAPI';
+	load.
+
+"deployment on PharoCloud"
+client := EphemericCloudClient userID: ephUser authToken: ephToken. 
+	(client publishSelfAs: 'glimpse') 
+		ifTrue:[ ZnZincServerAdaptor startOn: 8080 ] 
+		ifFalse: [ client lastPublishedInstance hostname ]
 ]]]
 
-Si vous avez besoin de créer quelques posts initiaux:
-
-[[[
-TBBlog reset ; createDemoPosts
-]]]
-
-Complétez ou terminez ""votre"" application et commitez votre code dans votre dépôt sur Smalltalkhub.
+@todo Luc here
 
 !!! Chapitre : Une Interface Web avec Teapot pour TinyBlog
 
