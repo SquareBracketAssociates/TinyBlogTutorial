@@ -478,7 +478,7 @@ TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
       with: aCategory
 ]]]
 
-Reste maintenant à écrire la méthode de rendu du composant: On itère sur toutes les catégories et on les affiche
+Reste maintenant à écrire la méthode de rendu du composant: on itère sur toutes les catégories et on les affiche
 
 [[[
 TBCategoriesComponent >> renderContentOn: html
