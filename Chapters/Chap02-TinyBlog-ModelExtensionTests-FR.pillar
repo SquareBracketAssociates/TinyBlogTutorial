@@ -57,7 +57,7 @@ TBBlog class >> initialize
 
 !!!Tester les règles métiers
 
-Nous allons écrire des tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premier puis en définissant les fonctionalités jusqu'à ce que les tests passent.
+Nous allons écrire des tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premier puis en définissant les fonctionnalités jusqu'à ce que les tests passent.
 
 Les tests unitaires sont regroupés dans une étiquette (tag) ==TinyBlog-Tests== qui contient la classe ==TBBlogTest== (voir menu item "Add Tag..."). Un tag est juste une étiquette qui permet de trier et grouper les classes à l'intérieur d'un package. Nous utilisons un tag ici pour ne pas avoir à gérer deux packages différents mais dans un projet réel vous définirions un package séparé pour les tests.
 
@@ -127,7 +127,7 @@ TBBlog >> size
 
 Le test précédent doit maintenant passer.
 
-Ecrivons d'autres tests pour couvrir les fonctionalités que nous venons de développer. 
+Ecrivons d'autres tests pour couvrir les fonctionnalités que nous venons de développer. 
 
 [[[
 TBBlogTest >> testSize
