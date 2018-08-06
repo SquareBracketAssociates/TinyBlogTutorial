@@ -43,12 +43,61 @@ En inspectant l'objet blog retourné par ==TBBlog current==, vérifier qu'il con
 Dans le futur, lorsque nous gérerons les utilisateurs et le fait qu'un utilisateur puisse avoir plusieurs blogs nous modifierons cette méthode pour utiliser des informations stockées dans la session active (Voir ==TBSession== dans le chapitre suivant).
 
 
-!!!!Pattern de définition  de composants
+[[[
+TBApplicationRootComponent >> renderContentOn: html
+   ^ TBBlog current
+]]]
+
+!!!Utilisation du composant Screen
+
+Bien que le composant ==TBScreenComponent== n'ait pas vocation à être utilisé directement, nous allons l'utiliser de manière temporaire pendant que nous développons les autres composants. 
+Nous ajoutons la variable d'instance ==main== dans la classe ==TBApplicationRootComponent==. Nous l'initialisons dans la méthode ==initialize== suivante et redéfinissons la méthode ==childre==. Nous obtenons la situation décrite par la figure *@compt1*.
+
+[[[
+WAComponent subclass: #TBApplicationRootComponent
+	instanceVariableNames: 'main'
+	classVariableNames: ''
+	package: 'TinyBlog-Components'
+]]]
+
++Le composant ==ApplicationRootComponent== utilise de manière temporaire le composant ==ScreenComponent== qui a un ==HeaderComponent==.>file://figures/ComponentRelationship1.pdf|width=75|label=compt1+
+
+[[[
+TBApplicationRootComponent >> initialize
+   super initialize.
+   main := TBScreenComponent new
+]]]
+
+
+[[[
+TBApplicationRootComponent >> renderContentOn: html
+   html render: main
+]]]
+
+Nous déclarons aussi la relation de contenu en retournant main parmi les enfants de ==TBApplicationRootComponent==.
+[[[
+TBApplicationRootComponent >> children
+   ^ { main }
+]]]
+
+Si vous rafraichissez votre browser, vous n'allez pas voir de changements car la classe ==TBScreenComponent== n'affiche rien. 
+
+Définissez la méthode ==renderContentOn:== comme suit et vous allez voir que ce composant est actif. 
+
+[[[
+TBScreenComponent >> renderContentOn: html
+   html text: 'Hello from TBScreenComponent'
+]]]
+
+
+
+!!!Pattern de définition  de composants
 
 Nous allons souvent utiliser la même façon de procéder:
 - Nous définissons d'abord la classe et le comportement d'un nouveau composant .
 - Puis nous allons y faire référence depuis la classe qui utilisera ce composant pour satisfaire les contraintes de Seaside.
 - En particulier nous exprimons la relation entre un composant et un sous composant en redéfinissant la méthode ==children==.
+
 
 !!!Définition du composant TBHeaderComponent
 
@@ -99,7 +148,7 @@ Créons une méthode ==initialize== dans le protocole 'initialize-release':
 [[[
 TBScreenComponent >> initialize
    super initialize.
-   header := TBHeaderComponent new.
+   header := TBHeaderComponent new
 ]]]
 
 
@@ -119,34 +168,8 @@ TBScreenComponent >> renderContentOn: html
    html render: header
 ]]]
 
-
-!!!Utilisation du composant Screen
-
-Bien que le composant ==TBScreenComponent== n'ait pas vocation à être utilisé directement, nous allons l'utiliser de manière temporaire pendant que nous développons les autres composants. 
-Nous ajoutons la variable d'instance ==main== dans la classe ==TBApplicationRootComponent==. Nous l'initialisons dans la méthode ==initialize== suivante. Nous obtenons la situation décrite par la figure *@compt1*.
-
-+Le composant ==ApplicationRootComponent== utilise de manière temporaire le composant ==ScreenComponent== qui a un ==HeaderComponent==.>file://figures/ComponentRelationship1.pdf|width=75|label=compt1+
-
-
-[[[
-TBApplicationRootComponent >> initialize
-   super initialize.
-   main := TBScreenComponent new. 
-]]]
-
-
-[[[
-TBApplicationRootComponent >> renderContentOn: html
-   html render: main
-]]]
-
-Nous déclarons aussi la relation de contenu en retournant main parmi les enfants de ==TBApplicationRootComponent==.
-[[[
-TBApplicationRootComponent >> children
-   ^ { main }
-]]]
-
 Si vous faites un rafraichissement de l'application dans votre navigateur web vous devez voir la Figure *@navBlog*.
+
 
 !!!!Amélioration possibles
 
@@ -307,7 +330,7 @@ Rafraichissez la page et vous devez obtenir la Figure *@container*.
 
 !!! Relation composite composants
 
-Alors que la solution fonctionne, Seaside nécessite que les enfants (ici ==TBPostComponent==) d'un composite (ici ==TBPostsListComponent==) soient accessibles via la méthode ==children==. Nous allons donc transformer la solution précédente pour suivre le framework.
+Alors que la solution fonctionne, Seaside nécessite que les enfants (ici ==TBPostComponent==) d'un composite (ici ==TBPostsListComponent==) soient accessibles via la méthode ==super children , ==. Nous allons donc transformer la solution précédente pour suivre le framework.
 
 Nous ajoutons une variable d'instance ==postComponents==.
 
@@ -335,7 +358,7 @@ TBPostsListComponent >> postComponents
 
 [[[
 TBPostsListComponent >> children 
-	^ self postComponents
+	^ self postComponents, super children
 ]]]
 
 Et nous redéfinissons la méthode ==renderContentOn:== pour utiliser les méthodes définies avant.
@@ -495,10 +518,21 @@ Nous définissons une méthode créant le composant catégorie
 
 [[[
 TBPostsListComponent >> categoriesComponent
-	^ (TBCategoriesComponent
+	^ TBCategoriesComponent
            categories: self blog allCategories
-            postsList: self).
+            postsList: self
 ]]]
+
+LUC: mais ici on cree plein de composant pour rien?
+cela serait mieux de mettre cela dans une variable d'instance. 
+
+Nous devons redéfinir la method ==children== pour que le composant des catégories soit au rendu par la méthode ==children==.
+
+[[[
+TBPostsListComponent >> children 
+	^ (self postComponents, super children) add: self categoriesComponent
+]]]
+
 
 Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des bulletins :
 

@@ -1,5 +1,7 @@
 !! Charger le code des chapitres
 
+Ce chapitre contient les expressions pour charger le code de chacuns des chapitres afin de vous permettre de ne pas être bloqués.
+
 !!! Chapitre : Modèle 
 Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant :
 
@@ -14,8 +16,6 @@ Metacello new
 Vous pouvez ouvrir un browser de code sur la classe ==TBPost==.
 Maintenant que vous avez la correction, vous pouvez compléter le code de votre application TinyBlog si nécessaire.
 
-%% full code at: 9c87f4b8abb956469e145d2ba8afeba8b66159d2
-
 !!! Chapitre : Extension du modèle et tests unitaires
 
 Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
@@ -28,46 +28,15 @@ Metacello new
     load
 ]]]
 
-
-
 Après le chargement d'un package, il est recommandé d'exécuter les tests unitaires qu'il contient afin de vérifier le bon fonctionnement du code chargé.
 Pour cela, vous pouvez lancer l'outil TestRunner (World menu > Test Runner), chercher le package TinyBlog-Tests et lancer tous les tests unitaires de la classe ==TBBlogTest== en cliquant sur le bouton "Run Selected". Tous les tests doivent être verts. Une alternative est de presser l'icone verte qui se situe à coté de la class ==TBBlogTest==. 
 
 Ouvrez maintenant un browser de code pour regarder le code des classes ==TBBlog== et ==TBBlogTest== et compléter votre propre code si nécessaire.
 Avant de poursuivre, n'oubliez pas de committer une nouvelle version dans votre dépôt sur Smalltalkhub ou SS3 si vous avez modifié votre application. 
 
-%% full code at: 35785aaaf1284f1a472980f07522fc7d0d4743e6
 
 !!! Chapitre : Persistance des données de TinyBlog avec Voyage et Mongo
 
-%% full code cbd5b53135ec2404f791c1aba497c5ce9d1eb661
-Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
-
-[[[
-Metacello new
-    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #week4solution;
-    configuration: 'TinyBlog';
-    load
-]]]
-
-Pour tester le code, vous devez lancer le serveur HTTP pour Seaside  avec l'outil Seaside Control Panel (cf. sujet semaine précédente) ou avec le code suivant :
-
-[[[
-ZnZincServerAdaptor startOn: 8080.
-]]]
-
-Vous devrez également faire :
-
-[[[
-TBBlog reset ;
-    createDemoPosts
-]]]
-
-
-!!! Chapitre : Construction d'une interface Web en Seaside pour TinyBlog
-
-%full code 5d9935e0712e8cb9a78bc96c82143ef888496e3e
 Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
 
 [[[
@@ -78,26 +47,69 @@ Metacello new
     load
 ]]]
 
-Puis, testez le code en exécutant:
+Exécutez les tests.
+
+!!! Chapitre : Commencer avec Seaside
+
+
+Vous pouvez charger la correction de la semaine précédente en exécutant le code suivant:
 
 [[[
-	TBTeapotWebApp start
+Metacello new
+    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+    version: #week4solution;
+    configuration: 'TinyBlog';
+    load
 ]]]
 
-Attention, vérifiez d'abord que votre propre serveur HTTP ne soit pas déjà lancé sur le même port . Si c'est le cas, arrêtez votre application ou changez son port. 
-
-Vous devez ajouter des posts dans le blog pour voir quelquechose. 
+Pour tester le code, vous devez lancer le serveur HTTP pour Seaside:
 
 [[[
-	TBBlog reset ; createDemoPosts
+ZnZincServerAdaptor startOn: 8080.
 ]]]
 
-Avant de passer à la suite, stoppez votre serveur Teapot:
+Ouvrez votre browser sur ==http://localhost:8080/TinyBlog==
+
+
+!!! Chapitre : Des composants web pour TinyBlog
+
+Vous pouvez charger l'application complète TinyBlog en exécutant :
 
 [[[
-	TBTeapotWebApp stop
+Metacello new
+    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+    version: #week5solution;
+    configuration: 'TinyBlog';
+    load
 ]]]
 
+Pour tester le code, vous devez lancer le serveur HTTP pour Seaside:
+
+[[[
+ZnZincServerAdaptor startOn: 8080.
+]]]
+
+Si vous avez besoin de créer quelques posts initiaux:
+
+[[[
+TBBlog reset ; createDemoPosts
+]]]
+
+Stef: J'en suis ici!
+
+
+!!! Chapitre : Authentification
+
+
+Vous pouvez charger l'application complète TinyBlog en exécutant :
+
+[[[
+Metacello new
+    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+    version: #week6solution;
+    configuration: 'TinyBlog';
+    load
+]]]
 
 
 
@@ -110,6 +122,7 @@ Vous pouvez charger l'application complète TinyBlog en exécutant :
 [[[
 Metacello new
     smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+    version: #week6solution;
     configuration: 'TinyBlog';
     load
 ]]]

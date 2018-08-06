@@ -102,7 +102,7 @@ Ajoutons maintenant des informations dans l'entête de la page HTML afin que Tin
 TBApplicationRootComponent >> updateRoot: anHtmlRoot
    super updateRoot: anHtmlRoot.
    anHtmlRoot beHtml5.
-   anHtmlRoot title: 'TinyBlog'.
+   anHtmlRoot title: 'TinyBlog'
 ]]]
 
 
@@ -128,7 +128,7 @@ de l'application, nous décrivons son architecture dans la figure *@ApplicationA
 
 +Architecture de TinyBlog.>file://figures/ApplicationArchitecture.pdf|width=75|label=ApplicationArchitecture+
 
-- ==ApplicationRootComponent==. le composant ==TBApplicationRootComponent== contiendra des composants héritant tous de la classe abstraite ==ScreenComponent== que nous allons définir dans le prochain chapitre. 
+- ==ApplicationRootComponent== est le point d'entrée pour le serveur d'application. Ce composant contient des composants héritant tous de la classe abstraite ==ScreenComponent== que nous allons définir dans le prochain chapitre. 
 
 - ==ScreenComponent== est la racine d'héritage des composants utilisateurs ou admin. Il est composé d'un header et aussi est conceptuellemment en contact avec l'authentification. 
 
