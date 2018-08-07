@@ -4,7 +4,7 @@ Dans ce chapitre, commençons par définir une interface publique permettant d'a
 
 Si vous avez le sentiment d'être un peu perdu, la figure *@AssociationArchitectureUser* vous montre les composants sur lesquels nous allons travailler dans ce chapitre. 
 
-+L'architecture des composants Users.>file://figures/ApplicationArchitectureUser.pdf|width=75|label=AssociationArchitectureUser+
++L'architecture des composants utilisateurs (par opposition à administration).>file://figures/ApplicationArchitectureUser.pdf|width=75|label=AssociationArchitectureUser+
 
 Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
 Les instructions pour charger le code des chapitres précédents sont disponibles dans le dernier chapitre.
@@ -77,13 +77,13 @@ TBApplicationRootComponent >> renderContentOn: html
    html render: main
 ]]]
 
-Nous déclarons aussi la relation de contenu en retournant main parmi les enfants de ==TBApplicationRootComponent==.
+Nous déclarons aussi la relation de contenu en retournant le composant référencé par la variable ==main= parmi les enfants de ==TBApplicationRootComponent==.
 [[[
 TBApplicationRootComponent >> children
    ^ { main }
 ]]]
 
-Si vous rafraichissez votre browser, vous allez voir l'affichage produit par le sous-composant ==TBScreenComponent==. 
+Si vous rafraichissez votre browser, vous allez voir l'affichage produit par le sous-composant ==TBScreenComponent== avec le simple text ==Hello from TBScreenComponent==.
 
 !!!Pattern de définition  de composants
 
@@ -171,7 +171,7 @@ Si vous faites un rafraichissement de l'application dans votre navigateur web vo
 
 !!!Liste des posts
 
-Créons un composant ==TBPostsListComponent== pour afficher la liste des posts - ce qui reste d'ailleurs le but d'un blog. Ce composant constitue la partie publique du blog offerte aux lecteurs du blog. 
+Créons un composant ==TBPostsListComponent== pour afficher la liste des bulletins (posts) - ce qui reste d'ailleurs le but d'un blog. Ce composant constitue la partie publique du blog offerte aux lecteurs du blog. 
 Pour cela, définissons une sous-classe de ==TBScreenComponent==:
 
 [[[
@@ -187,7 +187,7 @@ Nous pouvons maintenant modifier le composant principal de l'application (==TBAp
 [[[
 TBApplicationRootComponent >> initialize
    super initialize.
-   main := TBPostsListComponent new. 
+   main := TBPostsListComponent new 
 ]]]
 
 Si vous rafraichissez la page de TinyBlog dans votre navigateur, vous devriez obtenir la même chose que sur la figure *@elementary*.
@@ -213,7 +213,6 @@ TBPostsListComponent >> renderContentOn: html
 
 +Le composant ==ApplicationRootComponent== utilise le composant ==PostsListComponent==.>file://figures/ComponentRelationship2.pdf|width=75|label=compt2+
 
-+TinyBlog avec une liste de bulletins plutot élémentaire.>file://figures/ElementaryListPost.png|width=65|label=elementary+
 
 
 !!!Le composant Post
@@ -234,7 +233,7 @@ WAComponent subclass: #TBPostComponent
 [[[
 TBPostComponent >> initialize
       super initialize.
-      post := TBPost new.
+      post := TBPost new
 ]]]
 
 [[[      
@@ -275,10 +274,14 @@ TBPostComponent >> renderContentOn: html
 
 !!!Afficher les bulletins (posts)
 
-Nous pouvons maintenant afficher les bulletins présents dans la base. N'oubliez pas de re-créer des bulletins de démonstration si vous avez re-chargé le code récemment :
-
+Nous pouvons maintenant afficher les bulletins présents dans la base. Vérifiez que votre blog a quelques bulletins : 
 [[[
-	TBBlog createDemoPosts 
+TBBlog current allBlogPosts size
+]]]
+
+Si il n'en contient aucun, recréez en : 
+[[[
+TBBlog createDemoPosts 
 ]]]
 
 Il ne reste plus qu'à modifier la méthode ==renderContentOn:== de la classe ==TBPostsListComponent== pour afficher l'ensemble des bulletins visibles présents dans la base.
@@ -290,7 +293,7 @@ TBPostsListComponent >> renderContentOn: html
       html render: (TBPostComponent new post: p) ]
 ]]]
 
-Rafraichissez la page de votre navigateur et vous obtiendrez une page d'erreur.
+Rafraichissez la page de votre navigateur et vous devez obtenir une page d'erreur.
 
 !!!Débugger les erreurs
 
@@ -309,7 +312,7 @@ TBPostComponent >> post: aPost
    post := aPost
 ]]]
 
-Vous pouvez ajouter cette méthode dans le debugger avec le bouton ==Create==. Quand c'est fait, appuyez sur le bouton ==Proceed==. La page de votre navigateur doit maintenant montrer la même chose que la Figure *@better*.
+Vous pouvez ajouter cette méthode dans le debugger avec le bouton ==Create==. Quand c'est fait, appuyez sur le bouton ==Proceed==. La page de votre navigateur doit maintenant montrer la même chose que la figure *@better*.
 
 +TinyBlog avec une liste de posts.>file://figures/betterListPosts.png|width=75|label=better+
 
