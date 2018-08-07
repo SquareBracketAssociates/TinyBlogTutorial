@@ -314,7 +314,7 @@ TBPostComponent >> post: aPost
 
 Vous pouvez ajouter cette méthode dans le debugger avec le bouton ==Create==. Quand c'est fait, appuyez sur le bouton ==Proceed==. La page de votre navigateur doit maintenant montrer la même chose que la figure *@better*.
 
-+TinyBlog avec une liste de posts.>file://figures/betterListPosts.png|width=75|label=better+
++TinyBlog avec une liste de posts sans amélioration visuelle.>file://figures/betterListPosts.png|width=65|label=better+
 
 
 !!!Affichage de la liste des posts avec Bootstrap
@@ -330,7 +330,7 @@ TBPostsListComponent >> renderContentOn: html
 ]]]
 
 Rafraichissez la page et vous devez obtenir la figure *@container*.
-+TinyBlog avec une liste de posts élémentaire.>file://figures/ContainerList.png|width=75|label=container+
++TinyBlog avec une liste de posts.>file://figures/ContainerList.png|width=65|label=container+
 
 
 @@todo Luc, non ce n'est pas nécessaire si l'on ré-instancie dans renderContentOn: à chaque fois - luc j'ai pris en compte ta remarque.
@@ -345,7 +345,7 @@ Si nous avions du le faire, nous aurions ajouter et initializer une variable d'i
 [[[
 TBPostsListComponent >> initialize
 	super initialize.
-	postComponents := OrderedCollection new.
+	postComponents := OrderedCollection new
 ]]]
 
 Nous aurions ajouter la méthode ==postComponents== calculant les composants pour les bulletins. 
@@ -373,10 +373,9 @@ TBPostsListComponent >> renderContentOn: html
 
 Nous ne le faisons par car cela complique le code. 
 
-!!!Affichage des posts par catégorie
+!!!Affichage des bulletins par catégorie
 
-Les posts sont classés par catégorie. Par défaut, si aucune catégorie n'a été précisée, ils sont rangés dans une catégorie spéciale dénommée "Unclassified".
-
+Les bulletins sont classés par catégorie. Par défaut, si aucune catégorie n'a été précisée, ils sont rangés dans une catégorie spéciale dénommée "Unclassified".
 Nous allons créer un composant pour gérer une liste de catégories nommée: ==TBCategoriesComponent==.
 
 !!!!Definition d'un composant pour les catégories
