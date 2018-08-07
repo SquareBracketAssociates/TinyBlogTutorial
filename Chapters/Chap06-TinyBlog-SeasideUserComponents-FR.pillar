@@ -521,6 +521,9 @@ Une instance du composant ==TBCategoriesComponent== est ajoutée sur la page et 
 
 +Catégories afin de sélectionner les posts.>file://figures/categoriesUgly.png|width=75|label=ugly+
 
+!!!! Améliorations possibles
+
+Mettre en dur le nom des classes et la logique de création des catégories et des bulletins n'est pas optimale. Proposer quelques méthodes pour réaliser cela.
 
 !!!Look et agencement
 
@@ -528,26 +531,31 @@ Nous allons maintenant agencer le composant ==TBPostsListComponent== en utilisan
 
 Les composants sont placés dans un container Bootstrap puis agencés sur une ligne avec deux colonnes. La dimension des colonnes est déterminée en fonction de la résolution (viewport) du terminal utilisé. Les 12 colonnes de Bootstrap sont réparties entre la liste des catégories et la liste des posts. Dans le cas d'une résolution faible, la liste des catégories est placée au dessus de la liste des posts (chaque élément occupant 100\% de la largeur du container).
 
+
 [[[
 TBPostsListComponent >> renderContentOn: html
-
-	super renderContentOn: html.
-	html
-		tbsContainer: [ html tbsRow
-				showGrid;
-				with: [ html tbsColumn
-						extraSmallSize: 12;
-						smallSize: 2;
-						mediumSize: 4;
-						with: [ html render: self categoriesComponent ].
-					html tbsColumn
-						extraSmallSize: 12;
-						smallSize: 10;
-						mediumSize: 8;
-						with: [ self postComponents do: [ :p | html render: p ] ] ] ]
+   super renderContentOn: html.
+   html tbsContainer: [
+      html tbsRow showGrid;
+         with: [
+            html tbsColumn
+               extraSmallSize: 12;
+               smallSize: 2;
+               mediumSize:  4;
+               with: [
+                  html render: (TBCategoriesComponent
+                    categories: (self blog allCategories)
+                    postsList: self) ].
+      html tbsColumn
+               extraSmallSize: 12;
+               smallSize: 10;
+               mediumSize: 8;
+               with: [
+         self readSelectedPosts do: [ :p |
+             html render: (TBPostComponent new post: p) ] ] ] ]
 ]]]
 
-Vous devez obtenir une application proche de celle représentée figure *@nicer5*.
+Vous devez obtenir une application proche de celle représentée par la figure *@nicer5*.
 
 +Avec un meilleur agencement.>file://figures/NicerCategories.png|width=75|label=nicer5+
 
@@ -565,8 +573,58 @@ TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
 
 Bien que le code fonctionne, on ne doit pas laisser la méthode ==TBPostsListComponent >> renderContentOn: html== dans un tel état. Elle est bien trop longue et difficilement réutilisable. Proposer une solution. 
 
-!!!Notre solution: Plein de petites méthodes
-Nous allons découper la méthode en plusieurs petites méthodes. 
+
+!!!Des petites méthodes
+
+Pour permettre une meilleure lecture et réutilisation future, nous commençons par définir les méthodes de création des composants 
+
+[[[
+TBPostsListComponent >> categoriesComponent
+	^ TBCategoriesComponent 
+			categories: self blog allCategories 
+			postsList: self
+]]]
+
+[[[
+TBPostsListComponent >> postComponentFor: aPost
+	^ TBPostComponent new post: aPost
+]]]
+
+[[[
+TBPostsListComponent >> renderContentOn: html
+	super renderContentOn: html.
+	html
+		tbsContainer: [ html tbsRow
+				showGrid;
+				with: [ 
+					html tbsColumn
+						extraSmallSize: 12;
+						smallSize: 2;
+						mediumSize: 4;
+						with: [ html render: self categoriesComponent ].
+					html tbsColumn
+						extraSmallSize: 12;
+						smallSize: 10;
+						mediumSize: 8;
+						with: [ self readSelectedPosts
+								do: [ :p | html render: (self postComponentFor: p) ] ] ] ]
+]]]
+
+!!!Notre solution: Encore de petites méthodes
+Nous continuons à découper la méthode en plusieurs petites méthodes. 
+Nous créons des méthodes pour les traitements élémentaires. 
+[[[
+TBPostsListComponent >> basicRenderCategoriesOn: html
+   html render: self categoriesComponent 
+]]]
+
+[[[
+TBPostsListComponent >> basicRenderPostsOn: html
+	self readSelectedPosts do: [ :p | html render: (self postComponentFor: p) ]
+]]]
+
+
+Puis nous utilisons ces traitements.
 
 [[[
 TBPostsListComponent >> renderContentOn: html
@@ -579,6 +637,7 @@ TBPostsListComponent >> renderContentOn: html
                   self renderPostColumnOn: html ] ]
 ]]]
 
+
 [[[
 TBPostsListComponent >> renderCategoryColumnOn: html
    html tbsColumn
@@ -588,10 +647,6 @@ TBPostsListComponent >> renderCategoryColumnOn: html
       with: [ self basicRenderCategoriesOn: html ]
 ]]]
 
-[[[
-TBPostsListComponent >> basicRenderCategoriesOn: html
-   html render: self categoriesComponent 
-]]]
 
 [[[
 TBPostsListComponent >> renderPostColumnOn: html
@@ -602,10 +657,7 @@ TBPostsListComponent >> renderPostColumnOn: html
          with: [ self basicRenderPostsOn: html ] 
 ]]]
 
-[[[
-TBPostsListComponent >> basicRenderPostsOn: html
-   self postComponents do: [ :p | html render: p ]
-]]]
+
 
 Nous voici prêts à définir la partie administrative de l'application.
 
