@@ -1,58 +1,81 @@
 !! Authentification et Session 
 
- Nous allons tout d'abord définir un composant d'identification : cette définition de composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances d'un composant ainsi que l'invocation de composants.
+Le scénario assez classique que nous allons développer dans ce chapitre est le suivant : l'utilisateur doit s'authentifier pour accéder à la partie administration de TinyBlog. Il le fait à l'aide d'un compte et d'un mot de passe. 
 
-%  Avant cela, il faut enrichir notre modèle de Tinyblog avec la notion d'auteur.
-%  Le ou les auteur(s) associés à un blog pourront s'identifier pour administrer les posts.
-%
-% !!!Le modèle des Auteurs
-%
-%  Le blog possède des auteurs qui peuvent écrire des posts. Un post n'a qu'un seul auteur (son créateur) même si tous les auteurs peuvent ensuite accéder et modifier n'importe quel post.
-%
-%  Ajouter maintenant une classe nommée ==TBAuthor== sachant qu'un auteur est caractérisé par son pseudo (affiché publiquement dans le post), son login et son mot de passe.
-%
-%  De même que pour les posts, ajoutez des accesseurs et des méthodes de création côté classe.
-%  Nous souhaitons pouvoir écrire dans un playground :
-%
-%  [[[
-%  	luc := TBAuthor pseudo: 'Luke' login: 'luc' password: 'topsecret'
-%  ]]]
-%
-%  Ajouter un champs ==author== dans la classe ==TBPost== ainsi que des accesseurs.
-%  Dans un playground, on souhaite pouvoir écrire :
-%
-%  [[[
-%  	|luc|
-%  	luc := TBAuthor pseudo: 'Luke' login: 'luc' password: 'topsecret'.
-%  	(TBPost
-%  		title: 'Welcome in TinyBlog'
-%  		text: 'TinyBlog is a small blog engine made with Pharo.'
-%  		category: 'TinyBlog')
-%  		author: luc ;
-%  		yourself
-%  ]]]
-%
-%  Dans la classe ==TBBlog==, ajouter une accesseur permettant de récupérer l'ensemble des auteurs du
-%
-% @todo : to finish 
+Dans la suite, nous commencerons donc par définir un composant d'identification.
+Cela va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances d'un composant ainsi que l'invocation de composants. 
+Nous intègrerons ce composant d'identification dans la partie publique de TinyBlog rendue par le composant ==TBPostsListComponent==. Enfin, nous montrerons aussi comment utiliser stocker l'utilisateur connecté en session.
 
-!!!Administration de TinyBlog
 
-Nous allons aborder maintenant l'administration de TinyBlog. Cet exercice va nous permettre de montrer comment utiliser des informations de session ainsi que Magritte pour la définition de rapports.
+!!! Composant d'administration simple
 
-Le scénario assez classique que nous allons développer est le suivant : l'utilisateur doit s'authentifier pour accéder à la partie administration de TinyBlog. Il le fait à l'aide d'un compte et d'un mot de passe. Le lien permettant d'afficher le composant d'authentification sera placé sous la liste des catégories.
+Définissons un composant d'administration très simple.
+
+[[[
+TBScreenComponent subclass: #TBAdminComponent
+   instanceVariableNames: ''
+   classVariableNames: ''
+   package: 'TinyBlog-Components'
+]]]
+
+Nous définissons une première version de la méthode de rendu afin de pourvoir tester.
+
+[[[
+TBAdminComponent >> renderContentOn: html
+   super renderContentOn: html.
+   html tbsContainer: [
+      html heading: 'Blog Admin'.
+      html horizontalRule ]
+]]]
+
+!!! Intégration du composant d'administration simple
+
+
+C'est depuis le composant ==TBPostsListComponent== (partie publique de TinyBlog) que nous donnerons accès à la partie administration via un lien placé sous la liste des catégories. Pour cela, modifions la méthode ==renderCategoryColumnOn:== de ce composant ainsi: 
+
+[[[
+TBPostsListComponent >> renderCategoryColumnOn: html
+   html tbsColumn
+      extraSmallSize: 12;
+      smallSize: 2;
+      mediumSize: 4;
+      with: [
+         self basicRenderCategoriesOn: html.
+         self renderSignInOn: html ]
+]]]
+
+On définit également une méthode qui affiche un lien permettant d'accéder à la partie administration du site.
+Lorsque l'utilisateur clique sur ce lien, la méthode ==gotoToAdministration== est exécutée. 
+La méthode ==call:== de Seaside permet de remplacer le composant courant ==TBPostsListComponent== par une instance du composant ==TBAdminComponent== et ainsi voir la partie administration. Vous remarquerez que cette première solution est très simple et sans authentification.
+
+[[[
+TBPostsListComponent >> renderSignInOn: html
+   html anchor 
+		callback: [ self gotoToAdministration ];
+		with: 'admin'
+]]]
+
+
+[[[
+TBPostsListComponent >> gotoToAdministration
+	self call: TBAdminComponent new
+]]]	
+
++Lien simple vers la partie administration.>file://figures/SimpleAdminLink.png|width=100|label=SimpleAdminLink+
+
+En rechargeant la page de TinyBlog dans votre navigateur, nous voyons maintenant un lien 'admin'et lorsque l'on clique dessus, nous voyons bien la partie administration comme sur la figure *@SimpleAdminLink*.
+
+Modifions maintenant ce premier résultat pour ajouter l'authentification.
 
 !!! Composant d'identification
 
-Nous allons commencer par développer un composant d'identification qui lorsqu'il sera invoqué ouvrira une boite de dialogue pour demander les informations d'identification. Le résultat que nous voulons obtenir est montré dans la figure *@authentification*. Remarquer qu'une telle fonctionnalité devrait faire partie d'une bibliothèque de composants de base en Seaside. Le projet Heimdal disponible sur *http://www.github.com/DuneSt/* offre cette fonctionnalité.
+Commençons par développer un composant d'identification qui lorsqu'il sera invoqué ouvrira une boite de dialogue pour demander un login et un mot de passe. Le résultat que nous voulons obtenir est montré sur la figure *@authentification*. Une telle fonctionnalité devrait faire partie d'une bibliothèque de composants de base en Seaside. Le projet Heimdal disponible sur *http://www.github.com/DuneSt/* offre cette fonctionnalité.
 
-+Authentification avec un meilleur agencement.>file://figures/Authentification.png|width=75|label=authentification+
-
-Ce composant va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances du composant.
++Aperçu du composant d'identification.>file://figures/Authentification.png|width=75|label=authentification+
 
 !!!! Définition du composant
-Nous définissons une nouvelle classe comme sousclasses de la classe ==WAComponent== et des accesseurs.
-Ce composant contient un compte d'administration, le mot de passe associé ainsi que le composant a invoqué pour accéder à l'administration.
+
+Nous définissons une nouvelle sous-classe de la classe ==WAComponent== et des accesseurs. Ce composant contient un login, un mot de passe ainsi que le composant qui l'a invoqué pour accéder à la partie administration.
 
 [[[
 WAComponent subclass: #TBAuthentificationComponent
@@ -91,7 +114,7 @@ TBAuthentificationComponent >> component: anObject
    component := anObject
 ]]]
 
-La variable d'instance ==component== est initialisée par la méthode de classe suivante :
+La variable d'instance ==component== sera initialisée par la méthode de classe suivante :
 
 [[[
 TBAuthentificationComponent class >> from: aComponent
@@ -101,9 +124,10 @@ TBAuthentificationComponent class >> from: aComponent
 ]]]
 
 
-!!!! Rendu du composant. 
-La méthode ==renderContentOn:== définit le contenu d'une boite de dialogue modale.
-Il est composé d'un header et d'un corps.
+!!!! Rendu du composant
+
+La méthode ==renderContentOn:== définit le contenu d'une boite de dialogue modale avec l'identifiant ==myAuthDialog==.
+Il est composé d'une en-tête et d'un corps.
 
 [[[
 TBAuthentificationComponent >> renderContentOn: html
@@ -116,7 +140,7 @@ TBAuthentificationComponent >> renderContentOn: html
                self renderBodyOn: html ] ] ]
 ]]]
 
-Le header affiche un titre avec de larges fontes. 
+L'en-tête affiche un titre avec de larges fontes. 
 
 [[[
 TBAuthentificationComponent >> renderHeaderOn: html
@@ -130,6 +154,7 @@ TBAuthentificationComponent >> renderHeaderOn: html
 
 Le corps du composant affiche une masque de saisie pour l'identifiant, le mot de passe
 et finalement des boutons.
+
 [[[
 TBAuthentificationComponent >> renderBodyOn: html
     html
@@ -141,7 +166,7 @@ TBAuthentificationComponent >> renderBodyOn: html
 ]]]
 
 
-La méthode ==renderAccountFieldOn:== montre comment la valeur d'un input field est passée puis stockeé dans une variable d'instance d'une instance du composant quand l'utilisateur confirme sa saisie. L'argument du ==callback:== est un block avec un argument et c'est cet argument qui représente la valeur du text input.
+La méthode ==renderAccountFieldOn:== montre comment la valeur d'un input field est passée puis stockée dans une variable d'instance du composant quand l'utilisateur confirme sa saisie. Le paramètre de la méthode ==callback:== est un bloc qui prends lui-même un argument représentant la valeur du text input.
 
 [[[
 TBAuthentificationComponent >> renderAccountFieldOn: html
@@ -178,29 +203,29 @@ TBAuthentificationComponent >> renderButtonsOn: html
       value: 'SignIn'
 ]]]
 
-
-
-Lorsque l'utilisateur clique sur le bouton 'SignIn', le message ==validate== est envoyé: il vérifie que l'utilisateur a bien le compte 'admin' et a saisi le mot de passe 'password'.
-
-[[[
-TBAuthentificationComponent >> validate
-   (self account = 'admin' and: [ self password = 'password' ])
-      ifTrue: [ self gotoAdministration ]
-]]]
+Lorsque l'utilisateur clique sur le bouton 'SignIn', le message ==validate== est envoyé.
+Dans la méthode ==validate==, si le compte utilisé est valide (==isValidAccount:andPassword:==), nous indiquons au composant principal d'afficher la partie administration en lui envoyant le message ==gotoAdministration==.
+Pour l'instant, notre méthode de validation de compte est simpliste puisque nous vérifions juste que le login est la chaîne 'admin' et le mot de passe 'password'.
 
 [[[
-TBAuthentificationComponent >> gotoAdministration
+TBAuthentificationComponent >> isValidAccount: login andPassword: passwd
+   ^ login = 'admin' and: [ passwd = 'password' ]
 	
+TBAuthentificationComponent >> validate
+   (self isValidAccount: self account andPassword: self password)	
+      ifTrue: [ component gotoAdministration ]		
 ]]]
 
-!!!!! Améliorations.
-Rechercher une autre méthode pour réaliser l'authentification de l'utilisateur (utilisation d'un backend de type base de données, LDAP ou fichier texte). En tout cas, ce n'est pas à la boite de login de faire ce travail, il faut le déléguer à un objet métier qui saura consulter le backend et authentifier l'utilisateur.
-
-De plus le composant ==TBAuthentificationComponent== pourrait afficher l'utilisateur lorsque celui-ci est logué.
+% !!!!! Améliorations
+% Rechercher une autre méthode pour réaliser l'authentification de l'utilisateur (utilisation d'un backend de type base de données, LDAP ou fichier texte). En tout cas, ce n'est pas à la boite de login de faire ce travail, il faut le déléguer à un objet métier qui saura consulter le backend et authentifier l'utilisateur.
+%
+% De plus le composant ==TBAuthentificationComponent== pourrait afficher l'utilisateur lorsque celui-ci est logué.
 
 !!!Intégration de l'authentification
 
-Il faut maintenant intégrer le lien qui déclenchera l'affichage de la boite modale d'authentification. Au tout début de la méthode ==renderContentOn:== du composant ==TBPostsListComponent==, on ajoute le rendu du composant d'authentification. Ce composant reçoit en paramètre la référence vers le composant affichant les posts. C'est depuis ce component (==TBPostsListComponent==) que nous donnerons acces à l'administration.
+C'est depuis le composant (==TBPostsListComponent==) que nous donnerons accès à la partie administration du site et au composant d'identification. Ce composant affiche une boîte modale, nous devons donc d'une part l'intégrer dans le composant ==TBPostsListComponent== mais également ajouter un lien qui déclenchera l'affichage de cette boîte modale c'est-à-dire le rendu du composant d'identification. 
+
+Modifions donc la méthode ==renderContentOn:== du composant ==TBPostsListComponent== ainsi: 
 
 [[[
 TBPostsListComponent >> renderContentOn: html
@@ -214,9 +239,8 @@ TBPostsListComponent >> renderContentOn: html
                   self renderPostColumnOn: html ] ]
 ]]]
 
-@@todo Why here we do not see the component. I do not get it 
-
- On définit maintenant une méthode qui affiche un pictogramme clé et un lien 'SignIn'.
+On définit également une méthode qui affiche un pictogramme clé et un lien 'SignIn'.
+Lorsque l'utilisateur cliquera sur ce lien, la boîte modale ayant l'identifiant ==myAuthDialog== sera affichée.
 
 [[[
 TBPostsListComponent >> renderSignInOn: html
@@ -224,21 +248,9 @@ TBPostsListComponent >> renderSignInOn: html
    html html: '<a data-toggle="modal" href="#myAuthDialog" class="link">SignIn</a>'
 ]]]
 
-Nous ajoutons le composant d'authentification dessous la liste de categories.
-[[[
-TBPostsListComponent >> renderCategoryColumnOn: html
-   html tbsColumn
-      extraSmallSize: 12;
-      smallSize: 2;
-      mediumSize: 4;
-      with: [
-           self basicRenderCategoriesOn: html.
-         self renderSignInOn: html ]
-]]]
+En rechargeant la page de TinyBlog dans votre navigateur, nous voyons maintenant le lien 'SignIn' et lorsque l'on clique dessus, nous obtenons bien le rendu sur la figure *@authentification*.
 
-
-Lorsque nous pressons sur le lien SignIn nous obtenons la figure *@authentification*.
-
+@todo Luc here
 
 !!!Gestion de session
 
@@ -331,5 +343,42 @@ TBApplicationRootComponent class >> initialize
 ]]]
 
 Pensez à exécuter cette méthode via ==TBApplicationRootComponent initialize== avant de tester à nouveau l'application.
+
+
+
+
+%  Avant cela, il faut enrichir notre modèle de Tinyblog avec la notion d'auteur.
+%  Le ou les auteur(s) associés à un blog pourront s'identifier pour administrer les posts.
+%
+% !!!Le modèle des Auteurs
+%
+%  Le blog possède des auteurs qui peuvent écrire des posts. Un post n'a qu'un seul auteur (son créateur) même si tous les auteurs peuvent ensuite accéder et modifier n'importe quel post.
+%
+%  Ajouter maintenant une classe nommée ==TBAuthor== sachant qu'un auteur est caractérisé par son pseudo (affiché publiquement dans le post), son login et son mot de passe.
+%
+%  De même que pour les posts, ajoutez des accesseurs et des méthodes de création côté classe.
+%  Nous souhaitons pouvoir écrire dans un playground :
+%
+%  [[[
+%  	luc := TBAuthor pseudo: 'Luke' login: 'luc' password: 'topsecret'
+%  ]]]
+%
+%  Ajouter un champs ==author== dans la classe ==TBPost== ainsi que des accesseurs.
+%  Dans un playground, on souhaite pouvoir écrire :
+%
+%  [[[
+%  	|luc|
+%  	luc := TBAuthor pseudo: 'Luke' login: 'luc' password: 'topsecret'.
+%  	(TBPost
+%  		title: 'Welcome in TinyBlog'
+%  		text: 'TinyBlog is a small blog engine made with Pharo.'
+%  		category: 'TinyBlog')
+%  		author: luc ;
+%  		yourself
+%  ]]]
+%
+%  Dans la classe ==TBBlog==, ajouter une accesseur permettant de récupérer l'ensemble des auteurs du
+%
+% @todo : to finish 
 
 
