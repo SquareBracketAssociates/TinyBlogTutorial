@@ -77,7 +77,7 @@ TBApplicationRootComponent >> renderContentOn: html
    html render: main
 ]]]
 
-Nous déclarons aussi la relation de contenu en retournant le composant référencé par la variable ==main= parmi les enfants de ==TBApplicationRootComponent==.
+Nous déclarons aussi la relation de contenu en retournant le composant référencé par la variable ==main== parmi les enfants de ==TBApplicationRootComponent==.
 [[[
 TBApplicationRootComponent >> children
    ^ { main }
@@ -329,23 +329,18 @@ TBPostsListComponent >> renderContentOn: html
           html render: (TBPostComponent new post: p) ] ]
 ]]]
 
-Rafraichissez la page et vous devez obtenir la Figure *@container*.
+Rafraichissez la page et vous devez obtenir la figure *@container*.
 +TinyBlog avec une liste de posts élémentaire.>file://figures/ContainerList.png|width=75|label=container+
 
 
-@@todo Luc, non ce n'est pas nécessaire si l'on ré-instancie dans renderContentOn: à chaque fois
-!!! Relation composite composants
+@@todo Luc, non ce n'est pas nécessaire si l'on ré-instancie dans renderContentOn: à chaque fois - luc j'ai pris en compte ta remarque.
 
-Alors que la solution fonctionne, Seaside nécessite que les enfants (ici ==TBPostComponent==) d'un composite (ici ==TBPostsListComponent==) soient accessibles via la méthode ==super children , ==. Nous allons donc transformer la solution précédente pour suivre le framework.
+!!! Cas d'instanciation de composants dans renderContentOn:
+Nous avons dit que la méthode ==children== d'un composant devait retourner ses sous-composants.
+Ceci est vrai pour les composants qui ne sont pas instanciés systèmatiquement dans la méthode ==renderContentOn:== comme c'est le cas dans la méthode
+==renderContentOn:== de la classe ==TBPostsListComponent== ci-dessus.
 
-Nous ajoutons une variable d'instance ==postComponents==.
-
-[[[
-TBScreenComponent subclass: #TBPostsListComponent
-	instanceVariableNames: 'postComponents'
-	classVariableNames: ''
-	package: 'TinyBlog-Components'
-]]]
+Si nous avions du le faire, nous aurions ajouter et initializer une variable d'instance ==postComponents==.
 
 [[[
 TBPostsListComponent >> initialize
@@ -353,7 +348,7 @@ TBPostsListComponent >> initialize
 	postComponents := OrderedCollection new.
 ]]]
 
-La méthode ==postComponents== calcule et rend les composants pour les bulletins. 
+Nous aurions ajouter la méthode ==postComponents== calculant les composants pour les bulletins. 
 
 [[[
 TBPostsListComponent >> postComponents 
@@ -362,12 +357,12 @@ TBPostsListComponent >> postComponents
 	^ postComponents 
 ]]]
 
+Et nous aurions finalement modifié la méthode ==children== et ==renderContentOn:== 
 [[[
 TBPostsListComponent >> children 
 	^ self postComponents, super children
 ]]]
 
-Et nous redéfinissons la méthode ==renderContentOn:== pour utiliser les méthodes définies avant.
 [[[
 TBPostsListComponent >> renderContentOn: html
 	super renderContentOn: html.
@@ -376,7 +371,7 @@ TBPostsListComponent >> renderContentOn: html
 				html render: p ] ]
 ]]]
 
-
+Nous ne le faisons par car cela complique le code. 
 
 !!!Affichage des posts par catégorie
 
