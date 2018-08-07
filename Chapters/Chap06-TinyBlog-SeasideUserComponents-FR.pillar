@@ -380,7 +380,7 @@ Nous allons créer un composant pour gérer une liste de catégories nommée: ==
 
 !!!!Definition d'un composant pour les catégories
 
-Nous avons besoin d'un composant qui affiche la liste des catégories présentes dans la base et permet d'en sélectionner une. Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui communiquer la catégorie courante. La situation est décrite par la figure *@compt4*.
+Nous avons besoin d'un composant qui affiche la liste des catégories présentes dans la base et permet d'en sélectionner une. Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui demander la catégorie courante. La situation est décrite par la figure *@compt4*.
 
 Rappellez-vous qu'une categorie est simplement exprimée comme une chaine dans le modèle défini dans le Chapitre *@cha:model* et comme l'illustre le test suivant.
 
@@ -437,7 +437,7 @@ Nous avons donc besoin d'ajouter une variable d'instance pour stocker la catégo
 
 [[[
 TBScreenComponent subclass: #TBPostsListComponent
-   instanceVariableNames: 'currentCategory postComponents'
+   instanceVariableNames: 'currentCategory'
    classVariableNames: ''
    package: 'TinyBlog-Components'
 ]]]
@@ -469,7 +469,7 @@ catégorie couramment sélectionnée.
 
 !!! Rendu des catégories
 Nous pouvons maintenant ajouter une méthode (protocole 'rendering') pour afficher les catégories sur la page. En particulier pour chaque catégorie nous définissons le fait que cliquer sur la catégorie la sélectionne comme la catégorie courante.
-Nous utilisons un callback (message ==callback:==): l'argument d'un callback est un block Pharo et peut contenir n'importe quelle expression. Cela illustre la puissance de Seaside.
+Nous utilisons un callback (message ==callback:==) : l'argument d'un callback est un block Pharo et peut contenir n'importe quelle expression. Cela illustre la puissance de Seaside.
 
 [[[
 TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
@@ -478,7 +478,7 @@ TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
       with: aCategory
 ]]]
 
-Reste maintenant à écrire la méthode de rendu du composant: on itère sur toutes les catégories et on les affiche
+Reste maintenant à écrire la méthode de rendu du composant : on itère sur toutes les catégories et on les affiche
 
 [[[
 TBCategoriesComponent >> renderContentOn: html
@@ -489,7 +489,7 @@ TBCategoriesComponent >> renderContentOn: html
          self renderCategoryLinkOn: html with: cat ] ]
 ]]]
 
-Nous avons presque fini mais il faut encore afficher la liste des catégories et mettre à jour la liste des posts en fonction de la catégorie courante. 
+Nous avons presque fini mais il faut encore afficher la liste des catégories et mettre à jour la liste des bulletins en fonction de la catégorie courante. 
 
 !!!Mise à jour des Posts
 
@@ -504,45 +504,17 @@ TBPostsListComponent >> readSelectedPosts
       ifNotNil: [ self blog allVisibleBlogPostsFromCategory: self currentCategory ]
 ]]]
 
-Nous redéfinissons la méthode ==postComponents== pour utiliser la méthode ==readSelectedPosts==.
-
-[[[
-TBPostsListComponent >> postComponents
-	postComponents := self readSelectedPosts
-			collect: [ :each | TBPostComponent new post: each ].
-	^ postComponents 
-]]]
-
-
-Nous définissons une méthode créant le composant catégorie
-
-[[[
-TBPostsListComponent >> categoriesComponent
-	^ TBCategoriesComponent
-           categories: self blog allCategories
-            postsList: self
-]]]
-
-LUC: mais ici on cree plein de composant pour rien?
-cela serait mieux de mettre cela dans une variable d'instance. 
-
-Nous devons redéfinir la method ==children== pour que le composant des catégories soit au rendu par la méthode ==children==.
-
-[[[
-TBPostsListComponent >> children 
-	^ (self postComponents, super children) add: self categoriesComponent
-]]]
-
-
-Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des bulletins :
+Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des posts:
 
 [[[
 TBPostsListComponent >> renderContentOn: html
    super renderContentOn: html.
-   html render: self categoriesComponent
+   html render: (TBCategoriesComponent
+               categories: (self blog allCategories)
+               postsList: self).
    html tbsContainer: [ 
-		self postComponents do: [ :p |
-				html render: p ] ]
+      self readSelectedPosts do: [ :p |
+         html render: (TBPostComponent new post: p) ] ]
 ]]]
 
 Une instance du composant ==TBCategoriesComponent== est ajoutée sur la page et permet de sélectionner la catégorie courante (voir la figure *@ugly*).
