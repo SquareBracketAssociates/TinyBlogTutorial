@@ -4,12 +4,13 @@ Le scénario assez classique que nous allons développer dans ce chapitre est le
 
 Dans la suite, nous commencerons donc par définir un composant d'identification.
 Cela va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances d'un composant ainsi que l'invocation de composants. 
-Nous intègrerons ce composant d'identification dans la partie publique de TinyBlog rendue par le composant ==TBPostsListComponent==. Enfin, nous montrerons aussi comment utiliser stocker l'utilisateur connecté en session.
+Nous intègrerons ce composant d'identification dans la partie publique de TinyBlog rendue par le composant
+gérant la liste des bulletins (==TBPostsListComponent==). Enfin, nous montrerons aussi comment stocker l'utilisateur connecté à l'aide d'une session.
 
-
++Architecture de TinyBlog.>file://figures/ApplicationArchitecture.pdf|width=75|label=ApplicationArchitecture2+
 !!! Composant d'administration simple
 
-Définissons un composant d'administration très simple.
+Définissons un composant d'administration très simple. Ce composant hérite de la classe ==TBScreenComponent== comme mentionné dans un chapitre précédent et illustré dans la figure *@ApplicationArchitecture2*.
 
 [[[
 TBScreenComponent subclass: #TBAdminComponent

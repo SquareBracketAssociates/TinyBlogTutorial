@@ -1,6 +1,6 @@
 !! Des composants web pour TinyBlog
 
-Dans ce chapitre, commençons par définir une interface publique permettant d'afficher les posts du blog. Dans un prochain chapitre, nous développerons une interface d'administration pour le ou les auteurs du blog.
+Dans ce chapitre, commençons par définir une interface publique permettant d'afficher les bulletins (posts) du blog. Dans un prochain chapitre, nous développerons une interface d'administration pour le ou les auteurs du blog.
 
 Si vous avez le sentiment d'être un peu perdu, la figure *@AssociationArchitectureUser* vous montre les composants sur lesquels nous allons travailler dans ce chapitre. 
 
@@ -35,7 +35,11 @@ TBScreenComponent >> blog
    ^ TBBlog current
 ]]]
 
-En inspectant l'objet blog retourné par ==TBBlog current==, vérifier qu'il contient bien des bulletins (posts). Si ce n'est pas le cas, exécuter ==TBBlog createDemoPosts==.
+En inspectant l'objet blog retourné par ==TBBlog current==, vérifier qu'il contient bien des bulletins (posts). Si ce n'est pas le cas, exécuter :
+
+[[[
+	TBBlog createDemoPosts
+]]]
 
 Par la suite, si l'on souhaite étendre TinyBlog pour qu'un utilisateur puisse avoir plusieurs blogs, il suffira de modifier cette méthode pour utiliser des informations stockées dans la session active (Voir ==TBSession== dans le chapitre suivant).
 
@@ -368,7 +372,7 @@ TBPostsListComponent >> renderContentOn: html
 				html render: p ] ]
 ]]]
 
-Nous ne le faisons par car cela complique le code et n'apporte pas grand chose puisque les sous-composants sont tout de même instanciés à chaque rendu du composant ==TBPostsListComponent==.
+Nous ne le faisons pas car cela complique le code et n'apporte pas grand chose puisque les sous-composants sont tout de même instanciés à chaque rendu du composant ==TBPostsListComponent==.
 
 @todo je n'aime pas le code ci-dessus car on re-créé tous les sous-composants quand même 
 
