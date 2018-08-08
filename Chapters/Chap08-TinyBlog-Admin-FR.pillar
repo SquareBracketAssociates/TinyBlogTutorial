@@ -83,55 +83,6 @@ Nous pourrions enrichir les descriptions pour qu'il ne soit pas possible de post
 
 Nous allons développer deux composants. Le premier sera un rapport qui contiendra tous les posts et le second contiendra ce rapport. Le rapport étant généré par Magritte sous la forme d'un composant Seaside, nous aurions pu n'avoir qu'un seul composant. Toutefois, nous pensons que distinguer le composant d'administration du rapport est une bonne chose pour l'évolution de la partie administration. Commençons donc par le composant d'administration.
 
-!!!!Création d'un composant d'administration
-
-Le composant ==TBAdminComponent== hérite de ==TBScreenComponent== pour bénéficier du header et de l'accès au blog. Il contiendra en plus le rapport que nous construisons par la suite.
-
-[[[
-TBScreenComponent subclass: #TBAdminComponent
-   instanceVariableNames: ''
-   classVariableNames: ''
-   package: 'TinyBlog-Components'
-]]]
-
-Nous définissons une première version de la méthode de rendu afin de pourvoir tester.
-
-[[[
-TBAdminComponent >> renderContentOn: html
-   super renderContentOn: html.
-   html tbsContainer: [
-      html heading: 'Blog Admin'.
-      html horizontalRule ]
-]]]
-
-
-Nous modifions la méthode ==validate== pour qu'elle invoque la méthode ==gotoAdministration== définie dans le composant ==TBPostsListComponent==. Cette dernière méthode invoque le composant d'administration.
-
-[[[
-TBPostsListComponent >> gotoAdministration
-   self call: TBAdminComponent new
-]]]
-
-[[[
-TBAuthentificationComponent >> validate
-   (self account = 'admin' and: [ self password = 'password' ])
-      ifTrue: [ self component gotoAdministration ]
-]]]
-
-Pour tester, identifiez-vous sur l'application et vous devez obtenir la situation telle que représentée par la figure *@adminSimple*.
-
-+Un composant d'administration vide.>file://figures/BlogAdminSimple.png|width=75|label=adminSimple+
-
-
-
-
-
-
-
-
-
-
-
 !!! Le composant PostsReport
 
 La liste des posts est affichée à l'aide d'un rapport généré dynamiquement par le framework Magritte. Nous utilisons ce framework pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
