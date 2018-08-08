@@ -70,7 +70,8 @@ Modifions maintenant ce premier résultat pour ajouter l'authentification.
 
 !!! Composant d'identification
 
-Commençons par développer un composant d'identification qui lorsqu'il sera invoqué ouvrira une boite de dialogue pour demander un login et un mot de passe. Le résultat que nous voulons obtenir est montré sur la figure *@authentification*. Une telle fonctionnalité devrait faire partie d'une bibliothèque de composants de base en Seaside. Le projet Heimdal disponible sur *http://www.github.com/DuneSt/* offre cette fonctionnalité.
+Commençons par développer un composant d'identification qui lorsqu'il sera invoqué ouvrira une boite de dialogue pour demander un login et un mot de passe. Le résultat que nous voulons obtenir est montré sur la figure *@authentification*. Une telle fonctionnalité devrait faire partie d'une bibliothèque de composants de base en Seaside. Le projet Heimdal disponible sur *http://www.github.com/DuneSt/* offre cette fonctionnalité. 
+D'autres composants permettant d'interroger google ou twitter sont disponibles et utilisé dans le projet Steam.
 
 +Aperçu du composant d'identification.>file://figures/Authentification.png|width=75|label=authentification+
 
@@ -128,7 +129,7 @@ TBAuthentificationComponent class >> from: aComponent
 !!!! Rendu du composant
 
 La méthode ==renderContentOn:== définit le contenu d'une boite de dialogue modale avec l'identifiant ==myAuthDialog==.
-Il est composé d'une en-tête et d'un corps.
+Il est composé d'une en-tête et d'un corps. Notez l'utilisation des messages ==tbsModal==, ==tbsModalBody:==, ==tbsModalContent:==  qui permettent une interaction modale avec ce composant.
 
 [[[
 TBAuthentificationComponent >> renderContentOn: html
@@ -153,8 +154,8 @@ TBAuthentificationComponent >> renderHeaderOn: html
             with: 'Authentication' ]
 ]]]
 
-Le corps du composant affiche une masque de saisie pour l'identifiant, le mot de passe
-et finalement des boutons.
+Le corps du composant affiche un masque de saisie pour l'identifiant, le mot de passe
+et finalement des boutons. 
 
 [[[
 TBAuthentificationComponent >> renderBodyOn: html
@@ -167,7 +168,7 @@ TBAuthentificationComponent >> renderBodyOn: html
 ]]]
 
 
-La méthode ==renderAccountFieldOn:== montre comment la valeur d'un input field est passée puis stockée dans une variable d'instance du composant quand l'utilisateur confirme sa saisie. Le paramètre de la méthode ==callback:== est un bloc qui prends lui-même un argument représentant la valeur du text input.
+La méthode ==renderAccountFieldOn:== montre comment la valeur d'un input field est passée puis stockée dans une variable d'instance du composant quand l'utilisateur confirme sa saisie. Le paramètre de la méthode ==callback:== est un bloc qui prend lui-même un argument représentant la valeur du text input.
 
 [[[
 TBAuthentificationComponent >> renderAccountFieldOn: html
@@ -205,7 +206,9 @@ TBAuthentificationComponent >> renderButtonsOn: html
 ]]]
 
 Lorsque l'utilisateur clique sur le bouton 'SignIn', le message ==validate== est envoyé.
-Dans la méthode ==validate==, si le compte utilisé est valide (==isValidAccount:andPassword:==), nous indiquons au composant principal d'afficher la partie administration en lui envoyant le message ==gotoAdministration==.
+Dans la méthode ==validate==, si le compte utilisé est valide (message ==isValidAccount:andPassword:==), nous indiquons au composant principal d'afficher la partie administration en lui envoyant le message ==gotoAdministration==.
+
+
 Pour l'instant, notre méthode de validation de compte est simpliste puisque nous vérifions juste que le login est la chaîne 'admin' et le mot de passe 'password'.
 
 [[[
@@ -224,7 +227,8 @@ TBAuthentificationComponent >> validate
 
 !!!Intégration de l'authentification
 
-C'est depuis le composant (==TBPostsListComponent==) que nous donnerons accès à la partie administration du site et au composant d'identification. Ce composant affiche une boîte modale, nous devons donc d'une part l'intégrer dans le composant ==TBPostsListComponent== mais également ajouter un lien qui déclenchera l'affichage de cette boîte modale c'est-à-dire le rendu du composant d'identification. 
+Comme nous l'avons déjà évoqué, c'est depuis le composant (==TBPostsListComponent==) que nous donnons accès à la partie administration du site et au composant d'identification. Ce composant affiche une boîte modale, nous devons donc d'une part l'intégrer dans le composant ==TBPostsListComponent== mais également ajouter un lien qui déclenchera l'affichage de cette boîte modale c'est-à-dire le rendu du composant d'identification. 
+
 
 Modifions donc la méthode ==renderContentOn:== du composant ==TBPostsListComponent== ainsi: 
 
