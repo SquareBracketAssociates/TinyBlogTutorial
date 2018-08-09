@@ -8,7 +8,8 @@ Nous intègrerons ce composant d'identification dans la partie publique de TinyB
 gérant la liste des bulletins (==TBPostsListComponent==). Enfin, nous montrerons aussi comment stocker l'utilisateur connecté à l'aide d'une session.
 
 +Architecture de TinyBlog.>file://figures/ApplicationArchitecture.pdf|width=75|label=ApplicationArchitecture2+
-!!! Composant d'administration simple
+
+!!! Composant d'administration simple (v1)
 
 Définissons un composant d'administration très simple. Ce composant hérite de la classe ==TBScreenComponent== comme mentionné dans un chapitre précédent et illustré dans la figure *@ApplicationArchitecture2*.
 
@@ -29,7 +30,7 @@ TBAdminComponent >> renderContentOn: html
       html horizontalRule ]
 ]]]
 
-!!! Intégration du composant d'administration simple
+!!! Intégration du composant d'administration simple (v1)
 
 
 C'est depuis le composant ==TBPostsListComponent== (partie publique de TinyBlog) que nous donnerons accès à la partie administration via un lien placé sous la liste des catégories. Pour cela, modifions la méthode ==renderCategoryColumnOn:== de ce composant ainsi: 
@@ -68,10 +69,15 @@ En rechargeant la page de TinyBlog dans votre navigateur, nous voyons maintenant
 
 Modifions maintenant ce premier résultat pour ajouter l'authentification.
 
+@todo answer:
+
+
 !!! Composant d'identification
 
 Commençons par développer un composant d'identification qui lorsqu'il sera invoqué ouvrira une boite de dialogue pour demander un login et un mot de passe. Le résultat que nous voulons obtenir est montré sur la figure *@authentification*. Une telle fonctionnalité devrait faire partie d'une bibliothèque de composants de base en Seaside. Le projet Heimdal disponible sur *http://www.github.com/DuneSt/* offre cette fonctionnalité. 
 D'autres composants permettant d'interroger google ou twitter sont disponibles et utilisé dans le projet Steam.
+
+@todo: ajouter URL projet Steam
 
 +Aperçu du composant d'identification.>file://figures/Authentification.png|width=75|label=authentification+
 
@@ -255,7 +261,39 @@ TBPostsListComponent >> renderSignInOn: html
 
 En rechargeant la page de TinyBlog dans votre navigateur, nous voyons maintenant le lien 'SignIn' et lorsque l'on clique dessus, nous obtenons bien le rendu sur la figure *@authentification*.
 
-@todo Luc here
+
+!!!Modélisation des administrateurs
+
+
+ Avant cela, il faut enrichir notre modèle de Tinyblog avec la notion d'auteur.
+ Le ou les auteur(s) associés à un blog pourront s'identifier pour administrer les posts.
+
+ Le blog possède des auteurs qui peuvent écrire des posts. Un post n'a qu'un seul auteur (son créateur) même si tous les auteurs peuvent ensuite accéder et modifier n'importe quel post.
+
+ Ajouter maintenant une classe nommée ==TBAuthor== sachant qu'un auteur est caractérisé par son pseudo (affiché publiquement dans le post), son login et son mot de passe.
+
+ De même que pour les posts, ajoutez des accesseurs et des méthodes de création côté classe.
+ Nous souhaitons pouvoir écrire dans un playground :
+
+ [[[
+ 	luc := TBAuthor pseudo: 'Luke' login: 'luc' password: 'topsecret'
+ ]]]
+
+ Ajouter un champs ==author== dans la classe ==TBPost== ainsi que des accesseurs.
+ Dans un playground, on souhaite pouvoir écrire :
+
+ [[[
+ 	|luc|
+ 	luc := TBAdmin pseudo: 'Luke' login: 'luc' password: 'topsecret'.
+ 	(TBPost
+ 		title: 'Welcome in TinyBlog'
+ 		text: 'TinyBlog is a small blog engine made with Pharo.'
+ 		category: 'TinyBlog')
+ 		author: luc ;
+ 		yourself
+ ]]]
+
+ Dans la classe ==TBBlog==, ajouter une accesseur permettant de récupérer l'ensemble des auteurs du
 
 !!!Gestion de session
 
@@ -348,42 +386,5 @@ TBApplicationRootComponent class >> initialize
 ]]]
 
 Pensez à exécuter cette méthode via ==TBApplicationRootComponent initialize== avant de tester à nouveau l'application.
-
-
-
-
-%  Avant cela, il faut enrichir notre modèle de Tinyblog avec la notion d'auteur.
-%  Le ou les auteur(s) associés à un blog pourront s'identifier pour administrer les posts.
-%
-% !!!Le modèle des Auteurs
-%
-%  Le blog possède des auteurs qui peuvent écrire des posts. Un post n'a qu'un seul auteur (son créateur) même si tous les auteurs peuvent ensuite accéder et modifier n'importe quel post.
-%
-%  Ajouter maintenant une classe nommée ==TBAuthor== sachant qu'un auteur est caractérisé par son pseudo (affiché publiquement dans le post), son login et son mot de passe.
-%
-%  De même que pour les posts, ajoutez des accesseurs et des méthodes de création côté classe.
-%  Nous souhaitons pouvoir écrire dans un playground :
-%
-%  [[[
-%  	luc := TBAuthor pseudo: 'Luke' login: 'luc' password: 'topsecret'
-%  ]]]
-%
-%  Ajouter un champs ==author== dans la classe ==TBPost== ainsi que des accesseurs.
-%  Dans un playground, on souhaite pouvoir écrire :
-%
-%  [[[
-%  	|luc|
-%  	luc := TBAuthor pseudo: 'Luke' login: 'luc' password: 'topsecret'.
-%  	(TBPost
-%  		title: 'Welcome in TinyBlog'
-%  		text: 'TinyBlog is a small blog engine made with Pharo.'
-%  		category: 'TinyBlog')
-%  		author: luc ;
-%  		yourself
-%  ]]]
-%
-%  Dans la classe ==TBBlog==, ajouter une accesseur permettant de récupérer l'ensemble des auteurs du
-%
-% @todo : to finish 
 
 
