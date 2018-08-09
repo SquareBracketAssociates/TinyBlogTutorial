@@ -46,7 +46,7 @@ Vous pouvez:
 
 Pharo possède de bonnes ressources pédagogique ainsi qu'une communauté d'utilisateurs accueillante. Voici quelques informations qui peuvent vous être utiles. 
 
-- *http://books.pharo.org* contient des ouvrages autour de Pharo. Pharo by Example peut vous aider dans les aspects de découverte du langage et des bibliothèques de base. En particulier Entreprise Pharo: a Web Perspective presente d'autres aspects utiles pour le développement web.C
+- *http://books.pharo.org* contient des ouvrages autour de Pharo. Pharo by Example peut vous aider dans les aspects de découverte du langage et des bibliothèques de base. Entreprise Pharo: a Web Perspective presente d'autres aspects utiles pour le développement web.C
 - *http://book.seaside.st* est un des ouvrages sur Seaside. Il est en cours de migration en livre open-source sur *https://github.com/SquareBracketAssociates/DynamicWebDevelopmentWithSeaside*.
 - *http://mooc.pharo.org* propose un excellent Mooc (cours en ligne) comprenant plus de 90 videos expliquant des points de syntaxes mais aussi de conception objet.
 - *http://discord.gg/Sj2rhxn* est le channel discord où nombre de Pharoers échangent et s'entraident. 
