@@ -136,7 +136,6 @@ de l'application, nous décrivons son architecture dans la figure *@ApplicationA
 
 - ==AdminComponent== est le composant principal gérant les aspects d'administration. Il créera des rapports instance de ==PostsReport== en utilisant Magritte.
 
-
 !!! Conclusion 
 
 Nous sommes prêts à développer les composants décrits. Comme le processus est un peu linéaire n'hésitez pas à revenir sur cette architecture afin de comprendre 
