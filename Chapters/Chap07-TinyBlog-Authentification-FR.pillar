@@ -7,11 +7,11 @@ Cela va nous permettre d'illustrer comment la saisie de champs utilise de maniè
 Nous intègrerons ce composant d'identification dans la partie publique de TinyBlog rendue par le composant
 gérant la liste des bulletins (==TBPostsListComponent==). Enfin, nous montrerons aussi comment stocker l'utilisateur connecté à l'aide d'une session.
 
-+Architecture de TinyBlog.>file://figures/ApplicationArchitecture.pdf|width=75|label=ApplicationArchitecture2+
++Gérant l'authentification pour accéder à l'administration.>file://figures/ApplicationArchitectureAdminHeader.pdf|width=75|label=ApplicationArchitectureAdminHeader+
 
 !!! Composant d'administration simple (v1)
 
-Définissons un composant d'administration très simple. Ce composant hérite de la classe ==TBScreenComponent== comme mentionné dans un chapitre précédent et illustré dans la figure *@ApplicationArchitecture2*.
+Définissons un composant d'administration très simple. Ce composant hérite de la classe ==TBScreenComponent== comme mentionné dans un chapitre précédent et illustré dans la figure *@ApplicationArchitectureAdminHeader*.
 
 [[[
 TBScreenComponent subclass: #TBAdminComponent
