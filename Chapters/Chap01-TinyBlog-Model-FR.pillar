@@ -7,8 +7,7 @@ Le modèle est particulièrement simple : il définit une liste de bulletin et u
 
 !!!La classe TBPost
 
-Le modèle de TinyBlog est extrêmement simple. Nous commençons ici par la représentation d'un bulletin avec 
-la classe ==TBPost== définie ainsi:
+Nous commençons ici par la représentation d'un bulletin avec la classe ==TBPost== définie ainsi:
 
 [[[
 Object subclass: #TBPost
