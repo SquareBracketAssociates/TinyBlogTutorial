@@ -1,8 +1,6 @@
 !! Gestion des catégories
 
-Dans ce chapitre, nous allons ajouter la gestion des categories
-
-Si vous avez le sentiment d'être un peu perdu, la figure *@AssociationArchitectureUser* vous montre les composants sur lesquels nous allons travailler dans ce chapitre. 
+Dans ce chapitre, nous allons ajouter la gestion des categories. Si vous avez le sentiment d'être un peu perdu, la figure *@AssociationArchitectureUser* vous montre les composants sur lesquels nous allons travailler dans ce chapitre. 
 
 +L'architecture des composants utilisateurs (par opposition à administration).>file://figures/ApplicationArchitectureUser.pdf|width=75|label=AssociationArchitectureUser+
 
@@ -292,7 +290,7 @@ TBPostsListComponent >> renderPostColumnOn: html
 ]]]
 
 
-L'application finale devrait ressembler à la figure *@final*.
+L'application finale est affichée dans la figure *@final*.
 
 +Final TinyBlog Public UI.>file://figures/finalPublicWebPage.png|width=85|label=final+
 
