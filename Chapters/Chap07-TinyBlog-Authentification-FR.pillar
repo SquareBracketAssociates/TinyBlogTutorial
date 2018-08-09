@@ -220,7 +220,9 @@ Pour l'instant, notre méthode de validation de compte est simpliste puisque nou
 [[[
 TBAuthentificationComponent >> isValidAccount: login andPassword: passwd
    ^ login = 'admin' and: [ passwd = 'password' ]
-	
+]]]
+
+[[[
 TBAuthentificationComponent >> validate
    (self isValidAccount: self account andPassword: self password)	
       ifTrue: [ component gotoAdministration ]		
@@ -264,36 +266,93 @@ En rechargeant la page de TinyBlog dans votre navigateur, nous voyons maintenant
 
 !!!Modélisation des administrateurs
 
+Pour l'instant, le login et le mot de passe pour accéder à la partie administration sont directement stockés dans le code du composant ==TBAuthentificationComponent== . 
+Nous allons maintenant changer cela et stocker ces identifiants dans la base de données.
 
- Avant cela, il faut enrichir notre modèle de Tinyblog avec la notion d'auteur.
- Le ou les auteur(s) associés à un blog pourront s'identifier pour administrer les posts.
+Commençons par enrichir notre modèle de Tinyblog avec la notion d'administrateur.
+Un blog possède un administrateur qui peut s'identifier sur le blog afin administrer les posts qu'il contient. Ajoutons donc une nouvelle classe nommée ==TBAdministrator== caractérisé par son pseudo, son login et son mot de passe.
 
- Le blog possède des auteurs qui peuvent écrire des posts. Un post n'a qu'un seul auteur (son créateur) même si tous les auteurs peuvent ensuite accéder et modifier n'importe quel post.
+[[[
+Object subclass: #TBAdministrator
+	instanceVariableNames: 'login password'
+	classVariableNames: ''
+	package: 'TinyBlog'.
 
- Ajouter maintenant une classe nommée ==TBAuthor== sachant qu'un auteur est caractérisé par son pseudo (affiché publiquement dans le post), son login et son mot de passe.
+TBAdministrator >> login
+   ^ login
 
- De même que pour les posts, ajoutez des accesseurs et des méthodes de création côté classe.
- Nous souhaitons pouvoir écrire dans un playground :
+TBAdministrator >> login: anObject
+   login := anObject
 
- [[[
- 	luc := TBAuthor pseudo: 'Luke' login: 'luc' password: 'topsecret'
- ]]]
+TBAdministrator >> password
+   ^ password
 
- Ajouter un champs ==author== dans la classe ==TBPost== ainsi que des accesseurs.
- Dans un playground, on souhaite pouvoir écrire :
+TBAdministrator >> password: anObject
+   password := (MD5 hashMessage: anObject)
 
- [[[
- 	|luc|
- 	luc := TBAdmin pseudo: 'Luke' login: 'luc' password: 'topsecret'.
- 	(TBPost
- 		title: 'Welcome in TinyBlog'
- 		text: 'TinyBlog is a small blog engine made with Pharo.'
- 		category: 'TinyBlog')
- 		author: luc ;
- 		yourself
- ]]]
+TBAdministrator class >> login: login password: password
+	^ self new 
+		login: login;
+		password: password;
+		yourself	
+]]]
 
- Dans la classe ==TBBlog==, ajouter une accesseur permettant de récupérer l'ensemble des auteurs du
+
+Dans un playground, on peut inspecter l'expression suivante :
+
+[[[
+luc := TBAdmin login: 'luc' password: 'topsecret'.
+]]] 
+
+@todo
+password are not stored directly.
+we store the MD5 of the password.
+
+
+Ajoutons un champ ==adminUser== dans la classe ==TBBlog== afin d'y stocker l'administrateur du blog:
+
+[[[
+Object subclass: #TBBlog
+	instanceVariableNames: 'adminUser posts'
+	classVariableNames: ''
+	package: 'TinyBlog'.
+
+TBBlog >> administrator
+   ^ adminUser
+	
+TBBlog >> initialize
+   super initialize.
+   posts := OrderedCollection new.
+   adminUser := self createAdministrator
+		
+TBBlog >> createAdministrator
+   ^ TBAdministrator login: self class defaultAdminLogin password: self class defaultAdminPassword
+	
+TBBlog class >> defaultAdminLogin
+   ^ 'admin'
+
+TBBlog class >> defaultAdminPassword
+   ^ 'topsecret'
+]]] 
+ 
+Il ne faut pas oublier de re-créer le blog ainsi:
+
+[[[
+	TBBlog reset; createDemos
+]]]
+ 
+!!!Modification de l'authentification
+
+Modifions maintenant le composant d'authentification ==TBAuthentificationComponent== pour qu'il utilise les valeurs d'identification du blog courant.  
+
+[[[
+TBAuthentificationComponent >> isValidAccount: login andPassword: passwd
+   ^ login = component blog administrator login and: [ 
+			(MD5 hashMessage: passwd) = component blog administrator password ]
+]]]
+
+
+@todo here
 
 !!!Gestion de session
 
