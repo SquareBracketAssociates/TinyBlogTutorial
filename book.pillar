@@ -12,6 +12,8 @@ ${inputFile:Chapters/Chap05-TinyBlog-SeasideIntro-FR.pillar}$
 
 ${inputFile:Chapters/Chap06-TinyBlog-SeasideUserComponents-FR.pillar}$
 
+${inputFile:Chapters/Chap06-TinyBlog-SeasideCategories-FR.pillar}$
+
 ${inputFile:Chapters/Chap07-TinyBlog-Authentification-FR.pillar}$
 
 ${inputFile:Chapters/Chap08-TinyBlog-Admin-FR.pillar}$
