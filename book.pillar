@@ -31,3 +31,5 @@ ${inputFile:Chapters/Chap11-TinyBlog-Mustache-FR.pillar}$
 ${inputFile:Chapters/Chap12-TinyBlog-Export.pillar}$
 
 ${inputFile:Chapters/Chap14-TinyBlog-Loading-FR.pillar}$
+
+${inputFile:Chapters/Chap15-TinyBlog-SavingCode-FR.pillar}$

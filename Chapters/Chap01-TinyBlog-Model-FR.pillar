@@ -128,6 +128,21 @@ TBPost class >> title: aTitle text: aText category: aCategory
             yourself
 ]]]
 
+!!!Création de posts
+
+Vous pouvez maintenant créer des posts. Ouvrez l'outil Playground et executez l'expression suivante :
+
+[[[
+TBPost 
+	title: 'Welcome in TinyBlog' 
+	text: 'TinyBlog is a small blog engine made with Pharo.' 
+	category: 'TinyBlog'
+]]]
+
+Si vous inspectez le code ci-dessus (clic droit sur l'expression et "Inspect it"), vous allez obtenir un inspecteur sur l'objet post nouvellement créé comme représenté sur la Figure *@inspectorOnTBPost*.
+
++Inspecteur sur une instance de TBPost.>figures/inspectorOnTBPost.png|width=100|label=inspectorOnTBPost+
+
 !!! Ajout de quelques tests unitaires
 
 Bien que le modèle soit simple nous pouvons définir quelques tests. 
@@ -135,12 +150,16 @@ En mode Test Driven Developpement nous écrivons les tests en premier.
 Ici nous avons préféré vous laissez définir une petite classe pour vous familiariser avec l'IDE.
 Mais maintenant nous réparons ce manque. 
 
+Nous définissons la classe ==TBPostTest== (comme souclasse de ==TestCase==).
+
 [[[
 TestCase subclass: #TBPostTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	package: 'TinyBlog-Tests'
 ]]]
+
+Nous définissons un premier test.
 
 [[[
 TBPostTest >> testWithoutCategoryIsUnclassified
@@ -150,7 +169,7 @@ TBPostTest >> testWithoutCategoryIsUnclassified
 		title: 'Welcome to TinyBlog' 
 		text: 'TinyBlog is a small blog engine made with Pharo.'.
 	self assert: post title equals: 'Welcome to TinyBlog' .
-	self assert: post isUnclassified.
+	self assert: post category = TBPost unclassifiedTag.
 ]]]
 
 
@@ -168,20 +187,7 @@ TBPostTest >> testPostIsCreatedCorrectly
 
 Vos tests doivent passer.
 
-!!!Création de posts
 
-Vous pouvez maintenant créer des posts. Ouvrez l'outil Playground et recopiez l'expression suivante :
-
-[[[
-TBPost 
-	title: 'Welcome in TinyBlog' 
-	text: 'TinyBlog is a small blog engine made with Pharo.' 
-	category: 'TinyBlog'
-]]]
-
-Si vous inspectez le code ci-dessus (clic droit sur l'expression et "Inspect it"), vous allez obtenir un inspecteur sur l'objet post nouvellement créé comme représenté sur la Figure *@inspectorOnTBPost*.
-
-+Inspecteur sur une instance de TBPost.>figures/inspectorOnTBPost.png|width=100|label=inspectorOnTBPost+
 
 !!! Interrogation d'un post
 
@@ -196,8 +202,11 @@ TBPost >> isUnclassified
    ^ self category = TBPost unclassifiedTag
 ]]]
 
-De même il serait préférable de ne pas faire une référence en dur à la classe ==TBPost== dans le code d'une méthode. Proposer une solution.
+De même il serait préférable de ne pas faire une référence en dur à la classe ==TBPost== dans le corps d'une méthode. 
+Proposer une solution.
 De plus, prenons le temps de mettre à jour notre test pour couvrir ce nouvel aspect.
+Nous simplifions de cette manière la logique de notre test.
+
 [[[
 TBPostTest >> testWithoutCategoryIsUnclassified
 
@@ -209,52 +218,6 @@ TBPostTest >> testWithoutCategoryIsUnclassified
 	self assert: post isUnclassified.
 	self deny: post isVisible
 ]]]
-
-
-
-!!! Sauvegarder votre code 
-
-Lorsque vous sauvez l'image Pharo (clic gauche sur le fond de Pharo pour accéder au menu world et sélectionner 'save'), celle-ci contient tous les objets du système et donc les classes elles-même.
-Cette solution est pratique mais peu pérenne.  
-Nous allons vous montrer comment les pharoers sauvent leur code sous forme de packages sur un serveur dédié à l'aide de Monticello: le gestionnaire de versions de Pharo.
-
-Notez que des videos sont disponibles dans le Mooc Pharo qui montrent la procédure pour sauver du code: *http://mooc.pharo.org* et en particulier la video de la semaine 1 qui montre comment développer et sauver le code d'une application compteur: *http://rmod-pharo-mooc.lille.inria.fr/MOOC/Videos/W1/C019-W1S-Videos-Redo-Counter-Traditional-FR-V3-HD_720p_4Mbs.m4v*.
-
-!!!!Créer un dépôt de code
-
-Il existent plusieurs serveurs en ligne permettant d'héberger vos dépôts de code gratuitement comme Smalltalkhub *http://smalltalkhub.com* ou SS3 *http://ss3.gemstone.com*. 
-
-- Créer un compte sur le site  *http://smalltalkhub.com/*.
-- Se connecter au site. 
-- Créer un projet nommé "TinyBlog" (si vous rencontrez des problèmes de connexion car le site est en version beta, essayez avec un autre navigateur ; si les problèmes persistent utilisez *http://ss3.gemstone.com*).
-
-!!!!Sauver votre package
-
-- Dans Pharo, ouvrez l'outil Monticello Browser via le menu principal (clic gauche sur le fond de Pharo).
-- Ajoutez un dépôt (repository) de type SmalltalkHub ou HTTP pour *http://ss3.gemstone.com*.
-- Sélectionnez ce dépôt et dans son menu contextuel (clic droit), sélectionnez l'item 'Add to package...' pour ajouter ce dépôt au package TinyBlog.
-- Sélectionnez maintenant votre package et pressez le bouton 'Save'. 
-- Indiquez une description pour votre commit et sauver. Votre code vient d'être envoyé sur le serveur.
-
-Le code de votre application TinyBlog est maintenant sauvegardé dans votre dépôt sur Smalltalkhub. Il est donc maintenant possible de charger votre code dans une nouvelle image Pharo. 
-Pour rappel, dans le cadre de ce tutoriel, nous vous suggérons de toujours utiliser l'image avec tous les packages web chargés que nous avons mentionné dans le premier chapitre. Cela vous permettra de pouvoir recharger votre package sans devoir vous soucier des dépendances sur d'autres packages. 
-
-
-!!!A propos de dépendances
-
-Les bonnes pratiques lors de développements en Pharo sont de spécifier clairement les dépendances sur les packages utilisés afin d'avoir une reproductibilité complète d'un projet. Une telle reproductibilité permet alors l'utilisation de serveur de construction tels que Travis ou Jenkins.
-Pour cela, une configuration (une classe spéciale) définit d'une part l'architecture du projet (dépendances et packages du projet) et les versions des packages versionnés. 
-
-Dans le cadre de ce projet, nous n'abordons pas ce point plus avancé. Un chapitre entier est consacré à l'expression de configurations dans le livre intitulé "Deep Into Pharo" (cf. *http://books.pharo.org*). 
- 
-%!!!!! Optionel. 
-%Si vous voulez essayer de créer une configuration, vous pouvez utiliser Versionner. 
-%Dans votre image Pharo, ouvrez l'outil Versionner depuis le menu 'Tools':
-%%- Créez un nouveau projet nommé "TinyBlog",
-%- Indiquez que votre projet dépend de PharoWeb (dépendance entre projets),
-%- Dans Packages, ajoutez le paquet TinyBlog,
-%- Définissez le dépôt de votre projet: 'http://smalltalkhub.com/mc/XXX/TinyBlog/main'
-%- Cliquez sur le bouton "Save to development" (pour générer la nouvelle structure %d'architecture et dépendances), "Release" (pour créer une nouvelle vetsion) et Commit (pour sauver le code sur le serveur).
 
 
 !!! Conclusion
