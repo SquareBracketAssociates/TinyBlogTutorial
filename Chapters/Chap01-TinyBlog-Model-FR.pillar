@@ -1,4 +1,4 @@
-!! L'application TinyBlog : présentation et modèle
+!! Modèle de l'application TinyBlog
 @cha:model
 % full code at: 9c87f4b8abb956469e145d2ba8afeba8b66159d2
 
@@ -7,8 +7,7 @@ Le modèle est particulièrement simple : il définit une liste de bulletin et u
 
 !!!La classe TBPost
 
-Le modèle de TinyBlog est extrêmement simple. Nous commençons ici par la représentation d'un bulletin avec 
-la classe ==TBPost== définie ainsi:
+Nous commençons ici par la représentation d'un bulletin avec la classe ==TBPost== définie ainsi:
 
 [[[
 Object subclass: #TBPost
@@ -88,7 +87,10 @@ TBPost >> notVisible
 
 !!!Initialisation
 
-La méthode ==initialize== (protocole 'initialization') fixe la date à celle du jour et la visibilité à faux. L'utilisateur devra par la suite activer la visibilité. Cela permet de rédiger des brouillons et de ne publier un post que lorsque celui-ci est terminé. Un post est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe.  La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
+La méthode ==initialize== (protocole 'initialization') fixe la date à celle du jour et la visibilité à faux. L'utilisateur devra par la suite activer la visibilité. 
+Cela permet de rédiger des brouillons et de ne publier un post que lorsque celui-ci est terminé. 
+Un post est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe. 
+La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
 
 [[[
 TBPost class >> unclassifiedTag
@@ -109,7 +111,7 @@ Dans la solution proposée ci-dessus pour la méthode ==initialize==, il serait 
 
 !!!Méthodes de création
 
-Coté classe, on définit des méthodes (dans la catégorie 'instance creation') pour faciliter la création de post appartenant ou pas à une catégorie.
+Coté classe, on définit des méthodes (dans la protocole 'instance creation') pour faciliter la création de post appartenant ou pas à une catégorie.
 
 [[[
 TBPost class >> title: aTitle text: aText
@@ -128,8 +130,9 @@ TBPost class >> title: aTitle text: aText category: aCategory
 
 !!! Ajout de quelques tests unitaires
 
-Bien que le modèle soit simple nous pouvons définir quelques tests. En mode Test Driven Developpement nous écrivons les tests
-en premier. Ici nous avons préféré vous laissez définir une petite classe pour vous familiariser avec l'IDE.
+Bien que le modèle soit simple nous pouvons définir quelques tests. 
+En mode Test Driven Developpement nous écrivons les tests en premier. 
+Ici nous avons préféré vous laissez définir une petite classe pour vous familiariser avec l'IDE.
 Mais maintenant nous réparons ce manque. 
 
 [[[
