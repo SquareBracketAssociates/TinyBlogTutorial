@@ -128,8 +128,15 @@ Créons une méthode ==initialize== dans le protocole 'initialization' :
 [[[
 TBScreenComponent >> initialize
    super initialize.
-   header := TBHeaderComponent new
+   header := self createHeaderComponent
 ]]]
+
+[[[
+TBScreenComponent >> createHeaderComponent
+   ^ TBHeaderComponent new
+]]]
+
+Notez que nous avons une méthode spécifique pour créer le composant en-tête. Nous pouvons ainsi redéfinir cette méthode afin de changer le composant en-tête. Cela sera utile pour la partie administration du site.
 
 !!!Relation composite-composant
 
@@ -154,9 +161,17 @@ n'a pas de rendu visuel. Pour cela, définissons la méthode ==renderContentOn:=
 
 [[[
 TBHeaderComponent >> renderContentOn: html
-   html tbsNavbar beDefault with: [
+	html tbsNavbar beDefault; with: [  
+		 html tbsContainer: [ 
+			self renderBrandOn: html
+	]]
+]]]
+
+[[[
+TBHeaderComponent >> renderBrandOn: html
+   html tbsNavbarHeader: [ 
       html tbsNavbarBrand
-         url: '#';
+         url: self application url;
          with: 'TinyBlog' ]
 ]]]
 
@@ -165,7 +180,7 @@ Si vous faites un rafraichissement de l'application dans votre navigateur web vo
 
 +TinyBlog avec une barre de navigation.>file://figures/navBlog.png|width=75|label=navBlog+
 
-Par défaut dans une barre de navigation Bootstrap, il y a un lien sur ==tbsNavbarBrand== qui est ici inutile (sur le titre de l'application). Ici nous l'initialisons avec une ancre =='#'== de façon à ce que si l'utilisateur clique sur le titre, il ne se passe rien. En général, cliquer sur le titre de l'application permet de revenir à la page de départ du site. 
+Par défaut dans une barre de navigation Bootstrap, il y a un lien sur le titre de l'application (==tbsNavbarBrand== ) qui permet de revenir à la page de départ du site. 
 
 !!!!Améliorations possibles
 
