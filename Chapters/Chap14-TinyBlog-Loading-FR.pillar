@@ -1,6 +1,6 @@
 !! Charger le code des chapitres
 
-Ce chapitre contient les expressions permettant de charger le code décrit dans chacun des chapitres. Ces expressions doivent être exécutées dans une image PharoWeb 5 (*http://files.pharo.org/mooc/image/PharoWeb-5.0.zip*) ou PharoWeb 6.1 (*http://files.pharo.org/mooc/image/PharoWeb-61.zip*). Ensuite, si vous commencer le chapitre 4 par exemple, vous pouvez charger tout le code des chapitres précédents (1, 2 et 3) en suivant la procédure décrite dans la section Chapitre 4 ci-après.
+Ce chapitre contient les expressions permettant de charger le code décrit dans chacun des chapitres. Ces expressions doivent être exécutées dans une image PharoWeb 5 (*http://files.pharo.org/mooc/image/PharoWeb-5.0.zip*) ou PharoWeb 6.1 (*http://files.pharo.org/mooc/image/PharoWeb-61.zip*). Ensuite, si vous commencer le chapitre 4 par exemple, vous pouvez charger tout le code des chapitres précédents (1, 2 et 3) en suivant la procédure décrite dans la section 'Chapitre 4' ci-après.
 
 Bien évidemment, nous vous conseillons de faire votre propre code mais cela vous permettra de ne pas rester bloqué le cas échéant.
 
@@ -35,8 +35,7 @@ Après le chargement d'un package, il est recommandé d'exécuter les tests unit
 Pour cela, vous pouvez lancer l'outil TestRunner (World menu > Test Runner), chercher le package TinyBlog-Tests et lancer tous les tests unitaires de la classe ==TBBlogTest== en cliquant sur le bouton "Run Selected". Tous les tests doivent être verts. Une alternative est de presser l'icone verte qui se situe à coté de la class ==TBBlogTest==. 
 
 Ouvrez maintenant un browser de code pour regarder le code des classes ==TBBlog== et ==TBBlogTest== et compléter votre propre code si nécessaire.
-Avant de poursuivre, n'oubliez pas de committer une nouvelle version dans votre dépôt sur Smalltalkhub ou SS3 si vous avez modifié votre application. 
-
+Avant de poursuivre, n'oubliez pas de committer une nouvelle version dans votre dépôt sur Smalltalkhub ou SS3 si vous avez modifié votre application.
 
 !!! Chapitre 5: Commencer avec Seaside
 
@@ -51,6 +50,20 @@ Metacello new
 ]]]
 
 Exécutez les tests.
+
+Pour tester l'application, vous devez lancer le serveur HTTP pour Seaside:
+
+[[[
+ZnZincServerAdaptor startOn: 8080.
+]]]
+
+Ouvrez votre browser sur ==http://localhost:8080/TinyBlog==
+
+Si vous avez besoin de créer quelques posts initiaux:
+
+[[[
+TBBlog reset ; createDemoPosts
+]]]
 
 !!! Chapitre 6: Des composants web pour TinyBlog
 
@@ -79,6 +92,14 @@ Si vous avez besoin de créer quelques posts initiaux:
 [[[
 TBBlog reset ; createDemoPosts
 ]]]
+
+!!! Chapitre 7: Gestion des catégories
+
+%Pour l'instant le code est dans TinyBlog-StephaneDucasse.5_1
+
+
+
+
 
 !!! Chapitre 7: Authentification et Session
 
