@@ -2,12 +2,18 @@
 
 Le scénario assez classique que nous allons développer dans ce chapitre est le suivant : l'utilisateur doit s'authentifier pour accéder à la partie administration de TinyBlog. Il le fait à l'aide d'un compte et d'un mot de passe. 
 
-Dans la suite, nous commencerons donc par définir un composant d'identification.
-Cela va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances d'un composant ainsi que l'invocation de composants. 
-Nous intègrerons ce composant d'identification dans la partie publique de TinyBlog rendue par le composant
-gérant la liste des bulletins (==TBPostsListComponent==). Enfin, nous montrerons aussi comment stocker l'utilisateur connecté à l'aide d'une session.
+La figure *@ApplicationArchitectureAdminHeader* montre un aperçu de l'architecture visée dans ce chapitre.
 
 +Gérant l'authentification pour accéder à l'administration.>file://figures/ApplicationArchitectureAdminHeader.pdf|width=75|label=ApplicationArchitectureAdminHeader+
+
+Nous commençons par mettre en place une première version permettant de naviguer entre la partie publique TinyBlog rendue par le composant
+gérant la liste des bulletins (==TBPostsListComponent==) et une première version de la partie d'administration du site comme sur la figure *@SimpleAdminLink*.
+Cela va nous permettre d'illustrer l'invocation de composant.
+
+Nous intègrerons ensuite un composant d'identification sous la forme d'une boîte modale.
+Cela va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances d'un composant.
+
+Enfin, nous montrerons aussi comment stocker l'utilisateur connecté à l'aide d'une session.
 
 !!! Composant d'administration simple (v1)
 
@@ -30,58 +36,141 @@ TBAdminComponent >> renderContentOn: html
       html horizontalRule ]
 ]]]
 
-!!! Intégration du composant d'administration simple (v1)
+!!! Ajout d'un bouton 'admin'
 
-
-C'est depuis le composant ==TBPostsListComponent== (partie publique de TinyBlog) que nous donnerons accès à la partie administration via un lien placé sous la liste des catégories. Pour cela, modifions la méthode ==renderCategoryColumnOn:== de ce composant ainsi: 
-
-[[[
-TBPostsListComponent >> renderCategoryColumnOn: html
-   html tbsColumn
-      extraSmallSize: 12;
-      smallSize: 2;
-      mediumSize: 4;
-      with: [
-         self basicRenderCategoriesOn: html.
-         self renderSignInOn: html ]
-]]]
-
-On définit également une méthode qui affiche un lien permettant d'accéder à la partie administration du site.
-Lorsque l'utilisateur clique sur ce lien, la méthode ==gotoToAdministration== est exécutée. 
-La méthode ==call:== de Seaside permet de remplacer le composant courant ==TBPostsListComponent== par une instance du composant ==TBAdminComponent== et ainsi voir la partie administration. Vous remarquerez que cette première solution est très simple et sans authentification.
-
-[[[
-TBPostsListComponent >> renderSignInOn: html
-   html anchor 
-		callback: [ self gotoToAdministration ];
-		with: 'admin'
-]]]
-
-
-[[[
-TBPostsListComponent >> gotoToAdministration
-	self call: TBAdminComponent new
-]]]	
+Nous souhaitons maintenant ajouter un bouton dans l'en-tête du site (composant ==TBHeaderComponent==) afin d'accéder à la partie administration du site comme sur la figure *@SimpleAdminLink*.
+Pour cela, nous allons modifier les composants existants ==TBHeaderComponent== (en-tête) et ==TBPostsListComponent== (partie publique).
 
 +Lien simple vers la partie administration.>file://figures/SimpleAdminLink.png|width=100|label=SimpleAdminLink+
 
-En rechargeant la page de TinyBlog dans votre navigateur, nous voyons maintenant un lien 'admin'et lorsque l'on clique dessus, nous voyons bien la partie administration comme sur la figure *@SimpleAdminLink*.
+Commençons par ajouter le 'admin' dans l'en-tête:
 
-Modifions maintenant ce premier résultat pour ajouter l'authentification.
+[[[
+TBHeaderComponent >>	renderContentOn: html	
+		html tbsNavbar beDefault; with: [  
+			 html tbsContainer: [ 
+				self renderBrandOn: html.	
+				self renderButtonsOn: html
+		]]
+]]]
 
-@todo answer:
+[[[
+TBHeaderComponent >>	renderButtonsOn: html
+	html form: [ 
+	html tbsNavbarButton 
+		tbsPullRight;
+		with: 'Admin' ]
+]]]
 
+Si vous rafraichissez votre navigateur, le bouton admin est bien présent mais il n'a aucun effet pour l'instant.
+Il faut définir un ==callback:== sur ce bouton (un bloc) qui remplace le composant courant (==TBPostsListComponent==) par le composant d'administration (==TBAdminComponent==).
+
+Commençons par réviser la définition de ==TBHeaderComponent== en lui ajoutant une variable d'instance ==component== pour stocker et accéder au composant courant ainsi :
+
+[[[
+WAComponent subclass: #TBHeaderComponent
+	instanceVariableNames: 'component'
+	classVariableNames: ''
+	package: 'TinyBlog-Components'
+]]]
+
+[[[
+TBHeaderComponent >> component: anObject
+   component := anObject
+	
+TBHeaderComponent >> component
+   ^ component
+]]]
+
+[[[
+TBHeaderComponent >> from: aComponent
+   ^ self new
+		component: aComponent;
+		yourself
+]]]
+
+Modifions l'instanciation de ce composant en-tête dans ==TBScreenComponent== ainsi :
+
+[[[
+TBScreenComponent >> createHeaderComponent
+	^ TBHeaderComponent from: self
+]]]
+
+Nous pouvons maintenant ajouter le ==callback:== sur le bouton :
+
+[[[
+TBHeaderComponent >>	renderButtonsOn: html
+	html form: [ 
+	html tbsNavbarButton 
+		tbsPullRight;
+		callback: [ component gotoToAdministration ]; 
+		with: 'Admin' ]
+]]]
+
+Il ne reste plus qu'à définir la méthode ==gotoToAdministration== sur le composant ==TBPostsListComponent== :
+
+[[[
+TBPostsListComponent >> gotoToAdministration
+   self call: TBAdminComponent new
+]]]
+
+Si vous rafraichissez votre navigateur et cliquez sur le bouton 'Admin', vous devez voir la partie administraion v1 s'afficher.
+Toutefois, ce bouton admin est toujours présent dans la partie administration bien qu'il n'est plus fonctionnel.
+
+!!! Ajout d'un bouton 'disconnect'
+
+Nous souhaitons maintenant remplacer le composant en-tête par un autre lorsqu'on affiche la partie administration.
+Cette nouvelle en-tête affichera un bouton 'disconnect'.
+
+Définissons un nouveau composant en-tête:
+[[[	
+TBHeaderComponent subclass: #TBAdminHeaderComponent
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'TinyBlog-Components'
+]]]
+
+[[[
+TBAdminHeaderComponent >> renderButtonsOn: html
+	html form: [ 
+		html tbsNavbarButton 
+			tbsPullRight; 
+			callback: [ component gotoToPublic ];
+			with: 'Disconnect' ]
+]]]
+
+Indiquons au composant ==TBAdminComponent== d'utiliser cette en–tête:
+
+[[[
+TBAdminComponent >> createHeaderComponent
+   ^ TBAdminHeaderComponent from: self; yourself
+]]]
+
+[[[
+TBAdminComponent >> gotoToPublic
+	self answer
+]]]
+
+Si vous rafraichissez votre navigateur et cliquez sur le bouton 'Admin', vous devez voir la partie administraion v1 s'afficher avec un bouton 'disconnect' pour revenir à la partie publique
+
+
+!!! call:/answer:
+
+Si vous étudiez le code précédent, vous verrez que nous avons utilisé le mécanisme ==call:==/==answer:== de Seaside pour mettre en place la navigation entre les composants ==TBPostsListComponent== et ==TBAdminComponent==.
+Ce mécanisme puissant et élégant est expliqué dans la vidéo 1 de la semaine 5 du Mooc.
+
+@todo ré-expliquer ?
 
 !!! Composant d'identification
 
-Commençons par développer un composant d'identification qui lorsqu'il sera invoqué ouvrira une boite de dialogue pour demander un login et un mot de passe. Le résultat que nous voulons obtenir est montré sur la figure *@authentification*. Une telle fonctionnalité devrait faire partie d'une bibliothèque de composants de base en Seaside. Le projet Heimdal disponible sur *http://www.github.com/DuneSt/* offre cette fonctionnalité. 
+Développons maintenant un composant d'identification qui lorsqu'il sera invoqué ouvrira une boite de dialogue pour demander un login et un mot de passe. Le résultat que nous voulons obtenir est montré sur la figure *@authentification*. Une telle fonctionnalité devrait faire partie d'une bibliothèque de composants de base en Seaside. Le projet Heimdal disponible sur *http://www.github.com/DuneSt/* offre cette fonctionnalité. 
 D'autres composants permettant d'interroger google ou twitter sont disponibles et utilisé dans le projet Steam.
 
 @todo: ajouter URL projet Steam
 
 +Aperçu du composant d'identification.>file://figures/Authentification.png|width=75|label=authentification+
 
-!!!! Définition du composant
+!!!! Définition d'un composant d'identification
 
 Nous définissons une nouvelle sous-classe de la classe ==WAComponent== et des accesseurs. Ce composant contient un login, un mot de passe ainsi que le composant qui l'a invoqué pour accéder à la partie administration.
 
@@ -214,7 +303,6 @@ TBAuthentificationComponent >> renderButtonsOn: html
 Lorsque l'utilisateur clique sur le bouton 'SignIn', le message ==validate== est envoyé.
 Dans la méthode ==validate==, si le compte utilisé est valide (message ==isValidAccount:andPassword:==), nous indiquons au composant principal d'afficher la partie administration en lui envoyant le message ==gotoAdministration==.
 
-
 Pour l'instant, notre méthode de validation de compte est simpliste puisque nous vérifions juste que le login est la chaîne 'admin' et le mot de passe 'password'.
 
 [[[
@@ -233,7 +321,19 @@ TBAuthentificationComponent >> validate
 %
 % De plus le composant ==TBAuthentificationComponent== pourrait afficher l'utilisateur lorsque celui-ci est logué.
 
-!!!Intégration de l'authentification
+@todo Luc Here
+!!!Intégration du composant d'identification
+
+
+TBHeaderComponent >> renderButtonsOn: html
+html render: (TBAuthentificationComponent from: component).
+html tbsNavbarButton 
+	tbsPullRight; 
+	attributeAt: 'data-target' put: '#myAuthDialog';
+	attributeAt: 'data-toggle' put: 'modal';
+	with: 'Admin'
+
+
 
 Comme nous l'avons déjà évoqué, c'est depuis le composant (==TBPostsListComponent==) que nous donnons accès à la partie administration du site et au composant d'identification. Ce composant affiche une boîte modale, nous devons donc d'une part l'intégrer dans le composant ==TBPostsListComponent== mais également ajouter un lien qui déclenchera l'affichage de cette boîte modale c'est-à-dire le rendu du composant d'identification. 
 
