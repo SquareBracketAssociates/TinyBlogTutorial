@@ -14,7 +14,7 @@ Les solutions proposées dans ce tutoriel sont parfois non optimales afin de vou
 Finalement, afin de vous permettre de ne pas abandonner si vous ne trouvez pas une erreur, le dernier chapitre vous permet de charger 
 le code décrit dans chacun des chapitres. 
 
-+L'application TinyBlog application.>figures/TinyBlogOnPharoCloud.png|width=100|label=TinyBlogOnPharoCloudHere+
++L'application TinyBlog.>figures/TinyBlogOnPharoCloud.png|width=100|label=TinyBlogOnPharoCloudHere+
 
 
 !!!Installation de Pharo
