@@ -298,8 +298,7 @@ L'application finale est affichée dans la figure *@final*.
 Nous avons défini une interface pour notre blog en utilisant un ensemble de composants définissant chacun
 leur propre état et leurs responsabilités. Maintenant il faut remarquer que de très nombreuses applications se construisent de la même manière. Donc vous avez les bases pour définir de nombreuses applications web. 
 
-Nous voici prêts à définir la partie administrative de l'application ce qui est l'objet du chapitre suivant.
-Nous en profiterons pour vous montrer un aspect avancé qui permet la définition automatique de formulaires ou d'objets ayant de nombreux champs.
+Dans le prochaine chapitre, nous allons voir comment gérer l'identification permettant d'accéder à la partie administration des bulletins.
 
 !!!! Améliorations possibles
 

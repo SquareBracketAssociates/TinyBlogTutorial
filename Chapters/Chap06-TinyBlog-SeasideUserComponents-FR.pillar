@@ -398,8 +398,3 @@ Avec Seaside, le programmeur n'a pas à se soucier de gérer les requêtes web, 
 
 Un composant Seaside est responsable d'assurer son rendu en spécialisant la méthode ==renderContentOn:==.
 De plus un composant doit retourner ses sous-composants en spécialisant la méthode ==children==.
-
-
-
-
-

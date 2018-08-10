@@ -65,7 +65,7 @@ TBHeaderComponent >>	renderSimpleAdminButtonOn: html
 	   html tbsNavbarButton 
 		   tbsPullRight;
 		   with: [
-            html tbsGlyphIcon iconEyeOpen.
+            html tbsGlyphIcon iconListAlt.
             html text: ' Admin View' ]]
 ]]]
 
@@ -633,3 +633,21 @@ TBAdminHeaderComponent >> renderPublicViewButtonOn: html
 ]]]
 
 @todo screenshot final
+
+
+!!! Conclusion
+
+
+Nous avons mis en place une gestion de l'identification pour TinyBlog.
+Cela comprend un composant réutilisable d'identification sous la forme d'une fenêtre modale.
+Nous avons également différencié les composants affichés lorsqu'un administrateur est connecté ou non.
+Enfin, nous avons utilisé la session pour faciliter la navigation d'un administrateur connecté jusqu'à sa déconnexion.
+
+Nous voici prêts à définir la partie administrative de l'application ce qui est l'objet du chapitre suivant.
+Nous en profiterons pour vous montrer un aspect avancé qui permet la définition automatique de formulaires ou d'objets ayant de nombreux champs.
+
+!!!! Améliorations possibles
+
+A titre d'exercice, vous pouvez :
+- ajouter la possibilité d'avoir plusieurs compte administrateurs chacun avec ses propres identifiants,
+- 
