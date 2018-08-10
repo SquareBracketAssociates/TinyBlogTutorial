@@ -1,4 +1,17 @@
 
+
+[TODO] maj figure 6.2
+
+[TODO] changer le code de chargement des solutions 
+			week par chapter
+
+[TODO] fix envoi pdf chapitre export
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+[DONE] revoir l'authentification pour stocker l'utilisateur courant en session
+
 [DONE] Fix PharoWeb on CI
 
 [DONE] 			CI automatically push PharoWeb-50.zip and PharoWeb-61.zip to OVH (scp)
@@ -27,9 +40,5 @@
 
 [DONE] Chap installation Pharo 61.
 
-[TOFINISH] changer le code de chargement des solutions 
-			week par chapter
 
-[TODO] revoir l'authentification pour stocker l'utilisateur courant en session
 
-[TODO] Postmark email 

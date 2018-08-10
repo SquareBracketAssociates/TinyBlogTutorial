@@ -175,9 +175,7 @@ Ce mécanisme puissant et élégant est expliqué dans la vidéo 1 de la semaine
 !!! Composant fenêtre modale d'identification 
 
 Développons maintenant un composant d'identification qui lorsqu'il sera invoqué ouvrira une boite de dialogue pour demander un login et un mot de passe. Le résultat que nous voulons obtenir est montré sur la figure *@authentification*. Une telle fonctionnalité devrait faire partie d'une bibliothèque de composants de base en Seaside. Le projet Heimdal disponible sur *http://www.github.com/DuneSt/* offre cette fonctionnalité. 
-D'autres composants permettant d'interroger google ou twitter sont disponibles et utilisé dans le projet Steam.
-
-@todo: ajouter URL projet Steam
+D'autres composants permettant d'interroger google ou twitter sont disponibles et utilisé dans le projet Steam *https://github.com/guillep/steam*.
 
 +Aperçu du composant d'identification.>file://figures/Authentification.png|width=75|label=authentification+
 
