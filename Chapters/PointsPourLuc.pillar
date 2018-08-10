@@ -1,7 +1,4 @@
 
-
-[TODO] maj figure 6.2
-
 [TODO] changer le code de chargement des solutions 
 			week par chapter
 
@@ -9,6 +6,8 @@
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+[DONE] maj figure 6.2
 
 [DONE] revoir l'authentification pour stocker l'utilisateur courant en session
 

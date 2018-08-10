@@ -1,8 +1,9 @@
 !! Gestion des catégories
 
-Dans ce chapitre, nous allons ajouter la gestion des categories. Si vous avez le sentiment d'être un peu perdu, la figure *@AssociationArchitectureUser* vous montre les composants sur lesquels nous allons travailler dans ce chapitre. 
+Dans ce chapitre, nous allons ajouter la gestion des catégories des bulletins. 
+Si vous avez le sentiment d'être un peu perdu, la figure *@AssociationArchitectureUser* vous montre les composants sur lesquels nous allons travailler dans ce chapitre. 
 
-+L'architecture des composants utilisateurs (par opposition à administration).>file://figures/ApplicationArchitectureUser.pdf|width=75|label=AssociationArchitectureUser+
++L'architecture des composants de la partie publique (par opposition à la partie administration).>file://figures/ApplicationArchitectureUser.pdf|width=75|label=AssociationArchitectureUser+
 
 Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
 Les instructions pour charger le code des chapitres précédents sont disponibles dans le dernier chapitre.
@@ -12,11 +13,12 @@ Les instructions pour charger le code des chapitres précédents sont disponible
 Les bulletins sont classés par catégorie. Par défaut, si aucune catégorie n'a été précisée, ils sont rangés dans une catégorie spéciale dénommée "Unclassified".
 Nous allons créer un composant pour gérer une liste de catégories nommée: ==TBCategoriesComponent==.
 
-!!!!Definition d'un composant pour les catégories
+!!!!Definition d'un composant pour afficher les catégories
 
-Nous avons besoin d'un composant qui affiche la liste des catégories présentes dans la base et permet d'en sélectionner une. Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui communiquer la catégorie courante. La situation est décrite par la figure *@compt4*.
+Nous avons besoin d'un composant qui affiche la liste des catégories présentes dans le blog et permet d'en sélectionner une. 
+Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui communiquer la catégorie courante. La situation est décrite par la figure *@AssociationArchitectureUser*.
 
-Rappelez-vous qu'une catégorie est simplement exprimée comme une chaine dans le modèle défini dans le Chapitre *@cha:model* et comme l'illustre le test suivant.
+Rappelez-vous qu'une catégorie est simplement exprimée comme une chaîne de caractères dans le modèle défini dans le Chapitre *@cha:model* et comme l'illustre le test suivant.
 
 [[[
 testAllBlogPostsFromCategory
@@ -24,11 +26,10 @@ testAllBlogPostsFromCategory
 ]]]
 
 
-+Ajout du composant Categories.>file://figures/ComponentRelationship4.pdf|width=75|label=compt4+
+% +Ajout du composant Categories.>file://figures/ComponentRelationship4.pdf|width=75|label=compt4+
 
-
-Nous définissons un nouveau composant nommé ==TBCategoriesComponent==. Ce composant va garder une liste
-de chaines pour chacune des catégories ainsi qu'un pointeur sur le composant postsList associé.
+Nous définissons un nouveau composant nommé ==TBCategoriesComponent==. 
+Ce composant va garder une collection triée par ordre alphabétique de chaines de caractères pour chacune des catégories ainsi qu'un pointeur sur le composant postsList associé. 
 
 [[[
 WAComponent subclass: #TBCategoriesComponent
@@ -46,7 +47,7 @@ TBCategoriesComponent >> categories
 
 [[[
 TBCategoriesComponent >> categories: aCollection
-   categories := aCollection
+   categories := aCollection asSortedCollection
 ]]]
 
 [[[
@@ -89,7 +90,8 @@ TBPostsListComponent >> currentCategory: anObject
 
 
 !!!! La méthode selectCategory:
-La méthode ==selectCategory:== (protocole 'action') communique au composant ==TBPostsListComponent== la nouvelle catégorie courante.
+
+La méthode ==selectCategory:== (protocole 'actions') communique au composant ==TBPostsListComponent== la nouvelle catégorie courante.
 
 [[[
 TBCategoriesComponent >> selectCategory: aCategory
@@ -123,11 +125,13 @@ TBCategoriesComponent >> renderContentOn: html
 
 Nous avons presque fini mais il faut encore afficher la liste des catégories et mettre à jour la liste des bulletins en fonction de la catégorie courante. 
 
-!!!Mise à jour des Posts
+!!!Mise à jour de la liste des bulletins
 
-Nous devons mettre à jours les bulletins, pour cela, modifions la méthode de rendu du composant ==TBPostsListComponent==.
+Nous devons mettre à jour les bulletins.
+Pour cela, modifions la méthode de rendu du composant ==TBPostsListComponent==.
 
-La méthode ==readSelectedPosts== récupère les bulletins à afficher depuis la base et les filtre en fontction de la catégorie courante. Si la catégorie courante est ==nil==, cela signifie que l'utilisateur n'a pas encore sélectionné de catégorie et l'ensemble des bulletins visibles de la base est affiché. Si elle contient une valeur autre que ==nil==, l'utilisateur a sélectionné une catégorie et l'application affiche alors la liste des bulletins attachés à cette catégorie.
+La méthode ==readSelectedPosts== récupère les bulletins à afficher depuis la base et les filtre en fonction de la catégorie courante. Si la catégorie courante est ==nil==, cela signifie que l'utilisateur n'a pas encore sélectionné de catégorie et l'ensemble des bulletins visibles de la base est affiché. 
+Si elle contient une valeur autre que ==nil==, l'utilisateur a sélectionné une catégorie et l'application affiche alors la liste des bulletins attachés à cette catégorie.
 
 [[[
 TBPostsListComponent >> readSelectedPosts
@@ -149,7 +153,8 @@ TBPostsListComponent >> renderContentOn: html
          html render: (TBPostComponent new post: p) ] ]
 ]]]
 
-Une instance du composant ==TBCategoriesComponent== est ajoutée sur la page et permet de sélectionner la catégorie courante (voir la figure *@ugly*). De même qu'expliqué précédemment, une nouvelle instance de ==TBCategoriesComponent== est créé à chaque rendu du composant ==TBPostsListComponent== donc il n'est pas nécessaire de l'ajouter dans la liste des sous-composants retourné par ==children:==.
+Une instance du composant ==TBCategoriesComponent== est ajoutée sur la page et permet de sélectionner la catégorie courante (voir la figure *@ugly*). 
+De même qu'expliqué précédemment, une nouvelle instance de ==TBCategoriesComponent== est créé à chaque rendu du composant ==TBPostsListComponent==, donc il n'est pas nécessaire de l'ajouter dans la liste des sous-composants retourné par ==children:==.
 
 +Catégories afin de sélectionner les posts.>file://figures/categoriesUgly.png|width=75|label=ugly+
 
@@ -189,7 +194,7 @@ TBPostsListComponent >> renderContentOn: html
 
 Vous devez obtenir une application proche de celle représentée par la figure *@nicer5*.
 
-+Avec un meilleur agencement.>file://figures/NicerCategories.png|width=75|label=nicer5+
++Liste des catégories avec un meilleur agencement.>file://figures/NicerCategories.png|width=75|label=nicer5+
 
 Lorsqu'on sélectionne une catégorie, la liste des posts est bien mise à jour.
 Toutefois, l'entrée courante dans la liste des catégories n'est pas sélectionnée.
@@ -252,7 +257,8 @@ TBPostsListComponent >> basicRenderCategoriesOn: html
 
 [[[
 TBPostsListComponent >> basicRenderPostsOn: html
-	self readSelectedPosts do: [ :p | html render: (self postComponentFor: p) ]
+	self readSelectedPosts do: [ :p | 
+      html render: (self postComponentFor: p) ]
 ]]]
 
 
