@@ -95,8 +95,6 @@ TBBlog reset ; createDemoPosts
 
 !!! Chapitre 7: Gestion des catégories
 
-%Pour l'instant le code est dans TinyBlog-StephaneDucasse.5_1
-
 Vous pouvez charger la correction des chapitres précédents en exécutant le code suivant:
 
 [[[
@@ -169,7 +167,7 @@ Metacello new
     load
 ]]]
 
-Vous devez également créer un compte du PharoCloud, reporter vos identifiants dans le code ci-dessous et l'exécuter:
+Vous devez également créer un compte du PharoCloud, reporter vos identifiants dans le code ci-dessous :
 
 [[[
 	
@@ -214,6 +212,8 @@ client := EphemericCloudClient userID: ephUser authToken: ephToken.
 		ifTrue:[ ZnZincServerAdaptor startOn: 8080 ] 
 		ifFalse: [ client lastPublishedInstance hostname ]
 ]]]
+
+Si vous exécutez ce code (cela prend un peu de temps), votre image Pharo courante sera automatiquement envoyée sur votre espace PharoCloud.
 
 
 %!! Chapitre : Une Interface Web avec Teapot pour TinyBlog

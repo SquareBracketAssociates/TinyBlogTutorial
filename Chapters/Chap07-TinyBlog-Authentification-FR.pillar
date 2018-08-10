@@ -13,7 +13,7 @@ Cela va nous permettre d'illustrer l'invocation de composant.
 Nous intègrerons ensuite un composant d'identification sous la forme d'une boîte modale.
 Cela va nous permettre d'illustrer comment la saisie de champs utilise de manière élégante les variables d'instances d'un composant.
 
-Enfin, nous montrerons aussi comment stocker l'utilisateur connecté à l'aide d'une session.
+Enfin, nous montrerons aussi comment stocker l'utilisateur connecté dans la session courante.
 
 !!! Composant d'administration simple (v1)
 
@@ -38,12 +38,12 @@ TBAdminComponent >> renderContentOn: html
 
 !!! Ajout d'un bouton 'admin'
 
-Nous souhaitons maintenant ajouter un bouton dans l'en-tête du site (composant ==TBHeaderComponent==) afin d'accéder à la partie administration du site comme sur la figure *@SimpleAdminLink*.
-Pour cela, nous allons modifier les composants existants ==TBHeaderComponent== (en-tête) et ==TBPostsListComponent== (partie publique).
+Ajoutons maintenant un bouton dans l'en-tête du site (composant ==TBHeaderComponent==) afin d'accéder à la partie administration du site comme sur la figure *@SimpleAdminLink*.
+Pour cela, modifions les composants existants: ==TBHeaderComponent== (en-tête) et ==TBPostsListComponent== (partie publique).
 
 +Lien simple vers la partie administration.>file://figures/SimpleAdminLink.png|width=100|label=SimpleAdminLink+
 
-Commençons par ajouter le 'admin' dans l'en-tête:
+Commençons par ajouter le bouton 'admin' dans l'en-tête:
 
 [[[
 TBHeaderComponent >>	renderContentOn: html	
@@ -112,7 +112,7 @@ TBHeaderComponent >>	renderSimpleAdminButtonOn: html
 		   tbsPullRight;
    		callback: [ component goToAdministrationView ]; 			
 		   with: [
-            html tbsGlyphIcon iconEyeOpen.
+            html tbsGlyphIcon iconListAlt.
             html text: ' Admin View' ]]
 ]]]
 
@@ -123,12 +123,14 @@ TBPostsListComponent >> goToAdministrationView
    self call: TBAdminComponent new
 ]]]
 
-Si vous rafraichissez votre navigateur et cliquez sur le bouton 'Admin', vous devez voir la partie administraion v1 s'afficher.
-Toutefois, ce bouton admin est toujours présent dans la partie administration bien qu'il n'est plus fonctionnel.
+Avant de cliquer sur le bouton 'Admin' dans votre navigateur, vous devez cliquer sur 'New Session' afin de recréer le composant ==TBHeaderComponent==. 
+Le bouton 'Admin' permet maintenant de voir la partie administraion v1 s'afficher.
+Attention à ne cliquer qu'une seule fois car ce bouton 'Admin' est toujours présent dans la partie administration bien qu'il ne soit fonctionnel.
+Nous allons le remplacer par un bouton 'Disconnect'.
 
 !!! Ajout d'un bouton 'disconnect'
 
-Nous souhaitons maintenant remplacer le composant en-tête par un autre lorsqu'on affiche la partie administration.
+Nous allons remplacer le composant en-tête par un autre lorsqu'on affiche la partie administration.
 Cette nouvelle en-tête affichera un bouton 'Disconnect'.
 
 Définissons un nouveau composant en-tête:
@@ -160,28 +162,33 @@ TBAdminComponent >> renderDisconnectButtonOn: html
 ]]]
 
 [[[
-TBAdminComponent >> gotoToPostListView
+TBAdminComponent >> goToPostListView
 	self answer
 ]]]
 
-Si vous rafraichissez votre navigateur et cliquez sur le bouton 'Admin', vous devez voir la partie administration v1 s'afficher avec un bouton 'Disconnect' pour revenir à la partie publique
+Cliquez sur 'New Session' en bas à gauche de votre navigateur et ensuite sur le bouton 'Admin', vous devez maintenant voir la partie administration v1 s'afficher avec un bouton 'Disconnect' permettant de revenir à la partie publique comme sur la figure *@SimpleAdminLink*.
 
 
-!!! call:/answer:
+!!!!Notion call:/answer:
 
 Si vous étudiez le code précédent, vous verrez que nous avons utilisé le mécanisme ==call:==/==answer:== de Seaside pour mettre en place la navigation entre les composants ==TBPostsListComponent== et ==TBAdminComponent==.
 Ce mécanisme puissant et élégant est expliqué dans la vidéo 1 de la semaine 5 du Mooc (*http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_5.html*).
 
 !!! Composant fenêtre modale d'identification 
 
-Développons maintenant un composant d'identification qui lorsqu'il sera invoqué ouvrira une boite de dialogue pour demander un login et un mot de passe. Le résultat que nous voulons obtenir est montré sur la figure *@authentification*. Une telle fonctionnalité devrait faire partie d'une bibliothèque de composants de base en Seaside. Le projet Heimdal disponible sur *http://www.github.com/DuneSt/* offre cette fonctionnalité. 
-D'autres composants permettant d'interroger google ou twitter sont disponibles et utilisé dans le projet Steam *https://github.com/guillep/steam*.
+Développons maintenant un composant d'identification qui lorsqu'il sera invoqué ouvrira une boite de dialogue pour demander un login et un mot de passe. 
+Le résultat que nous voulons obtenir est montré sur la figure *@authentification*. 
+
+Sachez qu'il existe des bibliothèques de composants Seaside prêt à l'emploi.
+Par exemple, le projet Heimdal disponible sur *http://www.github.com/DuneSt/* offre un composant d'identification ou  
+le projet Steam *https://github.com/guillep/steam* offre d'autres composants permettant d'interroger google ou twitter.
 
 +Aperçu du composant d'identification.>file://figures/Authentification.png|width=75|label=authentification+
 
 !!!! Définition d'un composant d'identification
 
-Nous définissons une nouvelle sous-classe de la classe ==WAComponent== et des accesseurs. Ce composant contient un login, un mot de passe ainsi que le composant qui l'a invoqué pour accéder à la partie administration.
+Nous définissons une nouvelle sous-classe de la classe ==WAComponent== et des accesseurs. 
+Ce composant contient un login, un mot de passe ainsi que le composant qui l'a invoqué pour accéder à la partie administration.
 
 [[[
 WAComponent subclass: #TBAuthentificationComponent
@@ -272,7 +279,8 @@ TBAuthentificationComponent >> renderBodyOn: html
 ]]]
 
 
-La méthode ==renderAccountFieldOn:== montre comment la valeur d'un input field est passée puis stockée dans une variable d'instance du composant quand l'utilisateur confirme sa saisie. Le paramètre de la méthode ==callback:== est un bloc qui prend lui-même un argument représentant la valeur du text input.
+La méthode ==renderAccountFieldOn:== montre comment la valeur d'un input field est passée puis stockée dans une variable d'instance du composant quand l'utilisateur confirme sa saisie. 
+Le paramètre de la méthode ==callback:== est un bloc qui prend lui-même un argument représentant la valeur du text input.
 
 [[[
 TBAuthentificationComponent >> renderAccountFieldOn: html
@@ -280,6 +288,7 @@ TBAuthentificationComponent >> renderAccountFieldOn: html
       tbsFormGroup: [ html label with: 'Account'.
          html textInput
             tbsFormControl;
+            attributeAt: 'autofocus' put: 'true';
             callback: [ :value | account := value ];
             value: account ]
 ]]]
@@ -299,7 +308,7 @@ TBAuthentificationComponent >> renderPasswordFieldOn: html
 
 Deux boutons sont ajoutés en bas de la fenêtre modale.
 Le bouton =='Cancel'== qui permet de fermer la fenêtre modale grâce à son attribut 'data-dismiss' et le bouton =='SignIn'== associé à un bloc de callback qui envoi le message ==validate==.
-La touche 'enter' du clavier permet également d'activer le bouton =='SignIn'== car c'est le seul dont l'attribut 'type' a la valeur 'submit'. 
+La touche ==enter== du clavier permet également d'activer le bouton =='SignIn'== car c'est le seul dont l'attribut 'type' a la valeur 'submit'. 
 
 
 [[[
@@ -354,21 +363,21 @@ Le composant étant instancié à chaque affichage, il n'a pas besoin d'être re
 On ajoute également un bouton nommé 'Login' avec un pictogramme un pictogramme clé.
 Lorsque l'utilisateur clique sur ce bouton, la boîte modale ayant l'identifiant ==myAuthDialog== est affichée.
 
-En rechargeant la page de TinyBlog dans votre navigateur, nous voyons maintenant le lien 'SignIn' et lorsque l'on clique dessus, nous obtenons bien le rendu sur la figure *@authentification*.
+En rechargeant la page de TinyBlog dans votre navigateur, nous voyons maintenant un bouton 'Login' dans l'en-tête permettant d'ouvrir la fenêtre modale comme illustré sur la figure *@authentification*.
 
 Toutefois, si vous cliquez sur le bouton 'SignIn', une erreur se produit. 
-Si vous avez activé l'ouverture du debugger dans Pharo, on comprend qu'il faut définir la méthode ==tryConnectionWithLogin:andPassword:== sur le composant ==TBPostsListComponent== car c'est le message envoyé par le callback du bouton 'SignIn': 
+En utilisant le debugger Pharo, on comprend qu'il faut définir la méthode ==tryConnectionWithLogin:andPassword:== sur le composant ==TBPostsListComponent== car c'est le message envoyé par le callback du bouton 'SignIn' de la fenêtre modale: 
 
 [[[
 TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password
    (login = 'admin' and: [ password = 'topsecret' ])
          ifTrue: [ self goToAdministrationView ]
-         ifFalse: [ self showLoginError ]
+         ifFalse: [ self loginErrorOccured ]
 ]]]
 
 Pour l'instant, le login et le mot de passe pour accéder à la partie administration sont directement stockés en dur dans le code de cette méthode. 
 Nous avons déjà défini la méthode ==goToAdministrationView== précédemment.
-Ajoutons la méthode ==showLoginError== et un mécanisme pour afficher un message d'erreur lorsque l'utilisateur n'utilise pas les bons identifiants comme sur la figure *@loginErrorMessage*
+Ajoutons la méthode ==loginErrorOccured== et un mécanisme pour afficher un message d'erreur lorsque l'utilisateur n'utilise pas les bons identifiants comme sur la figure *@loginErrorMessage*
 
 [[[
 TBScreenComponent subclass: #TBPostsListComponent
@@ -378,8 +387,18 @@ TBScreenComponent subclass: #TBPostsListComponent
 ]]]
 
 [[[
-TBPostsListComponent >> showLoginError
+TBPostsListComponent >> hasLoginError
+   ^ showLoginError ifNil: [ false ]
+]]]
+	
+[[[
+TBPostsListComponent >> loginErrorOccured
 	showLoginError := true
+]]]
+
+[[[
+TBPostsListComponent >> loginErrorMessage
+   ^ 'Inccorect login and/or password'
 ]]]
 
 [[[
@@ -395,7 +414,7 @@ TBPostsListComponent >> renderPostColumnOn: html
 
 [[[
 TBPostsListComponent >> renderLoginErrorMessageIfAnyOn: html
-   showLoginError ifTrue: [ 
+   self hasLoginError ifTrue: [ 
       showLoginError := false.
       html tbsAlert 
          beDanger ;
@@ -440,11 +459,11 @@ TBAdministrator class >> login: login password: password
 ]]]
 
 
-Notez que nous stockons pas le mot de passe administrateur en clair dans la variable d'instance ==password== mais son hash en MD5.
+Notez que nous ne stockons pas le mot de passe administrateur en clair dans la variable d'instance ==password== mais son hash en MD5.
 Vous pouvez vérifier cela en inspectant l'expression suivante :
 
 [[[
-luc := TBAdmin login: 'luc' password: 'topsecret'.
+luc := TBAdministrator login: 'luc' password: 'topsecret'.
 ]]] 
 
 Un blog possède un administrateur qui peut s'identifier sur le blog afin administrer les posts qu'il contient. 
@@ -481,7 +500,7 @@ TBBlog class >> defaultAdminPassword
 Il ne faut pas oublier de re-créer le blog ainsi:
 
 [[[
-	TBBlog reset; createDemos
+	TBBlog reset; createDemoPosts
 ]]]
 
 Vous pouvez maintenant modifier le login et le mot de passe administrateur de votre blog ainsi:
@@ -497,9 +516,14 @@ TBBlog current save
 Notez que sans rien faire, l'administrateur du blog a été sauvegardé par Voyage dans la base de données.
 En effet, la classe ==TBBlog== étant une racine Voyage, tous ces attributs sont stockés dans la base automatiquement lors de l'envoi du message ==save==.
 
+!!!!Améliorations possibles
+
+Etendre le modèle de l'application ainsi nécessite l'écriture de nouveaux tests unitaires. 
+
+
 !!!Intégration du compte administrateur
 
-Modifions maintenant le composant d'authentification ==TBAuthentificationComponent== pour qu'il utilise les identifiants de l'administrateur du blog courant. 
+Modifions maintenant la méthode ==tryConnectionWithLogin:andPassword:== pour qu'elle utilise les identifiants de l'administrateur du blog courant. 
 Notez que nous comparons les hash MD5 des mots de passe car nous ne stockons pas le mot de passe en clair dans le modèle.
 
 [[[
@@ -507,7 +531,7 @@ TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password
    (login = self blog administrator login and: [ 
       (MD5 hashMessage: password) = self blog administrator password ])
          ifTrue: [ self goToAdministrationView ]
-         ifFalse: [ self showLoginError ]
+         ifFalse: [ self loginErrorOccured ]
 ]]]
 
 !!!Stocker l'administrateur courant en session
@@ -518,6 +542,11 @@ Un objet session est attribué à chaque instance de l'application.
 Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants. 
 Nous stockerons donc l'administrateur courant en session et modifierons les composants pour afficher des boutons permettant une navigation simplifiée lorsque l'administrateur est connecté.
 Lorsqu'il se déconnecte explicitement ou que la session expire, nous supprimerons la session courante.
+
+La figure *@SessionNavigation* illustre la navigation entre les pages que nous souhaitons mettre en place dans TinyBlog.
+
++Navigation et identification dans TinyBlog.>file://figures/sessionAuthSimplifiedNavigation.pdf|width=100|label=SessionNavigation+
+
 
 !!!!Définition et utilisation d'une classe session spécifique
 
@@ -538,7 +567,7 @@ TBSession >> currentAdmin: anObject
     currentAdmin := anObject
 
 TBSession >> isLogged
-    ^ self currentAdmin = nil
+    ^ self currentAdmin notNil
 ]]]
 
 Indiquons maintenant à Seaside qu'il doit utiliser l'objet ==TBSession== comme objet de session courant pour l'application TinyBlog.
@@ -570,7 +599,7 @@ TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password
          ifTrue: [ 
             self session currentAdmin: self blog administrator.
             self goToAdministrationView ]
-         ifFalse: [ self showLoginError ]
+         ifFalse: [ self loginErrorOccured ]
 ]]]
 
 
@@ -579,11 +608,15 @@ TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password
 Pour mettre en place une navigation simplifiée, modifions l'en-tête pour afficher soit le bouton de connexion soit un bouton de navigation simple vers la partie administration sans étape de connexion si un administrateur est déjà connecté c'est-à-dire présent en session. 
 
 [[[
-TBPostsListComponent >> renderSignInOn: html
+TBHeaderComponent >> renderButtonsOn: html
     self session isLogged
         ifTrue: [ self renderSimpleAdminButtonOn: html ]
 		  ifFalse: [ self rendeModalLoginButtonOn: html ]     
 ]]]
+
+Vous pouvez tester dans votre navigateur en commençant une nouvelle session (bouton 'New Session' en bas à gauche).
+Une fois connecté, l'administrateur est ajouté en session.
+Remarquez que le bouton déconnexion ne fonctionne plus correctement car il n'invalide pas la session.
 
 !!!!Déconnexion
 
@@ -599,7 +632,7 @@ TBSession >> reset
 Modifions maintenant le bouton déconnexion de l'en-tête de la partie administration pour envoyer ce message ==reset== à la session courante:
 
 [[[
-TBAdminComponent >> renderDisconnectButtonOn: html
+TBAdminHeaderComponent >> renderDisconnectButtonOn: html
    html tbsNavbarButton 
       tbsPullRight; 
       callback: [ self session reset ];
@@ -607,6 +640,8 @@ TBAdminComponent >> renderDisconnectButtonOn: html
          html text: 'Disconnect '.
          html tbsGlyphIcon iconLogout ]
 ]]]
+
+Le bouton 'Disconnect' fonctionne à nouveau correctement.
 
 !!!!Navigation simplifiée vers la partie publique
 
@@ -630,8 +665,8 @@ TBAdminHeaderComponent >> renderPublicViewButtonOn: html
             html text: ' Public View' ]]
 ]]]
 
-@todo screenshot final
 
+Vous pouvez maintenant tester la navigation dans votre application qui doit correspondre avec la représentation sur la figure *@SessionNavigation*.
 
 !!! Conclusion
 
@@ -647,5 +682,6 @@ Nous en profiterons pour vous montrer un aspect avancé qui permet la définitio
 !!!! Améliorations possibles
 
 A titre d'exercice, vous pouvez :
-- ajouter la possibilité d'avoir plusieurs compte administrateurs chacun avec ses propres identifiants,
-- 
+- afficher le login de l'administrateur dans l'en-tête lorsqu'il est connecté,
+- ajouter la possibilité d'avoir plusieurs compte administrateurs chacun avec ses propres identifiants.
+
