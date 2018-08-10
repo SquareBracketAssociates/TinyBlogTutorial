@@ -71,7 +71,7 @@ TestCase subclass: #TBBlogTest
 
 La méthode ==setUp== permet d'initialiser le contexte des tests.
 Elle est donc exécutée avant chaque test unitaire.
-Dans cet exemple, elle efface le contenu du blog, lui ajoute un post et en créé un autre qui n'est provisoirement pas enregistré.
+Dans cet exemple, elle efface le contenu du blog, lui ajoute un post et en créé un autre qui n'est provisoirement pas enregistré. Faites attention car nous devrons changer cette logique car dans le future a chaque fois que vous exécuterez des tests, vous perdrez votre domaine. C'est un exemple de la sorte d'effets pernicieux qu'un Singleton introduit dans un système.
 
 [[[
 TBBlogTest >> setUp
@@ -128,6 +128,9 @@ TBBlog >> size
 
 Le test précédent doit maintenant passer.
 
+
+!!! Améliorons la couverture de test
+
 Ecrivons d'autres tests pour couvrir les fonctionnalités que nous venons de développer. 
 
 [[[
@@ -141,8 +144,9 @@ TBBlogTest >> testRemoveAllBlogPosts
    self assert: blog size equals: 0
 ]]]
 
+!!! Autres fonctionalités
 
-!!!!Obtenir l'ensemble des posts (visibles et invisibles)
+!!!! Obtenir l'ensemble des posts (visibles et invisibles)
 
 Ajoutons un nouveau test qui échoue:
 
@@ -160,7 +164,7 @@ TBBlog >> allBlogPosts
 ]]]
 
 
-!!!!Obtenir tous les posts visibles
+!!!! Obtenir tous les posts visibles
 
 Test unitaire:
 
@@ -178,7 +182,7 @@ TBBlog >> allVisibleBlogPosts
 ]]]
 
 
-!!!!Obtenir tous les posts d'une catégorie
+!!!! Obtenir tous les posts d'une catégorie
 
 [[[
 TBBlogTest >> testAllBlogPostsFromCategory
