@@ -1,4 +1,4 @@
-!! L'application TinyBlog : extension du modèle et tests unitaires
+!! TinyBlog : extension du modèle et tests unitaires
 @chapModelExtensionAndUnitTests
 
 % full hash of full code 35785aaaf1284f1a472980f07522fc7d0d4743e6
@@ -29,7 +29,7 @@ TBBlog >> initialize
 
 !!!Un seul blog
 
-Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. Dans le futur, vous pourrez ajouter la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant, nous utilisons donc un singleton pour la classe ==TBBlog==. Faites attention car le schéma de conception Singleton est rarement bien utilisé et peut rendre votre conception rapidement de mauvaise qualité. En effet, un singleton est souvent une sorte de variable globale et rend votre conception moins modulaire. Donc ne généralisez pas ce que nous faisons ici.
+Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. Dans le futur, vous pourrez ajouter la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant, nous utilisons donc un singleton pour la classe ==TBBlog==. Faites attention car le schéma de conception Singleton est rarement bien utilisé et peut rendre votre conception rapidement de mauvaise qualité. En effet, un singleton est souvent une sorte de variable globale et rend votre conception moins modulaire. Evitez de faire des références explicites au Singleton dans votre code et ne généralisez pas ce que nous faisons ici.
 
 Comme la gestion du singleton est un comportement de classe, ces méthodes sont définies sur le coté class de la classe ==TBBlog==.
 
@@ -47,7 +47,8 @@ TBBlog class >> current
    ^ uniqueInstance ifNil: [ uniqueInstance := self new ]
 ]]]
 
-Quand la classe est chargée, le singleton est réinitialisé. 
+Nous redéfinissons la méthode de classe ==initialize== afin que la classe
+soit réinitialisée quand elle est chargée en mémoire. 
 
 [[[
 TBBlog class >> initialize
