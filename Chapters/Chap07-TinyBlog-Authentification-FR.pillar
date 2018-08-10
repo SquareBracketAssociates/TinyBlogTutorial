@@ -56,10 +56,17 @@ TBHeaderComponent >>	renderContentOn: html
 
 [[[
 TBHeaderComponent >>	renderButtonsOn: html
+   self renderSimpleAdminButtonOn: html 
+]]]
+
+[[[
+TBHeaderComponent >>	renderSimpleAdminButtonOn: html
 	html form: [ 
-	html tbsNavbarButton 
-		tbsPullRight;
-		with: 'Admin' ]
+	   html tbsNavbarButton 
+		   tbsPullRight;
+		   with: [
+            html tbsGlyphIcon iconEyeOpen.
+            html text: ' Admin View' ]]
 ]]]
 
 Si vous rafraichissez votre navigateur, le bouton admin est bien présent mais il n'a aucun effet pour l'instant.
@@ -99,12 +106,14 @@ TBScreenComponent >> createHeaderComponent
 Nous pouvons maintenant ajouter le ==callback:== sur le bouton :
 
 [[[
-TBHeaderComponent >>	renderButtonsOn: html
+TBHeaderComponent >>	renderSimpleAdminButtonOn: html
 	html form: [ 
-	html tbsNavbarButton 
-		tbsPullRight;
-		callback: [ component goToAdministrationView ]; 
-		with: 'Admin' ]
+	   html tbsNavbarButton 
+		   tbsPullRight;
+   		callback: [ component goToAdministrationView ]; 			
+		   with: [
+            html tbsGlyphIcon iconEyeOpen.
+            html text: ' Admin View' ]]
 ]]]
 
 Il ne reste plus qu'à définir la méthode ==goToAdministrationView== sur le composant ==TBPostsListComponent== dans le protocole 'actions':
@@ -120,7 +129,7 @@ Toutefois, ce bouton admin est toujours présent dans la partie administration b
 !!! Ajout d'un bouton 'disconnect'
 
 Nous souhaitons maintenant remplacer le composant en-tête par un autre lorsqu'on affiche la partie administration.
-Cette nouvelle en-tête affichera un bouton 'disconnect'.
+Cette nouvelle en-tête affichera un bouton 'Disconnect'.
 
 Définissons un nouveau composant en-tête:
 [[[	
@@ -132,14 +141,7 @@ TBHeaderComponent subclass: #TBAdminHeaderComponent
 
 [[[
 TBAdminHeaderComponent >> renderButtonsOn: html
-	html form: [ 
-		html tbsNavbarButton 
-			tbsPullRight; 
-			callback: [ component gotoToPublic ];
-			with: [
-			   html text: 'Disconnect '.
-			   html tbsGlyphIcon iconLogout	
-			]
+   html form: [ self renderDisconnectButtonOn: html ]
 ]]]
 
 Indiquons au composant ==TBAdminComponent== d'utiliser cette en–tête:
@@ -147,6 +149,14 @@ Indiquons au composant ==TBAdminComponent== d'utiliser cette en–tête:
 [[[
 TBAdminComponent >> createHeaderComponent
    ^ TBAdminHeaderComponent from: self
+
+TBAdminComponent >> renderDisconnectButtonOn: html
+   html tbsNavbarButton 
+      tbsPullRight; 
+      callback: [ component goToPostListView ];
+      with: [  
+         html text: 'Disconnect '.
+         html tbsGlyphIcon iconLogout ]
 ]]]
 
 [[[
@@ -160,9 +170,7 @@ Si vous rafraichissez votre navigateur et cliquez sur le bouton 'Admin', vous de
 !!! call:/answer:
 
 Si vous étudiez le code précédent, vous verrez que nous avons utilisé le mécanisme ==call:==/==answer:== de Seaside pour mettre en place la navigation entre les composants ==TBPostsListComponent== et ==TBAdminComponent==.
-Ce mécanisme puissant et élégant est expliqué dans la vidéo 1 de la semaine 5 du Mooc.
-
-@todo ré-expliquer ?
+Ce mécanisme puissant et élégant est expliqué dans la vidéo 1 de la semaine 5 du Mooc (*http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_5.html*).
 
 !!! Composant fenêtre modale d'identification 
 
@@ -326,9 +334,13 @@ TBAuthentificationComponent >> validate
 
 !!!!Intégration du composant d'identification
 
-Pour intégrer notre composant d'identification, commençons par modifier le bouton 'Admin' de la barre d'en-tête (==TBHeaderComponent==) ainsi:
+Pour intégrer notre composant d'identification, modifions le bouton 'Admin' de la barre d'en-tête (==TBHeaderComponent==) ainsi:
+
 [[[
 TBHeaderComponent >>	renderButtonsOn: html
+   self rendeModalLoginButtonOn: html
+
+TBHeaderComponent >>	rendeModalLoginButtonOn: html
    html render: (TBAuthentificationComponent from: component).
    html tbsNavbarButton 
       tbsPullRight; 
@@ -339,7 +351,8 @@ TBHeaderComponent >>	renderButtonsOn: html
          html text: ' Login' ]
 ]]]
 
-Cette méthode commence donc par intégrer le code du composant ==TBAuthentificationComponent== dans la page web (==render:==). Le composant étant instancié à chaque affichage, il n'a pas besoin d'être retourné par la méthode ==children==.
+La méthode ==rendeModalLoginButtonOn:== commence par intégrer le code du composant ==TBAuthentificationComponent== dans la page web (==render:==). 
+Le composant étant instancié à chaque affichage, il n'a pas besoin d'être retourné par la méthode ==children==.
 On ajoute également un bouton nommé 'Login' avec un pictogramme un pictogramme clé.
 Lorsque l'utilisateur clique sur ce bouton, la boîte modale ayant l'identifiant ==myAuthDialog== est affichée.
 
@@ -355,9 +368,9 @@ TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password
          ifFalse: [ self showLoginError ]
 ]]]
 
-Pour l'instant, le login et le mot de passe pour accéder à la partie administration sont directement stockés dans le code de cette méthode. 
+Pour l'instant, le login et le mot de passe pour accéder à la partie administration sont directement stockés en dur dans le code de cette méthode. 
 Nous avons déjà défini la méthode ==goToAdministrationView== précédemment.
-Ajoutons maintenant un mécanisme pour afficher un message d'erreur lorsque l'utilisateur ne rentre pas les bons identifiants comme sur la figure *@loginErrorMessage*
+Ajoutons la méthode ==showLoginError== et un mécanisme pour afficher un message d'erreur lorsque l'utilisateur n'utilise pas les bons identifiants comme sur la figure *@loginErrorMessage*
 
 [[[
 TBScreenComponent subclass: #TBPostsListComponent
@@ -473,12 +486,23 @@ Il ne faut pas oublier de re-créer le blog ainsi:
 	TBBlog reset; createDemos
 ]]]
 
+Vous pouvez maintenant modifier le login et le mot de passe administrateur de votre blog ainsi:
+
+[[[
+|admin|
+admin := TBBlog current administrator.
+admin login: 'luke'.
+admin password: 'thebrightside'.
+TBBlog current save
+]]]
+
 Notez que sans rien faire, l'administrateur du blog a été sauvegardé par Voyage dans la base de données.
-En effet, la classe ==TBBlog== étant une racine Voyage, tous ces attributs sont stockés dans la base automatiquement.
+En effet, la classe ==TBBlog== étant une racine Voyage, tous ces attributs sont stockés dans la base automatiquement lors de l'envoi du message ==save==.
 
 !!!Intégration du compte administrateur
 
-Modifions maintenant le composant d'authentification ==TBAuthentificationComponent== pour qu'il utilise les valeurs d'identification du blog courant. Notez que nous comparons les hash MD5 des mots de passe car nous ne stockons pas le mot de passe en clair dans le modèle.
+Modifions maintenant le composant d'authentification ==TBAuthentificationComponent== pour qu'il utilise les identifiants de l'administrateur du blog courant. 
+Notez que nous comparons les hash MD5 des mots de passe car nous ne stockons pas le mot de passe en clair dans le modèle.
 
 [[[
 TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password
@@ -490,7 +514,7 @@ TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password
 
 !!!Stocker l'administrateur courant en session
 
-Actuellement, si l'administrateur du blog veut naviguer entre la partie privée et la partie publique de TinyBlog, il  reconnecter à chaque fois.
+Actuellement, si l'administrateur du blog veut naviguer entre la partie privée et la partie publique de TinyBlog, il doit se reconnecter à chaque fois.
 Nous allons simplifier cela en stockant l'administrateur courant en session lors d'une connexion réussie.
 Un objet session est attribué à chaque instance de l'application. 
 Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants. 
@@ -539,44 +563,73 @@ Pensez à exécuter cette méthode via ==TBApplicationRootComponent initialize==
 
 !!!!Stockage de l'administrateur courant en session
 
-@todo luc Here
+Lors d'une connexion réussie, nous ajoutons l'objet administrateur dans la session grâce à l'accesseur en écriture ==currentAdmin:==.
+
+[[[
+TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password
+   (login = self blog administrator login and: [ 
+      (MD5 hashMessage: password) = self blog administrator password ])
+         ifTrue: [ 
+            self session currentAdmin: self blog administrator.
+            self goToAdministrationView ]
+         ifFalse: [ self showLoginError ]
+]]]
+
 
 !!!!Navigation simplifiée vers la partie administration
 
-Modifions le comportement du bouton permettant d'accéder à l'administration. 
-Il doit provoquer l'affichage de la boite d'authentification uniquement si l'utilisateur ne s'est pas encore connecté.
+Pour mettre en place une navigation simplifiée, modifions l'en-tête pour afficher soit le bouton de connexion soit un bouton de navigation simple vers la partie administration sans étape de connexion si un administrateur est déjà connecté c'est-à-dire présent en session. 
 
 [[[
 TBPostsListComponent >> renderSignInOn: html
     self session isLogged
-        ifFalse: [
-            html tbsGlyphIcon perform: #iconLock.
-            html html: '<a data-toggle="modal" href="#myAuthDialog" class="link">SignIn</a>' ]
-        ifTrue: [
-            html tbsGlyphIcon perform: #iconUser.
-            html anchor callback: [ self gotoAdministration ]; with: 'Private area' ]
+        ifTrue: [ self renderSimpleAdminButtonOn: html ]
+		  ifFalse: [ self rendeModalLoginButtonOn: html ]     
 ]]]
 
-Enfin, le composant ==TBAuthentificationComponent== doit mettre à jour la variable d'instance ==logged== de la session si l'utilisateur est bien un administrateur.
+!!!!Déconnexion
+
+Ajoutons une méthode ==reset== sur notre objet session afin de supprimer l'administrateur courant, invalider la session courante et rediriger vers le point d'entrée de l'application.
 
 [[[
-TBAuthentificationComponent >> validate
-   (self account = 'admin' and: [ self password = 'password' ])
-      ifTrue: [
-         self session logged: true.
-         component gotoAdministration ]
+TBSession >> reset
+   currentAdmin := nil.
+	self requestContext redirectTo: self application url.
+	self unregister.
+]]]
+
+Modifions maintenant le bouton déconnexion de l'en-tête de la partie administration pour envoyer ce message ==reset== à la session courante:
+
+[[[
+TBAdminComponent >> renderDisconnectButtonOn: html
+   html tbsNavbarButton 
+      tbsPullRight; 
+      callback: [ self session reset ];
+      with: [  
+         html text: 'Disconnect '.
+         html tbsGlyphIcon iconLogout ]
 ]]]
 
 !!!!Navigation simplifiée vers la partie publique
 
-
-!!!!Déconnexion
-
-On ajoute également une méthode pour ré-initialiser la session :
+Ajoutons maintenant un nouveau bouton dans l'en-tête de la partie administration pour revenir à la partie publique sans se déconnecter.
 
 [[[
-TBSession >> reset
-   currentUser := nil
+TBAdminHeaderComponent >> renderButtonsOn: html
+	html form: [ 
+		self renderDisconnectButtonOn: html.
+		self renderPublicViewButtonOn: html ]
 ]]]
 
-@todo check if "self application newSession" is not better
+[[[
+TBAdminHeaderComponent >> renderPublicViewButtonOn: html
+   self session isLogged ifTrue: [ 		 
+      html tbsNavbarButton 
+         tbsPullRight; 
+         callback: [ component goToPostListView ];
+         with: [  
+            html tbsGlyphIcon iconEyeOpen.
+            html text: ' Public View' ]]
+]]]
+
+@todo screenshot final
