@@ -95,9 +95,29 @@ TBBlog reset ; createDemoPosts
 
 !!! Chapitre 7: Gestion des catégories
 
-%Pour l'instant le code est dans TinyBlog-StephaneDucasse.5_1
+Vous pouvez charger la correction des chapitres précédents en exécutant le code suivant:
 
+[[[
+Metacello new
+    smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
+    version: #chapter6solution;
+    configuration: 'TinyBlog';
+    load
+]]]
 
+Pour tester le code, vous devez lancer le serveur HTTP pour Seaside:
+
+[[[
+ZnZincServerAdaptor startOn: 8080.
+]]]
+
+Ouvrez votre browser sur ==http://localhost:8080/TinyBlog==
+
+Si vous avez besoin de créer quelques posts initiaux:
+
+[[[
+TBBlog reset ; createDemoPosts
+]]]
 
 
 
@@ -108,7 +128,7 @@ Vous pouvez charger l'application TinyBlog avec la partie publique en exécutant
 [[[
 Metacello new
     smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #chapter6solution;
+    version: #chapter7solution;
     configuration: 'TinyBlog';
     load
 ]]]
@@ -127,7 +147,7 @@ Vous pouvez charger l'application TinyBlog avec l'authentification en exécutant
 [[[
 Metacello new
     smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #chapter7solution;
+    version: #chapter8solution;
     configuration: 'TinyBlog';
     load
 ]]]
@@ -142,12 +162,12 @@ Vous pouvez charger l'application TinyBlog contenant la partie administration en
 [[[
 Metacello new
     smalltalkhubUser: 'PharoMooc' project: 'TinyBlog';
-    version: #chapter8solution;
+    version: #chapter9solution;
     configuration: 'TinyBlog';
     load
 ]]]
 
-Vous devez également créer un compte du PharoCloud, reporter vos identifiants dans le code ci-dessous et l'exécuter:
+Vous devez également créer un compte du PharoCloud, reporter vos identifiants dans le code ci-dessous :
 
 [[[
 	
@@ -193,7 +213,8 @@ client := EphemericCloudClient userID: ephUser authToken: ephToken.
 		ifFalse: [ client lastPublishedInstance hostname ]
 ]]]
 
-@todo Luc here
+Si vous exécutez ce code (cela prend un peu de temps), votre image Pharo courante sera automatiquement envoyée sur votre espace PharoCloud.
+
 
 %!! Chapitre : Une Interface Web avec Teapot pour TinyBlog
 

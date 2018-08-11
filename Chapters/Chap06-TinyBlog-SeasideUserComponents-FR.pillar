@@ -11,9 +11,9 @@ Les instructions pour charger le code des chapitres précédents sont disponible
 
 !!! Composants visuels 
 
-Nous sommes maintenant prêts à définir les composants visuels de notre application Web. La figure *@ComponentOverview* montre les différents composants que nous allons développer et où ils se situent.
+Nous sommes maintenant prêts à définir les composants visuels de notre application Web. La figure *@ComponentOverview* montre les différents composants que nous allons développer dans ce chapitre et où ils se situent.
 
-+Les composants composant l'application TinyBlog.>file://figures/ComponentOverview.pdf|width=75|label=ComponentOverview+
++Les composants composant l'application TinyBlog.>file://figures/ComponentOverview-ListPosts.pdf|width=75|label=ComponentOverview+
 
 !!!!Le composant TBScreenComponent
 
@@ -157,7 +157,7 @@ TBScreenComponent >> renderContentOn: html
 ]]]
 
 Si vous rafraichissez votre navigateur web, rien ne se passe car le composant ==TBHeaderComponent==
-n'a pas de rendu visuel. Pour cela, définissons la méthode ==renderContentOn:== chargée d'afficher l'entête comme suit :
+n'a pas de rendu visuel. Pour cela, définissons la méthode ==renderContentOn:== chargée d'afficher l'en-tête comme suit :
 
 [[[
 TBHeaderComponent >> renderContentOn: html
@@ -330,7 +330,7 @@ TBPostComponent >> post: aPost
 
 Vous pouvez ajouter cette méthode dans le debugger avec le bouton ==Create==. Quand c'est fait, appuyez sur le bouton ==Proceed==. La page de votre navigateur doit maintenant montrer la même chose que la figure *@better*.
 
-+TinyBlog avec une liste de posts sans amélioration visuelle.>file://figures/betterListPosts.png|width=65|label=better+
++TinyBlog avec une liste de posts.>file://figures/betterListPosts.png|width=65|label=better+
 
 
 !!!Affichage de la liste des posts avec Bootstrap
@@ -345,8 +345,8 @@ TBPostsListComponent >> renderContentOn: html
           html render: (TBPostComponent new post: p) ] ]
 ]]]
 
-Rafraichissez la page et vous devez obtenir la figure *@container*.
-+TinyBlog avec une liste de posts.>file://figures/ContainerList.png|width=65|label=container+
+Rafraichissez la page et vous devez obtenir la figure *@ComponentOverview*.
+% +TinyBlog avec une liste de posts affichée avec Bootstrap.>file://figures/ContainerList.png|width=65|label=container+
 
 !!! Cas d'instanciation de composants dans renderContentOn:
 
@@ -398,8 +398,3 @@ Avec Seaside, le programmeur n'a pas à se soucier de gérer les requêtes web, 
 
 Un composant Seaside est responsable d'assurer son rendu en spécialisant la méthode ==renderContentOn:==.
 De plus un composant doit retourner ses sous-composants en spécialisant la méthode ==children==.
-
-
-
-
-
