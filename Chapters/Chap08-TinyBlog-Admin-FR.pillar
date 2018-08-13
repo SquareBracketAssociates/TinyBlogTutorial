@@ -1,25 +1,27 @@
 !! Interface Web d'administration et génération automatique
 
-Dans le chapitre précédent nous avons vu comment développer l'embryon d'une application : nous avons défini des composants qui interagissent entre eux et en particulier un composant pour l'authentification. Chaque composant est alors responsable son état et de son rendu graphique.  Alors que le chapitre précédent décrit l'essentiel du développement avec Seaside dans ce chapitre nous voulons vous montrer que l'on peut aller encore plus loin et générer des composants Seaside à partir de la description d'objets en utilisant le frameworks Magritte. 
+Nous allons maintenant développer la partie administration de TinyBlog.
+Dans les chapitres précédents, nous avons défini des composants Seaside qui interagissent entre eux 
+et où chaque composant est responsable son état et de son rendu graphique.  
+Dans ce chapitre, nous voulons vous montrer que l'on peut aller encore plus loin et générer des composants Seaside à partir de la description d'objets en utilisant le framework Magritte. 
 
 
-!!!Administration de TinyBlog
+!!!Décrire les données métiers avec Magritte
 
-Nous allons aborder maintenant l'administration de TinyBlog. Cet exercice va nous permettre de montrer comment utiliser des description et Magritte pour la définition automatique de rapports.
-
-!!!!Décrire les données métiers avec Magritte
-
-Magritte est une bibliothèque qui permet une fois les données décrites de générer diverses représentations ou opérations (telles des requêtes). Couplé avec Seaside, Magritte permet de générer des formulaires et des rapports.  Le logiciel Quuve de la société Debris Publishing est un brillant exemple de la puissance de Magritte: tous les tableaux sont automatiquement générés (voir *http://www.pharo.org/success*). La validation des données est aussi définie au niveau de Magritte au lieu d'être dispersée dans le code de l'interface graphique. Ce chapitre ne montre pas cet aspect.
+Magritte est une bibliothèque qui permet une fois les données décrites de générer diverses représentations ou opérations (telles des requêtes). 
+Couplé avec Seaside, Magritte permet de générer des formulaires et des rapports.  
+Le logiciel Quuve de la société Debris Publishing est un brillant exemple de la puissance de Magritte: tous les tableaux sont automatiquement générés (voir *http://www.pharo.org/success*). 
+La validation des données est aussi définie au niveau de Magritte au lieu d'être dispersée dans le code de l'interface graphique. 
+Ce chapitre ne montre pas cet aspect.
 
 Un chapitre dans le livre sur Seaside (*http://book.seaside.st*) est disponible sur Magritte ainsi qu'un tutoriel sur *https://github.com/SquareBracketAssociates/Magritte*.
 
-Dans ce chapitre, nous allons décrire les cinq variables d'instance de l'objet ==TBPost== à l'aide de Magritte. Ensuite, nous
-en tirerons avantage pour générer automatiquement des composants Seaside.
+Commençons par décrire les cinq variables d'instance de l'objet ==TBPost== à l'aide de Magritte. 
+Ensuite, nous en tirerons avantage pour générer automatiquement des composants Seaside.
 
-!!!!Descriptions
-
-Les cinq méthodes suivantes sont dans le protocole 'descriptions' de la classe ==TBPost==.
-Noter que le nom des méthodes n'est pas important mais que nous suivons une convention. C'est le pragma ==<magritteDescription>== qui permet à Magritte d'identifier les descriptions.
+Les cinq méthodes suivantes sont dans le protocole 'magrittes-descriptions' de la classe ==TBPost==.
+Noter que le nom des méthodes n'est pas important mais que nous suivons une convention. 
+C'est le pragma ==<magritteDescription>== qui permet à Magritte d'identifier les descriptions.
 
 Le titre d'un bulletin est une chaine de caractères devant être obligatoirement complétée.
 
@@ -43,7 +45,8 @@ TBPost >> descriptionText
       yourself
 ]]]
 
-La catégorie d'un bulletin est une chaine de caractères qui peut ne pas être renseignée. Dans ce cas, le post sera de toute manière rangé dans la catégorie 'Unclassified'.
+La catégorie d'un bulletin est une chaîne de caractères qui peut ne pas être renseignée. 
+Dans ce cas, le post sera de toute manière rangé dans la catégorie 'Unclassified'.
 
 [[[
 TBPost >> descriptionCategory
@@ -76,14 +79,19 @@ TBPost >> descriptionVisible
       yourself
 ]]]
 
-Nous pourrions enrichir les descriptions pour qu'il ne soit pas possible de poster un bulletin ayant une date antérieure à celle du jour. Nous pourrions changer la description d'une catégorie pour que ses valeurs possibles soient définies par l'ensemble des catégories existantes. Tout cela permettrait de produire des interfaces plus complètes et toujours aussi simplement.
+Nous pourrions enrichir les descriptions pour qu'il ne soit pas possible de poster un bulletin ayant une date antérieure à celle du jour. 
+Nous pourrions changer la description d'une catégorie pour que ses valeurs possibles soient définies par l'ensemble des catégories existantes. 
+Tout cela permettrait de produire des interfaces plus complètes et toujours aussi simplement.
 
 
-!!!Administration des posts
+!!!Mise en place d'un rapport des bulletins
 
-Nous allons développer deux composants. Le premier sera un rapport qui contiendra tous les posts et le second contiendra ce rapport. Le rapport étant généré par Magritte sous la forme d'un composant Seaside, nous aurions pu n'avoir qu'un seul composant. Toutefois, nous pensons que distinguer le composant d'administration du rapport est une bonne chose pour l'évolution de la partie administration. Commençons donc par le composant d'administration.
+Nous allons développer deux composants. 
+Le premier sera un rapport (==TBPostReport==) qui contiendra tous les posts et le second contiendra ce rapport (==TBAdminComponent==). 
+Le rapport étant généré par Magritte sous la forme d'un composant Seaside, nous aurions pu n'avoir qu'un seul composant. 
+Toutefois, nous pensons que distinguer le composant d'administration du rapport est une bonne chose pour l'évolution de la partie administration.
 
-!!! Le composant PostsReport
+!!!!Le composant PostsReport
 
 La liste des posts est affichée à l'aide d'un rapport généré dynamiquement par le framework Magritte. Nous utilisons ce framework pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
 
@@ -104,6 +112,9 @@ TBPostsReport class >> from: aBlog
    ^ self rows: allBlogs description: allBlogs anyOne magritteDescription
 ]]]
 
+!!!!Intégration de PostsReport dans AdminComponent
+
+Révisons maintenant notre composant ==TBAdminComponent== pour afficher ce rapport.
 On ajoute ensuite une variable d'instance ==report== et ses accesseurs à la classe ==TBAdminComponent==.
 
 [[[
@@ -115,13 +126,14 @@ TBAdminComponent >> report: aReport
 ]]]
 
 Comme le rapport est un composant fils du composant admin nous n'oublions pas de redéfinir la méthode ==children== comme suit.
+Notez que la collection contient à la fois les sous-composants définis dans la super-classe (le composant en-tête) et ceux dans la classe courante (le composant rapport).
 
 [[[
 TBAdminComponent >> children
    ^ super children copyWith: self report
 ]]]
 
-La méthode ==initialize== permet d'initialiser la définition du rapport. Nous fournissons au composant ==TBPostReport== l'accès aux données.
+Dans la méthode ==initialize==, nous instancions un rapport tout en lui fournissant accès aux données du blog.
 
 [[[
 TBAdminComponent >> initialize
@@ -129,7 +141,7 @@ TBAdminComponent >> initialize
    self report: (TBPostsReport from: self blog)
 ]]]
 
-Nous pouvons maintenant afficher le rapport.
+Modifions le rendu de la partie administration afin d'afficher le rapport.
 
 [[[
 TBAdminComponent >> renderContentOn: html
@@ -140,7 +152,10 @@ TBAdminComponent >> renderContentOn: html
       html render: self report ]
 ]]]
 
-Par défaut, le rapport affiche l'intégralité des données présentes dans chaque post mais certaines colonnes ne sont pas utiles. Il faut donc filtrer les colonnes. Nous ne retiendrons ici que le titre, la catégorie et la date de rédaction.
+Vous pouvez déjà tester dans votre navigateur. 
+Par défaut, le rapport affiche l'intégralité des données présentes dans chaque post mais certaines colonnes ne sont pas utiles. 
+Il faut donc filtrer les colonnes. 
+Nous ne retiendrons ici que le titre, la catégorie et la date de rédaction.
 
 Nous ajoutons une méthode de classe pour la sélection des colonnes et modifions ensuite la méthode ==from:== pour en tirer parti.
 
@@ -155,7 +170,12 @@ TBPostsReport class >> from: aBlog
 ]]]
 
 
-!!!Amélioration des rapports
+La figure *@RapportV1* montre ce que vous devez obtenir dans votre navigateur.
+
++Rapport Magritte contenant les bulletins du blog.>file://figures/RapportMagritteV1.png|width=100|label=RapportV1+
+
+
+!!!!Amélioration du rapport
 
 Le rapport généré est brut. Il n'y a pas de titres sur les colonnes et l'ordre d'affichage des colonnes n'est pas fixé (il peut varier d'une instance à une autre). Pour gérer cela, il suffit de modifier les descriptions Magritte pour chaque variable d'instance.
 
@@ -211,14 +231,17 @@ TBPost >> descriptionVisible
 
 
 Identifiez-vous et vous devez obtenir la situation telle que représentée par la figure *@adminReportDraft*.
-+Administration avec un rapport.>file://figures/ReportDraft.png|width=85|label=adminReportDraft+
++Administration avec un rapport.>file://figures/RapportMagritteV2.png|width=85|label=adminReportDraft+
 
 
-!!!Gestion des posts
+!!!Administration des bulletins
 
-Nous pouvons maintenant mettre en place un CRUD (Create Read Update Delete) permettant de gérer les posts. Pour cela, nous allons ajouter une colonne (instance ==MACommandColumn==) au rapport qui regroupera les différentes opérations utilisant ==addCommandOn:==.
+Nous pouvons maintenant mettre en place un CRUD (Create Read Update Delete) permettant de gérer les bulletins. 
+Pour cela, nous allons ajouter une colonne (instance ==MACommandColumn==) au rapport qui regroupera les différentes opérations utilisant ==addCommandOn:==. 
+Cette méthode permet de définir un lien qui déclenchera l'exécution d'une méthode de l'objet courant lorsqu'il sera cliqué grâce à un callback.
 
-Ceci se fait lors de la création du rapport. En particulier nous donnons un accès au blog depuis le rapport.
+Ceci se fait lors de la création du rapport. 
+En particulier nous donnons un accès au blog depuis le rapport.
 
 [[[
 TBSMagritteReport subclass: #TBPostsReport
@@ -246,12 +269,13 @@ TBPostsReport class >> from: aBlog
      ^ report
 ]]]
 
-L'ajout (add) est dissocié des posts et se trouvera donc juste avant le rapport. Etant donné qu'il fait partie du composant ==TBPostsReport==, nous devons redéfinir la méthode ==renderContentOn:== du composant ==TBPostsReport== pour insérer le lien ==add==.
+L'ajout (add) est dissocié des bulletins et se trouvera donc juste avant le rapport. 
+Etant donné qu'il fait partie du composant ==TBPostsReport==, nous devons redéfinir la méthode ==renderContentOn:== du composant ==TBPostsReport== pour insérer le lien ==add==.
 
 
 [[[
 TBPostsReport >> renderContentOn: html
-   html tbsGlyphIcon perform: #iconPencil.
+   html tbsGlyphIcon iconPencil.
    html anchor
       callback: [ self addPost ];
       with: 'Add post'.
@@ -259,13 +283,16 @@ TBPostsReport >> renderContentOn: html
 ]]]
 
 Identifiez-vous à nouveau et vous devez obtenir la situation telle que représentée par la figure *@RapportNewLookActions*.
-+Ajout d'un post.>file://figures/RapportNewLookActions.png|width=75|label=RapportNewLookActions+
++Rapport des bulletins avec des liens d'édition.>file://figures/RapportNewLookActions.png|width=75|label=RapportNewLookActions+
 
 
 !!!Implémentation des actions CRUD
 
-A chaque action (Create/Read/Update/Delete) correspond une méthode de l'objet ==TBPostsReport==. Nous allons maintenant les implémenter. Un formulaire personnalisé est construit en fonction de l'opération demandé (il n'est pas utile par exemple d'avoir un bouton "Sauver" alors que l'utilisateur veut simplement lire le post).
+A chaque action (Create/Read/Update/Delete) correspond une méthode de l'objet ==TBPostsReport==. 
+Nous allons maintenant les implémenter. 
+Un formulaire personnalisé est construit en fonction de l'opération demandé (il n'est pas utile par exemple d'avoir un bouton "Sauver" alors que l'utilisateur veut simplement lire le post).
 
+!!!!Ajouter un bulletin
 [[[
 TBPostsReport >> renderAddPostForm: aPost
     ^ aPost asComponent
@@ -286,10 +313,21 @@ TBPostsReport >> addPost
 
 La méthode ==addPost== pour sa part, affiche le composant rendu par la méthode ==renderAddPostForm:== et lorsque qu'un nouveau post est créé, elle l'ajoute au blog.
 
+Le lien pour ajouter un bulletin permet maintenant d'afficher un formulaire de création.
 
-Enregistrez-vous et vous devez obtenir la situation telle que représentée par la figure *@addAPost*.
-+Ajout d'un post.>file://figures/AddAPost.png|width=75|label=addAPost+
+!!!!Afficher un bulletin
 
+[[[
+TBPostsReport >> renderViewPostForm: aPost
+   ^ aPost asComponent addDecoration: (
+      TBSMagritteFormDecoration buttons: { #cancel -> 'Back' });
+      yourself
+
+TBPostsReport >> viewPost: aPost
+   self call: (self renderViewPostForm: aPost)
+]]]
+
+!!!!Editer un bulletin
 
 [[[
 TBPostsReport >> renderEditPostForm: aPost
@@ -303,15 +341,9 @@ TBPostsReport >> editPost: aPost
    | post |
    post := self call: (self renderEditPostForm: aPost).
    post ifNotNil: [ blog save ]
-
-TBPostsReport >> renderViewPostForm: aPost
-   ^ aPost asComponent addDecoration: (
-      TBSMagritteFormDecoration buttons: { #cancel -> 'Back' });
-      yourself
-
-TBPostsReport >> viewPost: aPost
-   self call: (self renderViewPostForm: aPost)
 ]]]
+
+!!!!Supprimer un bulletin
 
 Pour éviter une opération accidentelle, nous utilisons une boite modale pour que l'utilisateur confirme la suppression du post. Une fois le post effacé, la liste des posts gérés par le composant ==TBPostsReport== est actualisée et le rapport est rafraîchi.
 
@@ -338,9 +370,10 @@ TBBlogTest >> testRemoveBlogPost
     self assert: blog size equals: 0
 ]]]
 
-!!!Gérer le problème du rafraîchissement des données
+!!!Gérer le rafraîchissement des données
 
-Les méthodes ==TBPostsReport>>addPost:== et ==TBPostsReport>>deletePost:== font bien leur travail mais les données à l'écran ne sont pas mises à jour. Il faut donc rafraichir la liste des posts car il y a un décalage entre les données en mémoire et celles stockées dans la base de données.
+Les méthodes ==TBPostsReport>>addPost:== et ==TBPostsReport>>deletePost:== font bien leur travail mais les données à l'écran ne sont pas mises à jour. 
+Il faut donc rafraichir la liste des posts car il y a un décalage entre les données en mémoire et celles stockées dans la base de données.
 
 [[[
 TBPostsReport >> refreshReport
@@ -363,9 +396,9 @@ TBPostsReport >> deletePost: aPost
                  self refreshReport ]
 ]]]
 
-Le formulaire est fonctionnel maintenant et gère même les contraintes de saisie c'est-à-dire que le formulaire assure par exemple que les champs déclarés comme obligatoire dans les descriptions Magritte sont bien renseignés.
+Le rapport est maintenant fonctionnel  et gère même les contraintes de saisie c'est-à-dire que le formulaire assure par exemple que les champs déclarés comme obligatoire dans les descriptions Magritte sont bien renseignées.
 
-!!!Amélioration de l'apparence du formulaire
+!!!Amélioration de l'apparence des formulaires
 
 Pour tirer partie de Bootstrap, nous allons modifier les définitions Magritte. Tout d'abord, spécifions que le rendu du formulaire doit se baser sur Bootstrap.
 
@@ -433,17 +466,20 @@ TBPost >> descriptionVisible
         yourself
 ]]]
 
-Le formulaire d'édition d'un post doit maintenant ressembler à celui de la figure *@addAPostBootstrap*.
+Grâce à ces nouvelles descriptions Magritte, les formulaires générés sous la forme de composants Seaside utilisent Bootstrap. 
+Par exemple, formulaire d'édition d'un post doit maintenant ressembler à celui de la figure *@addAPostBootstrap*.
 +Formulaire d'ajout d'un post avec Bootstrap.>file://figures/AddAPostBootstrap.png|width=85|label=addAPostBootstrap+
 
+!!!Conclusion 
+
+Nous avons mis en place la partie administration de TinyBlog sous la forme d'un rapport des bulletins contenus dans le blog courant. 
+Nous avons également ajouté des liens permettant une gestion CRUD de chaque bulletin. 
+Nous avons réalisé tout cela en utilisant Magritte. 
+En effet, nous avons ajouté des descriptions sur les bulletins et généré des composants Seaside (des formulaires) à partir de ces descriptions.
 
 
-!!!Améliorations possibles
+!!!Amélioration
 
-- Ajouter un bouton "Déconnexion"
-- gérer plusieurs comptes administrateur ce qui nécessite une amélioration des sessions qui devront conserver l'identification de l'utilisateur courant
-- gérer plusieurs blogs
-
-% Local Variables:
-% compile-command: "cd .. && ./compile.sh --to='latex' Exercises/Exo-W5-TinyBlog-SeasideAdmin-FR.pillar"
-% End:
+Vous pouvez par eemple:
+- mieux mettre en évidence les bulletins non visibles dans le rapport
+- gérer plusieurs blog
