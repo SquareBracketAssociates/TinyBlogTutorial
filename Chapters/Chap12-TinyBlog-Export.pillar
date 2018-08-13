@@ -9,29 +9,52 @@ Le format PDF (Portable Document Format) a été créé par la société Adobe e
 
 !!!! Artefact
 
-La construction d'un document PDF avec Pharo est grandement simplifiée à l'aide d'un framework nommé Artefact (https://sites.google.com/site/artefactpdf/). Pour l'installer, il vous suffit de le sélectionner dans le catalogue Pharo. 
+La construction d'un document PDF avec Pharo est grandement simplifiée à l'aide d'un framework nommé Artefact (*https://sites.google.com/site/artefactpdf/*). Pour l'installer, il vous suffit de le sélectionner dans le catalogue Pharo. 
 
 !!!! Intégrer l'exportation dans la liste des posts
 
 Pour pouvoir exporter un post en PDF, l'utilisateur doit disposer d'un lien sur chaque post. Pour cela, vous devez modifier la méthode ==TBPostComponent >> renderContentOn:==. 
 
 [[[
-renderContentOn: html
-	html paragraph class: 'title'; with: self title.
+TBPostComponent >> renderContentOn: html
+   html paragraph class: 'title'; with: self title.
    html paragraph class: 'subtitle'; with: self date.
    html paragraph class: 'content'; with: self text.
-	html anchor 
-		callback: [ TBPostPDFExport context: self requestContext post: post ];
-		with: 'PDF'
+   html div 
+      with: [ 
+         html anchor
+         callback: [ self exportPostAsPdf ];
+         with: [
+			   html tbsGlyphIcon iconSave.
+			   html text: 'pdf' ] ].
 ]]]
 
-+Chaque post peut être exporté en PDF>file://figures/posttopdf.png|width=75|label=nicer+
+La figure *@pdfLink* montre le lien d'export en PDF ajouté pour chacun des posts.
 
-Lorsque l'utilisateur clique sur le lien, une instance de la classe ==TBPostPDFExport== est créée. Cette classe aura la responsabilité de construire et d'envoyer le document PDF à l'utilisateur. C'est pour cette raison qu'elle a besoin de deux paramètres qui sont le contexte HTTP et le post sélectionné.
++Chaque post peut être exporté en PDF>file://figures/posttopdf.png|width=100|label=pdfLink+
+
+Ajoutons maintenant la méthode de callback:
+
+[[[
+TBPostComponent >> exportPostAsPdf
+   | pdfStream |
+   pdfStream := TBPostPDFExport post: post.
+   self requestContext respond: [:response | 
+      response 
+   	   contentType: 'application/pdf; charset=UTF-8';
+   	   attachmentWithFileName: post title, '.pdf';
+   	   binary;
+   	   nextPutAll: pdfStream contents ]
+]]]
+
+
+Lorsque l'utilisateur clique sur le lien, une instance de la classe ==TBPostPDFExport== est créée. 
+Cette classe aura la responsabilité de construire le document PDF à partir du bulletin courant.
+Ce document est ensuite envoyé à l'utilisateur grâce au contexte HTTP.
 
 !!!! Construction du document PDF
 
-Vous allez maintenant implémenter la classe ==TBPostPDFExport==. Celle ci nécessite deux variables d'instance qui sont ==post== contenant le post sélectionné et ==pdfdo== pour stocker le document PDF généré.
+Vous allez maintenant implémenter la classe ==TBPostPDFExport==. Celle ci nécessite deux variables d'instance qui sont ==post== contenant le post sélectionné et ==pdfdoc== pour stocker le document PDF généré.
 
 [[[
 Object subclass: #TBPostPDFExport
@@ -46,20 +69,76 @@ TBPostPDFExport >> post: aPost
     post := aPost       
 ]]]
 
-Vous avez besoin de la méthode de classe ==context:post:== qui est le point d'entrée pour utiliser la classe. Celle-ci appelle la méthode ==renderPDFFile== qui produit le document PDF.
+Vous avez besoin de la méthode de classe ==context:post:== qui est le point d'entrée pour utiliser la classe. 
+Les méthodes ==exportPdf== et ==renderPostAsPdfInto:== produisent ensuite le document PDF .
 
 [[[
-TBPostPDFExport class >> context: anHTTPContext post: aPost
+TBPostPDFExport class >> post: aPost
 	^ self new
 		post: aPost;
-		renderPDFFile;
-		yourself    
+		exportPdf   
 ]]]
 
-!!!! Envoi du document au client
+[[[
+TBPostPDFExport >> exportPdf
+	| pdfStream |
+	pdfStream := MultiByteBinaryOrTextStream on: String new.
+	self renderPostAsPdfInto: pdfStream.
+	^ pdfStream reset
+]]]
 
-Check with olivier
+	
+[[[
+TBPostPDFExport >> renderPostAsPdfInto: aStream
+   | aPage titleFont titleColor layout pharoLogo metaDataColor defaultFont | 
+   pharoLogo := Morph new 
+      extent: PolymorphSystemSettings pharoLogo extent;
+      color: Color white;
+      addMorph: PolymorphSystemSettings pharoLogo.
+   
+   pdfdoc := PDFDocument new.
+   
+   titleColor := PDFColor r: 13 g: 100 b: 175.
+   titleFont := PDFHelveticaFont new
+      fontSize: 22 pt;
+      bold: true.
+   
+   metaDataColor := PDFColor greyLevel: 0.3.
+   
+   defaultFont := PDFHelveticaFont new
+      fontSize: 12 pt ; yourself.
+   
+   aPage := PDFPage new.
+   aPage add: ((PDFPngElement fromMorph: pharoLogo)
+      from: 10 mm @ 20 mm;
+      dimension: 80mm @ 27mm).
+   
+   layout := PDFVerticalLayout on: {
+      (PDFFormattedTextElement new
+         font: titleFont;
+         textColor: titleColor;
+         text: post title).
+      
+      (PDFFormattedTextElement new
+         textColor: metaDataColor;
+         text: post date asString).
+      
+      (PDFParagraphElement new
+         dimension: 150 mm @ 35 mm;
+         font: defaultFont;
+         text: post text ) }.
+      		
+   layout from: 25 mm @ 80 mm.
+   layout spacing: 1 cm.
+   aPage add: layout.
+   pdfdoc add: aPage.
+   pdfdoc exportTo: aStream
+]]]
 
+
+La figure *@pdfResult* montre le résultat d'un export en PDF d'un bulletin.
+
++Résultat du rendu PDF d'un bulletin>file://figures/postInPdf.png|width=100|label=pdfResult+
 
 !!! Exportation des posts au format CSV
 

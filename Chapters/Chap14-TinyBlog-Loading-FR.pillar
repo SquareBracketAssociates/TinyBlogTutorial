@@ -207,8 +207,8 @@ Metacello new
 	load.
 
 "deployment on PharoCloud"
-client := EphemericCloudClient userID: ephUser authToken: ephToken. 
-	(client publishSelfAs: 'glimpse') 
+client := #EphemericCloudClient asClass userID: ephUser authToken: ephToken. 
+	(client publishSelfAs: 'TinyBlog') 
 		ifTrue:[ ZnZincServerAdaptor startOn: 8080 ] 
 		ifFalse: [ client lastPublishedInstance hostname ]
 ]]]

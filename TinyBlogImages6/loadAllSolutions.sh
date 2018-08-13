@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-for F in loadSolutionForChapter[2-5]\.sh; do 
-	echo "$F"
-	./$F
+for i in $(seq 2 9);
+do
+	echo "./loadSolutionForChapter.sh $i"
+	./loadSolutionForChapter.sh $i
 done
