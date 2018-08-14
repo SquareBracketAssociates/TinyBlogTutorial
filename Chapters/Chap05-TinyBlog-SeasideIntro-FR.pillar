@@ -130,11 +130,11 @@ de l'application, nous décrivons son architecture dans la figure *@ApplicationA
 
 - ==ApplicationRootComponent== est le point d'entrée pour le serveur d'application. Ce composant contient des composants héritant tous de la classe abstraite ==ScreenComponent== que nous allons définir dans le prochain chapitre. 
 
-- ==ScreenComponent== est la racine d'héritage des composants utilisateurs ou admin. Il est composé d'un header et aussi est conceptuellemment en contact avec l'authentification. 
+- ==ScreenComponent== est la racine d'héritage des composants utilisateurs ou admin. Il est composé d'un header. 
 
-- ==PostsListComponent== est le composant principal affichant les blogs (il est composé d'instance de  ==PostComponent==), il gère aussi les catégories. 
+- ==PostsListComponent== est le composant principal affichant les bulletins (posts). Il est composé d'instances de  ==PostComponent== et gère aussi les catégories. 
 
-- ==AdminComponent== est le composant principal gérant les aspects d'administration. Il créera des rapports instance de ==PostsReport== en utilisant Magritte.
+- ==AdminComponent== est le composant principal de la partie administration. Il contient un rapport (instance de ==PostsReport==) sur les bulletins (posts) construit en utilisant Magritte.
 
 !!! Conclusion 
 
