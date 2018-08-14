@@ -147,7 +147,7 @@ TBBlogTest >> tearDown
    TBBlog reset
 ]]]
 
-Here we see the limits of using a Singleton. Indeed, if you deploy a blog and then execute the tests, you will lose all posts that have been created because we reset the Blog singleton.
+Here we see the limits of using a Singleton. Indeed, if you deploy a blog and then execute the tests, you will lose all posts that have been created because we reset the Blog singleton. We will address this problem in the future.
 
 We will now develop tests first and then implement all functionalities to make them green.
 

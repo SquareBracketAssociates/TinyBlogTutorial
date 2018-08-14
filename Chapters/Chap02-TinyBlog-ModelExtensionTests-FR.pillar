@@ -1,4 +1,4 @@
-!! L'application TinyBlog : extension du modèle et tests unitaires
+!! TinyBlog : extension du modèle et tests unitaires
 @chapModelExtensionAndUnitTests
 
 % full hash of full code 35785aaaf1284f1a472980f07522fc7d0d4743e6
@@ -29,7 +29,7 @@ TBBlog >> initialize
 
 !!!Un seul blog
 
-Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. Dans le futur, vous pourrez ajouter la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant, nous utilisons donc un singleton pour la classe ==TBBlog==. Faites attention car le schéma de conception Singleton est rarement bien utilisé et peut rendre votre conception rapidement de mauvaise qualité. En effet, un singleton est souvent une sorte de variable globale et rend votre conception moins modulaire. Donc ne généralisez pas ce que nous faisons ici.
+Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. Dans le futur, vous pourrez ajouter la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant, nous utilisons donc un singleton pour la classe ==TBBlog==. Faites attention car le schéma de conception Singleton est rarement bien utilisé et peut rendre votre conception rapidement de mauvaise qualité. En effet, un singleton est souvent une sorte de variable globale et rend votre conception moins modulaire. Evitez de faire des références explicites au Singleton dans votre code et ne généralisez pas ce que nous faisons ici.
 
 Comme la gestion du singleton est un comportement de classe, ces méthodes sont définies sur le coté class de la classe ==TBBlog==.
 
@@ -47,7 +47,8 @@ TBBlog class >> current
    ^ uniqueInstance ifNil: [ uniqueInstance := self new ]
 ]]]
 
-Quand la classe est chargée, le singleton est réinitialisé. 
+Nous redéfinissons la méthode de classe ==initialize== afin que la classe
+soit réinitialisée quand elle est chargée en mémoire. 
 
 [[[
 TBBlog class >> initialize
@@ -70,7 +71,7 @@ TestCase subclass: #TBBlogTest
 
 La méthode ==setUp== permet d'initialiser le contexte des tests.
 Elle est donc exécutée avant chaque test unitaire.
-Dans cet exemple, elle efface le contenu du blog, lui ajoute un post et en créé un autre qui n'est provisoirement pas enregistré.
+Dans cet exemple, elle efface le contenu du blog, lui ajoute un post et en créé un autre qui n'est provisoirement pas enregistré. Faites attention car nous devrons changer cette logique car dans le future a chaque fois que vous exécuterez des tests, vous perdrez votre domaine. C'est un exemple de la sorte d'effets pernicieux qu'un Singleton introduit dans un système.
 
 [[[
 TBBlogTest >> setUp
@@ -127,6 +128,9 @@ TBBlog >> size
 
 Le test précédent doit maintenant passer.
 
+
+!!! Améliorons la couverture de test
+
 Ecrivons d'autres tests pour couvrir les fonctionnalités que nous venons de développer. 
 
 [[[
@@ -140,8 +144,9 @@ TBBlogTest >> testRemoveAllBlogPosts
    self assert: blog size equals: 0
 ]]]
 
+!!! Autres fonctionalités
 
-!!!!Obtenir l'ensemble des posts (visibles et invisibles)
+!!!! Obtenir l'ensemble des posts (visibles et invisibles)
 
 Ajoutons un nouveau test qui échoue:
 
@@ -159,7 +164,7 @@ TBBlog >> allBlogPosts
 ]]]
 
 
-!!!!Obtenir tous les posts visibles
+!!!! Obtenir tous les posts visibles
 
 Test unitaire:
 
@@ -177,7 +182,7 @@ TBBlog >> allVisibleBlogPosts
 ]]]
 
 
-!!!!Obtenir tous les posts d'une catégorie
+!!!! Obtenir tous les posts d'une catégorie
 
 [[[
 TBBlogTest >> testAllBlogPostsFromCategory
