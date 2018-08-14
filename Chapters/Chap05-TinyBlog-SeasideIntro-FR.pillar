@@ -113,13 +113,13 @@ Comme par exemple, les composants principaux de l'application permettant l'affic
 
 !!! Architecture
 
-Nous sommes maintenant prêts à définir les composants visuels de notre application Web. Afin de vous donner une vision d'ensemble nous montrons comment chaque composant est responsable d'une partie de l'application (Figure *@ComponentOverview*) et comment ces composants s'intègre au sein de l'architecture (simple) du système (Figure *@ApplicationArchitecture*).
+Nous sommes maintenant prêts à définir les composants visuels de notre application Web. Afin de vous donner une vision d'ensemble nous montrons comment chaque composant est responsable d'une partie de l'application (Figure *@ComponentOverviewa*) et comment ces composants s'intègre au sein de l'architecture (simple) du système (Figure *@ApplicationArchitecture*).
 
 !!!! Premier apercu des composants
 
-La figure *@ComponentOverview* montre les différents composants que nous allons développer et où ils se situent.
+La figure *@ComponentOverviewa* montre les différents composants que nous allons développer et où ils se situent.
 
-+Les composants composant l'application TinyBlog (en mode non admin).>file://figures/ComponentOverview.pdf|width=75|label=ComponentOverview+
++Les composants composant l'application TinyBlog (en mode non admin).>file://figures/ComponentOverview.pdf|width=75|label=ComponentOverviewa+
 
 !!!! Eléments
 
