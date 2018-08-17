@@ -48,6 +48,8 @@ TBScreenComponent >> renderContentOn: html
 !!!Utilisation du composant Screen
 
 Bien que le composant ==TBScreenComponent== n'ait pas vocation à être utilisé directement, nous allons l'utiliser de manière temporaire pendant que nous développons les autres composants. 
+
+
 Nous ajoutons la variable d'instance ==main== dans la classe ==TBApplicationRootComponent==. 
 [[[
 WAComponent subclass: #TBApplicationRootComponent
@@ -79,7 +81,10 @@ TBApplicationRootComponent >> children
    ^ { main }
 ]]]
 
-Si vous rafraichissez votre browser, vous allez voir l'affichage produit par le sous-composant ==TBScreenComponent== qui affiche pour l'instant le texte: ==Hello from TBScreenComponent==.
+Si vous rafraichissez votre browser, vous allez voir l'affichage produit par le sous-composant ==TBScreenComponent== qui affiche pour l'instant le texte: ==Hello from TBScreenComponent== (voir figure *@fig:Hello*).
+
++Premier visuel du composant ==TBScreenComponent==.>file://figures/HelloFromScreenComponent.png|width=75|label=fig:Hello+
+
 
 !!!Pattern de définition  de composants
 

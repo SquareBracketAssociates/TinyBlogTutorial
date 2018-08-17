@@ -7,7 +7,9 @@ Le modèle est particulièrement simple : il définit une liste de bulletin et u
 
 !!!La classe TBPost
 
-Nous commençons ici par la représentation d'un bulletin avec la classe ==TBPost== définie ainsi:
++TBPost.>file://figures/postUML.pdf|width=10|label=postUml+
+
+Nous commençons ici par la représentation d'un bulletin avec la classe ==TBPost==. Elle est très simple (voir Figure *@postUml* et définie ainsi:
 
 [[[
 Object subclass: #TBPost
