@@ -144,9 +144,9 @@ TBBlogTest >> testRemoveAllBlogPosts
    self assert: blog size equals: 0
 ]]]
 
-!!! Autres fonctionalités
+!!!Autres fonctionalités
 
-!!!! Obtenir l'ensemble des posts (visibles et invisibles)
+!!!!Obtenir l'ensemble des posts (visibles et invisibles)
 
 Ajoutons un nouveau test qui échoue:
 
