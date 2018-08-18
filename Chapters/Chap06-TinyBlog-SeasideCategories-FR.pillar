@@ -13,7 +13,7 @@ Les instructions pour charger le code des chapitres précédents sont disponible
 Les bulletins sont classés par catégorie. Par défaut, si aucune catégorie n'a été précisée, ils sont rangés dans une catégorie spéciale dénommée "Unclassified".
 Nous allons créer un composant pour gérer une liste de catégories nommée: ==TBCategoriesComponent==.
 
-!!!!Definition d'un composant pour afficher les catégories
+!!!!Pour afficher les catégories
 
 Nous avons besoin d'un composant qui affiche la liste des catégories présentes dans le blog et permet d'en sélectionner une. 
 Ce composant devra donc avoir la possibilité de communiquer avec le composant ==TBPostsListComponent== afin de lui communiquer la catégorie courante. La situation est décrite par la figure *@AssociationArchitectureUser*.
@@ -26,7 +26,9 @@ testAllBlogPostsFromCategory
 ]]]
 
 
-% +Ajout du composant Categories.>file://figures/ComponentRelationship4.pdf|width=75|label=compt4+
+%+Ajout du composant Categories.>file://figures/ComponentRelationship4.pdf|width=75|label=compt4+
+
+!!!!Definition du composant
 
 Nous définissons un nouveau composant nommé ==TBCategoriesComponent==. 
 Ce composant va garder une collection triée par ordre alphabétique de chaines de caractères pour chacune des catégories ainsi qu'un pointeur sur le composant postsList associé. 
@@ -68,6 +70,7 @@ TBCategoriesComponent class >> categories: categories postsList: aTBScreen
 ]]]
 
 
+!!!! Liaison depuis la liste de bulletins
 Nous avons donc besoin d'ajouter une variable d'instance pour stocker la catégorie courante dans la classe ==TBPostsListComponent==.
 
 [[[
@@ -164,7 +167,7 @@ Mettre en dur le nom des classes et la logique de création des catégories et d
 
 !!!Look et agencement
 
-Nous allons maintenant agencer le composant ==TBPostsListComponent== en utilisant un 'responsive design' pour la liste des bulletins. Cela veut dire que le style CSS va adapter les composants à l'espace disponible.
+Nous allons maintenant agencer le composant ==TBPostsListComponent== en utilisant un 'responsive design' pour la liste des bulletins (voir la figure  *@nicer5*). Cela veut dire que le style CSS va adapter les composants à l'espace disponible.
 
 Les composants sont placés dans un container Bootstrap puis agencés sur une ligne avec deux colonnes. La dimension des colonnes est déterminée en fonction de la résolution (viewport) du terminal utilisé. Les 12 colonnes de Bootstrap sont réparties entre la liste des catégories et la liste des posts. Dans le cas d'une résolution faible, la liste des catégories est placée au dessus de la liste des posts (chaque élément occupant 100\% de la largeur du container).
 
@@ -203,7 +206,7 @@ Pour cela, on modifie la méthode suivante :
 [[[
 TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
    html tbsLinkifyListGroupItem
-      class: 'active' if: aCategory = self postsList currentCategory ;
+      class: 'active' if: aCategory = self postsList currentCategory;
       callback: [ self selectCategory: aCategory ]; 
       with: aCategory
 ]]]
@@ -213,7 +216,7 @@ Bien que le code fonctionne, on ne doit pas laisser la méthode ==TBPostsListCom
 
 !!!Modulariser son code avec des petites méthodes
 
-Pour permettre une meilleure lecture et réutilisation future, nous commençons par définir les méthodes de création des composants 
+Voici notre solution au problème précédent. Pour permettre une meilleure lecture et réutilisation future, nous commençons par définir les méthodes de création des composants 
 
 [[[
 TBPostsListComponent >> categoriesComponent
@@ -247,22 +250,22 @@ TBPostsListComponent >> renderContentOn: html
 								do: [ :p | html render: (self postComponentFor: p) ] ] ] ]
 ]]]
 
+!!!! Autre passe de découpage
 
 Continuons à découper cette méthode en plusieurs petites méthodes.  Pour cela, créons des méthodes pour les traitements élémentaires. 
 
 [[[
 TBPostsListComponent >> basicRenderCategoriesOn: html
-   html render: self categoriesComponent 
+	html render: self categoriesComponent 
 ]]]
 
 [[[
 TBPostsListComponent >> basicRenderPostsOn: html
 	self readSelectedPosts do: [ :p | 
-      html render: (self postComponentFor: p) ]
+		html render: (self postComponentFor: p) ]
 ]]]
 
-
-Puis nous utilisons ces traitements.
+Puis nous utilisons ces traitements pour simplifier la méthode ==renderContentOn:==.
 
 [[[
 TBPostsListComponent >> renderContentOn: html
@@ -309,7 +312,7 @@ Dans le prochaine chapitre, nous allons voir comment gérer l'identification per
 !!!! Améliorations possibles
 
 A titre d'exercice, vous pouvez :
-- trier les catégories par ordre alphabétique
+- trier les catégories par ordre alphabétique ou
 - ajouter un lien nommé 'All' dans la liste des catégories permettant d'afficher toutes les posts visible quelque soit leur catégorie.
 
 
