@@ -144,11 +144,15 @@ TBBlogTest >> testRemoveAllBlogPosts
    self assert: blog size equals: 0
 ]]]
 
-!!! Autres fonctionalités
+!!!Autres fonctionalités
 
-!!!! Obtenir l'ensemble des posts (visibles et invisibles)
+Nous allons procéder en suivant une méthodologie dirigée par les tests (Test Driven Development). Nous définissons 
+un test, vérifions que le test ne passe pas. Puis nous définissons la méthode qui était ainsi spécifiée et nous vérifions 
+que le test passe.
 
-Ajoutons un nouveau test qui échoue:
+!!!!Obtenir l'ensemble des posts (visibles et invisibles)
+
+Ajoutons un nouveau test qui échoue :
 
 [[[
 TBBlogTest >> testAllBlogPosts
@@ -163,10 +167,10 @@ TBBlog >> allBlogPosts
    ^ posts
 ]]]
 
-
+Votre nouveau test doit passer. 
 !!!! Obtenir tous les posts visibles
 
-Test unitaire:
+Ajoutons un nouveau test qui échoue :
 
 [[[
 TBBlogTest >> testAllVisibleBlogPosts
@@ -174,27 +178,36 @@ TBBlogTest >> testAllVisibleBlogPosts
    self assert: blog allVisibleBlogPosts size equals: 1
 ]]]
 
-Code métier ajouté:
+Voici le nouveau code métier ajouté :
 
 [[[
 TBBlog >> allVisibleBlogPosts
    ^ posts select: [ :p | p isVisible ]
 ]]]
 
+Votre nouveau test doit passer. 
 
 !!!! Obtenir tous les posts d'une catégorie
+
+Ajoutons un nouveau test qui échoue :
 
 [[[
 TBBlogTest >> testAllBlogPostsFromCategory
    self assert: (blog allBlogPostsFromCategory: 'First Category') size equals: 1
 ]]]
 
+Voici le nouveau code métier ajouté :
+
 [[[
 TBBlog >> allBlogPostsFromCategory: aCategory
    ^ posts select: [ :p | p category = aCategory ]
 ]]]
 
+Votre nouveau test doit passer. 
+
 !!!!Obtenir tous les posts visibles d'une catégorie
+
+Ajoutons un nouveau test qui échoue :
 
 [[[
 TBBlogTest >> testAllVisibleBlogPostsFromCategory
@@ -203,14 +216,19 @@ TBBlogTest >> testAllVisibleBlogPostsFromCategory
    self assert: (blog allVisibleBlogPostsFromCategory: 'Second Category') size equals: 1
 ]]]
 
+Voici le nouveau code métier ajouté :
+
 [[[
 TBBlog >> allVisibleBlogPostsFromCategory: aCategory
 	^ posts select: [ :p | p category = aCategory 
 									and: [ p isVisible ] ]
 ]]]
 
+Votre nouveau test doit passer. 
+
 !!!!Vérifier la gestion des posts non classés
 
+Nous ajoutons un nouveau test pour vérifier que notre fixture ne contient pas de tests non classifiés.
 [[[
 TBBlogTest >> testUnclassifiedBlogPosts
    self assert: (blog allBlogPosts select: [ :p | p isUnclassified ]) size equals: 0
@@ -218,20 +236,25 @@ TBBlogTest >> testUnclassifiedBlogPosts
 
 !!!!Obtenir la liste des catégories
 
+Ajoutons un nouveau test qui retorune la liste des catégories et qui échoue :
 [[[
 TBBlogTest >> testAllCategories
    blog writeBlogPost: post.
    self assert: blog allCategories size equals: 2
 ]]]
 
+Voic le code métier :
+
 [[[
 TBBlog >> allCategories
    ^ (self allBlogPosts collect: [ :p | p category ]) asSet
 ]]]
 
+Votre nouveau test doit passer.
+
 !!!Données de test 
 
-Afin de nous aider à tester l'application nous définissons une méthode qui ajoute des posts au blog courant. 
+Afin de nous aider à tester l'application nous définissons une méthode qui ajoute des posts au blog courant.
 
 [[[
 TBBlog class >> createDemoPosts

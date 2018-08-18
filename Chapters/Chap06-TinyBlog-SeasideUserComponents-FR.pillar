@@ -35,12 +35,6 @@ TBScreenComponent >> blog
    ^ TBBlog current
 ]]]
 
-En inspectant l'objet blog retourné par ==TBBlog current==, vérifier qu'il contient bien des bulletins (posts). Si ce n'est pas le cas, exécuter :
-
-[[[
-	TBBlog createDemoPosts
-]]]
-
 Par la suite, si l'on souhaite étendre TinyBlog pour qu'un utilisateur puisse avoir plusieurs blogs, il suffira de modifier cette méthode pour utiliser des informations stockées dans la session active (Voir ==TBSession== dans le chapitre suivant).
 
 Définissez la méthode ==renderContentOn:== de ce composant comme suit temporairement. Notez que pour l'instant, nous n'affichons pas ce composant
@@ -54,6 +48,8 @@ TBScreenComponent >> renderContentOn: html
 !!!Utilisation du composant Screen
 
 Bien que le composant ==TBScreenComponent== n'ait pas vocation à être utilisé directement, nous allons l'utiliser de manière temporaire pendant que nous développons les autres composants. 
+
+
 Nous ajoutons la variable d'instance ==main== dans la classe ==TBApplicationRootComponent==. 
 [[[
 WAComponent subclass: #TBApplicationRootComponent
@@ -85,7 +81,10 @@ TBApplicationRootComponent >> children
    ^ { main }
 ]]]
 
-Si vous rafraichissez votre browser, vous allez voir l'affichage produit par le sous-composant ==TBScreenComponent== qui affiche pour l'instant le texte: ==Hello from TBScreenComponent==.
+Si vous rafraichissez votre browser, vous allez voir l'affichage produit par le sous-composant ==TBScreenComponent== qui affiche pour l'instant le texte: ==Hello from TBScreenComponent== (voir figure *@fig:Hello*).
+
++Premier visuel du composant ==TBScreenComponent==.>file://figures/HelloFromScreenComponent.png|width=75|label=fig:Hello+
+
 
 !!!Pattern de définition  de composants
 
@@ -93,6 +92,14 @@ Nous allons souvent utiliser la même façon de procéder:
 - nous définissons d'abord la classe et le comportement d'un nouveau composant;
 - puis, nous allons y faire référence depuis la classe qui utilisera ce composant pour satisfaire les contraintes de Seaside;
 - en particulier, nous exprimons la relation entre un composant et un sous-composant en redéfinissant la méthode ==children==.
+
+!!!Ajouter quelques bulletins au blog
+
+En inspectant l'objet blog retourné par ==TBBlog current==, vérifier qu'il contient bien des bulletins (posts). Si ce n'est pas le cas, exécuter :
+
+[[[
+	TBBlog createDemoPosts
+]]]
 
 
 !!!Définition du composant TBHeaderComponent
