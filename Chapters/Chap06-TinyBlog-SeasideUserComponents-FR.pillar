@@ -13,7 +13,7 @@ Les instructions pour charger le code des chapitres précédents sont disponible
 
 Nous sommes maintenant prêts à définir les composants visuels de notre application Web. La figure *@ComponentOverview* montre les différents composants que nous allons développer dans ce chapitre et où ils se situent.
 
-+Les composants composant l'application TinyBlog.>file://figures/ComponentOverview-ListPosts.pdf|width=75|label=ComponentOverview+
++Les composants visuels de l'application TinyBlog.>file://figures/ComponentOverview-ListPosts.pdf|width=75|label=ComponentOverview+
 
 !!!!Le composant TBScreenComponent
 
@@ -81,7 +81,7 @@ TBApplicationRootComponent >> children
    ^ { main }
 ]]]
 
-Si vous rafraichissez votre browser, vous allez voir l'affichage produit par le sous-composant ==TBScreenComponent== qui affiche pour l'instant le texte: ==Hello from TBScreenComponent== (voir figure *@fig:Hello*).
+Si vous rafraichissez votre browser, vous allez voir l'affichage produit par le sous-composant ==TBScreenComponent== qui affiche pour l'instant le texte: ==Hello from TBScreenComponent== (voir la figure *@fig:Hello*).
 
 +Premier visuel du composant ==TBScreenComponent==.>file://figures/HelloFromScreenComponent.png|width=75|label=fig:Hello+
 
@@ -95,10 +95,14 @@ Nous allons souvent utiliser la même façon de procéder:
 
 !!!Ajouter quelques bulletins au blog
 
-En inspectant l'objet blog retourné par ==TBBlog current==, vérifier qu'il contient bien des bulletins (posts). Si ce n'est pas le cas, exécuter :
-
+Vérifiez que votre blog a quelques bulletins : 
 [[[
-	TBBlog createDemoPosts
+TBBlog current allBlogPosts size
+]]]
+
+Si il n'en contient aucun, recréez-en : 
+[[[
+TBBlog createDemoPosts
 ]]]
 
 
@@ -183,7 +187,7 @@ TBHeaderComponent >> renderBrandOn: html
 ]]]
 
 L'entête (header) est affichée à l'aide d'une barre de navigation Bootstrap.
-Si vous faites un rafraichissement de l'application dans votre navigateur web vous devez voir apparaitre l'en-tête comme sur la Figure *@navBlog*.
+Si vous faites un rafraichissement de l'application dans votre navigateur web vous devez voir apparaitre l'en-tête comme sur la figure *@navBlog*.
 
 +TinyBlog avec une barre de navigation.>file://figures/navBlog.png|width=75|label=navBlog+
 
@@ -196,7 +200,8 @@ Le nom du blog devrait être paramétrable à l'aide d'une variable d'instance d
 !!!Liste des posts
 
 Créons un composant ==TBPostsListComponent== pour afficher la liste des bulletins (posts) - ce qui reste d'ailleurs le but d'un blog. Ce composant constitue la partie publique du blog offerte aux lecteurs du blog. 
-Pour cela, définissons une sous-classe de ==TBScreenComponent==:
+
+Pour cela, définissons une sous-classe de ==TBScreenComponent== (comme illustré dans la figure *@compt2*):
 
 [[[
 TBScreenComponent subclass: #TBPostsListComponent
@@ -208,7 +213,7 @@ TBScreenComponent subclass: #TBPostsListComponent
 
 +Le composant ==ApplicationRootComponent== utilise le composant ==PostsListComponent==.>file://figures/ComponentRelationship2.pdf|width=75|label=compt2+
 
-Nous pouvons maintenant modifier le composant principal de l'application (==TBApplicationRootComponent==) pour qu'il affiche ce nouveau composant comme illustré dans la figure *@compt2*. Pour cela nous modifions sa méthode ==initialize== ainsi: 
+Nous pouvons maintenant modifier le composant principal de l'application (==TBApplicationRootComponent==) pour qu'il affiche ce nouveau composant. Pour cela nous modifions sa méthode ==initialize== ainsi: 
 
 [[[
 TBApplicationRootComponent >> initialize
@@ -296,16 +301,6 @@ TBPostComponent >> renderContentOn: html
 
 
 !!!Afficher les bulletins (posts)
-
-Nous pouvons maintenant afficher les bulletins présents dans la base. Vérifiez que votre blog a quelques bulletins : 
-[[[
-TBBlog current allBlogPosts size
-]]]
-
-Si il n'en contient aucun, recréez-en : 
-[[[
-TBBlog createDemoPosts 
-]]]
 
 Il ne reste plus qu'à modifier la méthode ==renderContentOn:== de la classe ==TBPostsListComponent== pour afficher l'ensemble des bulletins visibles présents dans la base.
 

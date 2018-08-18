@@ -11,7 +11,9 @@ Avant de commencer, reprenez votre code ou reportez-vous au dernier chapitre du 
 !!!La classe TBBlog
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Nous allons développer la classe ==TBBlog== qui contient des posts, en écrivant des tests puis en les implémentant.
+Nous allons développer la classe ==TBBlog== qui contient des bulletins (posts), en écrivant des tests puis en les implémentant (voir la figure *@postBlogUML*).
+
++TBBlog une classe très simple.>file://figures/postBlogUML.pdf|width=60|label=postBlogUML+
 
 [[[
 Object subclass: #TBBlog
@@ -43,7 +45,7 @@ TBBlog class >> reset
 ]]]
 [[[
 TBBlog class >> current
-   "answer the instance of the TBRepository"
+   "Answer the instance of the class"
    ^ uniqueInstance ifNil: [ uniqueInstance := self new ]
 ]]]
 

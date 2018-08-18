@@ -1,15 +1,14 @@
 !! Modèle de l'application TinyBlog
 @cha:model
-% full code at: 9c87f4b8abb956469e145d2ba8afeba8b66159d2
 
-Dans ce premier chapitre, nous allons commencer à développer la partie modèle de l'application Tinyblog.
+Dans ce premier chapitre, nous développons une partie du modèle de l'application Tinyblog.
 Le modèle est particulièrement simple : il définit une liste de bulletin et un bulletin.
 
 !!!La classe TBPost
 
-+TBPost.>file://figures/postUML.pdf|width=10|label=postUml+
++TBPost une classe très simple.>file://figures/postUML.pdf|width=20|label=postUml+
 
-Nous commençons ici par la représentation d'un bulletin avec la classe ==TBPost==. Elle est très simple (voir Figure *@postUml* et définie ainsi:
+Nous commençons ici par la représentation d'un bulletin (post) avec la classe ==TBPost==. Elle est très simple (voir figure *@postUml* et définie ainsi:
 
 [[[
 Object subclass: #TBPost
@@ -21,10 +20,10 @@ Object subclass: #TBPost
 Nous utilisons cinq variables d'instance pour décrire un post sur le blog.
 
 |!Variable 		|!Signification |
-|title         |Titre du post                |
-|text          |Texte du post                |
+|title         |Titre du bulletin                |
+|text          |Texte du bulletin                |
 |date          |Date de redaction            |
-|category      |Rubrique contenant le post   |
+|category      |Rubrique contenant le bulletin   |
 |visible       |Post visible ou pas ?        |
 
 
@@ -90,8 +89,8 @@ TBPost >> notVisible
 !!!Initialisation
 
 La méthode ==initialize== (protocole 'initialization') fixe la date à celle du jour et la visibilité à faux. L'utilisateur devra par la suite activer la visibilité. 
-Cela permet de rédiger des brouillons et de ne publier un post que lorsque celui-ci est terminé. 
-Un post est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe. 
+Cela permet de rédiger des brouillons et de ne publier un bulletin que lorsque celui-ci est terminé. 
+Un bulletin est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe. 
 La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
 
 [[[
@@ -141,7 +140,7 @@ TBPost
 	category: 'TinyBlog'
 ]]]
 
-Si vous inspectez le code ci-dessus (clic droit sur l'expression et "Inspect it"), vous allez obtenir un inspecteur sur l'objet post nouvellement créé comme représenté sur la Figure *@inspectorOnTBPost*.
+Si vous inspectez le code ci-dessus (clic droit sur l'expression et "Inspect it"), vous allez obtenir un inspecteur sur l'objet post nouvellement créé comme représenté sur la figure *@inspectorOnTBPost*.
 
 +Inspecteur sur une instance de TBPost.>figures/inspectorOnTBPost.png|width=100|label=inspectorOnTBPost+
 
@@ -205,7 +204,9 @@ TBPost >> isUnclassified
 ]]]
 
 De même il serait préférable de ne pas faire une référence en dur à la classe ==TBPost== dans le corps d'une méthode. 
-Proposer une solution.
+Proposer une solution!
+
+
 De plus, prenons le temps de mettre à jour notre test pour couvrir ce nouvel aspect.
 Nous simplifions de cette manière la logique de notre test.
 
