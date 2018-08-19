@@ -69,8 +69,12 @@ TBHeaderComponent >> renderSimpleAdminButtonOn: html
             html text: ' Admin View' ]]
 ]]]
 
-Si vous rafraichissez votre navigateur, le bouton admin est bien présent mais il n'a aucun effet pour l'instant.
+Si vous rafraichissez votre navigateur , le bouton admin est bien présent mais il n'a aucun effet pour l'instant (voir la figure *@withAdminView1*).
 Il faut définir un ==callback:== sur ce bouton (un bloc) qui remplace le composant courant (==TBPostsListComponent==) par le composant d'administration (==TBAdminComponent==).
+
++Un button admin.>file://figures/withAdminView1.png|width=80|label=withAdminView1+
+
+!!! Revisons la barre de navigation
 
 Commençons par réviser la définition de ==TBHeaderComponent== en lui ajoutant une variable d'instance ==component== pour stocker et accéder au composant courant ainsi :
 
