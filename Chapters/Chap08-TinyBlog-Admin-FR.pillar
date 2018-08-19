@@ -91,19 +91,31 @@ Nous pourrions enrichir les descriptions pour qu'il ne soit pas possible de post
 Nous pourrions changer la description d'une catégorie pour que ses valeurs possibles soient définies par l'ensemble des catégories existantes. 
 Tout cela permettrait de produire des interfaces plus complètes et toujours aussi simplement.
 
+!!! Création automatique de composant
 
-!!!Mise en place d'un rapport des bulletins
+Une fois un bulletin décrit nous pouvons générer un composant Seaside en envoyant le message ==asComponent== à une instance.
 
-Nous allons développer deux composants. 
-Le premier sera un rapport (==TBPostReport==) qui contiendra tous les posts et le second contiendra ce rapport (==TBAdminComponent==). 
+[[[
+	aTBPost asComponent
+]]]
+
+Nous allons voir cela dans la suite.
+
+
+!!! Mise en place d'un rapport des bulletins
+
+Nous allons développer un nouveau composant qui sera utilisé par le composant ==TBAdminComponent==.
+Le composant ==TBPostReport== est un rapport qui contiendra tous les posts.
 Le rapport étant généré par Magritte sous la forme d'un composant Seaside, nous aurions pu n'avoir qu'un seul composant. 
 Toutefois, nous pensons que distinguer le composant d'administration du rapport est une bonne chose pour l'évolution de la partie administration.
 
-!!!!Le composant PostsReport
+!!!! Le composant PostsReport
 
-La liste des posts est affichée à l'aide d'un rapport généré dynamiquement par le framework Magritte. Nous utilisons ce framework pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
+La liste des posts est affichée à l'aide d'un rapport généré dynamiquement par le framework Magritte.
+ Nous utilisons ce framework pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
 
-Pour rester modulaire, nous allons créer un composant Seaside pour cette tâche.
+Pour rester modulaire, nous allons créer un composant Seaside pour cette tâche. Le composant ==TBPostsReport== est une souclasse
+de la classe ==TBSMagritteReport== qui gére les rapports avec Bootstrap.
 
 [[[
 TBSMagritteReport subclass: #TBPostsReport
@@ -112,7 +124,8 @@ TBSMagritteReport subclass: #TBPostsReport
    package: 'TinyBlog-Components'
 ]]]
 
-Avec la méthode ==from:== nous disons que nous voulons créer un rapport en prenant les descriptions de n'importe quel blog.
+Nous ajoutons une méthode de création qui prend en argument un blog et donc ses bulletins. 
+
 [[[
 TBPostsReport class >> from: aBlog
    | allBlogs |
@@ -120,15 +133,24 @@ TBPostsReport class >> from: aBlog
    ^ self rows: allBlogs description: allBlogs anyOne magritteDescription
 ]]]
 
-!!!!Intégration de PostsReport dans AdminComponent
+!!! Intégration de PostsReport dans AdminComponent
 
 Révisons maintenant notre composant ==TBAdminComponent== pour afficher ce rapport.
-On ajoute ensuite une variable d'instance ==report== et ses accesseurs à la classe ==TBAdminComponent==.
+On ajoute une variable d'instance ==report== et ses accesseurs à la classe ==TBAdminComponent==.
+
+[[[
+TBScreenComponent subclass: #TBAdminComponent
+	instanceVariableNames: 'report'
+	classVariableNames: ''
+	package: 'TinyBlog-Components'
+]]]
 
 [[[
 TBAdminComponent >> report
    ^ report
+]]]
 
+[[[
 TBAdminComponent >> report: aReport
    report := aReport
 ]]]
@@ -161,16 +183,25 @@ TBAdminComponent >> renderContentOn: html
 ]]]
 
 Vous pouvez déjà tester dans votre navigateur. 
-Par défaut, le rapport affiche l'intégralité des données présentes dans chaque post mais certaines colonnes ne sont pas utiles. 
-Il faut donc filtrer les colonnes. 
+
+!!! Filtrer les colonnes
+
+Par défaut, un rapport affiche l'intégralité des données présentes dans chaque post. 
+Cependant certaines colonnes ne sont pas utiles.
+Il faut donc filtrer les colonnes.
 Nous ne retiendrons ici que le titre, la catégorie et la date de rédaction.
 
 Nous ajoutons une méthode de classe pour la sélection des colonnes et modifions ensuite la méthode ==from:== pour en tirer parti.
 
 [[[
 TBPostsReport class >> filteredDescriptionsFrom: aBlogPost
-   ^ aBlogPost magritteDescription select: [ :each | #(title category date) includes: each accessor selector ]
+	"Filter only some descriptions for the report columns."
 
+	^ aBlogPost magritteDescription
+		select: [ :each | #(title category date) includes: each accessor selector ]
+]]]
+
+[[[
 TBPostsReport class >> from: aBlog
    | allBlogs |
    allBlogs := aBlog allBlogPosts.
@@ -183,9 +214,12 @@ La figure *@RapportV1* montre ce que vous devez obtenir dans votre navigateur.
 +Rapport Magritte contenant les bulletins du blog.>file://figures/RapportMagritteV1.png|width=100|label=RapportV1+
 
 
-!!!!Amélioration du rapport
+!!! Amélioration du rapport
 
-Le rapport généré est brut. Il n'y a pas de titres sur les colonnes et l'ordre d'affichage des colonnes n'est pas fixé (il peut varier d'une instance à une autre). Pour gérer cela, il suffit de modifier les descriptions Magritte pour chaque variable d'instance.
+Le rapport généré est brut. Il n'y a pas de titres sur les colonnes et l'ordre d'affichage des colonnes n'est pas fixé.
+Celui-ci peut varier d'une instance à une autre. 
+Pour gérer cela, il suffit de modifier les descriptions Magritte pour chaque variable d'instance.
+Nous spécifions une priorité
 
 [[[
 TBPost >> descriptionTitle
@@ -238,14 +272,14 @@ TBPost >> descriptionVisible
 ]]]
 
 
-Identifiez-vous et vous devez obtenir la situation telle que représentée par la figure *@adminReportDraft*.
+Vous devez obtenir la situation telle que représentée par la figure *@adminReportDraft*.
 +Administration avec un rapport.>file://figures/RapportMagritteV2.png|width=85|label=adminReportDraft+
 
 
 !!!Administration des bulletins
 
-Nous pouvons maintenant mettre en place un CRUD (Create Read Update Delete) permettant de gérer les bulletins. 
-Pour cela, nous allons ajouter une colonne (instance ==MACommandColumn==) au rapport qui regroupera les différentes opérations utilisant ==addCommandOn:==. 
+Nous pouvons maintenant mettre en place un CRUD (Create Read Update Delete) permettant de gérer les bulletins.
+Pour cela, nous allons ajouter une colonne (instance ==MACommandColumn==) au rapport qui regroupera les différentes opérations en utilisant ==addCommandOn:==. 
 Cette méthode permet de définir un lien qui déclenchera l'exécution d'une méthode de l'objet courant lorsqu'il sera cliqué grâce à un callback.
 
 Ceci se fait lors de la création du rapport. 
@@ -256,13 +290,20 @@ TBSMagritteReport subclass: #TBPostsReport
     instanceVariableNames: 'blog'
     classVariableNames: ''
     package: 'TinyBlog-Components'
+]]]
 
+[[[
 TBSMagritteReport >> blog
    ^ blog
+]]]
 
+[[[
 TBSMagritteReport >> blog: aTBBlog
    blog := aTBBlog
 ]]]
+
+
+La méthode ==from:== ajoute une nouvelle colonne au rapport. Elle regroupe les différentes opérations en utilisant ==addCommandOn:==. 
 
 [[[
 TBPostsReport class >> from: aBlog
@@ -271,11 +312,12 @@ TBPostsReport class >> from: aBlog
     report := self rows: blogPosts description: (self filteredDescriptionsFrom: blogPosts anyOne).
     report blog: aBlog.
     report addColumn: (MACommandColumn new
-        addCommandOn: report  selector: #viewPost: text: 'View'; yourself;
+        addCommandOn: report selector: #viewPost: text: 'View'; yourself;
         addCommandOn: report selector: #editPost: text: 'Edit'; yourself;
         addCommandOn: report selector: #deletePost: text: 'Delete'; yourself).
      ^ report
 ]]]
+
 
 L'ajout (add) est dissocié des bulletins et se trouvera donc juste avant le rapport. 
 Etant donné qu'il fait partie du composant ==TBPostsReport==, nous devons redéfinir la méthode ==renderContentOn:== du composant ==TBPostsReport== pour insérer le lien ==add==.
