@@ -191,7 +191,7 @@ Cliquez sur 'New Session' en bas à gauche de votre navigateur et ensuite sur le
 !!!!Notion call:/answer:
 
 Si vous étudiez le code précédent, vous verrez que nous avons utilisé le mécanisme ==call:==/==answer:== de Seaside pour mettre en place la navigation entre les composants ==TBPostsListComponent== et ==TBAdminComponent==.
-==call:== remplace le composant courant par le composant passé en argument et lui donne le flot de calcul et ==answer:== retourne une valeur à cet appel.
+Les message ==call:== remplace le composant courant par le composant passé en argument et lui donne le flot de calcul et ==answer:== retourne une valeur à cet appel et redonne le contr\^ole au composant appellant.
 Ce mécanisme puissant et élégant est expliqué dans la vidéo 1 de la semaine 5 du Mooc (*http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_5.html*).
 
 !!! Composant fenêtre modale d'identification 
@@ -257,9 +257,9 @@ TBAuthentificationComponent class >> from: aComponent
 ]]]
 
 
-!!!! Rendu du composant
+!!! Rendu du composant d'identification
 
-La méthode ==renderContentOn:== définit le contenu d'une boîte de dialogue modale avec l'identifiant ==myAuthDialog==.
+La méthode ==renderContentOn:== définit le contenu d'une boîte de dialogue modale avec l'identifiant ==myAuthDialog==. Cet identifiant sera utilisé pour sélectionner le composant qui sera rendu visible en mode modal plus tard.
 Il est composé d'une en-tête et d'un corps. Notez l'utilisation des messages ==tbsModal==, ==tbsModalBody:==, ==tbsModalContent:==  qui permettent une interaction modale avec ce composant.
 
 [[[
@@ -327,7 +327,7 @@ TBAuthentificationComponent >> renderPasswordFieldOn: html
 
 
 Deux boutons sont ajoutés en bas de la fenêtre modale.
-Le bouton =='Cancel'== qui permet de fermer la fenêtre modale grâce à son attribut 'data-dismiss' et le bouton =='SignIn'== associé à un bloc de callback qui envoi le message ==validate==.
+Le bouton =='Cancel'== qui permet de fermer la fenêtre modale grâce à son attribut 'data-dismiss' et le bouton =='SignIn'== associé à un bloc de callback qui envoie le message ==validate==.
 La touche ==enter== du clavier permet également d'activer le bouton =='SignIn'== car c'est le seul dont l'attribut 'type' a la valeur 'submit'. 
 
 
@@ -359,31 +359,35 @@ TBAuthentificationComponent >> validate
 %
 % De plus le composant ==TBAuthentificationComponent== pourrait afficher l'utilisateur lorsque celui-ci est logué.
 
-!!!!Intégration du composant d'identification
+!!!Intégration du composant d'identification
 
 Pour intégrer notre composant d'identification, modifions le bouton 'Admin' de la barre d'en-tête (==TBHeaderComponent==) ainsi:
 
 [[[
-TBHeaderComponent >>	renderButtonsOn: html
-   self rendeModalLoginButtonOn: html
+TBHeaderComponent >> renderButtonsOn: html
+   self renderModalLoginButtonOn: html
+]]]
 
-TBHeaderComponent >>	rendeModalLoginButtonOn: html
+[[[
+TBHeaderComponent >> renderModalLoginButtonOn: html
    html render: (TBAuthentificationComponent from: component).
-   html tbsNavbarButton 
-      tbsPullRight; 
+   html tbsNavbarButton
+      tbsPullRight;
       attributeAt: 'data-target' put: '#myAuthDialog';
       attributeAt: 'data-toggle' put: 'modal';
       with: [
-         html tbsGlyphIcon iconLock. 
+         html tbsGlyphIcon iconLock.
          html text: ' Login' ]
 ]]]
 
-La méthode ==rendeModalLoginButtonOn:== commence par intégrer le code du composant ==TBAuthentificationComponent== dans la page web (==render:==). 
+La méthode ==renderModalLoginButtonOn:== commence par intégrer le code du composant ==TBAuthentificationComponent== dans la page web (==render:==). 
 Le composant étant instancié à chaque affichage, il n'a pas besoin d'être retourné par la méthode ==children==.
 On ajoute également un bouton nommé 'Login' avec un pictogramme un pictogramme clé.
 Lorsque l'utilisateur clique sur ce bouton, la boîte modale ayant l'identifiant ==myAuthDialog== est affichée.
 
 En rechargeant la page de TinyBlog dans votre navigateur, nous voyons maintenant un bouton 'Login' dans l'en-tête permettant d'ouvrir la fenêtre modale comme illustré sur la figure *@authentification*.
+
+!!! Gestion naive des logins
 
 Toutefois, si vous cliquez sur le bouton 'SignIn', une erreur se produit. 
 En utilisant le debugger Pharo, on comprend qu'il faut définir la méthode ==tryConnectionWithLogin:andPassword:== sur le composant ==TBPostsListComponent== car c'est le message envoyé par le callback du bouton 'SignIn' de la fenêtre modale: 
@@ -392,12 +396,17 @@ En utilisant le debugger Pharo, on comprend qu'il faut définir la méthode ==tr
 TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password
    (login = 'admin' and: [ password = 'topsecret' ])
          ifTrue: [ self goToAdministrationView ]
-         ifFalse: [ self loginErrorOccured ]
+         ifFalse: [ self loginErrorOccurred ]
 ]]]
 
-Pour l'instant, le login et le mot de passe pour accéder à la partie administration sont directement stockés en dur dans le code de cette méthode. 
+Pour l'instant, le login et le mot de passe pour accéder à la partie administration sont directement stockés en dur dans le code de cette méthode ce qui n'est pas très bon. 
+
+!!! Gestion des erreurs
+
 Nous avons déjà défini la méthode ==goToAdministrationView== précédemment.
 Ajoutons la méthode ==loginErrorOccured== et un mécanisme pour afficher un message d'erreur lorsque l'utilisateur n'utilise pas les bons identifiants comme sur la figure *@loginErrorMessage*
+
+Pour cela nous ajoutons une variable d'instance ==showLoginError== qui représente le fait que nous devons afficher une erreur. 
 
 [[[
 TBScreenComponent subclass: #TBPostsListComponent
@@ -406,20 +415,29 @@ TBScreenComponent subclass: #TBPostsListComponent
    package: 'TinyBlog-Components'
 ]]]
 
+La méthode ==loginErrorOccurred== spécifie qu'une erreur doit être affichée. 
+
+[[[
+TBPostsListComponent >> loginErrorOccurred
+	showLoginError := true
+]]]
+
+Nous ajoutons une méthode pour tester cet état.
 [[[
 TBPostsListComponent >> hasLoginError
    ^ showLoginError ifNil: [ false ]
 ]]]
 	
-[[[
-TBPostsListComponent >> loginErrorOccured
-	showLoginError := true
-]]]
+Nous définissons aussi un message d'erreur. 
 
 [[[
 TBPostsListComponent >> loginErrorMessage
-   ^ 'Inccorect login and/or password'
+   ^ 'Incorrect login and/or password'
 ]]]
+
+
+Nous modifions la méthode ==renderPostColumnOn:== afin de faire un traitement 
+spécifique en cas d'erreur. 
 
 [[[
 TBPostsListComponent >> renderPostColumnOn: html
@@ -431,6 +449,9 @@ TBPostsListComponent >> renderPostColumnOn: html
          self renderLoginErrorMessageIfAnyOn: html. 
          self basicRenderPostsOn: html ] 
 ]]]
+
+La méthode ==renderLoginErrorMessageIfAnyOn:== affiche si nécessaire un message d'erreur. Elle repositionne 
+la variable d'instance ==showLoginError== pour ne que le message ne soit pas afficher indéfiniment.
 
 [[[
 TBPostsListComponent >> renderLoginErrorMessageIfAnyOn: html
