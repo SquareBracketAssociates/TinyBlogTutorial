@@ -119,7 +119,7 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2018-08-09 11:44:26 +0000</string>
+	<string>2018-08-19 20:29:06 +0000</string>
 	<key>Modifier</key>
 	<string>ducasse</string>
 	<key>MovementHandleVisible</key>
@@ -219,7 +219,7 @@
 			<array>
 				<dict>
 					<key>Bounds</key>
-					<string>{{6.7401589205884065, 530.62205290231168}, {48, 30}}</string>
+					<string>{{8.5039370850315237, 495.62205290231117}, {48, 30}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -276,14 +276,14 @@
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>13</integer>
+						<integer>11</integer>
 					</dict>
 					<key>ID</key>
-					<integer>6</integer>
+					<integer>4</integer>
 					<key>Points</key>
 					<array>
-						<string>{268.58267960224555, 504.04724828671283}</string>
-						<string>{268.58267960224555, 417.85039730147111}</string>
+						<string>{270.34645776668867, 469.04724828671215}</string>
+						<string>{270.34645776668867, 382.85039730147048}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -310,7 +310,7 @@
 					<key>Tail</key>
 					<dict>
 						<key>ID</key>
-						<integer>8</integer>
+						<integer>6</integer>
 					</dict>
 				</dict>
 				<dict>
@@ -328,10 +328,10 @@
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>26</integer>
+						<integer>24</integer>
 					</dict>
 					<key>ID</key>
-					<integer>7</integer>
+					<integer>5</integer>
 					<key>Points</key>
 					<array>
 						<string>{268.58267960224555, 248.92913573576709}</string>
@@ -362,7 +362,7 @@
 					<key>Tail</key>
 					<dict>
 						<key>ID</key>
-						<integer>22</integer>
+						<integer>20</integer>
 					</dict>
 				</dict>
 				<dict>
@@ -372,7 +372,7 @@
 					<array>
 						<dict>
 							<key>Bounds</key>
-							<string>{{199.84252149824073, 462.04724828671277}, {137.48031620800967, 14}}</string>
+							<string>{{201.60629966268391, 427.04724828671215}, {137.48031620800967, 14}}</string>
 							<key>Class</key>
 							<string>ShapedGraphic</string>
 							<key>FitText</key>
@@ -380,7 +380,7 @@
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>9</integer>
+							<integer>7</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -412,7 +412,7 @@
 						</dict>
 						<dict>
 							<key>Bounds</key>
-							<string>{{199.84252149824073, 476.04724828671277}, {137.48031620800967, 56}}</string>
+							<string>{{201.60629966268391, 441.04724828671215}, {137.48031620800967, 56}}</string>
 							<key>Class</key>
 							<string>ShapedGraphic</string>
 							<key>FitText</key>
@@ -420,7 +420,7 @@
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>10</integer>
+							<integer>8</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -457,7 +457,7 @@ post:}</string>
 						</dict>
 						<dict>
 							<key>Bounds</key>
-							<string>{{199.84252149824073, 532.04724828671283}, {137.48031620800967, 14}}</string>
+							<string>{{201.60629966268391, 497.0472482867122}, {137.48031620800967, 14}}</string>
 							<key>Class</key>
 							<string>ShapedGraphic</string>
 							<key>FitText</key>
@@ -465,7 +465,7 @@ post:}</string>
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>11</integer>
+							<integer>9</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -500,15 +500,15 @@ post:}</string>
 					</array>
 					<key>GridH</key>
 					<array>
+						<integer>7</integer>
+						<integer>8</integer>
 						<integer>9</integer>
-						<integer>10</integer>
-						<integer>11</integer>
 						<array/>
 					</array>
 					<key>GroupConnect</key>
 					<string>YES</string>
 					<key>ID</key>
-					<integer>8</integer>
+					<integer>6</integer>
 					<key>Style</key>
 					<dict>
 						<key>fill</key>
@@ -534,14 +534,14 @@ post:}</string>
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>22</integer>
+						<integer>20</integer>
 					</dict>
 					<key>ID</key>
-					<integer>12</integer>
+					<integer>10</integer>
 					<key>Points</key>
 					<array>
-						<string>{268.58266146454736, 396.85039730147116}</string>
-						<string>{268.58266146454736, 290.92913573576715}</string>
+						<string>{270.07007702390689, 361.85039730147048}</string>
+						<string>{269.13668316911873, 290.92913573576709}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -570,7 +570,7 @@ post:}</string>
 					<key>Tail</key>
 					<dict>
 						<key>ID</key>
-						<integer>13</integer>
+						<integer>11</integer>
 					</dict>
 				</dict>
 				<dict>
@@ -580,7 +580,7 @@ post:}</string>
 					<array>
 						<dict>
 							<key>Bounds</key>
-							<string>{{199.84252149824073, 396.85039730147111}, {137.48031620800967, 14}}</string>
+							<string>{{201.60629966268391, 361.85039730147048}, {137.48031620800967, 14}}</string>
 							<key>Class</key>
 							<string>ShapedGraphic</string>
 							<key>FitText</key>
@@ -588,7 +588,7 @@ post:}</string>
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>14</integer>
+							<integer>12</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -620,7 +620,7 @@ post:}</string>
 						</dict>
 						<dict>
 							<key>Bounds</key>
-							<string>{{199.84252149824073, 410.85039730147111}, {137.48031620800967, 14}}</string>
+							<string>{{201.60629966268391, 375.85039730147048}, {137.48031620800967, 14}}</string>
 							<key>Class</key>
 							<string>ShapedGraphic</string>
 							<key>FitText</key>
@@ -628,7 +628,7 @@ post:}</string>
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>15</integer>
+							<integer>13</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -662,7 +662,7 @@ post:}</string>
 						</dict>
 						<dict>
 							<key>Bounds</key>
-							<string>{{199.84252149824073, 424.85039730147111}, {137.48031620800967, 14}}</string>
+							<string>{{201.60629966268391, 389.85039730147048}, {137.48031620800967, 14}}</string>
 							<key>Class</key>
 							<string>ShapedGraphic</string>
 							<key>FitText</key>
@@ -670,7 +670,7 @@ post:}</string>
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>16</integer>
+							<integer>14</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -705,15 +705,15 @@ post:}</string>
 					</array>
 					<key>GridH</key>
 					<array>
+						<integer>12</integer>
+						<integer>13</integer>
 						<integer>14</integer>
-						<integer>15</integer>
-						<integer>16</integer>
 						<array/>
 					</array>
 					<key>GroupConnect</key>
 					<string>YES</string>
 					<key>ID</key>
-					<integer>13</integer>
+					<integer>11</integer>
 					<key>Style</key>
 					<dict>
 						<key>fill</key>
@@ -748,10 +748,10 @@ post:}</string>
 					<key>Head</key>
 					<dict>
 						<key>ID</key>
-						<integer>22</integer>
+						<integer>20</integer>
 					</dict>
 					<key>ID</key>
-					<integer>17</integer>
+					<integer>15</integer>
 					<key>Points</key>
 					<array>
 						<string>{468.42520110048639, 248.92913573576703}</string>
@@ -782,7 +782,7 @@ post:}</string>
 					<key>Tail</key>
 					<dict>
 						<key>ID</key>
-						<integer>18</integer>
+						<integer>16</integer>
 					</dict>
 				</dict>
 				<dict>
@@ -800,7 +800,7 @@ post:}</string>
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>19</integer>
+							<integer>17</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -840,7 +840,7 @@ post:}</string>
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>20</integer>
+							<integer>18</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -882,7 +882,7 @@ post:}</string>
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>21</integer>
+							<integer>19</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -918,15 +918,15 @@ post:}</string>
 					</array>
 					<key>GridH</key>
 					<array>
+						<integer>17</integer>
+						<integer>18</integer>
 						<integer>19</integer>
-						<integer>20</integer>
-						<integer>21</integer>
 						<array/>
 					</array>
 					<key>GroupConnect</key>
 					<string>YES</string>
 					<key>ID</key>
-					<integer>18</integer>
+					<integer>16</integer>
 					<key>Style</key>
 					<dict>
 						<key>fill</key>
@@ -961,7 +961,7 @@ post:}</string>
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>23</integer>
+							<integer>21</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -1001,7 +1001,7 @@ post:}</string>
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>24</integer>
+							<integer>22</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -1044,7 +1044,7 @@ header}</string>
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>25</integer>
+							<integer>23</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -1081,15 +1081,15 @@ updateRoot:}</string>
 					</array>
 					<key>GridH</key>
 					<array>
+						<integer>21</integer>
+						<integer>22</integer>
 						<integer>23</integer>
-						<integer>24</integer>
-						<integer>25</integer>
 						<array/>
 					</array>
 					<key>GroupConnect</key>
 					<string>YES</string>
 					<key>ID</key>
-					<integer>22</integer>
+					<integer>20</integer>
 					<key>Style</key>
 					<dict>
 						<key>fill</key>
@@ -1124,7 +1124,7 @@ updateRoot:}</string>
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>27</integer>
+							<integer>25</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -1165,7 +1165,7 @@ Component}</string>
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>28</integer>
+							<integer>26</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -1207,7 +1207,7 @@ Component}</string>
 							<key>Flow</key>
 							<string>Resize</string>
 							<key>ID</key>
-							<integer>29</integer>
+							<integer>27</integer>
 							<key>Style</key>
 							<dict>
 								<key>fill</key>
@@ -1243,15 +1243,15 @@ updateRoot:}</string>
 					</array>
 					<key>GridH</key>
 					<array>
+						<integer>25</integer>
+						<integer>26</integer>
 						<integer>27</integer>
-						<integer>28</integer>
-						<integer>29</integer>
 						<array/>
 					</array>
 					<key>GroupConnect</key>
 					<string>YES</string>
 					<key>ID</key>
-					<integer>26</integer>
+					<integer>24</integer>
 					<key>Style</key>
 					<dict>
 						<key>fill</key>
@@ -1273,11 +1273,11 @@ updateRoot:}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{6.7401589205884065, 369.92126319887126}, {349.35433112016824, 190.70078970344048}}</string>
+					<string>{{8.5039370850315237, 334.92126319887063}, {349.35433112016824, 190.70078970344048}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>ID</key>
-					<integer>30</integer>
+					<integer>28</integer>
 					<key>Style</key>
 					<dict>
 						<key>fill</key>
@@ -1317,7 +1317,7 @@ updateRoot:}</string>
 							<key>FreeHand</key>
 							<true/>
 							<key>Width</key>
-							<real>2</real>
+							<real>3</real>
 						</dict>
 					</dict>
 				</dict>
