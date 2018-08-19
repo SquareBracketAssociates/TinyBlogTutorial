@@ -103,37 +103,45 @@ TBHeaderComponent class >> from: aComponent
 
 
 !!! Activation du button d'admin
-Modifions l'instanciation de ce composant en-tête dans ==TBScreenComponent== ainsi :
+Modifions l'instanciation du composant en-tête dans ==TBScreenComponent== afin de passer le composant qui sera
+sous la barre de navigation à celle-ci :
 
 [[[
 TBScreenComponent >> createHeaderComponent
 	^ TBHeaderComponent from: self
 ]]]
 
+Notez que la méthode ==createHeaderComponent== est bien définie dans la superclasse
+==TBScreenComponent== car elle est applicable pour toutes ses souclasses.
+
 Nous pouvons maintenant ajouter le ==callback:== sur le bouton :
 
 [[[
 TBHeaderComponent >> renderSimpleAdminButtonOn: html
 	html form: [ 
-	   html tbsNavbarButton 
-		   tbsPullRight;
-   		callback: [ component goToAdministrationView ];
-		   with: [
-            html tbsGlyphIcon iconListAlt.
-            html text: ' Admin View' ]]
+	html tbsNavbarButton 
+		tbsPullRight;
+		callback: [ component goToAdministrationView ];
+		with: [
+				html tbsGlyphIcon iconListAlt.
+				html text: ' Admin View' ]]
 ]]]
 
-Il ne reste plus qu'à définir la méthode ==goToAdministrationView== sur le composant ==TBPostsListComponent== dans le protocole 'actions':
+Il ne reste plus qu'à définir la méthode ==goToAdministrationView== sur le composant ==TBPostsListComponent== dans le protocole 'actions' :
 
 [[[
 TBPostsListComponent >> goToAdministrationView
-   self call: TBAdminComponent new
+	self call: TBAdminComponent new
 ]]]
 
 Avant de cliquer sur le bouton 'Admin' dans votre navigateur, vous devez cliquer sur 'New Session' afin de recréer le composant ==TBHeaderComponent==. 
+Vous devez obtenir la situation présentée dans la figure *@withAdminCom*.
 Le bouton 'Admin' permet maintenant de voir la partie administraion v1 s'afficher.
 Attention à ne cliquer qu'une seule fois car ce bouton 'Admin' est toujours présent dans la partie administration bien qu'il ne soit fonctionnel.
 Nous allons le remplacer par un bouton 'Disconnect'.
+
++Affichage du composant admin en cours de définition.>file://figures/WithAdminComp.png|width=100|label=withAdminCom+
+
 
 !!! Ajout d'un bouton 'disconnect'
 
