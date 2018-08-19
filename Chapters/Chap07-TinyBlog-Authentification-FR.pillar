@@ -140,12 +140,12 @@ Le bouton 'Admin' permet maintenant de voir la partie administraion v1 s'affiche
 Attention à ne cliquer qu'une seule fois car ce bouton 'Admin' est toujours présent dans la partie administration bien qu'il ne soit fonctionnel.
 Nous allons le remplacer par un bouton 'Disconnect'.
 
-+Affichage du composant admin en cours de définition.>file://figures/WithAdminComp.png|width=100|label=withAdminCom+
++Affichage du composant admin en cours de définition.>file://figures/WithAdminComp.png|width=80|label=withAdminCom+
 
 
 !!! Ajout d'un bouton 'disconnect'
 
-Nous allons remplacer le composant en-tête par un autre lorsqu'on affiche la partie administration.
+Lorsqu'on affiche la partie administration, nous allons remplacer le composant en-tête par un autre.
 Cette nouvelle en-tête affichera un bouton 'Disconnect'.
 
 Définissons un nouveau composant en-tête:
@@ -168,8 +168,10 @@ TBAdminComponent >> createHeaderComponent
    ^ TBAdminHeaderComponent from: self
 ]]]
 
+Maintenant nous pouvons spécialiser notre nouvelle barre de navigation dédiée à l'administration pour afficher un bouton de déconnexion.
+
 [[[
-TBAdminComponent >> renderDisconnectButtonOn: html
+TBAdminHeaderComponent >> renderDisconnectButtonOn: html
    html tbsNavbarButton 
       tbsPullRight; 
       callback: [ component goToPostListView ];
@@ -189,6 +191,7 @@ Cliquez sur 'New Session' en bas à gauche de votre navigateur et ensuite sur le
 !!!!Notion call:/answer:
 
 Si vous étudiez le code précédent, vous verrez que nous avons utilisé le mécanisme ==call:==/==answer:== de Seaside pour mettre en place la navigation entre les composants ==TBPostsListComponent== et ==TBAdminComponent==.
+==call:== remplace le composant courant par le composant passé en argument et lui donne le flot de calcul et ==answer:== retourne une valeur à cet appel.
 Ce mécanisme puissant et élégant est expliqué dans la vidéo 1 de la semaine 5 du Mooc (*http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_5.html*).
 
 !!! Composant fenêtre modale d'identification 
