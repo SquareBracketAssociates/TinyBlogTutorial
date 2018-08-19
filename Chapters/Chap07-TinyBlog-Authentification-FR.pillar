@@ -552,8 +552,8 @@ Maintenant nous nous pouvons créer une administrateur par défaut.
 [[[
 TBBlog >> createAdministrator
 	^ TBAdministrator
-		login: self class defaultAdminLogin
-		password: self class defaultAdminPassword
+			login: self class defaultAdminLogin
+			password: self class defaultAdminPassword
 ]]]
 
 
@@ -608,8 +608,10 @@ TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password
 
 Actuellement, si l'administrateur du blog veut naviguer entre la partie privée et la partie publique de TinyBlog, il doit se reconnecter à chaque fois.
 Nous allons simplifier cela en stockant l'administrateur courant en session lors d'une connexion réussie.
-Un objet session est attribué à chaque instance de l'application. 
-Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants. 
+
+
+Un objet session est attribué à chaque instance de l'application.
+Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants.
 Nous stockerons donc l'administrateur courant en session et modifierons les composants pour afficher des boutons permettant une navigation simplifiée lorsque l'administrateur est connecté.
 Lorsqu'il se déconnecte explicitement ou que la session expire, nous supprimerons la session courante.
 
@@ -618,7 +620,7 @@ La figure *@SessionNavigation* illustre la navigation entre les pages que nous s
 +Navigation et identification dans TinyBlog.>file://figures/sessionAuthSimplifiedNavigation.pdf|width=100|label=SessionNavigation+
 
 
-!!!!Définition et utilisation d'une classe session spécifique
+!!!Définition et utilisation d'une classe session spécifique
 
 Commençons par définir une nouvelle sous-classe de ==WASession== nommée ==TBSession== dans laquelle nous ajoutons une variable d'instance pour stocker l'administrateur connecté.
 
@@ -632,10 +634,16 @@ WASession subclass: #TBSession
 [[[
 TBSession >> currentAdmin
     ^ currentAdmin
+]]] 
 
+[[[
 TBSession >> currentAdmin: anObject
     currentAdmin := anObject
+]]] 
 
+Nous définissons une méthode ==isLogged== qui nous permettra de savoir si l'administrateur est loggé.
+
+[[[
 TBSession >> isLogged
     ^ self currentAdmin notNil
 ]]]
@@ -658,7 +666,7 @@ TBApplicationRootComponent class >> initialize
 
 Pensez à exécuter cette méthode via ==TBApplicationRootComponent initialize== avant de tester à nouveau l'application.
 
-!!!!Stockage de l'administrateur courant en session
+!!!Stockage de l'administrateur courant en session
 
 Lors d'une connexion réussie, nous ajoutons l'objet administrateur dans la session grâce à l'accesseur en écriture ==currentAdmin:==.
 
@@ -669,11 +677,11 @@ TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password
          ifTrue: [ 
             self session currentAdmin: self blog administrator.
             self goToAdministrationView ]
-         ifFalse: [ self loginErrorOccured ]
+         ifFalse: [ self loginErrorOccurred ]
 ]]]
 
 
-!!!!Navigation simplifiée vers la partie administration
+!!!Navigation simplifiée vers la partie administration
 
 Pour mettre en place une navigation simplifiée, modifions l'en-tête pour afficher soit le bouton de connexion soit un bouton de navigation simple vers la partie administration sans étape de connexion si un administrateur est déjà connecté c'est-à-dire présent en session. 
 
@@ -681,14 +689,14 @@ Pour mettre en place une navigation simplifiée, modifions l'en-tête pour affic
 TBHeaderComponent >> renderButtonsOn: html
     self session isLogged
         ifTrue: [ self renderSimpleAdminButtonOn: html ]
-		  ifFalse: [ self rendeModalLoginButtonOn: html ]     
+		  ifFalse: [ self renderModalLoginButtonOn: html ]     
 ]]]
 
 Vous pouvez tester dans votre navigateur en commençant une nouvelle session (bouton 'New Session' en bas à gauche).
 Une fois connecté, l'administrateur est ajouté en session.
 Remarquez que le bouton déconnexion ne fonctionne plus correctement car il n'invalide pas la session.
 
-!!!!Déconnexion
+!!!Déconnexion
 
 Ajoutons une méthode ==reset== sur notre objet session afin de supprimer l'administrateur courant, invalider la session courante et rediriger vers le point d'entrée de l'application.
 
@@ -713,7 +721,7 @@ TBAdminHeaderComponent >> renderDisconnectButtonOn: html
 
 Le bouton 'Disconnect' fonctionne à nouveau correctement.
 
-!!!!Navigation simplifiée vers la partie publique
+!!! Navigation simplifiée vers la partie publique
 
 Ajoutons maintenant un nouveau bouton dans l'en-tête de la partie administration pour revenir à la partie publique sans se déconnecter.
 
@@ -739,7 +747,6 @@ TBAdminHeaderComponent >> renderPublicViewButtonOn: html
 Vous pouvez maintenant tester la navigation dans votre application qui doit correspondre avec la représentation sur la figure *@SessionNavigation*.
 
 !!! Conclusion
-
 
 Nous avons mis en place une gestion de l'identification pour TinyBlog.
 Cela comprend un composant réutilisable d'identification sous la forme d'une fenêtre modale.
