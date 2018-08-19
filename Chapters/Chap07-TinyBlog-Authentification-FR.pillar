@@ -478,34 +478,48 @@ Ajoutons donc une nouvelle classe nommée ==TBAdministrator== caractérisé par 
 Object subclass: #TBAdministrator
 	instanceVariableNames: 'login password'
 	classVariableNames: ''
-	package: 'TinyBlog'.
-
-TBAdministrator >> login
-   ^ login
-
-TBAdministrator >> login: anObject
-   login := anObject
-
-TBAdministrator >> password
-   ^ password
-
-TBAdministrator >> password: anObject
-   password := (MD5 hashMessage: anObject)
-
-TBAdministrator class >> login: login password: password
-	^ self new 
-		login: login;
-		password: password;
-		yourself	
+	package: 'TinyBlog'
 ]]]
 
+[[[
+TBAdministrator >> login
+   ^ login
+]]]
+
+[[[
+TBAdministrator >> login: anObject
+   login := anObject
+]]]
+
+[[[
+TBAdministrator >> password
+   ^ password
+]]]
 
 Notez que nous ne stockons pas le mot de passe administrateur en clair dans la variable d'instance ==password== mais son hash en MD5.
+
+[[[
+TBAdministrator >> password: anObject
+   password := MD5 hashMessage: anObject
+]]]
+
+Nous définissons aussi une méthode de création.
+
+[[[
+TBAdministrator class >> login: login password: password
+	^ self new 
+			login: login;
+			password: password;
+			yourself	
+]]]
+
 Vous pouvez vérifier cela en inspectant l'expression suivante :
 
 [[[
 luc := TBAdministrator login: 'luc' password: 'topsecret'.
 ]]] 
+
+!!! Administrateur pour un blog
 
 Un blog possède un administrateur qui peut s'identifier sur le blog afin administrer les posts qu'il contient. 
 Ajoutons donc un champ ==adminUser== et un accesseur en lecture dans la classe ==TBBlog== afin d'y stocker l'administrateur du blog:
@@ -514,11 +528,34 @@ Ajoutons donc un champ ==adminUser== et un accesseur en lecture dans la classe =
 Object subclass: #TBBlog
 	instanceVariableNames: 'adminUser posts'
 	classVariableNames: ''
-	package: 'TinyBlog'.
+	package: 'TinyBlog'
+]]]
 
+[[[
 TBBlog >> administrator
    ^ adminUser
 ]]]
+
+Nous définissons le login et password que nous utiliserons par défaut. Comme vous allez le voir plus loin, nous allons modifier les attributs de l'administrateur et ceux-ci seront sauvés en même temps que le blog dans la base de données.
+
+[[[
+TBBlog class >> defaultAdminPassword
+   ^ 'topsecret'
+]]] 
+
+[[[	
+TBBlog class >> defaultAdminLogin
+   ^ 'admin'
+]]]
+
+Maintenant nous nous pouvons créer une administrateur par défaut. 
+[[[
+TBBlog >> createAdministrator
+	^ TBAdministrator
+		login: self class defaultAdminLogin
+		password: self class defaultAdminPassword
+]]]
+
 
 Lors de l'initialisation d'un blog ajoutons un administrateur par défaut.
 
@@ -527,17 +564,10 @@ TBBlog >> initialize
    super initialize.
    posts := OrderedCollection new.
    adminUser := self createAdministrator
-		
-TBBlog >> createAdministrator
-   ^ TBAdministrator login: self class defaultAdminLogin password: self class defaultAdminPassword
-	
-TBBlog class >> defaultAdminLogin
-   ^ 'admin'
+]]]
 
-TBBlog class >> defaultAdminPassword
-   ^ 'topsecret'
-]]] 
- 
+!!! Définir un administrateur 
+
 Il ne faut pas oublier de re-créer le blog ainsi:
 
 [[[
@@ -559,7 +589,7 @@ En effet, la classe ==TBBlog== étant une racine Voyage, tous ces attributs sont
 
 !!!!Améliorations possibles
 
-Etendre le modèle de l'application ainsi nécessite l'écriture de nouveaux tests unitaires. 
+Etendre le modèle de l'application ainsi nécessite l'écriture de nouveaux tests unitaires.  A vous de jouer!
 
 
 !!!Intégration du compte administrateur
