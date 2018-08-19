@@ -594,18 +594,17 @@ Etendre le modèle de l'application ainsi nécessite l'écriture de nouveaux tes
 
 !!!Intégration du compte administrateur
 
-Modifions maintenant la méthode ==tryConnectionWithLogin:andPassword:== pour qu'elle utilise les identifiants de l'administrateur du blog courant. 
-Notez que nous comparons les hash MD5 des mots de passe car nous ne stockons pas le mot de passe en clair dans le modèle.
+Modifions maintenant la méthode ==tryConnectionWithLogin:andPassword:== pour qu'elle utilise les identifiants de l'administrateur du blog courant.  Notez que nous comparons les hash MD5 des mots de passe car nous ne stockons pas le mot de passe en clair dans le modèle.
 
 [[[
 TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password
    (login = self blog administrator login and: [ 
       (MD5 hashMessage: password) = self blog administrator password ])
          ifTrue: [ self goToAdministrationView ]
-         ifFalse: [ self loginErrorOccured ]
+         ifFalse: [ self loginErrorOccurred ]
 ]]]
 
-!!!Stocker l'administrateur courant en session
+!!! Stocker l'administrateur courant en session
 
 Actuellement, si l'administrateur du blog veut naviguer entre la partie privée et la partie publique de TinyBlog, il doit se reconnecter à chaque fois.
 Nous allons simplifier cela en stockant l'administrateur courant en session lors d'une connexion réussie.
