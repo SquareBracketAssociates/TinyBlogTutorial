@@ -369,7 +369,8 @@ TBPostsReport >> renderAddPostForm: aPost
 Ici, le message ==asComponent==, envoyé à un objet métier instance de la classe ==TBPost==, créé directement un composant Seaside. Nous ajoutons une décoration à ce composant Seaside afin de gérer ok/cancel.
 
 
-La méthode ==addPost== pour sa part, affiche le composant rendu par la méthode ==renderAddPostForm:== et lorsque qu'un nouveau post est créé, elle l'ajoute au blog.
+La méthode ==addPost== pour sa part, affiche le composant rendu par la méthode ==renderAddPostForm:== et lorsque qu'un nouveau post est créé, elle l'ajoute au blog. La méthode ==writeBlogPost:== sauve les changements.
+
 [[[
 TBPostsReport >> addPost
     | post |
@@ -386,19 +387,26 @@ Le lien pour ajouter un bulletin permet maintenant d'afficher un formulaire de c
 
 
 !!!!Afficher un bulletin
+Pour afficher un bulletin en lecture nous définissons deux méthodes similaires aux précédentes.
+Notez que nous utilisons l'expression ==readonly: true== pour indiquer que le formulaire n'est pas éditable.
 
 [[[
 TBPostsReport >> renderViewPostForm: aPost
-   ^ aPost asComponent addDecoration: (
-      TBSMagritteFormDecoration buttons: { #cancel -> 'Back' });
-      yourself
+   ^ aPost asComponent 
+       addDecoration: (TBSMagritteFormDecoration buttons: { #cancel -> 'Back' });
+       readonly: true;
+       yourself
+]]]
 
+Voir un bulletin ne nécessite pas d'action supplémentaire que d'afficher le composant.
+[[[
 TBPostsReport >> viewPost: aPost
    self call: (self renderViewPostForm: aPost)
 ]]]
 
 !!!!Editer un bulletin
 
+Pour éditer un bulletin nous utilisons la même approche. 
 [[[
 TBPostsReport >> renderEditPostForm: aPost
    ^ aPost asComponent addDecoration: (
@@ -406,7 +414,10 @@ TBPostsReport >> renderEditPostForm: aPost
          #save -> 'Save post'.
          #cancel -> 'Cancel'});
       yourself
+]]]
 
+Maintenant la méthode ==editPost:== récupère la valeur du message ==call:== et sauve les changements apportés.
+[[[
 TBPostsReport >> editPost: aPost
    | post |
    post := self call: (self renderEditPostForm: aPost).
@@ -414,14 +425,6 @@ TBPostsReport >> editPost: aPost
 ]]]
 
 !!!!Supprimer un bulletin
-
-Pour éviter une opération accidentelle, nous utilisons une boite modale pour que l'utilisateur confirme la suppression du post. Une fois le post effacé, la liste des posts gérés par le composant ==TBPostsReport== est actualisée et le rapport est rafraîchi.
-
-[[[
-TBPostsReport >> deletePost: aPost
-    (self confirm: 'Do you want remove this post ?')
-        ifTrue: [ blog removeBlogPost: aPost ]
-]]]
 
 Il nous faut maintenant ajouter la méthode ==removeBlogPost:== à la classe ==TBBlog==:
 
@@ -440,10 +443,21 @@ TBBlogTest >> testRemoveBlogPost
     self assert: blog size equals: 0
 ]]]
 
+Pour éviter une opération accidentelle, nous utilisons une boite modale pour que l'utilisateur confirme la suppression du post. 
+Une fois le post effacé, la liste des posts gérés par le composant ==TBPostsReport== est actualisée et le rapport est rafraîchi.
+
+[[[
+TBPostsReport >> deletePost: aPost
+    (self confirm: 'Do you want remove this post ?')
+        ifTrue: [ blog removeBlogPost: aPost ]
+]]]
+
+
+
 !!!Gérer le rafraîchissement des données
 
-Les méthodes ==TBPostsReport>>addPost:== et ==TBPostsReport>>deletePost:== font bien leur travail mais les données à l'écran ne sont pas mises à jour. 
-Il faut donc rafraichir la liste des posts car il y a un décalage entre les données en mémoire et celles stockées dans la base de données.
+Les méthodes ==addPost:== et ==deletePost:== font bien leur travail mais les données à l'écran ne sont pas mises à jour.
+Il faut donc rafraichir la liste des bulletins car il y a un décalage entre les données en mémoire et celles stockées dans la base de données.
 
 [[[
 TBPostsReport >> refreshReport
@@ -453,24 +467,27 @@ TBPostsReport >> refreshReport
 
 [[[
 TBPostsReport >> addPost
-    | post |
-    post := self call: (self renderAddPostForm: TBPost new).
-    post ifNotNil: [
-        blog writeBlogPost: post.
-        self refreshReport
-    ]
+	| post |
+	post := self call: (self renderAddPostForm: TBPost new).
+	post
+		ifNotNil: [ blog writeBlogPost: post.
+			self refreshReport ]
+]]]
 
+[[[
 TBPostsReport >> deletePost: aPost
     (self confirm: 'Do you want remove this post ?')
         ifTrue: [ blog removeBlogPost: aPost.
                  self refreshReport ]
 ]]]
 
-Le rapport est maintenant fonctionnel  et gère même les contraintes de saisie c'est-à-dire que le formulaire assure par exemple que les champs déclarés comme obligatoire dans les descriptions Magritte sont bien renseignées.
+Le rapport est maintenant fonctionnel  et gère même les contraintes de saisie c'est-à-dire que le formulaire assure par exemple que les champs déclarés comme obligatoire dans les descriptions Magritte sont bien renseignés.
 
 !!!Amélioration de l'apparence des formulaires
 
-Pour tirer partie de Bootstrap, nous allons modifier les définitions Magritte. Tout d'abord, spécifions que le rendu du formulaire doit se baser sur Bootstrap.
+Pour tirer parti de Bootstrap, nous allons modifier les définitions Magritte. Tout d'abord, spécifions que le rendu du formulaire doit se baser sur Bootstrap.
+
+Un container en Magritte est l'élément qui va contenir les composants créer à partir des descriptions.
 
 [[[
 TBPost >> descriptionContainer
@@ -495,6 +512,9 @@ TBPost >> descriptionTitle
         beRequired;
         yourself
 ]]]
+
++Formulaire d'ajout d'un post avec Bootstrap.>file://figures/AddAPostBootstrap.png|width=85|label=addAPostBootstrap+
+
 
 [[[
 TBPost >> descriptionText
@@ -538,7 +558,7 @@ TBPost >> descriptionVisible
 
 Grâce à ces nouvelles descriptions Magritte, les formulaires générés sous la forme de composants Seaside utilisent Bootstrap. 
 Par exemple, formulaire d'édition d'un post doit maintenant ressembler à celui de la figure *@addAPostBootstrap*.
-+Formulaire d'ajout d'un post avec Bootstrap.>file://figures/AddAPostBootstrap.png|width=85|label=addAPostBootstrap+
+
 
 !!!Conclusion 
 
@@ -546,10 +566,3 @@ Nous avons mis en place la partie administration de TinyBlog sous la forme d'un 
 Nous avons également ajouté des liens permettant une gestion CRUD de chaque bulletin. 
 Nous avons réalisé tout cela en utilisant Magritte. 
 En effet, nous avons ajouté des descriptions sur les bulletins et généré des composants Seaside (des formulaires) à partir de ces descriptions.
-
-
-!!!Amélioration
-
-Vous pouvez par eemple:
-- mieux mettre en évidence les bulletins non visibles dans le rapport
-- gérer plusieurs blog
