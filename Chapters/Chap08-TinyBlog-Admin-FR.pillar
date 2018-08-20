@@ -5,6 +5,11 @@ Dans les chapitres précédents, nous avons défini des composants Seaside qui i
 et où chaque composant est responsable son état et de son rendu graphique.  
 Dans ce chapitre, nous voulons vous montrer que l'on peut aller encore plus loin et générer des composants Seaside à partir de la description d'objets en utilisant le framework Magritte. 
 
+La figure *@RapportNewLookActions2* montre une partie du résultat que nous allons obtenir. L'autre partie étant l'édition de bulletins. 
+
++Gestion des bulletins.>file://figures/RapportNewLookActions.png|width=75|label=RapportNewLookActions2+
+
+
 La figure *@ApplicationAdmin* montre un aperçu de l'architecture visée dans ce chapitre.
 
 + Composants pour l'administration.>file://figures/ApplicationArchitectureWithAdmin.pdf|width=75|label=ApplicationAdmin+
@@ -219,7 +224,7 @@ La figure *@RapportV1* montre ce que vous devez obtenir dans votre navigateur.
 Le rapport généré est brut. Il n'y a pas de titres sur les colonnes et l'ordre d'affichage des colonnes n'est pas fixé.
 Celui-ci peut varier d'une instance à une autre. 
 Pour gérer cela, il suffit de modifier les descriptions Magritte pour chaque variable d'instance.
-Nous spécifions une priorité
+Nous spécifions une priorité et un titre (message ==label:==) comme suit : 
 
 [[[
 TBPost >> descriptionTitle
@@ -319,6 +324,14 @@ TBPostsReport class >> from: aBlog
 ]]]
 
 
+Nous allons devoir définir les méthodes liées à chaque opérations dans une prochaine section.
+
+Par ailleurs, cette méthode est un peu longue et elle ne permet pas de separer la définition du rapport de l'ajout d'opérations sur les éléments. Une solution est de créer une méthode d'instance ==addCommands== et de l'appeller explicitement.  Faites cette transformation.
+
+
+
+!!! Gérer l'ajout d'un bulletin
+
 L'ajout (add) est dissocié des bulletins et se trouvera donc juste avant le rapport. 
 Etant donné qu'il fait partie du composant ==TBPostsReport==, nous devons redéfinir la méthode ==renderContentOn:== du composant ==TBPostsReport== pour insérer le lien ==add==.
 
@@ -336,13 +349,16 @@ Identifiez-vous à nouveau et vous devez obtenir la situation telle que représe
 +Rapport des bulletins avec des liens d'édition.>file://figures/RapportNewLookActions.png|width=75|label=RapportNewLookActions+
 
 
-!!!Implémentation des actions CRUD
+!!! Implémentation des actions CRUD
 
 A chaque action (Create/Read/Update/Delete) correspond une méthode de l'objet ==TBPostsReport==. 
 Nous allons maintenant les implémenter. 
 Un formulaire personnalisé est construit en fonction de l'opération demandé (il n'est pas utile par exemple d'avoir un bouton "Sauver" alors que l'utilisateur veut simplement lire le post).
 
-!!!!Ajouter un bulletin
+!!!Ajouter un bulletin
+Commençons par gérer l'ajout d'un bulletin.
+La méthode ==renderAddPostForm:== suivante illustre la puissance de Magritte pour générer des formulaires.
+
 [[[
 TBPostsReport >> renderAddPostForm: aPost
     ^ aPost asComponent
@@ -350,10 +366,10 @@ TBPostsReport >> renderAddPostForm: aPost
         yourself
 ]]]
 
-La méthode ==renderAddPostForm== illustre la puissance de Magritte pour générer des formulaires.
-Ici, le message ==asComponent== envoyé à un objet métier instance de la classe ==TBPost==, créé directement un composant Seaside.
-Nous ajoutons une décoration à ce composant Seaside afin de gérer ok/cancel.
+Ici, le message ==asComponent==, envoyé à un objet métier instance de la classe ==TBPost==, créé directement un composant Seaside. Nous ajoutons une décoration à ce composant Seaside afin de gérer ok/cancel.
 
+
+La méthode ==addPost== pour sa part, affiche le composant rendu par la méthode ==renderAddPostForm:== et lorsque qu'un nouveau post est créé, elle l'ajoute au blog.
 [[[
 TBPostsReport >> addPost
     | post |
@@ -361,9 +377,13 @@ TBPostsReport >> addPost
     post ifNotNil: [ blog writeBlogPost: post ]
 ]]]
 
-La méthode ==addPost== pour sa part, affiche le composant rendu par la méthode ==renderAddPostForm:== et lorsque qu'un nouveau post est créé, elle l'ajoute au blog.
+ On voit une fois encore l'utilisation du message ==call:== pour donner la main à un composant.
+Le lien pour ajouter un bulletin permet maintenant d'afficher un formulaire de création que nous rendrons plus présentable (Voir figure *@AffichePostRaw*).
 
-Le lien pour ajouter un bulletin permet maintenant d'afficher un formulaire de création.
+
++Affichage rudimentaire d'un bulletin.>file://figures/AffichePostRaw.png|width=75|label=AffichePostRaw+
+
+
 
 !!!!Afficher un bulletin
 
