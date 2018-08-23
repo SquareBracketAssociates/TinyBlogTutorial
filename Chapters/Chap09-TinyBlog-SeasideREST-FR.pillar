@@ -8,10 +8,10 @@ Les tests seront dans le package =='TinyBlog-Rest-Tests'==.
 
 REST se base sur les verbes HTTP pour décrire l'accès aux ressources HTTP (https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html). Les principaux verbes ont la signification suivante:
 
-* GET pour lire une ressource,
-* POST pour créer une nouvelle ressource,
-* PUT pour modifier une ressource existante,
-* DELETE pour effacer une ressource,
+- GET pour lire une ressource,
+- POST pour créer une nouvelle ressource,
+- PUT pour modifier une ressource existante,
+- DELETE pour effacer une ressource,
 
 Les ressources sont définies à l'aide des URL qui pointent sur une entité. Le chemin précisé dans l'URL permet de donner une signification plus précise à l'action devant être réalisée. Par exemple, un ==GET /files/file.txt== signifie que le client veut accéder au contenu de l'entité nommée ==file.txt==. Par contre, un ==GET /files/== précise que le client veut obtenir la liste des entités contenues dans l'entité ==files==.
 
@@ -22,10 +22,10 @@ La réussite ou l'échec d'une opération est basée sur les codes de statut du 
 !!!Définir un filtre REST
 
 Pour regrouper les différents services REST de TinyBlog, il est préférable de créer un paquet dédié, nommé TinyBlog-REST. L'installation de ces services REST sera ainsi optionnelle. Si le paquet TinyBlog-REST est présent, le serveur TinyBlog autorisera:
-* l'obtention des l'ensemble des posts existants,
-* l'ajout d'un nouveau post,
-* la recherche parmi les posts en fonction du titre,
-* la recherche parmi les posts en fonction d'une période.
+- l'obtention des l'ensemble des posts existants,
+- l'ajout d'un nouveau post,
+- la recherche parmi les posts en fonction du titre,
+- la recherche parmi les posts en fonction d'une période.
 
 L'élément central de REST est un objet destiné à filtrer les requêtes HTTP reçues par le serveur et à déclencher les différents traitements. C'est en quelque sorte une gare de triage permettant d'aiguiller la requête du client vers le code apte à le gérer. Cet objet, nommé ==TBRestfulFilter==, hérite de la classe WARestfulFilter.
 
@@ -67,8 +67,6 @@ Le premier service proposé sera destiné à récupérer la liste des posts. Il 
 
 Si le client interroge le serveur à l'aide de l'URL ==http://localhost:8080/TinyBlog/listAll==, la méthode ==listAll== est appelée. Celle-ci retourne les données selon le type MIME (Multipurpose Internet Mail Extensions) spécifié par l'annotation ==<produces:>==.
 
-PENSER A CHARGER SEASIDE-JSON-CORE ET SEASIDE-PHARO-JSON-CORE
-
 [[[
 TBRestfulFilter >> listAll
 	<get>
@@ -100,7 +98,7 @@ TBRestfulFilter >> listAll
 	<path: '/posts'>
 	<produces: 'application/json'>
 
-	TBRestServiceListAll new applyServiceWithContext: (self requestContext)	
+	TBRestServiceListAll new applyServiceWithContext: self requestContext
 ]]]
 
 !!! Créer des Services
@@ -143,7 +141,7 @@ Tous les services REST de TinyBlog doivent être capable de retourner une répon
 
 [[[
 TBRestService >> dataType: aDataType with: aResultSet
-	self context response contentType: (aDataType greaseString).
+	self context response contentType: aDataType greaseString.
 	self context respond: [ :response | response nextPutAll: aResultSet ]
 ]]]
 
@@ -151,7 +149,7 @@ Avant de terminer l'implémentation de ==TBRestServiceListAll==, il nous faut d�
 
 !!!Construire une réponse
 
-Un service REST doit pouvoir fournir sa réponse au client selon différents formats en fonction de la capacité du client à les comprendre. Un bon service REST doit être capable de s'adapter pour être compris par le client qui l'interroge. C'est pourquoi, il est courant qu'un même service puisse répondre dans les formats les plus courants tels que JSON, XML ou encore CSV. Cette contrainte doit être gérer dans notre application par l'utilisation d'un objet destiné à contenir les données. Au terme de l'exécution du service REST, c'est son contenu qui sera transformé dans le format adapté pour être ensuite transmis au client.
+Un service REST doit pouvoir fournir sa réponse au client selon différents formats en fonction de la capacité du client à les comprendre. Un bon service REST doit être capable de s'adapter pour être compris par le client qui l'interroge. C'est pourquoi, il est courant qu'un même service puisse répondre dans les formats les plus courants tels que JSON, XML ou encore CSV. Cette contrainte doit être gérée dans notre application par l'utilisation d'un objet destiné à contenir les données. Au terme de l'exécution du service REST, c'est son contenu qui sera transformé dans le format adapté pour être ensuite transmis au client.
 
 Dans TinyBlog, c'est l'objet ==TBRestResponseContent== qui a la responsabilité de contenir les données à l'aide de la méthode d'instance ==data==.
 
@@ -162,7 +160,7 @@ Object subclass: #TBRestResponseContent
 	category: 'TinyBlog-Rest'
 ]]]
 
-Les données sont stockés au sein d'une collection ordonnée, initialisée à l'instanciation de l'objet. La méthode ==add:== permet d'ajouter un nouvel élément à cette collection.
+Les données sont stockées au sein d'une collection ordonnée, initialisée à l'instanciation de l'objet. La méthode ==add:== permet d'ajouter un nouvel élément à cette collection.
 
 [[[
 TBRestResponseContent >> initialize
@@ -184,7 +182,7 @@ TBRestResponseContent >> toJson
 		nextPut: data ]	
 ]]]
 
-Pourquoi ne pas ajouter d'autres traducteurs ? Pharo supporte parfaitement XML ou encore CSV. Nous vous laissons le soin d'ajouter ces formats aux services REST de TinyBlog.
+Pourquoi ne pas ajouter d'autres traducteurs ? Pharo supporte parfaitement XML ou encore CSV comme nous l'avons vu dans le chapitre précédent. Nous vous laissons le soin d'ajouter ces formats aux services REST de TinyBlog.
 
 !!!Implémenter le code métier du service listAll
 
@@ -200,7 +198,7 @@ Cette méthode va collecter les posts présents dans la base de données de Tiny
 
 !!! Utiliser un service REST
 
-Je suis certain que vous vous posez la question de savoir comment utiliser ce service REST ! En fait, il y a différentes méthodes pour le faire. 
+Il existe plusieurs façons d'utiliser ce service REST.
 
 !!!! En ligne de commande
 
@@ -423,12 +421,12 @@ Au fil de ce chapitre, vous avez implémenté les principales briques d'une API 
 
 La modification d'un post existant peut facilement être réalisée. Il vous suffit d'implémenter un service REST utilisant le verbe HTTP ==PUT== et d'encoder votre post avec la même structure que celle utilisée pour la création d'un post (service ==addPost==). L'exercice consiste ici à implémenter correctement la gestion des codes d'erreurs HTTP. De nombreux cas sont possibles.
 
-* 200 (OK) ou 201 (CREATED) si l'opération a réussi,
-* 204 (NO CONTENT) si la requête ne contient pas de données,
-* 304 (NOT MODIFIED) si aucun changement ne doit être appliqué (le contenu du post est identique),
-* 400 (BAD REQUEST) si les données transmises par le client sont incorrectes,
-* 404 (NOT FOUND) si le post devant être modifié n'existe pas,
-* 500 (INTERNAL SERVER ERROR) si un problème survient lors de la création du post dans la base de données.
+- 200 (OK) ou 201 (CREATED) si l'opération a réussi,
+- 204 (NO CONTENT) si la requête ne contient pas de données,
+- 304 (NOT MODIFIED) si aucun changement ne doit être appliqué (le contenu du post est identique),
+- 400 (BAD REQUEST) si les données transmises par le client sont incorrectes,
+- 404 (NOT FOUND) si le post devant être modifié n'existe pas,
+- 500 (INTERNAL SERVER ERROR) si un problème survient lors de la création du post dans la base de données.
 
 !!!! Supprimer un post
 

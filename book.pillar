@@ -22,15 +22,12 @@ ${inputFile:Chapters/Chap13-TinyBlog-Deployment-FR.pillar}$
 
 ! Eléments optionnels
 
-
+${inputFile:Chapters/Chap12-TinyBlog-Export-FR.pillar}$
 
 ${inputFile:Chapters/Chap09-TinyBlog-SeasideREST-FR.pillar}$
 
-${inputFile:Chapters/Chap11-TinyBlog-Mustache-FR.pillar}$
-%${inputFile:Chapters/Chap03-TinyBlog-Teapot-FR.pillar}$
-
-
-${inputFile:Chapters/Chap12-TinyBlog-Export-FR.pillar}$
+% ${inputFile:Chapters/Chap11-TinyBlog-Mustache-FR.pillar}$
+% ${inputFile:Chapters/Chap03-TinyBlog-Teapot-FR.pillar}$
 
 ${inputFile:Chapters/Chap14-TinyBlog-Loading-FR.pillar}$
 

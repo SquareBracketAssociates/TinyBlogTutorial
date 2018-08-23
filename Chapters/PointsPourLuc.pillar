@@ -1,10 +1,6 @@
 
-[ENH] Remplacer le chapitre Teapot par construction d'une API REST 
-			post en xml
-			plsu
-		en Teapot pour l'export des posts la syndication (RSS)
-
-[ENH] idée: prendre un theme html sur themeforest et générer un site statique servi par teapot
+[ENH] Remplacer le chapitre Teapot par construction d'une API (RSS)
+	autre idée: prendre un theme html sur themeforest et générer un site statique servi par teapot
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

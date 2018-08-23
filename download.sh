@@ -90,7 +90,7 @@ if [[ $vm_enable == 0 && $img_enable == 0 ]]; then
     img_enable=1
 fi
 
-IMAGE_URL="https://github.com/pillar-markup/pillar/releases/download/$pharo_version/Pillar-deployment$pharo_version.zip";
+IMAGE_URL="https://github.com/pillar-markup/pillar/releases/download/v5.0/Pillar-deployment$pharo_version.zip"
 VM_INSTALL_URL="http://get.pharo.org/vm$pharo_version"
 
 if [[ $vm_enable == 1 || $img_enable == 0 ]]; then
