@@ -2,13 +2,14 @@
 @cha:model
 
 Dans ce chapitre, nous développons une partie du modèle de l'application Tinyblog.
-Le modèle est particulièrement simple : il définit une liste de bulletin et un bulletin.
+Le modèle est particulièrement simple : il définit un bulletin. Dans le chapitre suivant 
+nous définissons un blog qui contient une liste de bulletins.
 
 !!!La classe TBPost
 
-+TBPost une classe très simple.>file://figures/postUML.pdf|width=20|label=postUml+
++TBPost une classe très simple gérant principalement des données.>file://figures/postUML.pdf|width=20|label=postUml+
 
-Nous commençons ici par la représentation d'un bulletin (post) avec la classe ==TBPost==. Elle est très simple (voir figure *@postUml* et définie ainsi:
+Nous commençons ici par la représentation d'un bulletin (post) avec la classe ==TBPost==. Elle est très simple (comme le montre la figure *@postUml*) et elle définie ainsi:
 
 [[[
 Object subclass: #TBPost
@@ -17,7 +18,7 @@ Object subclass: #TBPost
    package: 'TinyBlog'
 ]]]
 
-Nous utilisons cinq variables d'instance pour décrire un post sur le blog.
+Nous utilisons cinq variables d'instance pour décrire un bulletin sur le blog.
 
 |!Variable 		|!Signification |
 |title         |Titre du bulletin                |
@@ -112,8 +113,9 @@ Dans la solution proposée ci-dessus pour la méthode ==initialize==, il serait 
 
 !!!Méthodes de création
 
-Coté classe, on définit des méthodes (dans la protocole 'instance creation') pour faciliter la création de post appartenant ou pas à une catégorie.
+Coté classe, on définit des méthodes de classe (i.e., exécuter sur des classes) pour faciliter la création de post appartenant ou pas à une catégorie - de telles méthodes sont souvent groupées dans le protocole 'instance creation'.
 
+Nous définissons deux méthodes.
 [[[
 TBPost class >> title: aTitle text: aText
    ^ self new
@@ -131,7 +133,7 @@ TBPost class >> title: aTitle text: aText category: aCategory
 
 !!!Création de posts
 
-Vous pouvez maintenant créer des posts. Ouvrez l'outil Playground et executez l'expression suivante :
+Créons des posts pour s'assurer que tout fonctionne. Ouvrez l'outil Playground et executez l'expression suivante :
 
 [[[
 TBPost 
@@ -146,6 +148,7 @@ Si vous inspectez le code ci-dessus (clic droit sur l'expression et "Inspect it"
 
 !!! Ajout de quelques tests unitaires
 
+Inspecter manuellemment des objets n'est pas une manière systématique de vérifier que ces objets ont les propriétes attendues.
 Bien que le modèle soit simple nous pouvons définir quelques tests. 
 En mode Test Driven Developpement nous écrivons les tests en premier. 
 Ici nous avons préféré vous laissez définir une petite classe pour vous familiariser avec l'IDE.
@@ -160,7 +163,7 @@ TestCase subclass: #TBPostTest
 	package: 'TinyBlog-Tests'
 ]]]
 
-Nous définissons un premier test.
+Nous définissons deux tests.
 
 [[[
 TBPostTest >> testWithoutCategoryIsUnclassified
