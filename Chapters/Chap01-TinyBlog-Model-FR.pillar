@@ -1,7 +1,7 @@
 !! Modèle de l'application TinyBlog
 @cha:model
 
-Dans ce premier chapitre, nous développons une partie du modèle de l'application Tinyblog.
+Dans ce chapitre, nous développons une partie du modèle de l'application Tinyblog.
 Le modèle est particulièrement simple : il définit une liste de bulletin et un bulletin.
 
 !!!La classe TBPost
