@@ -49,8 +49,9 @@ TBBlog class >> initialize
 
 N'oubliez pas d'exécuter la méthode ==initialize== une fois la méthode définie en exécutant expression ==TBBlog initialize==.
 
-Le cas de de la méthode ==current== est plus délicat. Avant l'utilisation de Mongo, nous avions un singleton tout simple. Cependant utiliser un Singleton 
-ne fonctionne plus car imaginons que nous ayons sauvé notre blog et que le serveur s'éteigne par accident ou que nous rechargions une nouvelle version du code. Ceci conduirait à une réinitialisation et création d'une nouvelle instance. Nous pouvons donc nous retrouver avec une instance différente de celle sauvée. 
+Le cas de de la méthode ==current== est plus délicat. Avant l'utilisation de Mongo, nous avions un singleton tout simple. 
+Cependant utiliser un Singleton ne fonctionne plus car imaginons que nous ayons sauvé notre blog et que le serveur s'éteigne par accident ou que nous rechargions une nouvelle version du code. 
+Ceci conduirait à une réinitialisation et création d'une nouvelle instance. Nous pouvons donc nous retrouver avec une instance différente de celle sauvée. 
 
 Nous redéfinissons ==current== de manière à faire une requête dans la base. Comme pour le moment nous ne gérons qu'un blog il nous suffit de faire ==self selectOne: [ :each | true ]== ou ==self selectAll anyOne==. Nous nous assurons de créer une nouvelle instance et la sauvegarder si aucune instance n'existe dans la base. 
 

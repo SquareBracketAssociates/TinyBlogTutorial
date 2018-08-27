@@ -31,14 +31,24 @@ TBBlog >> initialize
 
 !!!Un seul blog
 
-Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. Dans le futur, vous pourrez ajouter la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant, nous utilisons donc un singleton pour la classe ==TBBlog==. Faites attention car le schéma de conception Singleton est rarement bien utilisé et peut rendre votre conception rapidement de mauvaise qualité. En effet, un singleton est souvent une sorte de variable globale et rend votre conception moins modulaire. Evitez de faire des références explicites au Singleton dans votre code et ne généralisez pas ce que nous faisons ici.
+Dans un premier temps nous supposons que nous allons gérer qu'un seul blog. 
+Dans le futur, vous pourrez ajouter la possibilité de gérer plusieurs blogs comme un par utilisateur de notre application. Pour l'instant, nous utilisons donc un singleton pour la classe ==TBBlog==. 
+Faites attention car le schéma de conception Singleton est rarement bien utilisé et peut rendre votre conception rapidement de mauvaise qualité. 
+En effet, un singleton est souvent une sorte de variable globale et rend votre conception moins modulaire. 
+Evitez de faire des références explicites au Singleton dans votre code. 
+Quand vous utilisez un Singleton le mieux est d'y accéder via une variable d'instance qui pourra dans un second
+temps faire référence à un autre objet sans vous forcer à tout réécrire.
+Donc ne généralisez pas ce que nous faisons ici.
 
 Comme la gestion du singleton est un comportement de classe, ces méthodes sont définies sur le coté class de la classe ==TBBlog==.
+Nous définissons une variable d'instance au niveau classe:
 
 [[[
 TBBlog class
    instanceVariableNames: 'uniqueInstance'
 ]]]
+
+Nous définissons deux méthodes pour gérer le singleton.
 [[[
 TBBlog class >> reset
    uniqueInstance := nil
@@ -60,9 +70,9 @@ TBBlog class >> initialize
 
 !!!Tester les règles métiers
 
-Nous allons écrire des tests pour les règles métiers et ceci en mode TDD (Test Driven Development) c'est-à-dire en développant les tests en premier puis en définissant les fonctionnalités jusqu'à ce que les tests passent.
+Nous allons écrire des tests pour les règles métiers et ceci en mode TDD (Test-Driven Development) c'est-à-dire en développant les tests en premier puis en définissant les fonctionnalités jusqu'à ce que les tests passent.
 
-Les tests unitaires sont regroupés dans une étiquette (tag) ==TinyBlog-Tests== qui contient la classe ==TBBlogTest== (voir menu item "Add Tag..."). Un tag est juste une étiquette qui permet de trier et grouper les classes à l'intérieur d'un package. Nous utilisons un tag ici pour ne pas avoir à gérer deux packages différents mais dans un projet réel vous définirions un package séparé pour les tests.
+Les tests unitaires sont regroupés dans une étiquette (tag) ==TinyBlog-Tests== qui contient la classe ==TBBlogTest== (voir menu item "Add Tag..."). Un tag est juste une étiquette qui permet de trier et grouper les classes à l'intérieur d'un package. Nous utilisons un tag ici pour ne pas avoir à gérer deux packages différents mais dans un projet réel vous définirions un (ou plusieurs) package séparé pour les tests.
 
 [[[
 TestCase subclass: #TBBlogTest
@@ -71,9 +81,10 @@ TestCase subclass: #TBBlogTest
    package: 'TinyBlog-Tests'
 ]]]
 
-La méthode ==setUp== permet d'initialiser le contexte des tests.
+La méthode ==setUp== permet d'initialiser le contexte des tests (aussi appelé fixture).
 Elle est donc exécutée avant chaque test unitaire.
-Dans cet exemple, elle efface le contenu du blog, lui ajoute un post et en créé un autre qui n'est provisoirement pas enregistré. Faites attention car nous devrons changer cette logique car dans le future a chaque fois que vous exécuterez des tests, vous perdrez votre domaine. C'est un exemple de la sorte d'effets pernicieux qu'un Singleton introduit dans un système.
+Dans cet exemple, elle efface le contenu du blog, lui ajoute un post et en créé un autre qui n'est provisoirement pas enregistré. 
+Faites attention car nous devrons changer cette logique car dans le future a chaque fois que vous exécuterez des tests, vous perdrez votre domaine. C'est un exemple de la sorte d'effets pernicieux qu'un Singleton introduit dans un système.
 
 [[[
 TBBlogTest >> setUp
@@ -95,7 +106,7 @@ TBBlogTest >> tearDown
    TBBlog reset
 ]]]
 
-L'utilisation d'un Singleton montre ses limites puisque si vous déployez un blog puis exécutez les tests vous perdrez les posts que vous avez créés car nous les remettons à zéro.
+L'utilisation d'un Singleton montre une de ses limites puisque si vous déployez un blog puis exécutez les tests vous perdrez les posts que vous avez créés car nous les remettons à zéro.
 
 Nous allons développer les tests d'abord puis les fonctionnalités testées.
 Les fonctionnalités métiers seront regroupées dans le protocole 'action' de la classe ==TBBlog==.
@@ -110,7 +121,8 @@ TBBlogTest >> testAddBlogPost
    self assert: blog size equals: 2
 ]]]
 
-Ce test ne passe pas (n'est pas vert) car nous n'avons pas défini les méthodes: ==writeBlogPost:==,  ==removeAllPosts== et ==size==. Ajoutons-les.
+Ce test ne passe pas (n'est pas vert) car nous n'avons pas défini les méthodes: ==writeBlogPost:==,  ==removeAllPosts== et ==size==. 
+Ajoutons-les.
 
 [[[
 TBBlog >> removeAllPosts
