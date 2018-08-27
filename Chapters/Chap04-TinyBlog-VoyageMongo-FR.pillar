@@ -1,17 +1,26 @@
 !!Persistance des données de TinyBlog avec Voyage et Mongo
 
 
-Avoir un modèle d'objets en mémoire fonctionne bien, et sauvegarder l'image Pharo sauve aussi ces objets. Toutefois, il est préférable de pouvoir sauver les objets (les posts) dans une base de données extérieure. Pharo offre plusieurs sérialiseurs d'objets (Fuel en format binaire et STON en format texte). Ces sérialiseurs d'objets sont très puissants et pratiques. Dans ce chapitre, nous voulons vous présenter une troisième option : la sauvegarde dans une base de donnée documents telle que Mongo (*https://www.mongodb.com*). Voyage est un framework qui propose une API unifiée permettant d'accéder à différentes bases de données documents comme Mongo ou UnQLite afin d'y stocker des objets.
+Avoir un modèle d'objets en mémoire fonctionne bien, et sauvegarder l'image Pharo sauve aussi ces objets. 
+Toutefois, il est préférable de pouvoir sauver les objets (les posts) dans une base de données extérieure. 
+Pharo offre plusieurs sérialiseurs d'objets (Fuel en format binaire et STON en format texte). 
+Ces sérialiseurs d'objets sont très puissants et pratiques. 
+Souvent sauver un graphe complet d'objets est réalisé en une seule ligne de code comme explique dans le livre Enterprise Pharo disponible à *http://books.pharo.org*.
 
-Dans ce chapitre, nous allons commencer par utiliser la capacité de Voyage à simuler une base extérieure. Ceci est très pratique en phase de développement. Dans un second temps, nous installerons une base de données Mongo et nous y accéderons à travers Voyage.
+Dans ce chapitre, nous voulons vous présenter une autre option : la sauvegarde dans une base de donnée orientée documents telle que Mongo (*https://www.mongodb.com*) en utilisant le framework Voyage. 
+Voyage est un framework qui propose une API unifiée permettant d'accéder à différentes bases de données documents comme Mongo ou UnQLite afin d'y stocker des objets.
+
+Dans ce chapitre, nous allons commencer par utiliser la capacité de Voyage à simuler une base extérieure. 
+Ceci est très pratique en phase de développement. 
+Dans un second temps, nous installerons une base de données Mongo et nous y accéderons à travers Voyage.
 
 Comme pour chacun des chapitres précédents vous pouvez charger le code comme indiqué dans le dernier chapitre.
 
-%% cbd5b53135ec2404f791c1aba497c5ce9d1eb661
 
 !!!Configurer Voyage pour sauvegarder des objets TBBlog
 
-Grâce à la méthode de classe ==isVoyageRoot==, nous déclarons que les objets de la classe ==TBBlog== doivent être sauvés dans la base en tant qu'objets racines. Cela veut dire que nous aurons autant de documents que d'objets instance de cette classe.
+Grâce à la méthode de classe ==isVoyageRoot==, nous déclarons que les objets de la classe ==TBBlog== doivent être sauvés dans la base en tant qu'objets racines. 
+Cela veut dire que nous aurons autant de documents que d'objets instance de cette classe.
 
 [[[
 TBBlog class >> isVoyageRoot
@@ -19,13 +28,14 @@ TBBlog class >> isVoyageRoot
    ^ true
 ]]]
 
-Nous devons ensuite soit créer une connexion sur une base de données réelle soit travailler en mémoire. C'est cette dernière option que nous choisissons pour l'instant en utilisant cette expression. 
+Nous devons ensuite soit créer une connexion sur une base de données réelle soit travailler en mémoire. 
+C'est cette dernière option que nous choisissons pour l'instant en utilisant cette expression. 
 
 [[[
 VOMemoryRepository new enableSingleton.
 ]]]
 
-Le message ==enableSingleton== indique à Voyage que nous n'utilisons qu'une seule base de donnée ce qui nous permet de ne pas avoir à préciser avec laquelle nous travaillons. 
+Le message ==enableSingleton== indique à Voyage que nous n'utilisons qu'une seule base de donnée.
 
 Nous définissons une méthode ==initializeVoyageOnMemoryDB== dont le rôle est d'initialiser correctement la base. 
 
@@ -34,15 +44,16 @@ TBBlog class >> initializeVoyageOnMemoryDB
    VOMemoryRepository new enableSingleton
 ]]]
 
-Ici nous n'avons pas besoin de stocker la base dans une variable d'instance car nous n'avons qu'une seule base de donnée en mode singleton. 
 
 Nous définissons la méthode de classe ==reset== afin de réinitialiser la base de données.
-Nous redéfinissons également la méthode class ==initialize== pour réinitialiser la base de données lorsque l'on charge le code c'est-à-dire lorsque la classe TBBlog est chargée.
+Nous redéfinissons également la méthode class ==initialize== pour réinitialiser la base de données lorsque l'on charge le code c'est-à-dire lorsque la classe ==TBBlog== est chargée.
 
 [[[
 TBBlog class >> reset
       self initializeVoyageOnMemoryDB
-      
+]]]
+
+[[[
 TBBlog class >> initialize
       self reset
 ]]]
@@ -51,9 +62,12 @@ N'oubliez pas d'exécuter la méthode ==initialize== une fois la méthode défin
 
 Le cas de de la méthode ==current== est plus délicat. Avant l'utilisation de Mongo, nous avions un singleton tout simple. 
 Cependant utiliser un Singleton ne fonctionne plus car imaginons que nous ayons sauvé notre blog et que le serveur s'éteigne par accident ou que nous rechargions une nouvelle version du code. 
-Ceci conduirait à une réinitialisation et création d'une nouvelle instance. Nous pouvons donc nous retrouver avec une instance différente de celle sauvée. 
+Ceci conduirait à une réinitialisation et création d'une nouvelle instance. 
+Nous pouvons donc nous retrouver avec une instance différente de celle sauvée. 
 
-Nous redéfinissons ==current== de manière à faire une requête dans la base. Comme pour le moment nous ne gérons qu'un blog il nous suffit de faire ==self selectOne: [ :each | true ]== ou ==self selectAll anyOne==. Nous nous assurons de créer une nouvelle instance et la sauvegarder si aucune instance n'existe dans la base. 
+Nous redéfinissons ==current== de manière à faire une requête dans la base. 
+Comme pour le moment nous ne gérons qu'un blog il nous suffit de faire ==self selectOne: [ :each | true ]== ou ==self selectAll anyOne==. 
+Nous nous assurons de créer une nouvelle instance et la sauvegarder si aucune instance n'existe dans la base. 
 
 [[[
 TBBlog class >> current
@@ -90,7 +104,11 @@ TBBlog >> removeAllPosts
 
 !!! Revision des tests
 
-Maintenant que nous sauvons les blogs dans une base (quelle soit en mémoire ou dans une base Mongo), nous devons faire attention car si un test modifie la base, notre base courante (hors test) sera elle aussi modifiée : Cette situation est clairement dangereuse. Un test ne doit pas modifier l'état du système.
+Maintenant que nous sauvons les blogs dans une base (quelle soit en mémoire ou dans une base Mongo), nous devons faire attention car si un test modifie la base, notre base courante (hors test) sera elle aussi modifiée : Cette situation est clairement dangereuse. 
+Un test ne doit pas modifier l'état du système.
+
+Pour résoudre ce problème, avant de lancer un test nous allons garder une référence au blog courant, créer un nouveau contexte puis nous allons utiliser cette référence pour restaurer le blog courant après l'exécution d'un test.
+
 
 Nous ajoutons la variable d'instance ==previousRepository== à la classe ==TBBLogTest==.
 
@@ -101,7 +119,8 @@ TestCase subclass: #TBBlogTest
 	package: 'TinyBlog-Tests'
 ]]]
 
-Ensuite, nous modifions donc la méthode ==setUp== pour sauver la base de données avant l'exécution du test. Nous créons un objet base de données temporaire qui sera celui qui sera modifié par le test.
+Ensuite, nous modifions donc la méthode ==setUp== pour sauver la base de données avant l'exécution du test. 
+Nous créons un objet base de données temporaire qui sera celui qui sera modifié par le test.
 
 [[[
 TBBlogTest >> setUp
@@ -127,7 +146,8 @@ Notez que les méthodes ==setUp== et ==tearDown== sont exécutées avant et apr�
 !!!Utilisation de la base
 
 Alors même que la base est en mémoire et bien que nous pouvons accéder au blog en utilisant le singleton de la classe ==TBBlog==,
-nous allons montrer l'API offerte par Voyage. C'est la même API que nous pourrons utiliser pour accéder à une base Mongo.
+nous allons montrer l'API offerte par Voyage. 
+C'est la même API que nous pourrons utiliser pour accéder à une base Mongo.
 
 Nous créons des posts ainsi :
 [[[
@@ -155,17 +175,28 @@ Vous pouvez voir l'API de Voyage en parcourant
 
 Ces requêtes sont plus pertinentes quand on a plus d'objets mais nous ferions exactement les mêmes. 
 
-!!!Si nous devions sauvegarder les posts [Optionnel]
+!!!Si nous devions sauvegarder les posts [Discussion]
 
-Cette section n'est pas à implémenter et elle est juste donnée à titre d'exemple.  Plus d'explications sont données dans le chapitre sur Voyage dans le livre ''Enterprise Pharo: a Web Perspective'' disponible a *http://books.pharo.org*. Nous voulons illustrer que déclarer une classe comme une racine Voyage a une influence sur comment une instance de cette classe est sauvée et rechargée. En particulier, déclarer un post comme une racine
- a comme effet que les objets posts seront des documents a part entière et ne seront plus une sous-parties d'un blog.
+Cette section n'est pas à implémenter. Elle est juste donnée à titre de discussion
+(Plus d'explications sont données dans le chapitre sur Voyage dans le livre ''Enterprise Pharo: a Web Perspective'' disponible a *http://books.pharo.org*). 
+Nous voulons illustrer que déclarer une classe comme une racine Voyage a une influence sur comment une instance de cette classe est sauvée et rechargée. 
 
-Nous pourrions définir qu'un post soit un élément qui peut être sauvegardé de manière autonome. Cela  permettrait de sauver des posts de manière indépendante d'un blog. Par contre, si nous représentions les commentaires d'un post, nous ne les déclarerions pas   comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
+En particulier, déclarer un post comme une racine a comme effet que les objets posts seront des documents à part entière et ne seront plus une sous-parties d'un blog.
 
-Lorsqu'un post n'est pas une racine, vous n'avez pas la certitude d'unicité de celui-ci lors du chargement depuis la base. En effet, lors du chargement (et ce qui peut être contraire à la situation du graphe d'objet avant la sauvegarde) un post n'est alors pas partagé entre deux instances de blogs. Si avant la sauvegarde en base un post était partagé entre deux blogs, après le chargement depuis la base, ce post sera dupliqué car recréé à partir de la définition du blog (et le blog contient alors complètement le post).
+Lorsqu'un post n'est pas une racine, vous n'avez pas la certitude d'unicité de celui-ci lors du chargement depuis la base. 
+En effet, lors du chargement (et ce qui peut être contraire à la situation du graphe d'objet avant la sauvegarde) un post n'est alors pas partagé entre deux instances de blogs. 
+Si avant la sauvegarde en base un post était partagé entre deux blogs, après le chargement depuis la base, ce post sera dupliqué car recréé à partir de la définition du blog (et le blog contient alors complètement le post).
+
+Nous pourrions définir qu'un post soit un élément qui peut être sauvegardé de manière autonome.
+Cela permettrait de sauver des posts de manière indépendante d'un blog.
+
+Cependant tous les objets n'ont pas vocation être définis comme des racines.
+Si nous représentions les commentaires d'un post, nous ne les déclarerions pas comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
 
 !!!! Post comme racine = Unicité
-Si vous désirez qu'un post soit partagé et unique entre plusieurs instances de blog, alors les objets ==TBPost== doivent être déclarés comme une racine dans la base. Lorsque c'est le cas, les posts sont sauvés comme des entités autonomes et les instances de ==TBBlog== feront référence à ces entités au lieu que leurs définitions soient incluses dans celle des blogs. Cela a pour effet qu'un post donné devient unique et partageable via une référence depuis le blog. 
+Si vous désirez qu'un post soit partagé et unique entre plusieurs instances de blog, alors les objets ==TBPost== doivent être déclarés comme une racine dans la base. 
+Lorsque c'est le cas, les posts sont sauvés comme des entités autonomes et les instances de ==TBBlog== feront référence à ces entités au lieu que leurs définitions soient incluses dans celle des blogs. 
+Cela a pour effet qu'un post donné devient unique et partageable via une référence depuis le blog. 
 
 Pour cela on nous définirions les méthodes suivantes:
 
