@@ -1,16 +1,16 @@
 !! Commencer avec Seaside
 
-Nous commençons par définir une interface telle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons une interface d'administration que le possesseur du blog utilisera. Nous allons définir des composants Seaside *http://www.seaside.st* dont l'ouvrage de référence est disponible en ligne à *http://book.seaside.st*. Les premiers chapitres de *http://book.seaside.st* peuvent vous aider et compléter efficacement ce tutoriel.
+Dans ce chapitre nous vérifions que Seaside fonctionne et nous définissons notre premier composant.
+Dans les chapitres suivants, nous commençons par définir une interface telle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons la logique d'identification, et finalement une interface d'administration que le possesseur du blog utilisera. Nous allons définir des composants Seaside *http://www.seaside.st* dont l'ouvrage de référence est disponible en ligne à *http://book.seaside.st*. Les premiers chapitres de *http://book.seaside.st* peuvent vous aider et compléter efficacement ce tutoriel.
 
 Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
-Vous pouvez charger le code des chapitres précédents en suivant les instructions indiquées dans le dernier chapitre.
-
+Vous pouvez charger le code des chapitres précédents en suivant les instructions indiquées dans le dernier chapitre (Chapitre *@cha:loading*).
 
 +Lancer le serveur.>file://figures/RunningSeaside.png|width=50|label=RunningSeaside+
 
 
 !!!Démarrer Seaside
-Seaside est déjà chargé dans l'image Pharo, sinon relisez le premier chapitre. Il existe deux façons pour démarrer Seaside. La première consiste à exécuter le code suivant :
+Seaside est déjà chargé dans l'image Pharo, sinon relisez le premier chapitre (Chapitre *@cha:loading*). Il existe deux façons pour démarrer Seaside. La première consiste à exécuter le code suivant :
 
 [[[
 ZnZincServerAdaptor startOn: 8080.
@@ -67,8 +67,6 @@ TBApplicationRootComponent class >> initialize
 ]]]
 
 Exécuter ==TBApplicationRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. En effet les méthodes ==initialize== de classe ne sont automatiquement exécutées que l'on du chargement de la classe. Ici nous venons juste de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices.
-
-Les méthodes de classe ==initialize== ne sont invoquées automatiquement que lors du chargement de la classe.
 
 Ajoutons également la méthode ==canBeRoot== afin de préciser que la classe ==TBApplicationRootComponent== n'est pas qu'un simple composant Seaside mais qu'elle représente notre application Web.
 Elle sera donc instanciée dès qu'un utilisateur se connecte sur l'application.
@@ -134,7 +132,7 @@ de l'application, nous décrivons son architecture dans la figure *@ApplicationA
 
 - ==PostsListComponent== est le composant principal affichant les bulletins (posts). Il est composé d'instances de  ==PostComponent== et gère aussi les catégories. 
 
-- ==AdminComponent== est le composant principal de la partie administration. Il contient un rapport (instance de ==PostsReport==) sur les bulletins (posts) construit en utilisant Magritte.
+- ==AdminComponent== est le composant principal de la partie administration. Il contient un rapport (instance de ==PostsReport==) sur les bulletins (posts) construits en utilisant Magritte.
 
 !!! Conclusion 
 

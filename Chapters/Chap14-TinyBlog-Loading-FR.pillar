@@ -1,4 +1,5 @@
 !! Charger le code des chapitres
+@cha:loading
 
 Ce chapitre contient les expressions permettant de charger le code décrit dans chacun des chapitres. Ces expressions doivent être exécutées dans une image PharoWeb 5 (*http://files.pharo.org/mooc/image/PharoWeb-5.0.zip*) ou PharoWeb 6.1 (*http://files.pharo.org/mooc/image/PharoWeb-61.zip*). Ensuite, si vous commencer le chapitre 4 par exemple, vous pouvez charger tout le code des chapitres précédents (1, 2 et 3) en suivant la procédure décrite dans la section 'Chapitre 4' ci-après.
 
@@ -16,10 +17,10 @@ Metacello new
 	load.
 ]]]
 
-Vous pouvez ouvrir un browser de code sur la classe ==TBPost==.
-Maintenant que vous avez la correction, vous pouvez compléter le code de votre application TinyBlog si nécessaire.
+Après le chargement d'un package, il est recommandé d'exécuter les tests unitaires qu'il contient afin de vérifier le bon fonctionnement du code chargé.
+Pour cela, vous pouvez lancer l'outil TestRunner (World menu > Test Runner), chercher le package TinyBlog-Tests et lancer tous les tests unitaires de la classe ==TBBlogTest== en cliquant sur le bouton "Run Selected". Tous les tests doivent être verts. Une alternative est de presser l'icone verte qui se situe à coté de la class ==TBBlogTest==. 
 
-!!! Chapitre 4: Persistance des données de TinyBlog avec Voyage et Mongo
+!!! Chapitre 4 : Persistance des données de TinyBlog avec Voyage et Mongo
 
 Vous pouvez charger la correction du chapitre 3 en exécutant le code suivant:
 
@@ -31,13 +32,10 @@ Metacello new
 	load.
 ]]]
 
-Après le chargement d'un package, il est recommandé d'exécuter les tests unitaires qu'il contient afin de vérifier le bon fonctionnement du code chargé.
-Pour cela, vous pouvez lancer l'outil TestRunner (World menu > Test Runner), chercher le package TinyBlog-Tests et lancer tous les tests unitaires de la classe ==TBBlogTest== en cliquant sur le bouton "Run Selected". Tous les tests doivent être verts. Une alternative est de presser l'icone verte qui se situe à coté de la class ==TBBlogTest==. 
-
 Ouvrez maintenant un browser de code pour regarder le code des classes ==TBBlog== et ==TBBlogTest== et compléter votre propre code si nécessaire.
-Avant de poursuivre, n'oubliez pas de committer une nouvelle version dans votre dépôt sur Smalltalkhub ou SS3 si vous avez modifié votre application.
+Avant de poursuivre, n'oubliez pas de committer une nouvelle version dans votre dépôt si vous avez modifié votre application.
 
-!!! Chapitre 5: Commencer avec Seaside
+!!! Chapitre 5 : Commencer avec Seaside
 
 Vous pouvez charger la correction du chapitre 4 en exécutant le code suivant:
 
@@ -65,7 +63,7 @@ Si vous avez besoin de créer quelques posts initiaux:
 TBBlog reset ; createDemoPosts
 ]]]
 
-!!! Chapitre 6: Des composants web pour TinyBlog
+!!! Chapitre 6 : Des composants web pour TinyBlog
 
 %Pour l'instant le code est dans TinyBlog-StephaneDucasse.5_1
 
@@ -93,7 +91,7 @@ Si vous avez besoin de créer quelques posts initiaux:
 TBBlog reset ; createDemoPosts
 ]]]
 
-!!! Chapitre 7: Gestion des catégories
+!!! Chapitre 7 : Gestion des catégories
 
 Vous pouvez charger la correction des chapitres précédents en exécutant le code suivant:
 
@@ -121,7 +119,7 @@ TBBlog reset ; createDemoPosts
 
 
 
-!!! Chapitre 8: Authentification et Session
+!!! Chapitre 8 : Authentification et Session
 
 Vous pouvez charger l'application TinyBlog avec la partie publique en exécutant :
 
@@ -139,7 +137,7 @@ Pour tester le code, vous devez lancer le serveur HTTP pour Seaside:
 ZnZincServerAdaptor startOn: 8080.
 ]]]
 
-!!! Chapitre 9: Interface Web d’administration et génération automatique
+!!! Chapitre 9 : Interface Web d’administration et génération automatique
 
 
 Vous pouvez charger l'application TinyBlog avec l'authentification en exécutant :
@@ -154,7 +152,7 @@ Metacello new
 
 
 
-!!! Chapitre 10: Déploiement de TinyBlog
+!!! Chapitre 10 : Déploiement de TinyBlog
 
 
 Vous pouvez charger l'application TinyBlog contenant la partie administration en exécutant :
