@@ -103,21 +103,7 @@ Metacello new
     load
 ]]]
 
-Pour tester le code, vous devez lancer le serveur HTTP pour Seaside:
-
-[[[
-ZnZincServerAdaptor startOn: 8080.
-]]]
-
-Ouvrez votre browser sur ==http://localhost:8080/TinyBlog==
-
-Si vous avez besoin de créer quelques posts initiaux:
-
-[[[
-TBBlog reset ; createDemoPosts
-]]]
-
-
+Même process que le précédent.
 
 !!! Chapitre 8 : Authentification et Session
 

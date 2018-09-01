@@ -3,15 +3,14 @@
 Dans ce chapitre, nous allons ajouter la gestion des catégories des bulletins. 
 Si vous avez le sentiment d'être un peu perdu, la figure *@AssociationArchitectureUser* vous montre les composants sur lesquels nous allons travailler dans ce chapitre. 
 
-+L'architecture des composants de la partie publique (par opposition à la partie administration).>file://figures/ApplicationArchitectureUser.pdf|width=75|label=AssociationArchitectureUser+
++L'architecture des composants de la partie publique avec catégories.>file://figures/ApplicationArchitectureUser.pdf|width=75|label=AssociationArchitectureUser+
 
-Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
-Les instructions pour charger le code des chapitres précédents sont disponibles dans le dernier chapitre.
+Les instructions pour charger le code des chapitres précédents sont disponibles dans le chapitre *@cha:loading*.
 
 !!!Affichage des bulletins par catégorie
 
 Les bulletins sont classés par catégorie. Par défaut, si aucune catégorie n'a été précisée, ils sont rangés dans une catégorie spéciale dénommée "Unclassified".
-Nous allons créer un composant pour gérer une liste de catégories nommée: ==TBCategoriesComponent==.
+Nous allons créer un composant nommé ==TBCategoriesComponent== pour gérer une liste de catégories.
 
 !!!!Pour afficher les catégories
 
