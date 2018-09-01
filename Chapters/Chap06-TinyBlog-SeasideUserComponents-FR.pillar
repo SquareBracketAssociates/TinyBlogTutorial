@@ -1,13 +1,13 @@
 !! Des composants web pour TinyBlog
 
-Dans ce chapitre, commençons par définir une interface publique permettant d'afficher les bulletins (posts) du blog. Dans un prochain chapitre, nous développerons une interface d'administration pour le ou les auteurs du blog.
+Dans ce chapitre, commençons par définir une interface publique permettant d'afficher les bulletins (posts) du blog. Nous raffinons cela dans le chapitre suivant. 
 
 Si vous avez le sentiment d'être un peu perdu, la figure *@ApplicationArchitectureUserWithoutCategory* vous montre les composants sur lesquels nous allons travailler dans ce chapitre. 
 
 +L'architecture des composants utilisateurs (par opposition à administration).>file://figures/ApplicationArchitectureUserWithoutCategory.pdf|width=75|label=ApplicationArchitectureUserWithoutCategory+
 
 Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
-Les instructions pour charger le code des chapitres précédents sont disponibles dans le dernier chapitre.
+Les instructions pour charger le code des chapitres précédents sont disponibles dans le chapitre *@cha:loading*.
 
 !!! Composants visuels 
 
