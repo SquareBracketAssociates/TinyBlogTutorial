@@ -104,7 +104,7 @@ TBCategoriesComponent >> selectCategory: aCategory
 
 
 !!! Rendu des catégories
-Nous pouvons maintenant ajouter une méthode (protocole 'rendering') pour afficher les catégories sur la page. En particulier, pour chaque catégorie nous définissons le fait que cliquer sur la catégorie la sélectionne comme la catégorie courante.
+Nous ajoutons la méthode ==renderCategoryLinkOn:with:== (protocole 'rendering') pour afficher les catégories sur la page. En particulier, pour chaque catégorie nous définissons le fait que cliquer sur la catégorie la sélectionne comme la catégorie courante.
 Nous utilisons un callback (message ==callback:==). L'argument de ce message est un block qui peut contenir n'importe quelle expression Pharo. Cela illustre la puissance de Seaside.
 
 [[[
@@ -114,7 +114,7 @@ TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
       with: aCategory
 ]]]
 
-La méthode de rendu de ce composant ==TBCategoriesComponent== est simple : on itère sur toutes les catégories et on les affiche en utilisant Bootstrap.
+La méthode de rendu ==renderContentOn:== du composant ==TBCategoriesComponent== est simple : on itère sur toutes les catégories et on les affiche en utilisant Bootstrap.
 
 [[[
 TBCategoriesComponent >> renderContentOn: html
