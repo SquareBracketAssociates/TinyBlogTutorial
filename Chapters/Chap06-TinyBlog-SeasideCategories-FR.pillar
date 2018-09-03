@@ -210,7 +210,7 @@ TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
       with: aCategory
 ]]]
 
-Bien que le code fonctionne, on ne doit pas laisser la méthode ==TBPostsListComponent >> renderContentOn: html== dans un tel état. Elle est bien trop longue et difficilement réutilisable. Proposer une solution. 
+Bien que le code fonctionne, on ne doit pas laisser la méthode ==renderContentOn:== de la classe ==TBPostsListComponent== dans un tel état. Elle est bien trop longue et difficilement réutilisable. Proposer une solution. 
 
 
 !!!Modulariser son code avec des petites méthodes
@@ -300,13 +300,13 @@ TBPostsListComponent >> renderPostColumnOn: html
 
 L'application finale est affichée dans la figure *@final*.
 
-+Final TinyBlog Public UI.>file://figures/finalPublicWebPage.png|width=85|label=final+
++TinyBlog UI version finale.>file://figures/finalPublicWebPage.png|width=85|label=final+
 
 !!! Conclusion
 Nous avons défini une interface pour notre blog en utilisant un ensemble de composants définissant chacun
 leur propre état et leurs responsabilités. Maintenant il faut remarquer que de très nombreuses applications se construisent de la même manière. Donc vous avez les bases pour définir de nombreuses applications web. 
 
-Dans le prochaine chapitre, nous allons voir comment gérer l'identification permettant d'accéder à la partie administration des bulletins.
+Dans le prochain chapitre, nous allons voir comment gérer l'identification permettant d'accéder à la partie administration des bulletins.
 
 !!!! Améliorations possibles
 
