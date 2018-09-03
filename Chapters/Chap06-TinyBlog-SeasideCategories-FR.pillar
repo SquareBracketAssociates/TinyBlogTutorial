@@ -142,7 +142,7 @@ TBPostsListComponent >> readSelectedPosts
       ifNotNil: [ self blog allVisibleBlogPostsFromCategory: self currentCategory ]
 ]]]
 
-Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des posts:
+Nous pouvons maintenant modifier la méthode chargée du rendu de la liste des posts :
 
 [[[
 TBPostsListComponent >> renderContentOn: html
@@ -162,7 +162,7 @@ De même qu'expliqué précédemment, une nouvelle instance de ==TBCategoriesCom
 
 !!!! Améliorations possibles
 
-Mettre en dur le nom des classes et la logique de création des catégories et des bulletins n'est pas optimale. Proposer quelques méthodes pour réaliser cela.
+Mettre en dur le nom des classes et la logique de création des catégories et des bulletins n'est pas optimale. Proposer quelques méthodes pour résoudre cela.
 
 !!!Look et agencement
 
