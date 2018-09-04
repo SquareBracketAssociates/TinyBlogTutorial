@@ -192,7 +192,7 @@ Cliquez sur 'New Session' en bas à gauche de votre navigateur et ensuite sur le
 !!!!Notion call:/answer:
 
 Si vous étudiez le code précédent, vous verrez que nous avons utilisé le mécanisme ==call:==/==answer:== de Seaside pour mettre en place la navigation entre les composants ==TBPostsListComponent== et ==TBAdminComponent==.
-Les message ==call:== remplace le composant courant par le composant passé en argument et lui donne le flot de calcul et ==answer:== retourne une valeur à cet appel et redonne le contr\^ole au composant appellant.
+Le message ==call:== remplace le composant courant par le composant passé en argument et lui donne le flot de calcul. Les message ==answer:== retourne une valeur à cet appel et redonne le contr\^ole au composant appellant.
 Ce mécanisme puissant et élégant est expliqué dans la vidéo 1 de la semaine 5 du Mooc (*http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_5.html*).
 
 !!! Composant fenêtre modale d'identification 
@@ -260,8 +260,8 @@ TBAuthentificationComponent class >> from: aComponent
 
 !!! Rendu du composant d'identification
 
-La méthode ==renderContentOn:== définit le contenu d'une boîte de dialogue modale avec l'identifiant ==myAuthDialog==. Cet identifiant sera utilisé pour sélectionner le composant qui sera rendu visible en mode modal plus tard.
-Il est composé d'une en-tête et d'un corps. Notez l'utilisation des messages ==tbsModal==, ==tbsModalBody:==, ==tbsModalContent:==  qui permettent une interaction modale avec ce composant.
+La méthode ==renderContentOn:== suivante définit le contenu d'une boîte de dialogue modale avec l'identifiant ==myAuthDialog==. Cet identifiant sera utilisé pour sélectionner le composant qui sera rendu visible en mode modal plus tard.
+Cette boite de dialogue est composé d'une en-tête et d'un corps. Notez l'utilisation des messages ==tbsModal==, ==tbsModalBody:==, ==tbsModalContent:==  qui permettent une interaction modale avec ce composant.
 
 [[[
 TBAuthentificationComponent >> renderContentOn: html
