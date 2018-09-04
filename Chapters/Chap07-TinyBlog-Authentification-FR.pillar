@@ -43,7 +43,7 @@ Pour cela, modifions les composants existants: ==TBHeaderComponent== (en-tête) 
 
 +Lien simple vers la partie administration.>file://figures/SimpleAdminLink.png|width=100|label=SimpleAdminLink+
 
-Commençons par ajouter le bouton 'admin' dans l'en-tête:
+Commençons par ajouter le bouton 'admin' dans l'en-tête :
 
 [[[
 TBHeaderComponent >> renderContentOn: html	
