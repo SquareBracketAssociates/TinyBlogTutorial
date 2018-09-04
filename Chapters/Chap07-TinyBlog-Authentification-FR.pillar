@@ -103,8 +103,7 @@ TBHeaderComponent class >> from: aComponent
 
 
 !!! Activation du button d'admin
-Modifions l'instanciation du composant en-tête dans ==TBScreenComponent== afin de passer le composant qui sera
-sous la barre de navigation à celle-ci :
+Modifions l'instanciation du composant en-tête définie dans la méthode du component ==TBScreenComponent== afin de passer le composant qui sera sous la barre de navigation à celle-ci :
 
 [[[
 TBScreenComponent >> createHeaderComponent
@@ -114,7 +113,7 @@ TBScreenComponent >> createHeaderComponent
 Notez que la méthode ==createHeaderComponent== est bien définie dans la superclasse
 ==TBScreenComponent== car elle est applicable pour toutes ses souclasses.
 
-Nous pouvons maintenant ajouter le ==callback:== sur le bouton :
+Nous pouvons maintenant ajouter le callback (message ==callback:==) sur le bouton :
 
 [[[
 TBHeaderComponent >> renderSimpleAdminButtonOn: html
@@ -137,7 +136,7 @@ TBPostsListComponent >> goToAdministrationView
 Avant de cliquer sur le bouton 'Admin' dans votre navigateur, vous devez cliquer sur 'New Session' afin de recréer le composant ==TBHeaderComponent==. 
 Vous devez obtenir la situation présentée dans la figure *@withAdminCom*.
 Le bouton 'Admin' permet maintenant de voir la partie administraion v1 s'afficher.
-Attention à ne cliquer qu'une seule fois car ce bouton 'Admin' est toujours présent dans la partie administration bien qu'il ne soit fonctionnel.
+Attention à ne cliquer qu'une seule fois car ce bouton 'Admin' est toujours présent dans la partie administration bien qu'il ne soit pas fonctionnel.
 Nous allons le remplacer par un bouton 'Disconnect'.
 
 +Affichage du composant admin en cours de définition.>file://figures/WithAdminComp.png|width=80|label=withAdminCom+
@@ -161,7 +160,7 @@ TBAdminHeaderComponent >> renderButtonsOn: html
    html form: [ self renderDisconnectButtonOn: html ]
 ]]]
 
-Indiquons au composant ==TBAdminComponent== d'utiliser cette en–tête:
+Indiquons au composant ==TBAdminComponent== d'utiliser cette en–tête :
 
 [[[
 TBAdminComponent >> createHeaderComponent
@@ -184,6 +183,8 @@ TBAdminHeaderComponent >> renderDisconnectButtonOn: html
 TBAdminComponent >> goToPostListView
 	self answer
 ]]]
+
+Le message ==answer== donne le contrôle au component qui l'a invoqué. Ici nous retournons donc à la liste de bulletins. 
 
 Cliquez sur 'New Session' en bas à gauche de votre navigateur et ensuite sur le bouton 'Admin', vous devez maintenant voir la partie administration v1 s'afficher avec un bouton 'Disconnect' permettant de revenir à la partie publique comme sur la figure *@SimpleAdminLink*.
 
