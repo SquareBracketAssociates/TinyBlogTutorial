@@ -405,7 +405,7 @@ Pour l'instant, le login et le mot de passe pour accéder à la partie administr
 !!! Gestion des erreurs
 
 Nous avons déjà défini la méthode ==goToAdministrationView== précédemment.
-Ajoutons la méthode ==loginErrorOccured== et un mécanisme pour afficher un message d'erreur lorsque l'utilisateur n'utilise pas les bons identifiants comme sur la figure *@loginErrorMessage*
+Ajoutons la méthode ==loginErrorOccured== et un mécanisme pour afficher un message d'erreur lorsque l'utilisateur n'utilise pas les bons identifiants comme sur la figure *@loginErrorMessage*.
 
 Pour cela nous ajoutons une variable d'instance ==showLoginError== qui représente le fait que nous devons afficher une erreur. 
 
