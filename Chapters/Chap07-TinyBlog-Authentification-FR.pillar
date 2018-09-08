@@ -669,7 +669,7 @@ Pensez à exécuter cette méthode via ==TBApplicationRootComponent initialize==
 
 !!!Stockage de l'administrateur courant en session
 
-Lors d'une connexion réussie, nous ajoutons l'objet administrateur dans la session grâce à l'accesseur en écriture ==currentAdmin:==.
+Lors d'une connexion réussie, nous ajoutons l'objet administrateur dans la session grâce à l'accesseur en écriture ==currentAdmin:==. Notez que tout composant Seaside peut accéder à la session en cours en invoquant le message ==self session==.
 
 [[[
 TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password
