@@ -98,19 +98,20 @@ Tout cela permettrait de produire des interfaces plus complètes et toujours aus
 
 !!! Création automatique de composant
 
-Une fois un bulletin décrit nous pouvons générer un composant Seaside en envoyant le message ==asComponent== à une instance.
+Une fois un bulletin décrit, nous pouvons générer un composant Seaside en envoyant le message ==asComponent== à une instance.
 
 [[[
 	aTBPost asComponent
 ]]]
 
-Nous allons voir cela dans la suite.
+Nous allons voir comment utiliser cela dans la suite.
 
 
 !!! Mise en place d'un rapport des bulletins
 
 Nous allons développer un nouveau composant qui sera utilisé par le composant ==TBAdminComponent==.
 Le composant ==TBPostReport== est un rapport qui contiendra tous les posts.
+Comme nous allons le voir, le rapport est automatiquement généré. 
 Le rapport étant généré par Magritte sous la forme d'un composant Seaside, nous aurions pu n'avoir qu'un seul composant. 
 Toutefois, nous pensons que distinguer le composant d'administration du rapport est une bonne chose pour l'évolution de la partie administration.
 
@@ -353,7 +354,7 @@ Identifiez-vous à nouveau et vous devez obtenir la situation telle que représe
 
 A chaque action (Create/Read/Update/Delete) correspond une méthode de l'objet ==TBPostsReport==. 
 Nous allons maintenant les implémenter. 
-Un formulaire personnalisé est construit en fonction de l'opération demandé (il n'est pas utile par exemple d'avoir un bouton "Sauver" alors que l'utilisateur veut simplement lire le post).
+Un formulaire personnalisé est construit en fonction de l'opération demandée (il n'est pas utile par exemple d'avoir un bouton "Sauver" alors que l'utilisateur veut simplement lire le post).
 
 !!!Ajouter un bulletin
 Commençons par gérer l'ajout d'un bulletin.
