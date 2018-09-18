@@ -458,7 +458,7 @@ TBPostsReport >> deletePost: aPost
 !!!Gérer le rafraîchissement des données
 
 Les méthodes ==addPost:== et ==deletePost:== font bien leur travail mais les données à l'écran ne sont pas mises à jour.
-Il faut donc rafraichir la liste des bulletins car il y a un décalage entre les données en mémoire et celles stockées dans la base de données.
+Il faut donc rafraichir la liste des bulletins en utilisant l'expression ==self refresh==.
 
 [[[
 TBPostsReport >> refreshReport
@@ -486,7 +486,7 @@ Le rapport est maintenant fonctionnel  et gère même les contraintes de saisie 
 
 !!!Amélioration de l'apparence des formulaires
 
-Pour tirer parti de Bootstrap, nous allons modifier les définitions Magritte. Tout d'abord, spécifions que le rendu du formulaire doit se baser sur Bootstrap.
+Pour tirer parti de Bootstrap, nous allons modifier les définitions Magritte. Tout d'abord, spécifions que le rendu du rapport doit se baser sur Bootstrap.
 
 Un container en Magritte est l'élément qui va contenir les composants créer à partir des descriptions.
 
