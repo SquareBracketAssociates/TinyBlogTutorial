@@ -22,9 +22,12 @@ Préparer son compte PharoCloud :
 
 !!!Préparation de l'image Pharo pour PharoCloud
 
+
+!!!! Repartir d'une image vierge
 Télécharger une image PharoWeb neuve *http://files.pharo.org/mooc/image/PharoWeb-50.zip*.
 Lancer cette image avec la VM correspondante et nous allons maintenant la configurer.
 
+!!!! Configuration de Seaside 
 Commençons par configurer Seaside en enlevant les applications de démonstration et les outils de développement :
 
 [[[
@@ -40,6 +43,7 @@ WAAdmin defaultDispatcher
     at: 'files'.
 ]]]
 
+!!!! Chargement de TinyBlog
 Chargeons maintenant l'application TinyBlog.
 Pour charger l'application corrigée vous pouvez utiliser :
 
@@ -68,6 +72,8 @@ Gofer new
 #TBBlog asClass createDemoPosts.
 ]]]
 
+!!!! TinyBlog comme application par défaut
+
 Indiquons maintenant à Seaside que l'application par défaut est TinyBlog et lançons le serveur HTTP.
 
 [[[
@@ -84,6 +90,8 @@ Lancer Seaside :
 	"Start HTTP server"
 	ZnZincServerAdaptor startOn: 8080.
 ]]]
+
+!!!! Save your image
 
 Sauvegarder maintenant votre image Pharo (Menu World > save) et tester en local dans votre navigateur via l'URL *http://localhost:8080*.
 
@@ -122,8 +130,10 @@ client := EphemericCloudClient userID: EPHUSER authToken: EPHTOKEN.
 
 !!! A propos de dépendances
 
-Les bonnes pratiques lors de développements en Pharo sont de spécifier clairement les dépendances sur les packages utilisés afin d'avoir une reproductibilité complète d'un projet. Une telle reproductibilité permet alors l'utilisation de serveur de construction tels que Travis ou Jenkins.
+Les bonnes pratiques lors de développements en Pharo sont de spécifier clairement les dépendances sur les packages utilisés afin d'avoir une reproductibilité complète d'un projet. 
+Une telle reproductibilité permet alors l'utilisation de serveur de construction tels que Travis ou Jenkins.
 Pour cela, une configuration (une classe spéciale) définit d'une part l'architecture du projet (dépendances et packages du projet) et les versions des packages versionnés. 
+L'image PharoWeb est automatiquement construire à partir d'une telle configuration.
 
 Dans le cadre de ce projet, nous n'abordons pas ce point plus avancé. Un chapitre entier est consacré à l'expression de configurations dans le livre intitulé "Deep Into Pharo" (cf. *http://books.pharo.org*). 
  
