@@ -151,7 +151,7 @@ Metacello new
     load
 ]]]
 
-Vous devez également créer un compte du PharoCloud, reporter vos identifiants dans le code ci-dessous :
+Vous devez également créer un compte sur PharoCloud, reporter vos identifiants dans le code ci-dessous :
 
 [[[
 	
