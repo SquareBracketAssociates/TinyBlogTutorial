@@ -35,7 +35,7 @@ C'est cette dernière option que nous choisissons pour l'instant en utilisant ce
 VOMemoryRepository new enableSingleton.
 ]]]
 
-Le message ==enableSingleton== indique à Voyage que nous n'utilisons qu'une seule base de donnée.
+Le message ==enableSingleton== indique à Voyage que nous n'utilisons qu'une seule base de données.
 
 Nous définissons une méthode ==initializeVoyageOnMemoryDB== dont le rôle est d'initialiser correctement la base. 
 
@@ -132,7 +132,7 @@ TBBlogTest >> setUp
 	post := (TBPost title: 'Another title' text: 'Another text' category: 'Second Category') beVisible
 ]]]
 
-Dans la méthode ==tearDown==, à la fin de l'exécution, nous réinstallons l'objet base données sauver avant l'exécution.
+Dans la méthode ==tearDown==, à la fin de l'exécution d'un test nous réinstallons l'objet base données que nous avons sauvé avant l'exécution.
 
 [[[
 TBBlogTest >> tearDown
@@ -154,7 +154,7 @@ Nous créons des posts ainsi :
 TBBlog createDemoPosts.
 ]]]
 
-Nous pouvons compter le nombre de blog sauvés. ==count== fait partie de l'API directe de Voyage. Ici nous obtenons 1 ce qui est normal puisque le blog est implémentée comme un singleton. 
+Nous pouvons compter le nombre de blogs. ==count== fait partie de l'API directe de Voyage. Ici nous obtenons 1 ce qui est normal puisque le blog est implémentée comme un singleton. 
 
 [[[
 TBBlog count
@@ -194,11 +194,11 @@ Cependant tous les objets n'ont pas vocation être définis comme des racines.
 Si nous représentions les commentaires d'un post, nous ne les déclarerions pas comme racine car sauver ou manipuler un commentaire en dehors du contexte de son post ne fait pas beaucoup de sens. 
 
 !!!! Post comme racine = Unicité
-Si vous désirez qu'un post soit partagé et unique entre plusieurs instances de blog, alors les objets ==TBPost== doivent être déclarés comme une racine dans la base. 
-Lorsque c'est le cas, les posts sont sauvés comme des entités autonomes et les instances de ==TBBlog== feront référence à ces entités au lieu que leurs définitions soient incluses dans celle des blogs. 
+Si vous désirez qu'un bulletin soit partagé et unique entre plusieurs instances de blog, alors les objets ==TBPost== doivent être déclarés comme une racine dans la base. 
+Lorsque c'est le cas, les bulletinss sont sauvés comme des entités autonomes et les instances de ==TBBlog== feront référence à ces entités au lieu que leurs définitions soient incluses dans celle des blogs. 
 Cela a pour effet qu'un post donné devient unique et partageable via une référence depuis le blog. 
 
-Pour cela on nous définirions les méthodes suivantes:
+Pour cela nous définirions les méthodes suivantes:
 
 [[[
 TBPost class >> isVoyageRoot
@@ -224,7 +224,7 @@ TBBlog >> removeAllPosts
    self save.
 ]]]
 
-Ici dans la méthode ==removeAllPosts== nous enlevons chaque posts puis nous remettons à jour la collection.
+Ici dans la méthode ==removeAllPosts==, nous enlevons chaque bulletin puis nous remettons à jour la collection.
 
 
 !!! Deployer avec une base Mongo [Optionnel]
@@ -263,7 +263,7 @@ Quelques commandes utiles pour la suite :
 
 !!!!Connexion à un serveur local
 
-Nous définissions les méthodes ==initializeLocalhostMongoDB== pour établir la connexion vers la base de données.
+Nous définissons la méthode ==initializeLocalhostMongoDB== pour établir la connexion vers la base de données.
 
 [[[
 TBBlog class >> initializeLocalhostMongoDB
@@ -296,7 +296,7 @@ Notez que si vous avez besoin de réinitialiser la base extérieure complètemen
    database: 'tinyblog') dropDatabase
 ]]]
 
-Si vous ne pouvez pas le faire depuis Pharo, vous pouvez le faire lorsque ==mongod== est en cours d'exécution avec l'expression suivante : 
+Si vous ne pouvez pas le faire depuis Pharo, vous pouvez le faire lorsque Mongo est en cours d'exécution avec l'expression suivante : 
 
 [[[
 mongo tinyblog --eval "db.dropDatabase()"
