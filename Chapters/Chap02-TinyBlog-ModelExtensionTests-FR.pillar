@@ -72,7 +72,7 @@ TBBlog class >> initialize
 
 Nous allons écrire des tests pour les règles métiers et ceci en mode TDD (Test-Driven Development) c'est-à-dire en développant les tests en premier puis en définissant les fonctionnalités jusqu'à ce que les tests passent.
 
-Les tests unitaires sont regroupés dans une étiquette (tag) ==TinyBlog-Tests== qui contient la classe ==TBBlogTest== (voir menu item "Add Tag..."). Un tag est juste une étiquette qui permet de trier et grouper les classes à l'intérieur d'un package. Nous utilisons un tag ici pour ne pas avoir à gérer deux packages différents mais dans un projet réel vous définirions un (ou plusieurs) package séparé pour les tests.
+Les tests unitaires sont regroupés dans une étiquette (tag) ==TinyBlog-Tests== qui contient la classe ==TBBlogTest== (voir menu item "Add Tag..."). Un tag est juste une étiquette qui permet de trier et grouper les classes à l'intérieur d'un package. Nous utilisons un tag ici pour ne pas avoir à gérer deux packages différents mais dans un projet réel nous définirions un (ou plusieurs) package séparé pour les tests.
 
 [[[
 TestCase subclass: #TBBlogTest
@@ -84,7 +84,7 @@ TestCase subclass: #TBBlogTest
 La méthode ==setUp== permet d'initialiser le contexte des tests (aussi appelé fixture).
 Elle est donc exécutée avant chaque test unitaire.
 Dans cet exemple, elle efface le contenu du blog, lui ajoute un post et en créé un autre qui n'est provisoirement pas enregistré. 
-Faites attention car nous devrons changer cette logique car dans le future a chaque fois que vous exécuterez des tests, vous perdrez votre domaine. C'est un exemple de la sorte d'effets pernicieux qu'un Singleton introduit dans un système.
+Faites attention car nous devrons changer cette logique car dans le futur à chaque fois que vous exécuterez des tests, vous perdrez votre domaine. C'est un exemple de la sorte d'effets pernicieux qu'un Singleton introduit dans un système.
 
 [[[
 TBBlogTest >> setUp
@@ -250,7 +250,7 @@ TBBlogTest >> testUnclassifiedBlogPosts
 
 !!!!Obtenir la liste des catégories
 
-Ajoutons un nouveau test qui retorune la liste des catégories et qui échoue :
+Ajoutons un nouveau test qui retroune la liste des catégories et qui échoue :
 [[[
 TBBlogTest >> testAllCategories
    blog writeBlogPost: post.
@@ -292,7 +292,7 @@ Attention, si vous exécutez plus d'une fois la méthode ==createDemoPosts==, le
 
 !!! Futures évolutions
 
-Plusieurs évolutions peuvent être apportées telles que: obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts qu'elle contient, renommer une catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons développer ces fonctionnalités ou de nouvelles que vous auriez imaginé.
+Plusieurs évolutions peuvent être apportées telles que: obtenir uniquement la liste des catégories contenant au moins un post visible, effacer une catégorie et les posts qu'elle contient, renommer une catégorie, déplacer un post d'une catégorie à une autre, rendre visible ou invisible une catégorie et son contenu, etc. Nous vous encourageons à développer ces fonctionnalités ou de nouvelles que vous auriez imaginé.
 
 
 !!! Conclusion
