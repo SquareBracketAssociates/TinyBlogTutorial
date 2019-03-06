@@ -28,11 +28,11 @@ Dans le menu contextuel de cet outil (clic droit), cliquez sur "add adaptor..." 
 La bibliothèque Bootstrap est totalement accessible depuis Seaside comme nous allons le montrer.
 Pour parcourir les nombreux exemples, cliquer sur le lien ""bootstrap"" dans la liste des applications servies par Seaside ou pointer votre navigateur sur le lien *http://localhost:8080/bootstrap*. Vous devez obtenir l'écran de la figure *@bootstrap*.
 
-Cliquer sur le lien ""Examples"" au bas de la page et vous pouvez ainsi voir les éléments graphiques ainsi que le code pour les obtenir comme montré par la figure *@examplebootstrap*. 
+
 
 +Comprendre un élément et son code en Bootstrap.>file://figures/TBSAlert.png|width=75|label=examplebootstrap+
 
-
+En cliquant sur le lien ""Examples"" au bas de la page, vous pouvez voir les éléments graphiques et le code pour les obtenir (figure *@examplebootstrap*). 
 
 !!!!Bootstrap
 
@@ -66,7 +66,7 @@ TBApplicationRootComponent class >> initialize
       addLibrary: TBSDeploymentLibrary
 ]]]
 
-Exécuter ==TBApplicationRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. En effet les méthodes ==initialize== de classe ne sont automatiquement exécutées que l'on du chargement de la classe. Ici nous venons juste de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices.
+Exécuter ==TBApplicationRootComponent initialize== pour forcer l'exécution de la méthode ==initialize==. En effet, les méthodes de classe ==initialize==  ne sont automatiquement exécutées que lors du chargement en mémoire de la classe. Ici nous venons juste de la définir et donc il est nécessaire de l'exécuter pour en voir les bénéfices.
 
 Ajoutons également la méthode ==canBeRoot== afin de préciser que la classe ==TBApplicationRootComponent== n'est pas qu'un simple composant Seaside mais qu'elle représente notre application Web.
 Elle sera donc instanciée dès qu'un utilisateur se connecte sur l'application.
@@ -111,7 +111,7 @@ Comme par exemple, les composants principaux de l'application permettant l'affic
 
 !!! Architecture
 
-Nous sommes maintenant prêts à définir les composants visuels de notre application Web. Afin de vous donner une vision d'ensemble nous montrons comment chaque composant est responsable d'une partie de l'application (Figure *@ComponentOverviewa*) et comment ces composants s'intègre au sein de l'architecture (simple) du système (Figure *@ApplicationArchitecture*).
+Nous sommes maintenant prêts à définir les composants visuels de notre application Web. Afin de vous donner une vision d'ensemble nous montrons comment chaque composant est responsable d'une partie de l'application (Figure *@ComponentOverviewa*) et comment ces composants s'intègrent au sein de l'architecture (simple) du système (Figure *@ApplicationArchitecture*).
 
 !!!! Premier apercu des composants
 
