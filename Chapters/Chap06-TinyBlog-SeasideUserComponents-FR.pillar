@@ -186,7 +186,7 @@ TBHeaderComponent >> renderBrandOn: html
          with: 'TinyBlog' ]
 ]]]
 
-L'entête (header) est affichée à l'aide d'une barre de navigation Bootstrap.
+L'en-tête (header) est affichée à l'aide d'une barre de navigation Bootstrap.
 Si vous faites un rafraichissement de l'application dans votre navigateur web vous devez voir apparaitre l'en-tête comme sur la figure *@navBlog*.
 
 +TinyBlog avec une barre de navigation.>file://figures/navBlog.png|width=75|label=navBlog+

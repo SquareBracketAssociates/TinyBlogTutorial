@@ -94,7 +94,7 @@ En se connectant avec un navigateur sur *http://localhost:8080/TinyBlog*, la pag
 +Une page quasi vide mais servie par Seaside.>file://figures/TinyBlog-EmptyPage2.png|width=75|label=EmptyPage+
 
 
-Ajoutons maintenant des informations dans l'entête de la page HTML afin que TinyBlog ait un titre et soit une application HTML5. 
+Ajoutons maintenant des informations dans l'en-tête de la page HTML afin que TinyBlog ait un titre et soit une application HTML5. 
 
 [[[
 TBApplicationRootComponent >> updateRoot: anHtmlRoot
