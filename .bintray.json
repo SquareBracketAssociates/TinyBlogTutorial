@@ -18,8 +18,8 @@
 
     "files": [
         {
-            "includePattern": "build/(book).spiral.pdf",
-            "uploadPattern": "$1TinyBlogFR-wip.pdf",
+            "includePattern": "_result/pdf/book.pdf",
+            "uploadPattern": "TinyBlogFR.pdf",
             "matrixParams": { "override": 1 }
         }
     ],
