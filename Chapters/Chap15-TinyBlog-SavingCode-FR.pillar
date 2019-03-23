@@ -1,7 +1,11 @@
 !! Sauver votre code
 
-Lorsque vous sauvez l'image Pharo (clic gauche sur le fond de Pharo pour accéder au menu world et sélectionner 'save'), celle-ci contient tous les objets du système et donc les classes elles-même.
-Cette solution est pratique mais peu pérenne.  
+Lorsque vous sauvez l'image Pharo avec le menu 'Save', celle-ci contient tous les objets du système et donc les classes elles-mêmes.
+Cette solution est pratique mais peu pérenne. 
+Jusqu'à Pharo 60, Pharo nous propose d'utiliser Monticello et SmalltalkHub. A partir de Pharo 70, vous pouvez sauver votre code sur github ou gitlab avec Iceberg.
+
+!!! Jusqu'a Pharo 60 
+
 Nous allons vous montrer comment les pharoers sauvent leur code sous forme de packages sur un serveur dédié à l'aide de Monticello: le gestionnaire de versions de Pharo.
 
 Notez que des videos sont disponibles dans le Mooc Pharo qui montrent la procédure pour sauver du code: *http://mooc.pharo.org* et en particulier la video de la semaine 1 qui montre comment développer et sauver le code d'une application compteur: *http://rmod-pharo-mooc.lille.inria.fr/MOOC/Videos/W1/C019-W1S-Videos-Redo-Counter-Traditional-FR-V3-HD_720p_4Mbs.m4v*.
@@ -24,3 +28,15 @@ Il existent plusieurs serveurs en ligne permettant d'héberger vos dépôts de c
 
 Le code de votre application TinyBlog est maintenant sauvegardé dans votre dépôt sur Smalltalkhub. Il est donc maintenant possible de charger votre code dans une nouvelle image Pharo. 
 Pour rappel, dans le cadre de ce tutoriel, nous vous suggérons de toujours utiliser l'image avec tous les packages web chargés que nous avons mentionné dans le premier chapitre. Cela vous permettra de pouvoir recharger votre package sans devoir vous soucier des dépendances sur d'autres packages. 
+
+!!! En Pharo 70
+
+Nous vous suggèrons de lire le chapitre dédié à la gestion de code dans le livre "Managing Your Code with Iceberg" (disponible à *http://books.pharo.org*).
+
+Ici nous rappellons les points clefs :
+- Créer un projet sur *http://www.github.com*.
+- Utiliser Iceberg puis ajouter un projet, choisir clone from github par exemple.
+- Créer un dossier =='src'== avec le FileList ou la ligne de commande dans le dossier que vous avez choisi sur votre système de fichier local. 
+- Ouvrir votre projet et ajouter vos packages (Il est conseillé de definir une baseline pour être facilement rechargeable).
+- Commiter le code.
+- Publier votre code sur github.
