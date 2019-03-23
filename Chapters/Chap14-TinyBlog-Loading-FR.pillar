@@ -33,7 +33,7 @@ Metacello new
 ]]]
 
 Ouvrez maintenant un browser de code pour regarder le code des classes ==TBBlog== et ==TBBlogTest== et compléter votre propre code si nécessaire.
-Avant de poursuivre, n'oubliez pas de committer une nouvelle version dans votre dépôt si vous avez modifié votre application.
+Avant de poursuivre, n'oubliez pas de commiter une nouvelle version dans votre dépôt si vous avez modifié votre application.
 
 !!! Chapitre 5 : Commencer avec Seaside
 
