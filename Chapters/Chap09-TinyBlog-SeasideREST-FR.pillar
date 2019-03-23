@@ -17,12 +17,12 @@ Les ressources sont définies à l'aide des URL qui pointent sur une entité. Le
 
 Une autre notion importante est le respect des formats de données acceptés par le client et par le serveur. Lorsqu'un client REST émet une requête vers un serveur REST, il précise dans l'en-tête de la requête HTTP la liste des types de données qu'il est capable de gérer. Le serveur REST se doit de répondre dans un format compréhensible par le client et si cela n'est pas possible, de préciser au client qu'il n'est pas capable de lui répondre.
 
-La réussite ou l'échec d'une opération est basée sur les codes de statut du protocole HTTP (https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html). Par exemple,si une opération réussi, le serveur doit répondre un code 200 (OK). De même, si une ressource demandé par le client n'existe pas, il doit retourner un code 404 (Not Found). Il est très important de respecter la signification de ces codes de statut afin de mettre en place un dialogue compréhensible et normalisé entre le client et le serveur.
+La réussite ou l'échec d'une opération est basée sur les codes de statut du protocole HTTP (https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html). Par exemple, si une opération réussit, le serveur doit répondre un code 200 (OK). De même, si une ressource demandée par le client n'existe pas, il doit retourner un code 404 (Not Found). Il est très important de respecter la signification de ces codes de statut afin de mettre en place un dialogue compréhensible et normalisé entre le client et le serveur.
 
 !!!Définir un filtre REST
 
 Pour regrouper les différents services REST de TinyBlog, il est préférable de créer un paquet dédié, nommé TinyBlog-REST. L'installation de ces services REST sera ainsi optionnelle. Si le paquet TinyBlog-REST est présent, le serveur TinyBlog autorisera:
-- l'obtention des l'ensemble des posts existants,
+- l'obtention de l'ensemble des posts existants,
 - l'ajout d'un nouveau post,
 - la recherche parmi les posts en fonction du titre,
 - la recherche parmi les posts en fonction d'une période.
@@ -73,7 +73,7 @@ TBRestfulFilter >> listAll
 	<produces: 'application/json'>
 ]]]
 
-Afin de faciliter l'utilisation d'un service REST, il est préférable de préciser finement la ou les ressources manipulées. Dans le cas présent, le nom de la méthode ==listAll== ne précise pas au client quelles sont les ressources qui seront retournées. Certes, nous savons que ce sont les posts mais après tout, cela pourrait également être des rubriques. Il faut donc être plus explicite dans la formalisation de l'URL afin de lui donner une réelle signification sémantique. C'est d'ailleur la principale difficulté dans la mise en place des services REST. La meilleure méthode est de faire simple et de s'efforcer d'être cohérent dans la désignation des chemins d'accès aux ressources. Si nous voulons la liste des posts, il nous suffit de demander la liste des posts. L'URL doit donc avoir la forme suivante:
+Afin de faciliter l'utilisation d'un service REST, il est préférable de préciser finement la ou les ressources manipulées. Dans le cas présent, le nom de la méthode ==listAll== ne précise pas au client quelles sont les ressources qui seront retournées. Certes, nous savons que ce sont les posts mais après tout, cela pourrait également être des rubriques. Il faut donc être plus explicite dans la formalisation de l'URL afin de lui donner une réelle signification sémantique. C'est d'ailleurs la principale difficulté dans la mise en place des services REST. La meilleure méthode est de faire simple et de s'efforcer d'être cohérent dans la désignation des chemins d'accès aux ressources. Si nous voulons la liste des posts, il nous suffit de demander la liste des posts. L'URL doit donc avoir la forme suivante:
 
 [[[
 http://localhost:8080/TinyBlog/Posts
@@ -110,10 +110,12 @@ Object subclass: #TBRestService
 	instanceVariableNames: 'result context'
 	classVariableNames: ''
 	category: 'TinyBlog-Rest'	
-
+]]]
+[[[
 TBRestService >> context
 	^ context
-
+]]]
+[[[
 TBRestService >> context: anObject
 	context := anObject
 ]]]
@@ -126,18 +128,21 @@ TBRestService >> initialize
 	result := TBRestResponseContent new.	
 ]]]
 
-Le contexte d'éxecution est transmis au service REST à l'aide de la méthode ==applyServiceWithContext:==. Une fois reçu, le traitement spécifique au service est déclenché à l'aide de la méthode ==execute==. Au sein de l'objet TBRestService, la méthode ==execute== doit être déclarée comme abstraite puisqu'elle n'a aucun travail à faire. Cette méthode devra être implémenté de manière spécifique dans les différents services REST de TinyBlog.
+Le contexte d'éxecution est transmis au service REST à l'aide de la méthode ==applyServiceWithContext:==. Une fois reçu, le traitement spécifique au service est déclenché à l'aide de la méthode ==execute==. Au sein de l'objet TBRestService, la méthode ==execute== doit être déclarée comme abstraite puisqu'elle n'a aucun travail à faire. Cette méthode devra être implémentée de manière spécifique dans les différents services REST de TinyBlog.
 
 [[[
 TBRestService >> applyServiceWithContext: aRequestContext
 	self context: aRequestContext.
 	self execute.
-
+]]]
+[[[
 TBRestService >> execute
 	self subclassResponsibility
 ]]]
 
-Tous les services REST de TinyBlog doivent être capable de retourner une réponse au client et de lui préciser le format des données utilisé. Vous devez donc ajouter une méthode pour faire cela. Il s'agit de la méthode ==dataType:with:==. Le premier paramètre sera le type MIME utilisé et le second, contiendra les données transmise au client. La méthode insère ces informations dans le flux de réponse fournit par Seaside. La méthode ==greaseString== appliquée sur le type de données permet d'obtenir une représentation du type MIME sous la forme d'une chaine de caractères (par exemple: "application/json").
+Tous les services REST de TinyBlog doivent être capable de retourner une réponse au client et de lui préciser le format des données utilisé. Vous devez donc ajouter une méthode pour faire cela. Il s'agit de la méthode ==dataType:with:==. Le premier paramètre sera le type MIME utilisé et le second, contiendra les données transmises au client. 
+La méthode insère ces informations dans le flux de réponses fournit par Seaside. 
+La méthode ==greaseString== appliquée sur le type de données permet d'obtenir une représentation du type MIME sous la forme d'une chaine de caractères (par exemple: "application/json").
 
 [[[
 TBRestService >> dataType: aDataType with: aResultSet
@@ -166,7 +171,8 @@ Les données sont stockées au sein d'une collection ordonnée, initialisée à 
 TBRestResponseContent >> initialize
 	super initialize.
 	data := OrderedCollection new.
-
+]]]
+[[[
 TBRestResponseContent >> add: aValue
 	data add: aValue	
 ]]]
@@ -218,7 +224,9 @@ Les posts sont enregistrés dans un fichier nommé ==posts== qui contient les do
 
 !!!! Avec un client graphique
 
-Une autre approche, plus confortable et adaptée à la mise au point de vos services REST, consiste à utiliser un client graphique. Il en existe un grand nombre sur tous systèmes d'exploitation. Certains proposent des fonctionnalités avancées telles qu'un éditeur de requêtes HTTP ou HTTPS, la gestion de bibliothèques de requêtes ou encore la mise en place de tests unitaires. Nous vous recommandons de vous intéresser plus particulièrement à des produits fonctionnant directement avec des technologies web, sous la forme d'applications ou d'extensions intégrées à votre navigateur web. 
+Une autre approche, plus confortable et adaptée à la mise au point de vos services REST, consiste à utiliser un client graphique. 
+Il en existe un grand nombre sur tout système d'exploitation. 
+Certains proposent des fonctionnalités avancées telles qu'un éditeur de requêtes HTTP ou HTTPS, la gestion de bibliothèques de requêtes ou encore la mise en place de tests unitaires. Nous vous recommandons de vous intéresser plus particulièrement à des produits fonctionnant directement avec des technologies web, sous la forme d'applications ou d'extensions intégrées à votre navigateur web. 
 
 @todo IMAGE GRAPHIQUE D'UN CLIENT 
 
@@ -230,7 +238,7 @@ Bien évidemment, il vous est possible d'interroger vos services REST directemen
 (ZnEasy get: 'http://localhost:8080/TinyBlog/posts') contents
 ]]]
 
-Il vous est donc aisé des construire des services REST et d'écrire en Pharo des applications qui les consomment.
+Il vous est donc aisé de construire des services REST et d'écrire en Pharo des applications qui les consomment.
 
 !!!Recherche d'un Post
 
@@ -244,7 +252,7 @@ TBBlog >> postWithTitle: aString
 	result ifNotEmpty: [ ^result first ] ifEmpty: [ ^nil ]
 ]]]
 
-Il faut déclarer la route HTTP permettant de lancer la recherche. L'emplacement du titre recherché au sein de l'URL est entouré à l'aide d'accolades et le nom de l'argument doit être identique à celui du paramêtre reçu par la méthode.
+Il faut déclarer la route HTTP permettant de lancer la recherche. L'emplacement du titre recherché au sein de l'URL est entouré à l'aide d'accolades et le nom de l'argument doit être identique à celui du paramètre reçu par la méthode.
 
 [[[
 search: aTitle
@@ -260,10 +268,12 @@ TBRestService subclass: #TBRestServiceSearch
 	instanceVariableNames: 'title'
 	classVariableNames: ''
 	category: 'TinyBlog-Rest'
-
+]]]
+[[[
 TBRestServiceSearch >> title
 	^ title
-
+]]]
+[[[
 TBRestServiceSearch >> title: anObject
 	title := anObject
 ]]]
@@ -280,7 +290,11 @@ TBRestServiceSearch >> execute
 	self dataType: (WAMimeType applicationJson) with: result toJson
 ]]]
 
-Deux choses sont intéressantes dans cette méthode. Il y a tout d'abord l'utilisation de la méthode ==urlDecoded== qui est appliqué la chaine de caractères contenant le titre recherché. Cette méthode permet la gestion des caractères spéciaux tels que l'espace ou les caractères accentués. Si vous chercher un post ayant pour titre "La reproduction des hippocampes", le service REST recevra en fait la chaine de caractère "La%20reproduction%20des%20hippocampes" et une recherche avec celle ci ne fonctionnera pas car aucun titre de post ne coincidera. Il faut donc nettoyer la chaine de caractères en remplaçant les caractères spéciaux avant de lancer la recherche.
+Deux choses sont intéressantes dans cette méthode.
+Il y a tout d'abord l'utilisation de la méthode ==urlDecoded== qui est appliquée à la chaine de caractères contenant le titre recherché.
+Cette méthode permet la gestion des caractères spéciaux tels que l'espace ou les caractères accentués.
+Si vous chercher un post ayant pour titre "La reproduction des hippocampes", le service REST recevra en fait la chaine de caractère "La%20reproduction%20des%20hippocampes" et une recherche avec celle ci ne fonctionnera pas car aucun titre de post ne coincidera. 
+Il faut donc nettoyer la chaine de caractères en remplaçant les caractères spéciaux avant de lancer la recherche.
 
 Un autre point important est la gestion des codes d'erreur HTTP. Lorsqu'un serveur HTTP répond à son client, il glisse dans l'en-tête de la réponse une valeur numérique qui fournit au client de précieuses informations sur le résultat attendu. Si la réponse contient le code 200, c'est que tout s'est correctement passé et qu'un résultat est fourni au client (c'est d'ailleurs la valeur par défaut dans Seaside/Rest). Mais parfois, un problème survient. Par exemple, la requête demande à accéder à une ressource qui n'existe pas. Dans ce cas, il est nécessaire de retourner un code 404 (Not Found) pour l'indiquer au client. Un code 500 va indiquer qu'une erreur d'exécution a été rencontrée par le service. Vous trouverez la liste exhaustive des codes d'erreur sur la page décrivant le protocole HTTP (https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html). Il est très important de les gérer correctement tant au niveau de votre service REST qu'au sein de votre client REST car c'est ce qui va permettre à la couche cliente de réagir à bon escient en fonction du résultat du traitement exécuté par le serveur.
 
@@ -315,21 +329,26 @@ TBRestService subclass: #TBRestServiceSearchDate
 	instanceVariableNames: 'from to'
 	classVariableNames: ''
 	package: 'TinyBlog-Rest'
-
+]]]
+[[[
 TBRestServiceSearchDate >> from
 	^from
-
+]]]
+[[[
 TBRestServiceSearchDate >> from: anObject
 	from := anObject
-
+]]]
+[[[
 TBRestServiceSearchDate >> to
 	^to
-
+]]]
+[[[
 TBRestServiceSearchDate >> to: anObject
 	to := anObject	
 ]]]
 
-La méthode ==execute== convertie les deux chaines de caractères en instances de l'objet ==Date== à l'aide de la méthode ==fromString==. Elle lit l'ensemble des posts à l'aide de la méthode ==allBlogPosts==, filtre les posts créés dans période indiquées et retourne le résultat au format JSON.
+La méthode ==execute== convertie les deux chaines de caractères en instances de l'objet ==Date== à l'aide de la méthode ==fromString==. 
+Elle lit l'ensemble des posts à l'aide de la méthode ==allBlogPosts==, filtre les posts créés dans période indiquée et retourne le résultat au format JSON.
 
 [[[
 TBRestServiceSearchDate >> execute
@@ -345,7 +364,10 @@ TBRestServiceSearchDate >> execute
 	self dataType: (WAMimeType applicationJson) with: result toJson	
 ]]]
 
-Il serait judicieux ici d'ajouter certaines vérifications. Les deux dates sont elles dans un format correct ? La date de fin est elle postérieure à celle de début ? Nous vous laissons implémenter ces améliorations et gérer correctement les codes d'erreur HTTP.
+Il serait judicieux ici d'ajouter certaines vérifications. 
+Les deux dates sont-elles dans un format correct ? 
+La date de fin est-elle postérieure à celle de début ?
+Nous vous laissons implémenter ces améliorations et gérer correctement les codes d'erreur HTTP.
 
 La dernière étape consiste à compléter la méthode ==searchDateFrom:to:== afin d'instancier l'objet ==TBRestServiceSearchDate== lorsque le service ==searchDateFrom:to:== est invoqué.
 
@@ -413,7 +435,7 @@ TBRestfulFilter >> addPost
 
 En guide de travaux pratiques, il vous est possible d'améliorer la gestion d'erreur de la méthode execute afin de différencier une erreur au sein de la structure des données transmises au serveur, du format utilisé ou encore lors de l'étape d'ajout du post à la base de données. Un service REST complet se doit de fournir une information pertinente au client afin d'expliciter la cause du problème.
 
-!!!Amélioration possibles
+!!!Améliorations possibles
 
 Au fil de ce chapitre, vous avez implémenté les principales briques d'une API REST permettant de consulter et d'alimenter le contenu d'un moteur de blog. Il reste bien sur des évolutions possibles et nous vous encourageons à les implémenter. Voici quelques propositions qui constituent des améliorations pertinentes.
 
