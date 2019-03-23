@@ -102,7 +102,7 @@ TBHeaderComponent class >> from: aComponent
 ]]]
 
 
-!!! Activation du button d'admin
+!!! Activation du bouton d'admin
 Modifions l'instanciation du composant en-tête définie dans la méthode du component ==TBScreenComponent== afin de passer le composant qui sera sous la barre de navigation à celle-ci :
 
 [[[
@@ -111,7 +111,7 @@ TBScreenComponent >> createHeaderComponent
 ]]]
 
 Notez que la méthode ==createHeaderComponent== est bien définie dans la superclasse
-==TBScreenComponent== car elle est applicable pour toutes ses souclasses.
+==TBScreenComponent== car elle est applicable pour toutes ses sous-classes.
 
 Nous pouvons maintenant ajouter le callback (message ==callback:==) sur le bouton :
 
@@ -192,7 +192,7 @@ Cliquez sur 'New Session' en bas à gauche de votre navigateur et ensuite sur le
 !!!!Notion call:/answer:
 
 Si vous étudiez le code précédent, vous verrez que nous avons utilisé le mécanisme ==call:==/==answer:== de Seaside pour mettre en place la navigation entre les composants ==TBPostsListComponent== et ==TBAdminComponent==.
-Le message ==call:== remplace le composant courant par le composant passé en argument et lui donne le flot de calcul. Les message ==answer:== retourne une valeur à cet appel et redonne le contr\^ole au composant appellant.
+Le message ==call:== remplace le composant courant par le composant passé en argument et lui donne le flot de calcul. Les message ==answer:== retourne une valeur à cet appel et redonne le contrôle au composant appelant.
 Ce mécanisme puissant et élégant est expliqué dans la vidéo 1 de la semaine 5 du Mooc (*http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_5.html*).
 
 !!! Composant fenêtre modale d'identification 
@@ -261,7 +261,7 @@ TBAuthentificationComponent class >> from: aComponent
 !!! Rendu du composant d'identification
 
 La méthode ==renderContentOn:== suivante définit le contenu d'une boîte de dialogue modale avec l'identifiant ==myAuthDialog==. Cet identifiant sera utilisé pour sélectionner le composant qui sera rendu visible en mode modal plus tard.
-Cette boite de dialogue est composé d'une en-tête et d'un corps. Notez l'utilisation des messages ==tbsModal==, ==tbsModalBody:== et ==tbsModalContent:==  qui permettent une interaction modale avec ce composant.
+Cette boite de dialogue est composée d'une en-tête et d'un corps. Notez l'utilisation des messages ==tbsModal==, ==tbsModalBody:== et ==tbsModalContent:==  qui permettent une interaction modale avec ce composant.
 
 [[[
 TBAuthentificationComponent >> renderContentOn: html
@@ -383,7 +383,7 @@ TBHeaderComponent >> renderModalLoginButtonOn: html
 
 La méthode ==renderModalLoginButtonOn:== commence par intégrer le code du composant ==TBAuthentificationComponent== dans la page web (==render:==). 
 Le composant étant instancié à chaque affichage, il n'a pas besoin d'être retourné par la méthode ==children==.
-On ajoute également un bouton nommé 'Login' avec un pictogramme un pictogramme clé.
+On ajoute également un bouton nommé 'Login' avec un pictogramme clé.
 Lorsque l'utilisateur clique sur ce bouton, la boîte modale ayant l'identifiant ==myAuthDialog== est affichée.
 
 En rechargeant la page de TinyBlog dans votre navigateur, nous voyons maintenant un bouton 'Login' dans l'en-tête permettant d'ouvrir la fenêtre modale comme illustré sur la figure *@authentification*.
@@ -452,7 +452,7 @@ TBPostsListComponent >> renderPostColumnOn: html
 ]]]
 
 La méthode ==renderLoginErrorMessageIfAnyOn:== affiche si nécessaire un message d'erreur. Elle repositionne 
-la variable d'instance ==showLoginError== pour ne que le message ne soit pas afficher indéfiniment.
+la variable d'instance ==showLoginError== pour que le message ne soit pas affiché indéfiniment.
 
 [[[
 TBPostsListComponent >> renderLoginErrorMessageIfAnyOn: html
@@ -473,7 +473,7 @@ Nous ne souhaitons pas stocker les identifiants administrateur du blog dans le c
 Nous allons maintenant réviser cela et stocker ces identifiants dans le modèle.
 
 Commençons par enrichir notre modèle de Tinyblog avec la notion d'administrateur.
-Ajoutons donc une nouvelle classe nommée ==TBAdministrator== caractérisé par son pseudo, son login et son mot de passe.
+Ajoutons donc une nouvelle classe nommée ==TBAdministrator== caractérisée par son pseudo, son login et son mot de passe.
 
 [[[
 Object subclass: #TBAdministrator
@@ -549,7 +549,7 @@ TBBlog class >> defaultAdminLogin
    ^ 'admin'
 ]]]
 
-Maintenant nous nous pouvons créer une administrateur par défaut. 
+Maintenant nous pouvons créer un administrateur par défaut.
 [[[
 TBBlog >> createAdministrator
 	^ TBAdministrator
@@ -612,7 +612,7 @@ Nous allons simplifier cela en stockant l'administrateur courant en session lors
 
 
 Un objet session est attribué à chaque instance de l'application.
-Il permet de conserver principalement des informations qui sont partagées et accessible entre les composants.
+Il permet de conserver principalement des informations qui sont partagées et accessibles entre les composants.
 Nous stockerons donc l'administrateur courant en session et modifierons les composants pour afficher des boutons permettant une navigation simplifiée lorsque l'administrateur est connecté.
 Lorsqu'il se déconnecte explicitement ou que la session expire, nous supprimerons la session courante.
 
@@ -761,5 +761,5 @@ Nous en profiterons pour vous montrer un aspect avancé qui permet la définitio
 
 A titre d'exercice, vous pouvez :
 - afficher le login de l'administrateur dans l'en-tête lorsqu'il est connecté,
-- ajouter la possibilité d'avoir plusieurs compte administrateurs chacun avec ses propres identifiants.
+- ajouter la possibilité d'avoir plusieurs comptes d'administrateur : chacun avec ses propres identifiants.
 
