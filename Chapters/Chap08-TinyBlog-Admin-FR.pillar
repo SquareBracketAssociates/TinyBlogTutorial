@@ -120,8 +120,8 @@ Toutefois, nous pensons que distinguer le composant d'administration du rapport 
 La liste des posts est affichée à l'aide d'un rapport généré dynamiquement par le framework Magritte.
  Nous utilisons ce framework pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
 
-Pour rester modulaire, nous allons créer un composant Seaside pour cette tâche. Le composant ==TBPostsReport== est une souclasse
-de la classe ==TBSMagritteReport== qui gére les rapports avec Bootstrap.
+Pour rester modulaire, nous allons créer un composant Seaside pour cette tâche. Le composant ==TBPostsReport== étend la 
+classe ==TBSMagritteReport== qui gére les rapports avec Bootstrap.
 
 [[[
 TBSMagritteReport subclass: #TBPostsReport
@@ -558,7 +558,7 @@ TBPost >> descriptionVisible
 ]]]
 
 Grâce à ces nouvelles descriptions Magritte, les formulaires générés sous la forme de composants Seaside utilisent Bootstrap. 
-Par exemple, formulaire d'édition d'un post doit maintenant ressembler à celui de la figure *@addAPostBootstrap*.
+Par exemple, le formulaire d'édition d'un post doit maintenant ressembler à celui de la figure *@addAPostBootstrap*.
 
 
 !!!Conclusion 

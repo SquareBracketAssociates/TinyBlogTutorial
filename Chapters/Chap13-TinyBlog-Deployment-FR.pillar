@@ -1,6 +1,7 @@
 !! Déploiement de TinyBlog
 
-Dans ce chapitre nous vous montrons comment déployer votre application. Nous montrons en particulier un déployment sur un serveur cloud. 
+Dans ce chapitre nous vous montrons comment déployer votre application.
+Nous montrons en particulier un déployement sur un serveur cloud.
 
 !!! Déployer dans le cloud
 Maintenant que vous avez développé votre application web TinyBlog, nous allons voir comment la déployer sur un serveur dans le cloud.
