@@ -105,7 +105,7 @@ TBCategoriesComponent >> selectCategory: aCategory
 
 !!! Rendu des catégories
 Nous ajoutons la méthode ==renderCategoryLinkOn:with:== (protocole 'rendering') pour afficher les catégories sur la page. En particulier, pour chaque catégorie nous définissons le fait que cliquer sur la catégorie la sélectionne comme la catégorie courante.
-Nous utilisons un callback (message ==callback:==). L'argument de ce message est un block qui peut contenir n'importe quelle expression Pharo. Cela illustre la puissance de Seaside.
+Nous utilisons un callback (message ==callback:==). L'argument de ce message est un bloc qui peut contenir n'importe quelle expression Pharo. Cela illustre la puissance de Seaside.
 
 [[[
 TBCategoriesComponent >> renderCategoryLinkOn: html with: aCategory
@@ -312,7 +312,7 @@ Dans le prochain chapitre, nous allons voir comment gérer l'identification perm
 
 A titre d'exercice, vous pouvez :
 - trier les catégories par ordre alphabétique ou
-- ajouter un lien nommé 'All' dans la liste des catégories permettant d'afficher toutes les posts visible quelque soit leur catégorie.
+- ajouter un lien nommé 'All' dans la liste des catégories permettant d'afficher toutes les bulletins visibles quelque soit leur catégorie.
 
 
 
