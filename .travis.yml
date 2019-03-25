@@ -24,15 +24,17 @@ install:
 script:
   - ./pillar/build/pillar build pdf
 
-deploy:
-- provider: bintray
-  file: .bintray.json
-  on:
-    repo: SquareBracketAssociates/TinyBlogTutorial
-  skip_cleanup: true
-  user: ducasse
-  key:
-    secure: BlZBb9mGchGpn4d/znCUVTg2ZIPbEDs0flLnBPM/ftFzJf8glkKf639287NmTa59/k3BSoEbOF8gF8Xxw/Bj9gaR6fJwIZlA+ltlfq22aNZDkqf34oPY8d7q6t3GW/blK0fykDpqeSS7YhyCiO/ldVvpgjUfDxLitEoC/dDVUeNZ4qTvifmmtXzwRE24jiyaXR/Dvo8Mgsktu5hRkPgThYou0ls0sb2CPA2OH1zEKGBCWZF2F1hZsDD2kF57sfj6WBisbJIGtH3qDMrtt0RMDsDEAyZaR7o3r5+DpzEyshd28vaHPdDwYxRaC1qvXCf9tJyPFNGlydKdYeioLk7K87kWiw5LfzP/kaVtqGgF8+9dSxw6F4KJz+vMHZfdFDTG5gzc7qfvkNbGmWR1wwTRY5cSEkYs23qY4dc8M47RBpUA1Xoui13rRExvdpCFmpdN3mWhiaXfeEB+uihYfn1JoelkMufePrbbUANzVpbztcQWfsQ5fKgcqtwqF1Q1mGkFBaMoDnu6PipGl5dIFo7iN1apMHVFtWg1bq06KEG66A9dXvfDiRPWg2WagAK0UQwatsK3HR34OOGmIGKaIQyiVpgSjeMWR3kDNM0MMas3igBClWUXv0iCo5B7SB8OGY5Su1E1zy/RJviai/sVLoOvjiEl8+mnNwsqGnQwoaS65WY=
+after_success:
+  - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - mv _result/pdf/book.pdf TinyBlogFR-wip.pdf
+  - bash upload.sh TinyBlogFR-wip.pdf
+
+branches:
+  except:
+    - /^(?i:continuous)$/
+
+
+
 - provider: releases
   file: build/book.pdf
   on:
