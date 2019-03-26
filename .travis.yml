@@ -33,8 +33,6 @@ branches:
   except:
     - /^(?i:continuous)$/
 
-
-
 - provider: releases
   file: build/book.pdf
   on:
