@@ -1,7 +1,7 @@
 !! Commencer avec Seaside
 
 Dans ce chapitre nous vérifions que Seaside fonctionne et nous définissons notre premier composant.
-Dans les chapitres suivants, nous commençons par définir une interface telle que les utilisateurs la verrons. Dans un prochain chapitre nous développerons la logique d'identification, et finalement une interface d'administration que le possesseur du blog utilisera. Nous allons définir des composants Seaside *http://www.seaside.st* dont l'ouvrage de référence est disponible en ligne à *http://book.seaside.st*. Les premiers chapitres de *http://book.seaside.st* peuvent vous aider et compléter efficacement ce tutoriel.
+Dans les chapitres suivants, nous commençons par définir une interface telle que les utilisateurs la verront. Dans un prochain chapitre nous développerons la logique d'identification, et finalement une interface d'administration que le possesseur du blog utilisera. Nous allons définir des composants Seaside *http://www.seaside.st* dont l'ouvrage de référence est disponible en ligne à *http://book.seaside.st*. Les premiers chapitres de *http://book.seaside.st* peuvent vous aider et compléter efficacement ce tutoriel.
 
 Le travail présenté dans la suite est indépendant de celui sur Voyage et sur la base de données MongoDB.
 Vous pouvez charger le code des chapitres précédents en suivant les instructions indiquées dans le dernier chapitre (Chapitre *@cha:loading*).

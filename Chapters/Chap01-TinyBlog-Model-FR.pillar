@@ -154,7 +154,7 @@ En mode Test Driven Developpement nous écrivons les tests en premier.
 Ici nous avons préféré vous laissez définir une petite classe pour vous familiariser avec l'IDE.
 Mais maintenant nous réparons ce manque. 
 
-Nous définissons la classe ==TBPostTest== (comme souclasse de ==TestCase==).
+Nous définissons la classe ==TBPostTest== (comme sous-classe de ==TestCase==).
 
 [[[
 TestCase subclass: #TBPostTest

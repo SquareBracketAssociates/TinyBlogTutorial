@@ -76,7 +76,7 @@ Il faut définir un ==callback:== sur ce bouton (un bloc) qui remplace le compos
 
 !!! Revisons la barre de navigation
 
-Commençons par réviser la définition de ==TBHeaderComponent== en lui ajoutant une variable d'instance ==component== pour stocker et accéder au composant courant (qui sera soit la liste de bulletin, soit le composant d'administration). Ceci va nous permettre de pouvoir accéder au composant depuis la barre de navigation :
+Commençons par réviser la définition de ==TBHeaderComponent== en lui ajoutant une variable d'instance ==component== pour stocker et accéder au composant courant (qui sera soit la liste de bulletins, soit le composant d'administration). Ceci va nous permettre de pouvoir accéder au composant depuis la barre de navigation :
 
 [[[
 WAComponent subclass: #TBHeaderComponent
@@ -192,7 +192,7 @@ Cliquez sur 'New Session' en bas à gauche de votre navigateur et ensuite sur le
 !!!!Notion call:/answer:
 
 Si vous étudiez le code précédent, vous verrez que nous avons utilisé le mécanisme ==call:==/==answer:== de Seaside pour mettre en place la navigation entre les composants ==TBPostsListComponent== et ==TBAdminComponent==.
-Le message ==call:== remplace le composant courant par le composant passé en argument et lui donne le flot de calcul. Les message ==answer:== retourne une valeur à cet appel et redonne le contrôle au composant appelant.
+Le message ==call:== remplace le composant courant par le composant passé en argument et lui donne le flot de calcul. Le message ==answer:== retourne une valeur à cet appel et redonne le contrôle au composant appelant.
 Ce mécanisme puissant et élégant est expliqué dans la vidéo 1 de la semaine 5 du Mooc (*http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_5.html*).
 
 !!! Composant fenêtre modale d'identification 
@@ -301,7 +301,7 @@ TBAuthentificationComponent >> renderBodyOn: html
 
 
 La méthode ==renderAccountFieldOn:== montre comment la valeur d'un input field est passée puis stockée dans une variable d'instance du composant quand l'utilisateur confirme sa saisie. 
-Le paramètre de la méthode ==callback:== est un bloc qui prend lui-même un argument représentant la valeur du text input.
+Le paramètre de la méthode ==callback:== est un bloc qui prend lui-même un argument représentant la valeur du champ textInput.
 
 [[[
 TBAuthentificationComponent >> renderAccountFieldOn: html
@@ -642,7 +642,7 @@ TBSession >> currentAdmin: anObject
     currentAdmin := anObject
 ]]] 
 
-Nous définissons une méthode ==isLogged== qui nous permettra de savoir si l'administrateur est loggé.
+Nous définissons une méthode ==isLogged== qui nous permettra de savoir si l'administrateur est logué.
 
 [[[
 TBSession >> isLogged

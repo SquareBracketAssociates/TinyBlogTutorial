@@ -7,7 +7,7 @@ Pharo offre plusieurs sérialiseurs d'objets (Fuel en format binaire et STON en 
 Ces sérialiseurs d'objets sont très puissants et pratiques. 
 Souvent sauver un graphe complet d'objets est réalisé en une seule ligne de code comme explique dans le livre Enterprise Pharo disponible à *http://books.pharo.org*.
 
-Dans ce chapitre, nous voulons vous présenter une autre option : la sauvegarde dans une base de donnée orientée documents telle que Mongo (*https://www.mongodb.com*) en utilisant le framework Voyage. 
+Dans ce chapitre, nous voulons vous présenter une autre option : la sauvegarde dans une base de données orientée documents telle que Mongo (*https://www.mongodb.com*) en utilisant le framework Voyage. 
 Voyage est un framework qui propose une API unifiée permettant d'accéder à différentes bases de données documents comme Mongo ou UnQLite afin d'y stocker des objets.
 
 Dans ce chapitre, nous allons commencer par utiliser la capacité de Voyage à simuler une base extérieure. 
@@ -60,7 +60,7 @@ TBBlog class >> initialize
 
 N'oubliez pas d'exécuter la méthode ==initialize== une fois la méthode définie en exécutant expression ==TBBlog initialize==.
 
-Le cas de de la méthode ==current== est plus délicat. Avant l'utilisation de Mongo, nous avions un singleton tout simple. 
+Le cas de la méthode ==current== est plus délicat. Avant l'utilisation de Mongo, nous avions un singleton tout simple. 
 Cependant utiliser un Singleton ne fonctionne plus car imaginons que nous ayons sauvé notre blog et que le serveur s'éteigne par accident ou que nous rechargions une nouvelle version du code. 
 Ceci conduirait à une réinitialisation et création d'une nouvelle instance. 
 Nous pouvons donc nous retrouver avec une instance différente de celle sauvée. 
@@ -195,7 +195,7 @@ Si nous représentions les commentaires d'un post, nous ne les déclarerions pas
 
 !!!! Post comme racine = Unicité
 Si vous désirez qu'un bulletin soit partagé et unique entre plusieurs instances de blog, alors les objets ==TBPost== doivent être déclarés comme une racine dans la base. 
-Lorsque c'est le cas, les bulletinss sont sauvés comme des entités autonomes et les instances de ==TBBlog== feront référence à ces entités au lieu que leurs définitions soient incluses dans celle des blogs. 
+Lorsque c'est le cas, les bulletins sont sauvés comme des entités autonomes et les instances de ==TBBlog== feront référence à ces entités au lieu que leurs définitions soient incluses dans celle des blogs. 
 Cela a pour effet qu'un post donné devient unique et partageable via une référence depuis le blog. 
 
 Pour cela nous définirions les méthodes suivantes:
@@ -227,7 +227,7 @@ TBBlog >> removeAllPosts
 Ici dans la méthode ==removeAllPosts==, nous enlevons chaque bulletin puis nous remettons à jour la collection.
 
 
-!!! Deployer avec une base Mongo [Optionnel]
+!!! Déployer avec une base Mongo [Optionnel]
 
 Nous allons maintenant montrer comment utiliser une base Mongo externe à Pharo. 
 Dans le cadre de ce tutoriel, vous pouvez ne pas le faire et passer à la suite.
@@ -250,7 +250,7 @@ Toutefois, nous vous conseillons plutôt d'installer Docker (*https://www.docker
 Quelques commandes utiles pour la suite :
 
 [[[
-	# pour stoper votre conteneur
+	# pour stopper votre conteneur
 	docker stop mongo
 	
 	# pour re-démarrer votre conteneur

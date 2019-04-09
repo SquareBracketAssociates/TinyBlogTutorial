@@ -40,7 +40,7 @@ Quand vous utilisez un Singleton le mieux est d'y accéder via une variable d'in
 temps faire référence à un autre objet sans vous forcer à tout réécrire.
 Donc ne généralisez pas ce que nous faisons ici.
 
-Comme la gestion du singleton est un comportement de classe, ces méthodes sont définies sur le coté class de la classe ==TBBlog==.
+Comme la gestion du singleton est un comportement de classe, ces méthodes sont définies sur le coté classe de la classe ==TBBlog==.
 Nous définissons une variable d'instance au niveau classe:
 
 [[[
@@ -84,7 +84,7 @@ TestCase subclass: #TBBlogTest
 La méthode ==setUp== permet d'initialiser le contexte des tests (aussi appelé fixture).
 Elle est donc exécutée avant chaque test unitaire.
 Dans cet exemple, elle efface le contenu du blog, lui ajoute un post et en créé un autre qui n'est provisoirement pas enregistré. 
-Faites attention car nous devrons changer cette logique car dans le futur à chaque fois que vous exécuterez des tests, vous perdrez votre domaine. C'est un exemple de la sorte d'effets pernicieux qu'un Singleton introduit dans un système.
+Faites attention car nous devrons changer cette logique puisque dans le futur à chaque fois que vous exécuterez des tests, vous perdrez votre domaine. C'est un exemple de la sorte d'effets pernicieux qu'un Singleton introduit dans un système.
 
 [[[
 TBBlogTest >> setUp
@@ -250,7 +250,7 @@ TBBlogTest >> testUnclassifiedBlogPosts
 
 !!!!Obtenir la liste des catégories
 
-Ajoutons un nouveau test qui retroune la liste des catégories et qui échoue :
+Ajoutons un nouveau test qui retourne la liste des catégories et qui échoue :
 [[[
 TBBlogTest >> testAllCategories
    blog writeBlogPost: post.

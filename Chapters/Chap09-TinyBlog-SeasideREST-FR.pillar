@@ -140,7 +140,7 @@ TBRestService >> execute
 	self subclassResponsibility
 ]]]
 
-Tous les services REST de TinyBlog doivent être capable de retourner une réponse au client et de lui préciser le format des données utilisé. Vous devez donc ajouter une méthode pour faire cela. Il s'agit de la méthode ==dataType:with:==. Le premier paramètre sera le type MIME utilisé et le second, contiendra les données transmises au client. 
+Tous les services REST de TinyBlog doivent être capables de retourner une réponse au client et de lui préciser le format des données utilisé. Vous devez donc ajouter une méthode pour faire cela. Il s'agit de la méthode ==dataType:with:==. Le premier paramètre sera le type MIME utilisé et le second, contiendra les données transmises au client. 
 La méthode insère ces informations dans le flux de réponses fournit par Seaside. 
 La méthode ==greaseString== appliquée sur le type de données permet d'obtenir une représentation du type MIME sous la forme d'une chaine de caractères (par exemple: "application/json").
 
@@ -293,8 +293,8 @@ TBRestServiceSearch >> execute
 Deux choses sont intéressantes dans cette méthode.
 Il y a tout d'abord l'utilisation de la méthode ==urlDecoded== qui est appliquée à la chaine de caractères contenant le titre recherché.
 Cette méthode permet la gestion des caractères spéciaux tels que l'espace ou les caractères accentués.
-Si vous chercher un post ayant pour titre "La reproduction des hippocampes", le service REST recevra en fait la chaine de caractère "La%20reproduction%20des%20hippocampes" et une recherche avec celle ci ne fonctionnera pas car aucun titre de post ne coincidera. 
-Il faut donc nettoyer la chaine de caractères en remplaçant les caractères spéciaux avant de lancer la recherche.
+Si vous cherchez un post ayant pour titre "La reproduction des hippocampes", le service REST recevra en fait la chaîne de caractères "La%20reproduction%20des%20hippocampes" et une recherche avec celle ci ne fonctionnera pas car aucun titre de post ne coïncidera. 
+Il faut donc nettoyer la chaîne de caractères en remplaçant les caractères spéciaux avant de lancer la recherche.
 
 Un autre point important est la gestion des codes d'erreur HTTP. Lorsqu'un serveur HTTP répond à son client, il glisse dans l'en-tête de la réponse une valeur numérique qui fournit au client de précieuses informations sur le résultat attendu. Si la réponse contient le code 200, c'est que tout s'est correctement passé et qu'un résultat est fourni au client (c'est d'ailleurs la valeur par défaut dans Seaside/Rest). Mais parfois, un problème survient. Par exemple, la requête demande à accéder à une ressource qui n'existe pas. Dans ce cas, il est nécessaire de retourner un code 404 (Not Found) pour l'indiquer au client. Un code 500 va indiquer qu'une erreur d'exécution a été rencontrée par le service. Vous trouverez la liste exhaustive des codes d'erreur sur la page décrivant le protocole HTTP (https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html). Il est très important de les gérer correctement tant au niveau de votre service REST qu'au sein de votre client REST car c'est ce qui va permettre à la couche cliente de réagir à bon escient en fonction du résultat du traitement exécuté par le serveur.
 
@@ -433,7 +433,7 @@ TBRestfulFilter >> addPost
 		applyServiceWithContext: self requestContext	
 ]]]
 
-En guide de travaux pratiques, il vous est possible d'améliorer la gestion d'erreur de la méthode execute afin de différencier une erreur au sein de la structure des données transmises au serveur, du format utilisé ou encore lors de l'étape d'ajout du post à la base de données. Un service REST complet se doit de fournir une information pertinente au client afin d'expliciter la cause du problème.
+En guise de travaux pratiques, il vous est possible d'améliorer la gestion d'erreur de la méthode execute afin de différencier une erreur au sein de la structure des données transmises au serveur, du format utilisé ou encore lors de l'étape d'ajout du post à la base de données. Un service REST complet se doit de fournir une information pertinente au client afin d'expliciter la cause du problème.
 
 !!!Améliorations possibles
 
@@ -452,7 +452,7 @@ La modification d'un post existant peut facilement être réalisée. Il vous suf
 
 !!!! Supprimer un post
 
-La suppression d'un post sera le résultat d'une requête DELETE transmise au serveur. Ici aussi, il vous est conseillé d'implémenter une gestion la plus compléte possible des codes d'erreurs HTTP qui devrait être assez proche de celle utilisée dans le service de modification d'un post.
+La suppression d'un post sera le résultat d'une requête DELETE transmise au serveur. Ici aussi, il vous est conseillé d'implémenter une gestion la plus complète possible des codes d'erreurs HTTP qui devrait être assez proche de celle utilisée dans le service de modification d'un post.
 
 
 

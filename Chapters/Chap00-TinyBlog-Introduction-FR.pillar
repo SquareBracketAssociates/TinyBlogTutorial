@@ -2,7 +2,7 @@
 
 Tout au long de ce projet, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs. La figure *@TinyBlogOnPharoCloudHere* montre l'état final de l'application. L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
 
-Tinblog est une petite application pédagogique qui va vous montrer comment développer et déployer une application web en utilisant Pharo / Seaside / Mongo et d'autres frameworks tels que NeoJSON. 
+TinyBlog est une petite application pédagogique qui va vous montrer comment développer et déployer une application web en utilisant Pharo / Seaside / Mongo et d'autres frameworks tels que NeoJSON. 
 
 Notre idée est que par la suite vous pourrez réutiliser cette infrastructure pour créer vos propres applications Web.
 

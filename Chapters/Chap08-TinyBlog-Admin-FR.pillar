@@ -2,7 +2,7 @@
 
 Nous allons maintenant développer la partie administration de TinyBlog.
 Dans les chapitres précédents, nous avons défini des composants Seaside qui interagissent entre eux 
-et où chaque composant est responsable son état et de son rendu graphique.  
+et où chaque composant est responsable de son état et de son rendu graphique.  
 Dans ce chapitre, nous voulons vous montrer que l'on peut aller encore plus loin et générer des composants Seaside à partir de la description d'objets en utilisant le framework Magritte. 
 
 La figure *@RapportNewLookActions2* montre une partie du résultat que nous allons obtenir. L'autre partie étant l'édition de bulletins. 
@@ -325,7 +325,7 @@ TBPostsReport class >> from: aBlog
 ]]]
 
 
-Nous allons devoir définir les méthodes liées à chaque opérations dans une prochaine section.
+Nous allons devoir définir les méthodes liées à chaque opération dans une prochaine section.
 
 Par ailleurs, cette méthode est un peu longue et elle ne permet pas de separer la définition du rapport de l'ajout d'opérations sur les éléments. Une solution est de créer une méthode d'instance ==addCommands== et de l'appeller explicitement.  Faites cette transformation.
 

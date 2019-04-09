@@ -1,7 +1,7 @@
 !! Déploiement de TinyBlog
 
 Dans ce chapitre nous vous montrons comment déployer votre application.
-Nous montrons en particulier un déployement sur un serveur cloud.
+Nous montrons en particulier un déploiement sur un serveur cloud.
 
 !!! Déployer dans le cloud
 Maintenant que vous avez développé votre application web TinyBlog, nous allons voir comment la déployer sur un serveur dans le cloud.
@@ -14,11 +14,11 @@ PharoCloud est un hébergeur dédié aux applications Pharo et qui offre la poss
 
 Préparer son compte PharoCloud :
 
-- créer un compte sur *http://pharocloud.com*
+- créer un compte sur le site *https://pharocloud.com*
 - activer son compte
 - se connecter
 - activer "Ephemeric Cloud" afin d'obtenir un identifiant (""API User ID"") et un mot de passe (""API Auth Token"")
-- clicker sur "Open Cloud Client" et identifiez-vous avec les identifiants ci-dessus
+- cliquer sur "Open Cloud Client" et identifiez-vous avec les identifiants ci-dessus
 - une fois connecté, vous devez obtenir une page web permettant d'uploader un fichier archive (zip) contenant un fichier image Pharo et son fichier changes
 
 !!!Préparation de l'image Pharo pour PharoCloud
@@ -104,13 +104,13 @@ Glisser/déposer ce fichier zip sur le Ephemeric Cloud de Pharo cloud et activer
 
 +Administration des images Pharo sur Ephemeric Cloud.>file://figures/ActiveEphemerics.png|width=85|label=activeEphemerics+
 
-En cliquant sur l'URL publique fournie vous voir s'afficher votre application TinyBlog comme sur la figure *@tinyBlogOnPharoCloud*.
+En cliquant sur l'URL publique fournie vous allez voir s'afficher votre application TinyBlog comme sur la figure *@tinyBlogOnPharoCloud*.
 
 +Votre application TinyBlog sur PharoCloud.>file://figures/TinyBlogOnPharoCloud.png|width=85|label=tinyBlogOnPharoCloud+
 
 !!!Déploiement automatique sur Ephemeric Cloud de PharoCloud 
 
-Plutôt que faire une archive zip et utiliser son navigateur, la documentation de PharoCloud (*http://docs.swarm.pharocloud.com/*) indique comment déployer directement son image Pharo en exécutant le code suivant (attention, c'est un peu long le temps que l'image soit transférée sur PharoCloud) :
+Plutôt que de procéder avec une archive zip et utiliser son navigateur, la documentation de PharoCloud (*http://docs.swarm.pharocloud.com/*) indique comment déployer directement son image Pharo en exécutant le code suivant (attention, c'est un peu long le temps que l'image soit transférée sur PharoCloud) :
 
 [[[
 |client EPHUSER EPHTOKEN| 
