@@ -257,7 +257,7 @@ TBBlogTest >> testAllCategories
    self assert: blog allCategories size equals: 2
 ]]]
 
-Voic le code métier :
+Voici le code métier :
 
 [[[
 TBBlog >> allCategories
