@@ -158,7 +158,7 @@ TBBlogTest >> testRemoveAllBlogPosts
    self assert: blog size equals: 0
 ]]]
 
-!!!Autres fonctionalités
+!!!Autres fonctionnalités
 
 Nous allons procéder en suivant une méthodologie dirigée par les tests (Test Driven Development). Nous définissons 
 un test, vérifions que le test ne passe pas. Puis nous définissons la méthode qui était ainsi spécifiée et nous vérifions 
@@ -297,7 +297,7 @@ Plusieurs évolutions peuvent être apportées telles que: obtenir uniquement la
 
 !!! Conclusion
 
-Vous devez avoir le modèle complet de TinyBlog ainsi que des tests unitaires associés. Vous êtes maintenant prêt pour des fonctionalités plus avancées comme le stockage ou un premier serveur HTTP. C'est aussi un bon moment pour sauver votre code dans votre dépôt en ligne.
+Vous devez avoir le modèle complet de TinyBlog ainsi que des tests unitaires associés. Vous êtes maintenant prêt pour des fonctionnalités plus avancées comme le stockage ou un premier serveur HTTP. C'est aussi un bon moment pour sauver votre code dans votre dépôt en ligne.
 
 
 
