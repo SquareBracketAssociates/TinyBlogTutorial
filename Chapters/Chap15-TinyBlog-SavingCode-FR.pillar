@@ -4,7 +4,7 @@ Lorsque vous sauvez l'image Pharo avec le menu 'Save', celle-ci contient tous le
 Cette solution est pratique mais peu pérenne. 
 Jusqu'à Pharo 60, Pharo nous propose d'utiliser Monticello et SmalltalkHub. A partir de Pharo 70, vous pouvez sauver votre code sur github ou gitlab avec Iceberg.
 
-!!! Jusqu'a Pharo 60 
+!!! Jusqu'à Pharo 60 
 
 Nous allons vous montrer comment les pharoers sauvent leur code sous forme de packages sur un serveur dédié à l'aide de Monticello: le gestionnaire de versions de Pharo.
 
