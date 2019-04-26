@@ -34,9 +34,9 @@ Pour rappel, dans le cadre de ce tutoriel, nous vous suggérons de toujours util
 Nous vous suggèrons de lire le chapitre dédié à la gestion de code dans le livre "Managing Your Code with Iceberg" (disponible à *http://books.pharo.org*).
 
 Ici nous rappellons les points clefs :
-- Créer un projet sur *http://www.github.com*.
-- Utiliser Iceberg puis ajouter un projet, choisir clone from github par exemple.
+- Créer un projet sur *http://www.github.com* ou autre.
+- Utiliser Iceberg pour ajouter un projet, choisir clone from github par exemple.
 - Créer un dossier =='src'== avec le FileList ou la ligne de commande dans le dossier que vous avez choisi sur votre système de fichier local. 
 - Ouvrir votre projet et ajouter vos packages (Il est conseillé de definir une baseline pour être facilement rechargeable).
-- Commiter le code.
-- Publier votre code sur github.
+- Sauver votre code (Commit).
+- Publier votre code sur github (Push).
