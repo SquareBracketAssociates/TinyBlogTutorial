@@ -37,6 +37,6 @@ Ici nous rappellons les points clefs :
 - Créer un projet sur *http://www.github.com* ou autre.
 - Utiliser Iceberg pour ajouter un projet, choisir clone from github par exemple.
 - Créer un dossier =='src'== avec le FileList ou la ligne de commande dans le dossier que vous avez choisi sur votre système de fichier local. 
-- Ouvrir votre projet et ajouter vos packages (Il est conseillé de definir une baseline pour être facilement rechargeable).
+- Ouvrir votre projet et ajouter vos packages (Il est conseillé de definir une baseline pour être facilement rechargeable - voir *https://github.com/pharo-open-documentation/pharo-wiki/blob/master/General/Baselines.md*)
 - Sauver votre code (Commit).
 - Publier votre code sur github (Push).
