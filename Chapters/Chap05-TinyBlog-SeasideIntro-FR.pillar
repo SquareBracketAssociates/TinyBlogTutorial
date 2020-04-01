@@ -32,14 +32,22 @@ Pour parcourir les nombreux exemples, cliquer sur le lien ""bootstrap"" dans la 
 
 +Comprendre un élément et son code en Bootstrap.>file://figures/TBSAlert.png|width=75|label=examplebootstrap+
 
-En cliquant sur le lien ""Examples"" au bas de la page, vous pouvez voir les éléments graphiques et le code pour les obtenir (figure *@examplebootstrap*). 
+En cliquant sur le lien ""Examples"" au bas de la page, vous pouvez voir les éléments graphiques et le code pour les obtenir (figure *@examplebootstrap*).
 
 !!!!Bootstrap
 
-Le dépôt de code et la documentation de la bibliothèque Bootstrap pour Pharo est disponible ici: 
-*http://smalltalkhub.com/#!/~TorstenBergmann/Bootstrap*.
-Une démo en ligne est disponible à l'adresse : *http://pharo.pharocloud.com/bootstrap*. Cette bibliothèque a déjà été chargée dans l'image PharoWeb utilisée dans ce tutoriel.
+Le dépôt de code et la documentation de la bibliothèque Bootstrap pour Pharo est disponible ici:
+*https://github.com/astares/Seaside-Bootstrap4*.
+Cette bibliothèque a déjà été chargée dans l'image PharoWeb utilisée dans ce tutoriel.
+Vous pouvez donc naviguer dans les exemples de Seaside Bootstrap directement dans votre navigateur à l'adresse
+ *http://localhost:8080/bootstrap*.
+Vous devriez voir les exemples bootstrap comme sur la Figure *@bootstrap*.
 
++Explorer les exemples de la bibliothèques Seaside Bootstrap.>file://figures/SeasideBootstrap.png|width=75|label=bootstrap+
+
+En cliquant sur le lien ""Examples"" en bas de la page, vous pouvez voir à la fois le rendu graphique d'un élément Bootstrap ainsi que le code nécessaire pour l'obtenir (cf. Figure *@examplebootstrap*).
+
++Un élément Bootstrap et son code.>file://figures/TBSAlert.png|width=75|label=examplebootstrap+
 
 !!!Point d'entrée de l'application
 
@@ -80,7 +88,7 @@ TBApplicationRootComponent class >> canBeRoot
 
 Une connexion sur le serveur Seaside ("Browse the applications installed in your image") permet de vérifier que l'application TinyBlog est bien enregistrée comme le montre la figure *@BrowseApplications*.
 
-!!!Premier rendu simple 
+!!!Premier rendu simple
 
 Ajoutons maintenant une méthode d'instance ==renderContentOn:== dans le protocole ==rendering== afin de vérifier que notre application répond bien.
 
@@ -94,7 +102,7 @@ En se connectant avec un navigateur sur *http://localhost:8080/TinyBlog*, la pag
 +Une page quasi vide mais servie par Seaside.>file://figures/TinyBlog-EmptyPage2.png|width=75|label=EmptyPage+
 
 
-Ajoutons maintenant des informations dans l'en-tête de la page HTML afin que TinyBlog ait un titre et soit une application HTML5. 
+Ajoutons maintenant des informations dans l'en-tête de la page HTML afin que TinyBlog ait un titre et soit une application HTML5.
 
 [[[
 TBApplicationRootComponent >> updateRoot: anHtmlRoot
@@ -106,7 +114,7 @@ TBApplicationRootComponent >> updateRoot: anHtmlRoot
 
 Le message ==title:== permet de configurer le titre du document affiché dans la fenêtre du navigateur. Le composant ==TBApplicationRootComponent== est le composant principal de l'application, il ne fait que du rendu graphique limité.
 Dans le futur, il contiendra des composants et les affichera :
-Comme par exemple, les composants principaux de l'application permettant l'affichage des posts pour les lecteurs du blog mais également des composants pour administrer le blog et ses posts. 
+Comme par exemple, les composants principaux de l'application permettant l'affichage des posts pour les lecteurs du blog mais également des composants pour administrer le blog et ses posts.
 
 
 !!! Architecture
@@ -121,23 +129,23 @@ La figure *@ComponentOverviewa* montre les différents composants que nous allon
 
 !!!! Eléments
 
-Pour vous permettre de suivre le développement incrémental 
+Pour vous permettre de suivre le développement incrémental
 de l'application, nous décrivons son architecture dans la figure *@ApplicationArchitecture*.
 
 +Architecture de TinyBlog.>file://figures/ApplicationArchitecture.pdf|width=75|label=ApplicationArchitecture+
 
-- ==ApplicationRootComponent== est le point d'entrée pour le serveur d'application. Ce composant contient des composants héritant tous de la classe abstraite ==ScreenComponent== que nous allons définir dans le prochain chapitre. 
+- ==ApplicationRootComponent== est le point d'entrée pour le serveur d'application. Ce composant contient des composants héritant tous de la classe abstraite ==ScreenComponent== que nous allons définir dans le prochain chapitre.
 
-- ==ScreenComponent== est la racine d'héritage des composants utilisateurs ou admin. Il est composé d'un header. 
+- ==ScreenComponent== est la racine d'héritage des composants utilisateurs ou admin. Il est composé d'un header.
 
-- ==PostsListComponent== est le composant principal affichant les bulletins (posts). Il est composé d'instances de  ==PostComponent== et gère aussi les catégories. 
+- ==PostsListComponent== est le composant principal affichant les bulletins (posts). Il est composé d'instances de  ==PostComponent== et gère aussi les catégories.
 
 - ==AdminComponent== est le composant principal de la partie administration. Il contient un rapport (instance de ==PostsReport==) sur les bulletins (posts) construits en utilisant Magritte.
 
-!!! Conclusion 
+!!! Conclusion
 
-Nous sommes prêts à développer les composants décrits. Comme le processus est un peu linéaire n'hésitez pas à revenir sur cette architecture afin de comprendre 
-le composant que vous nous proposons de développer. 
+Nous sommes prêts à développer les composants décrits. Comme le processus est un peu linéaire n'hésitez pas à revenir sur cette architecture afin de comprendre
+le composant que vous nous proposons de développer.
 
 
 

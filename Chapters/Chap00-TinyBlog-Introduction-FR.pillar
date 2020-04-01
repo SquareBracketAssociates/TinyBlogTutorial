@@ -1,8 +1,8 @@
-!! A propos de ce livre 
+!! A propos de ce livre
 
 Tout au long de ce projet, nous allons vous guider pour développer et enrichir une application Web, nommée TinyBlog, pour gérer un ou plusieurs blogs. La figure *@TinyBlogOnPharoCloudHere* montre l'état final de l'application. L'idée est qu'un visiteur du site Web puisse voir les posts et que l'auteur du blog puisse se connecter sur le site pour administrer le blog c'est-à-dire ajouter, supprimer ou modifier des posts.
 
-TinyBlog est une petite application pédagogique qui va vous montrer comment développer et déployer une application web en utilisant Pharo / Seaside / Mongo et d'autres frameworks tels que NeoJSON. 
+TinyBlog est une petite application pédagogique qui va vous montrer comment développer et déployer une application web en utilisant Pharo / Seaside / Mongo et d'autres frameworks tels que NeoJSON.
 
 Notre idée est que par la suite vous pourrez réutiliser cette infrastructure pour créer vos propres applications Web.
 
@@ -14,8 +14,8 @@ Dans une seconde partie optionnelle, nous abordons des aspects optionnels tel qu
 
 Les solutions proposées dans ce tutoriel sont parfois non optimales afin de vous faire réagir et que vous puissiez proposer d'autres solutions et des améliorations. Notre objectif n'est pas d'être exhaustif. Nous montrons une façon de faire cependant nous invitons le lecteur à lire les références sur les autres chapitres, livres et tutoriaux Pharo afin d'approfondir son expertise et enrichir son application.
 
-Finalement, afin de vous permettre de ne pas abandonner si vous ne trouvez pas une erreur, le dernier chapitre vous permet de charger 
-le code décrit dans chacun des chapitres. 
+Finalement, afin de vous permettre de ne pas abandonner si vous ne trouvez pas une erreur, le dernier chapitre vous permet de charger
+le code décrit dans chacun des chapitres.
 
 +L'application TinyBlog.>figures/TinyBlogOnPharoCloud.png|width=100|label=TinyBlogOnPharoCloudHere+
 
@@ -23,19 +23,10 @@ le code décrit dans chacun des chapitres.
 !!!Installation de Pharo
 
 
-Dans ce tutoriel, nous supposons que vous utilisez Pharo 6.1 avec une image dans laquelle ont été chargés des bibliothèques et des frameworks spécifiques pour le développement d'applications Web: Seaside (le serveur d'application web à base de composants), Magritte (un framework de description pour la génération automatique de rapport), Bootstrap (la bibliothèque de rendu web), Voyage (un framework pour sauver vos objets) et quelques autres.
+Dans ce tutoriel, nous supposons que vous utilisez l'image Pharo du MOOC (actuellement une image Pharo 8.0) dans laquelle ont été chargés des bibliothèques et des frameworks spécifiques pour le développement d'applications Web: Seaside (le serveur d'application web à base de composants), Magritte (un framework de description pour la génération automatique de rapport), Bootstrap (la bibliothèque de rendu web), Voyage (un framework pour sauver vos objets) et quelques autres.
 
-Pour développer votre application TinyBlog et suivre ce tutoriel, nous vous suggérons de toujours utiliser l'image disponible à l'adresse suivante: *http://mooc.pharo.org/image/PharoWeb-60.zip* car elle contient tous les packages nécessaires.
 
-Vous pouvez construire l'image que nous utilisons à l'aide de ce script à exécuter dans une image Pharo 6.1 (*http://pharo.org/download*):
-
-[[[
-   Metacello new 
-      smalltalkhubUser: 'PharoExtras' project: 'PharoWeb'; 
-      configuration: 'PharoWeb';
-      version: #stable;
-      load 
-]]]
+Vous pouvez récupérer l'image Pharo MOOC en utilisant le Pharo Launcher (*http://pharo.org/download*).
 
 !!! Règles de nommage
 
@@ -47,12 +38,12 @@ Vous pouvez:
 
 !!! Ressources
 
-Pharo possède de bonnes ressources pédagogiques ainsi qu'une communauté d'utilisateurs accueillante. Voici quelques informations qui peuvent vous être utiles. 
+Pharo possède de bonnes ressources pédagogiques ainsi qu'une communauté d'utilisateurs accueillante. Voici quelques informations qui peuvent vous être utiles.
 
 - *http://books.pharo.org* contient des ouvrages autour de Pharo. Pharo by Example peut vous aider dans les aspects de découverte du langage et des bibliothèques de base. Entreprise Pharo: a Web Perspective presente d'autres aspects utiles pour le développement web.
 - *http://book.seaside.st* est un des ouvrages sur Seaside. Il est en cours de migration en livre open-source sur *https://github.com/SquareBracketAssociates/DynamicWebDevelopmentWithSeaside*.
 - *http://mooc.pharo.org* propose un excellent Mooc (cours en ligne) comprenant plus de 90 videos expliquant des points de syntaxes mais aussi de conception objet.
-- Sur la page Web *http://pharo.org/community* vous trouverez le lien vers le channel discord où nombre de Pharoers échangent et s'entraident. 
+- Sur la page Web *http://pharo.org/community* vous trouverez le lien vers le channel discord où nombre de Pharoers échangent et s'entraident.
 
 !!! Remerciements
 

@@ -1,42 +1,16 @@
 !! Sauver votre code
 
 Lorsque vous sauvez l'image Pharo avec le menu 'Save', celle-ci contient tous les objets du système et donc les classes elles-mêmes.
-Cette solution est pratique mais peu pérenne. 
-Jusqu'à Pharo 60, Pharo nous propose d'utiliser Monticello et *http://www.smalltalkhub.com* ou *http://ss3.gemstone.com*. A partir de Pharo 70, vous pouvez sauver votre code sur github, bitbucket, ou gitlab avec un nouvel outil dédié Iceberg.
+Cette solution est pratique mais peu pérenne.
+A partir de Pharo 70, vous pouvez sauver votre code sur github, bitbucket, ou gitlab avec un nouvel outil dédié: Iceberg.
 
-!!! Jusqu'à Pharo 60 
+Nous vous suggérons de lire le chapitre dédié à la gestion de code dans le livre "Managing Your Code with Iceberg" (disponible à *http://books.pharo.org*).
 
-Nous allons vous montrer comment les pharoers sauvent leur code sous forme de packages sur un serveur dédié à l'aide de Monticello: le gestionnaire de versions de Pharo.
-
-Notez que des videos sont disponibles dans le Mooc Pharo qui montrent la procédure pour sauver du code: *http://mooc.pharo.org* et en particulier la video de la semaine 1 qui montre comment développer et sauver le code d'une application compteur: *http://rmod-pharo-mooc.lille.inria.fr/MOOC/Videos/W1/C019-W1S-Videos-Redo-Counter-Traditional-FR-V3-HD_720p_4Mbs.m4v*.
-
-!!!!Créer un dépôt de code
-
-Il existent plusieurs serveurs en ligne permettant d'héberger vos dépôts de code gratuitement comme Smalltalkhub *http://smalltalkhub.com* ou SS3 *http://ss3.gemstone.com*. 
-
-- Créer un compte sur le site  *http://smalltalkhub.com/*.
-- Se connecter au site. 
-- Créer un projet nommé "TinyBlog" (si vous rencontrez des problèmes de connexion car le site est en version beta, essayez avec un autre navigateur ; si les problèmes persistent utilisez *http://ss3.gemstone.com*).
-
-!!!!Sauver votre package
-
-- Dans Pharo, ouvrez l'outil Monticello Browser via le menu principal (clic gauche sur le fond de Pharo).
-- Ajoutez un dépôt (repository) de type SmalltalkHub ou HTTP pour *http://ss3.gemstone.com*.
-- Sélectionnez ce dépôt et dans son menu contextuel (clic droit), sélectionnez l'item 'Add to package...' pour ajouter ce dépôt au package TinyBlog.
-- Sélectionnez maintenant votre package et pressez le bouton 'Save'. 
-- Indiquez une description pour votre commit et sauver. Votre code vient d'être envoyé sur le serveur.
-
-Le code de votre application TinyBlog est maintenant sauvegardé dans votre dépôt sur Smalltalkhub. Il est donc maintenant possible de charger votre code dans une nouvelle image Pharo. 
-Pour rappel, dans le cadre de ce tutoriel, nous vous suggérons de toujours utiliser l'image avec tous les packages web chargés que nous avons mentionné dans le premier chapitre. Cela vous permettra de pouvoir recharger votre package sans devoir vous soucier des dépendances sur d'autres packages. 
-
-!!! En Pharo 70
-
-Nous vous suggèrons de lire le chapitre dédié à la gestion de code dans le livre "Managing Your Code with Iceberg" (disponible à *http://books.pharo.org*).
-
-Ici nous rappellons les points clefs :
+Nous rappellons ici les points clefs :
+- Créer un compte sur *http://www.github.com* ou autre.
 - Créer un projet sur *http://www.github.com* ou autre.
 - Utiliser Iceberg pour ajouter un projet, choisir clone from github par exemple.
-- Créer un dossier =='src'== avec le FileList ou la ligne de commande dans le dossier que vous avez choisi sur votre système de fichier local. 
+- Créer un dossier =='src'== avec le FileList ou la ligne de commande dans le dossier que vous avez choisi sur votre système de fichier local.
 - Ouvrir votre projet et ajouter vos packages (Il est conseillé de definir une baseline pour être facilement rechargeable - voir *https://github.com/pharo-open-documentation/pharo-wiki/blob/master/General/Baselines.md*)
 - Sauver votre code (Commit).
 - Publier votre code sur github (Push).
