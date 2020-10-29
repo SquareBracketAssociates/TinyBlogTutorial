@@ -299,12 +299,12 @@ TBSMagritteReport subclass: #TBPostsReport
 ]]]
 
 [[[
-TBSMagritteReport >> blog
+TBPostsReport >> blog
    ^ blog
 ]]]
 
 [[[
-TBSMagritteReport >> blog: aTBBlog
+TBPostsReport >> blog: aTBBlog
    blog := aTBBlog
 ]]]
 
