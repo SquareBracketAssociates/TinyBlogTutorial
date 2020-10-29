@@ -2,7 +2,7 @@
 @cha:model
 
 Dans ce chapitre, nous développons une partie du modèle de l'application Tinyblog.
-Le modèle est particulièrement simple : il définit un bulletin. Dans le chapitre suivant 
+Le modèle est particulièrement simple : il définit un bulletin. Dans le chapitre suivant
 nous définissons un blog qui contient une liste de bulletins.
 
 !!!La classe TBPost
@@ -20,15 +20,15 @@ Object subclass: #TBPost
 
 Nous utilisons cinq variables d'instance pour décrire un bulletin sur le blog.
 
-|!Variable 		|!Signification |
-|title         |Titre du bulletin                |
-|text          |Texte du bulletin                |
-|date          |Date de redaction            |
-|category      |Rubrique contenant le bulletin   |
-|visible       |Post visible ou pas ?        |
+|!Variable 	   |!Signification|
+|title         |Titre du bulletin|
+|text          |Texte du bulletin|
+|date          |Date de redaction|
+|category      |Rubrique contenant le bulletin|
+|visible       |Post visible ou pas ?|
 
 
-Cette classe est également dotée de méthodes d'accès (aussi appelées accesseurs) à ces variables d'instances dans le protocole 'accessing'. Vous pouvez utiliser un refactoring pour créer automatiquement toutes les méthodes suivantes: 
+Cette classe est également dotée de méthodes d'accès (aussi appelées accesseurs) à ces variables d'instances dans le protocole 'accessing'. Vous pouvez utiliser un refactoring pour créer automatiquement toutes les méthodes suivantes:
 
 [[[
 TBPost >> title
@@ -89,9 +89,9 @@ TBPost >> notVisible
 
 !!!Initialisation
 
-La méthode ==initialize== (protocole 'initialization') fixe la date à celle du jour et la visibilité à faux. L'utilisateur devra par la suite activer la visibilité. 
-Cela permet de rédiger des brouillons et de ne publier un bulletin que lorsque celui-ci est terminé. 
-Un bulletin est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe. 
+La méthode ==initialize== (protocole 'initialization') fixe la date à celle du jour et la visibilité à faux. L'utilisateur devra par la suite activer la visibilité.
+Cela permet de rédiger des brouillons et de ne publier un bulletin que lorsque celui-ci est terminé.
+Un bulletin est également rangé par défaut dans la catégorie 'Unclassified' que l'on définit au niveau classe.
 La méthode ==unclassifiedTag== renvoie une valeur indiquant que le post n'est pas rangé dans une catégorie.
 
 [[[
@@ -99,7 +99,7 @@ TBPost class >> unclassifiedTag
    ^ 'Unclassified'
 ]]]
 
-Attention la méthode ==unclassifiedTag== est définie au niveau de la classe (cliquer le bouton 'Class' pour la définir). Les autres méthodes sont des méthodes d'instances c'est-à-dire qu'elles seront exécutées sur des instances de la classe ==TBPost==. 
+Attention la méthode ==unclassifiedTag== est définie au niveau de la classe (cliquer le bouton 'Class' pour la définir). Les autres méthodes sont des méthodes d'instances c'est-à-dire qu'elles seront exécutées sur des instances de la classe ==TBPost==.
 
 [[[
 TBPost >> initialize
@@ -109,7 +109,7 @@ TBPost >> initialize
 	self notVisible
 ]]]
 
-Dans la solution proposée ci-dessus pour la méthode ==initialize==, il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==. Proposer une solution. La séquence 3 de la semaine 6 du MOOC peut vous aider à mieux comprendre pourquoi (*http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_67.html*) il faut éviter de référencer des classes directement et comment faire. 
+Dans la solution proposée ci-dessus pour la méthode ==initialize==, il serait préférable de ne pas faire une référence en dur à la classe ==TBPost==. Proposer une solution. La séquence 3 de la semaine 6 du MOOC peut vous aider à mieux comprendre pourquoi (*http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_67.html*) il faut éviter de référencer des classes directement et comment faire.
 
 !!!Méthodes de création
 
@@ -136,9 +136,9 @@ TBPost class >> title: aTitle text: aText category: aCategory
 Créons des posts pour s'assurer que tout fonctionne. Ouvrez l'outil Playground et executez l'expression suivante :
 
 [[[
-TBPost 
-	title: 'Welcome in TinyBlog' 
-	text: 'TinyBlog is a small blog engine made with Pharo.' 
+TBPost
+	title: 'Welcome in TinyBlog'
+	text: 'TinyBlog is a small blog engine made with Pharo.'
 	category: 'TinyBlog'
 ]]]
 
@@ -149,10 +149,10 @@ Si vous inspectez le code ci-dessus (clic droit sur l'expression et "Inspect it"
 !!! Ajout de quelques tests unitaires
 
 Inspecter manuellemment des objets n'est pas une manière systématique de vérifier que ces objets ont les propriétes attendues.
-Bien que le modèle soit simple nous pouvons définir quelques tests. 
-En mode Test Driven Developpement nous écrivons les tests en premier. 
+Bien que le modèle soit simple nous pouvons définir quelques tests.
+En mode Test Driven Developpement nous écrivons les tests en premier.
 Ici nous avons préféré vous laissez définir une petite classe pour vous familiariser avec l'IDE.
-Mais maintenant nous réparons ce manque. 
+Mais maintenant nous réparons ce manque.
 
 Nous définissons la classe ==TBPostTest== (comme sous-classe de ==TestCase==).
 
@@ -169,8 +169,8 @@ Nous définissons deux tests.
 TBPostTest >> testWithoutCategoryIsUnclassified
 
 	| post |
-	post := TBPost 
-		title: 'Welcome to TinyBlog' 
+	post := TBPost
+		title: 'Welcome to TinyBlog'
 		text: 'TinyBlog is a small blog engine made with Pharo.'.
 	self assert: post title equals: 'Welcome to TinyBlog' .
 	self assert: post category = TBPost unclassifiedTag.
@@ -181,9 +181,9 @@ TBPostTest >> testWithoutCategoryIsUnclassified
 TBPostTest >> testPostIsCreatedCorrectly
 
 		| post |
-		post := TBPost 
-			title: 'Welcome to TinyBlog' 
-			text: 'TinyBlog is a small blog engine made with Pharo.' 
+		post := TBPost
+			title: 'Welcome to TinyBlog'
+			text: 'TinyBlog is a small blog engine made with Pharo.'
 			category: 'TinyBlog'.
 		self assert: post title equals: 'Welcome to TinyBlog' .
 		self assert: post text equals: 'TinyBlog is a small blog engine made with Pharo.' .
@@ -206,7 +206,7 @@ TBPost >> isUnclassified
    ^ self category = TBPost unclassifiedTag
 ]]]
 
-De même il serait préférable de ne pas faire une référence en dur à la classe ==TBPost== dans le corps d'une méthode. 
+De même il serait préférable de ne pas faire une référence en dur à la classe ==TBPost== dans le corps d'une méthode.
 Proposer une solution!
 
 
@@ -217,8 +217,8 @@ Nous simplifions de cette manière la logique de notre test.
 TBPostTest >> testWithoutCategoryIsUnclassified
 
 	| post |
-	post := TBPost 
-		title: 'Welcome to TinyBlog' 
+	post := TBPost
+		title: 'Welcome to TinyBlog'
 		text: 'TinyBlog is a small blog engine made with Pharo.'.
 	self assert: post title equals: 'Welcome to TinyBlog' .
 	self assert: post isUnclassified.
@@ -228,5 +228,5 @@ TBPostTest >> testWithoutCategoryIsUnclassified
 
 !!! Conclusion
 
-Nous avons développé une première partie du modèle (la classe ==TBPost==) et défini quelques tests. Nous vous suggérons fortement 
+Nous avons développé une première partie du modèle (la classe ==TBPost==) et défini quelques tests. Nous vous suggérons fortement
 d'écrire d'autres tests unitaires pour vérifier que ce modèle fonctionne correctement même s'il est simple.
