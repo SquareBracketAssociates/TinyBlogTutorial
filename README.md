@@ -1,11 +1,10 @@
 # TinyBlog
 
-[![Build status][badge]][travis]
+[![Build status](https://travis-ci.com/SquareBracketAssociates/TinyBlogTutorial.svg?branch=master)](https://travis-ci.com/github/SquareBracketAssociates/TinyBlogTutorial)
 
 TinyBlog is a tutorial (in French) for [Pharo](www.pharo.org).
 It explains how to create a simple blog engine with Pharo's web stack (Seaside, Magritte, Voyage, Bootstrap, etc.).
 
-[travis]: https://travis-ci.org/SquareBracketAssociates/TinyBlogTutorial
-[badge]: https://travis-ci.org/SquareBracketAssociates/TinyBlogTutorial.svg?branch=master
+
 
 The latest [PDF](https://github.com/SquareBracketAssociates/TinyBlogTutorial/releases/download/continuous/TinyBlog-FR.pdf) of this book.
