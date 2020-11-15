@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Tests-GemStone-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "DaleHenrichs 03/08/2011 14:08",
+	"instvars" : [
+		 ],
+	"name" : "GRGemStonePlatformTest",
+	"pools" : [
+		 ],
+	"super" : "TestCase",
+	"type" : "normal" }

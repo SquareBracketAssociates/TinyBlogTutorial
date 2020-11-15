@@ -1,0 +1,13 @@
+{
+	"class" : {
+		"basicForEncoding:" : "lr 7/25/2011 19:46",
+		"codecName" : "pmm 5/26/2010 07:07",
+		"codecs" : "jf 2/7/2009 20:27",
+		"supportsEncoding:" : "lr 7/25/2011 19:46" },
+	"instance" : {
+		"decode:" : "pmm 8/19/2014 10:00",
+		"decoderFor:" : "jf 9/30/2009 00:28",
+		"encode:" : "pmm 8/19/2014 10:00",
+		"encoderFor:" : "jf 9/30/2009 00:28",
+		"name" : "pmm 5/26/2010 07:07",
+		"url" : "lr 2/7/2009 12:06" } }

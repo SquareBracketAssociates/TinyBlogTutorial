@@ -1,0 +1,17 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'Grease',
+      #directory : 'repository',
+      #load : [ 'Tests' ],
+      #platforms : [ #squeak, #pharo ]
+    },
+    SCIMetacelloLoadSpec {
+      #baseline : 'Grease',
+      #directory : 'repository',
+      #onWarningLog : true,
+      #load : [ 'Tests' ],
+      #platforms : [ #gemstone ]
+    }
+  ]
+}

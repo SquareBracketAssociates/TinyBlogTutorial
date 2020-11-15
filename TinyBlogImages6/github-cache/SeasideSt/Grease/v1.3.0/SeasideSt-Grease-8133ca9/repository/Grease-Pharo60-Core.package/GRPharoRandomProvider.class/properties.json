@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "GRObject",
+	"category" : "Grease-Pharo60-Core",
+	"classinstvars" : [
+		"mutex",
+		"generator"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "GRPharoRandomProvider",
+	"type" : "normal"
+}

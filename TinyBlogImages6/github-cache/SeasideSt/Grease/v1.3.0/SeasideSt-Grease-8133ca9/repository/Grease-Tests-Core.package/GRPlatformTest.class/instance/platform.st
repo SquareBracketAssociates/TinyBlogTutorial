@@ -1,0 +1,3 @@
+accessing
+platform
+	^ GRPlatform current

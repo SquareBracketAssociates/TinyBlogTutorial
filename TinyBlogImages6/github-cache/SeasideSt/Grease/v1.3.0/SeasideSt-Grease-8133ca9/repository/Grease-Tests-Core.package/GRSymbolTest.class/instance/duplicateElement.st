@@ -1,0 +1,3 @@
+configuration
+duplicateElement
+	^ $b

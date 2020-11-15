@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Core-Text",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "pmm 1/10/2009 22:29",
+	"instvars" : [
+		 ],
+	"name" : "GRInvalidUtf8Error",
+	"pools" : [
+		 ],
+	"super" : "GRError",
+	"type" : "normal" }

@@ -1,0 +1,13 @@
+{
+	"instance" : {
+		"testPackages" : "JohanBrichau 12/15/2013 18:29",
+		"testName" : "lr 2/6/2010 10:44",
+		"testLicense" : "lr 2/6/2010 10:58",
+		"testAllDependencies" : "pmm 9/1/2012 15:32",
+		"testDescription" : "lr 2/6/2010 10:44",
+		"setUp" : "lr 2/6/2010 10:44",
+		"testDependencies" : "lr 2/6/2010 10:47",
+		"testUrl" : "lr 2/17/2010 15:24"
+	},
+	"class" : { }
+}

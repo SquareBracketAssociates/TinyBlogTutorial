@@ -1,0 +1,29 @@
+{
+	"instance" : {
+		"dependencies" : "jf 3/15/2009 17:00",
+		"license:" : "obi 10/8/2009 07:51",
+		"initialize" : "lr 2/17/2010 15:06",
+		"license" : "lr 2/10/2010 11:18",
+		"name" : "lr 2/17/2010 15:18",
+		"description:" : "lr 10/25/2009 11:26",
+		"seasideUrl" : "pmm 9/12/2013 15:58",
+		"allDependencies" : "lr 2/17/2010 15:18",
+		"isLGPL" : "lr 10/25/2009 15:19",
+		"seasideLGPLUrl" : "pmm 9/12/2013 15:59",
+		"greaseUrl" : "pmm 9/12/2013 15:57",
+		"name:" : "lr 10/25/2009 11:26",
+		"description" : "merged 10/20/2008 09:23",
+		"seasideAddonsUrl" : "pmm 9/12/2013 15:59",
+		"resolveWith:" : "JohanBrichau 5/26/2017 15:56",
+		"addDependency:" : "merged 10/20/2008 09:33",
+		"url" : "lr 2/10/2010 11:18",
+		"printOn:" : "merged 10/20/2008 09:24",
+		"addDependenciesTo:" : "lr 9/5/2009 18:35",
+		"url:" : "lr 2/17/2010 15:18",
+		"isMIT" : "lr 10/25/2009 15:19"
+	},
+	"class" : {
+		"greaseCore" : "pmm 9/12/2013 16:00",
+		"grPackages" : "JohanBrichau 12/15/2013 18:27"
+	}
+}

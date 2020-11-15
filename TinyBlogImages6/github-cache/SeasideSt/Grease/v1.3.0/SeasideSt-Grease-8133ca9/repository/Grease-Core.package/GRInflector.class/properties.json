@@ -1,0 +1,15 @@
+{
+	"category" : "Grease-Core-Text",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"InflectionRules",
+		"Uninflected" ],
+	"commentStamp" : "lr 12/27/2008 09:43",
+	"instvars" : [
+		 ],
+	"name" : "GRInflector",
+	"pools" : [
+		 ],
+	"super" : "GRObject",
+	"type" : "normal" }

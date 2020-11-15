@@ -1,0 +1,3 @@
+testing
+isBeta
+	^ stageLabel = #beta

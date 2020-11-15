@@ -1,0 +1,19 @@
+{
+	"instance" : {
+		"testNext" : "pmm 2/17/2010 20:06",
+		"testAllCodecs" : "pmm 11/17/2010 21:41",
+		"utf16beString" : "dkh 11/13/2009 15:24",
+		"utf8String" : "dkh 11/13/2009 15:24",
+		"latin1String" : "dkh 11/13/2009 15:24",
+		"macromanString" : "dkh 11/13/2009 15:24",
+		"testNullCodec" : "pmm 9/1/2012 15:19",
+		"testCodecLatin1" : "pmm 5/27/2010 22:55",
+		"asString:" : "lr 7/25/2011 19:50",
+		"seasideByteArray" : "pmm 2/17/2010 20:01",
+		"testCodecLatin1BorderLineString" : "pmm 11/17/2010 22:09",
+		"testReset" : "pmm 8/26/2011 09:38",
+		"decodedString" : "lr 7/25/2011 19:50",
+		"utf16leString" : "dkh 11/13/2009 15:24"
+	},
+	"class" : { }
+}

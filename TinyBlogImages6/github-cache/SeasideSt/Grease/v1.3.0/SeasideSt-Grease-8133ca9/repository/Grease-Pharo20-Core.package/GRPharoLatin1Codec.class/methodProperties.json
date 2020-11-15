@@ -1,0 +1,12 @@
+{
+	"class" : {
+		"basicForEncoding:" : "pmm 8/16/2010 00:36",
+		"codecs" : "lr 7/25/2011 19:46",
+		"supportedEncodingNames" : "lr 7/25/2011 19:46",
+		"supportsEncoding:" : "pmm 8/16/2010 00:36" },
+	"instance" : {
+		"decode:" : "pmm 8/16/2010 09:20",
+		"decoderFor:" : "pmm 8/16/2010 00:32",
+		"encoderFor:" : "pmm 8/16/2010 00:32",
+		"initializeWithName:" : "pmm 8/16/2010 00:35",
+		"name" : "pmm 8/16/2010 00:32" } }

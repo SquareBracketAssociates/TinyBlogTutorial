@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Slime",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GRTempsFormattingRule",
+	"pools" : [
+		 ],
+	"super" : "GRSlimeParseTreeLintRule",
+	"type" : "normal" }

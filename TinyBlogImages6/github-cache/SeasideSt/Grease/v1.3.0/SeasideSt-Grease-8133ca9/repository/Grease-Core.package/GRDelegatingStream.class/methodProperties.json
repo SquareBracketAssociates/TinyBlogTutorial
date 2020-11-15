@@ -1,0 +1,20 @@
+{
+	"class" : {
+		"on:" : "pmm 10/30/2010 18:53" },
+	"instance" : {
+		"atEnd" : "pmm 2/20/2009 22:04",
+		"contents" : "pmm 2/20/2009 22:05",
+		"crlf" : "pmm 2/20/2009 22:11",
+		"flush" : "pmm 2/20/2009 22:06",
+		"initializeOn:" : "pmm 9/1/2012 15:25",
+		"isStream" : "NorbertHartl 10/7/2010 08:21",
+		"next" : "pmm 2/20/2009 22:11",
+		"next:" : "pmm 2/20/2009 22:12",
+		"nextPut:" : "pmm 2/20/2009 22:12",
+		"nextPutAll:" : "pmm 2/20/2009 22:12",
+		"position" : "JohanBrichau 9/14/2013 12:20",
+		"print:" : "lr 9/25/2011 10:11",
+		"reset" : "ar 8/4/2010 20:54",
+		"size" : "pmm 2/20/2009 22:05",
+		"space" : "jf 7/28/2009 15:55",
+		"tab" : "jf 7/28/2009 15:56" } }

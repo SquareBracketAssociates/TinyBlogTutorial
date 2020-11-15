@@ -1,0 +1,3 @@
+encoding
+encodeUrl: aString
+	^aString

@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Tests-GemStone-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GRQuadByteStringTest",
+	"pools" : [
+		 ],
+	"super" : "GRStringTest",
+	"type" : "normal" }

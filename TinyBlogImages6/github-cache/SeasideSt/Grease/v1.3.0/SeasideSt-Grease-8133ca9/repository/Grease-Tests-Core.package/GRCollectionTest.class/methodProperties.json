@@ -1,0 +1,26 @@
+{
+	"instance" : {
+		"arbitraryCollection" : "jok 3/25/2010 15:21",
+		"isValidNewSequencedResponseClass:" : "jok 3/29/2010 12:24",
+		"testEmptyAny" : "jf 2/6/2010 02:05",
+		"includedElement" : "jf 2/9/2010 12:01",
+		"testNoneSatisfy" : "lr 7/25/2011 18:34",
+		"testSorted" : "pmm 9/1/2012 15:20",
+		"collectionClass" : "jf 2/9/2010 11:59",
+		"duplicateElement" : "jok 3/25/2010 11:59",
+		"isExtensible" : "jf 2/9/2010 11:10",
+		"allowsDuplicateValues" : "jf 2/9/2010 11:58",
+		"testAny" : "jf 2/6/2010 01:54",
+		"assert:sortedWith:" : "jf 2/9/2010 11:57",
+		"testNotEmpty" : "jf 2/6/2010 02:08",
+		"isInitializable" : "jf 2/9/2010 11:28",
+		"emptyCollection" : "jf 2/9/2010 12:00",
+		"testIsCollection" : "jf 2/15/2010 23:05",
+		"assert:validSequencedNewResponseFrom:" : "jf 2/9/2010 11:56",
+		"valuesOf:" : "jf 2/9/2010 12:02",
+		"excludedElement" : "jf 2/9/2010 12:01"
+	},
+	"class" : {
+		"isAbstract" : "jf 2/6/2010 01:52"
+	}
+}

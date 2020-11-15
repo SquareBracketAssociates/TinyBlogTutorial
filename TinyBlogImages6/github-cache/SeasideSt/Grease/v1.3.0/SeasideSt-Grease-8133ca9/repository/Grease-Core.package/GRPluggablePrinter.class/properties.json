@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Core-Text",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"block" ],
+	"name" : "GRPluggablePrinter",
+	"pools" : [
+		 ],
+	"super" : "GRPrinter",
+	"type" : "normal" }

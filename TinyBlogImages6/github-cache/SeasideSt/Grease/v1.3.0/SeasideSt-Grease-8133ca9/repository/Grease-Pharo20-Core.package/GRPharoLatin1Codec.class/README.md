@@ -1,0 +1,1 @@
+A GRPharoLatin1Codec is a WACodec optimized for ISO-8859-1 (direct byte to character mapping).

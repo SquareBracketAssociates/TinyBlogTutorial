@@ -1,0 +1,2 @@
+*grease-pharo-core
+fixCallbackTemps

@@ -1,0 +1,26 @@
+{
+	"class" : {
+		"initialize" : "lr 1/23/2009 21:18" },
+	"instance" : {
+		"accuracy:" : "lr 7/25/2008 19:13",
+		"base:" : "lr 7/25/2008 19:16",
+		"characters:" : "lr 2/6/2010 10:17",
+		"delimiter:" : "lr 7/24/2008 14:36",
+		"digits:" : "lr 7/24/2008 11:50",
+		"digitsOf:base:" : "lr 5/13/2010 12:26",
+		"infinite:" : "lr 3/24/2008 16:19",
+		"initialize" : "lr 2/6/2010 10:58",
+		"lowercase" : "lr 2/6/2010 10:17",
+		"nan:" : "lr 3/24/2008 16:19",
+		"padding:" : "lr 7/24/2008 11:51",
+		"precision:" : "lr 7/25/2008 19:16",
+		"print:on:" : "lr 3/24/2008 16:27",
+		"printFloat:on:" : "pmm 9/15/2013 11:45",
+		"printFraction:on:" : "lr 6/4/2009 21:41",
+		"printInfinite:on:" : "lr 3/24/2008 16:39",
+		"printInteger:on:" : "lr 7/24/2008 12:39",
+		"printNaN:on:" : "lr 3/24/2008 16:39",
+		"separate:left:" : "lr 7/24/2008 14:34",
+		"separate:right:" : "lr 7/24/2008 14:34",
+		"separator:" : "lr 7/24/2008 14:35",
+		"uppercase" : "lr 2/6/2010 10:17" } }

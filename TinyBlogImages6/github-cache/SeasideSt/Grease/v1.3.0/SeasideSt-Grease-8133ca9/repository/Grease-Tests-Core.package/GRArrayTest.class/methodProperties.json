@@ -1,0 +1,12 @@
+{
+	"instance" : {
+		"isInitializable" : "jf 2/9/2010 11:28",
+		"collectionClass" : "jf 2/6/2010 01:51",
+		"isSequenced" : "jf 2/6/2010 04:03",
+		"isHomogeneous" : "jok 3/29/2010 13:22",
+		"allowsDuplicateValues" : "jf 2/6/2010 04:22",
+		"isUnique" : "jok 3/29/2010 13:02",
+		"isExtensible" : "jf 2/6/2010 03:34"
+	},
+	"class" : { }
+}

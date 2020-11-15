@@ -1,0 +1,15 @@
+{
+	"category" : "Grease-Squeak5-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"UrlTable",
+		"XmlTable" ],
+	"commentStamp" : "pmm 2/1/2014 13:28",
+	"instvars" : [
+		 ],
+	"name" : "GRPharoPlatform",
+	"pools" : [
+		 ],
+	"super" : "GRPlatform",
+	"type" : "normal" }

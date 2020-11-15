@@ -1,0 +1,1 @@
+I'm a work around for bugs in the Pharo stream classes.

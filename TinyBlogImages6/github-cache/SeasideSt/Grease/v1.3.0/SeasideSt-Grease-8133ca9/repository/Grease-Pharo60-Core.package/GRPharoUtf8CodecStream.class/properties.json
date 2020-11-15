@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "pmm 2/20/2009 12:27",
+	"super" : "GRPharoConverterCodecStream",
+	"category" : "Grease-Pharo60-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [
+		"Latin1ToUtf8Encodings",
+		"Latin1ToUtf8Map"
+	],
+	"instvars" : [ ],
+	"name" : "GRPharoUtf8CodecStream",
+	"type" : "normal"
+}

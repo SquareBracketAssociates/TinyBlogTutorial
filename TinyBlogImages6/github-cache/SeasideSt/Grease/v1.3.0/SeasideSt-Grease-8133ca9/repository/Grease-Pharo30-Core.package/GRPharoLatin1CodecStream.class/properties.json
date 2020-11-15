@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "<historical>",
+	"super" : "GRNullCodecStream",
+	"category" : "Grease-Pharo30-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "GRPharoLatin1CodecStream",
+	"type" : "normal"
+}

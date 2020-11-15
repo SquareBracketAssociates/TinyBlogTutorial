@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Squeak5-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "<historical>",
+	"instvars" : [
+		"name" ],
+	"name" : "GRPharoLatin1Codec",
+	"pools" : [
+		 ],
+	"super" : "GRNullCodec",
+	"type" : "normal" }

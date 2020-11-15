@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Core-Text",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "pmm 6/25/2012 20:20",
+	"instvars" : [
+		"stream" ],
+	"name" : "GRDelegatingStream",
+	"pools" : [
+		 ],
+	"super" : "GRObject",
+	"type" : "normal" }

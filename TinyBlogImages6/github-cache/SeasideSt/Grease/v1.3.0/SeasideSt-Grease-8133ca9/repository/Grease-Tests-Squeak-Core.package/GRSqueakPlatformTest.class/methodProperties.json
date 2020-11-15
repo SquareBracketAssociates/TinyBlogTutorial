@@ -1,0 +1,11 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"testCompileIntoClassified" : "JohnMcKeon 11/30/2014 22:53",
+		"testFullName" : "JohnMcKeon 11/30/2014 22:53",
+		"testGreaseIntegerOnCharacter" : "JohnMcKeon 11/30/2014 22:53",
+		"testMessageSendValueWithPossibleArguments" : "JohnMcKeon 11/30/2014 22:53",
+		"testWriteToFileInFolderBinary" : "JohnMcKeon 11/30/2014 22:53",
+		"testWriteToFileInFolderText" : "JohnMcKeon 11/30/2014 22:53",
+		"writeToFile:" : "JohnMcKeon 11/30/2014 22:53" } }

@@ -1,0 +1,15 @@
+{
+	"category" : "Grease-Core-Utilities",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "NickAger 3/20/2012 09:04",
+	"instvars" : [
+		"receiver",
+		"message" ],
+	"name" : "GRDelayedSend",
+	"pools" : [
+		 ],
+	"super" : "GRObject",
+	"type" : "normal" }

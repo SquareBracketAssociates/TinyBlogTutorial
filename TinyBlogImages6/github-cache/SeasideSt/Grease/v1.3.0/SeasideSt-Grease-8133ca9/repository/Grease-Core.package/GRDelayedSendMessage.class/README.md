@@ -1,0 +1,1 @@
+GRDelayedSendMessage is an abstract base for objects that provide currying functionality for GRDelayedSend

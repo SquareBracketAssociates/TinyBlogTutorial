@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "GRNotification",
+	"category" : "Grease-Tests-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"foo"
+	],
+	"name" : "GRNotificationStub",
+	"type" : "normal"
+}

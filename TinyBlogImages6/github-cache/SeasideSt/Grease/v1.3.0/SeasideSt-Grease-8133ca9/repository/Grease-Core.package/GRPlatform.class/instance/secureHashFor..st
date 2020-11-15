@@ -1,0 +1,3 @@
+cryptography
+secureHashFor: aString
+	self subclassResponsibility

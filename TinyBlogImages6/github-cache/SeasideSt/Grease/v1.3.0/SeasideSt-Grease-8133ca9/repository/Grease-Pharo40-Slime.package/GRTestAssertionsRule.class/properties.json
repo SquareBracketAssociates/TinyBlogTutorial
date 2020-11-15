@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Pharo40-Slime",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "pmm 8/17/2014 11:24",
+	"instvars" : [
+		 ],
+	"name" : "GRTestAssertionsRule",
+	"pools" : [
+		 ],
+	"super" : "GRSlimeTransformationRule",
+	"type" : "normal" }

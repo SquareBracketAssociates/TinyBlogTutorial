@@ -1,0 +1,13 @@
+{
+	"class" : {
+		"basicForEncoding:" : "pmm 6/28/2009 15:43",
+		"codecs" : "pmm 8/19/2014 10:04",
+		"supportedEncodingNames" : "lr 7/25/2011 19:46",
+		"supportsEncoding:" : "pmm 6/28/2009 16:43" },
+	"instance" : {
+		"converter" : "lr 7/25/2011 19:51",
+		"decoderFor:" : "lr 2/7/2009 12:52",
+		"encoderFor:" : "jf 9/30/2009 00:46",
+		"initializeWithName:" : "pmm 8/16/2010 11:52",
+		"name" : "lr 2/7/2009 10:16",
+		"url" : "lr 2/7/2009 12:36" } }

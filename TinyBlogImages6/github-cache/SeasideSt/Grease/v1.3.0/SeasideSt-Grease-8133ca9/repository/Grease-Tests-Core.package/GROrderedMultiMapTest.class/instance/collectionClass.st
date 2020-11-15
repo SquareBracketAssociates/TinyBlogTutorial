@@ -1,0 +1,3 @@
+configuration
+collectionClass
+	^ GROrderedMultiMap

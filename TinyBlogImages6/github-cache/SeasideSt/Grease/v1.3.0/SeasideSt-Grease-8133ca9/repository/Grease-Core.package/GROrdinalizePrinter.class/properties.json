@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Core-Text",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GROrdinalizePrinter",
+	"pools" : [
+		 ],
+	"super" : "GRPrinter",
+	"type" : "normal" }

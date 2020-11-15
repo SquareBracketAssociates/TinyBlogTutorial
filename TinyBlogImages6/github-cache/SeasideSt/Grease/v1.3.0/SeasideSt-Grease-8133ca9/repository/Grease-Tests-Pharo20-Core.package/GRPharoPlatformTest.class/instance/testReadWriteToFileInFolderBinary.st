@@ -1,0 +1,8 @@
+tests
+testReadWriteToFileInFolderBinary
+	| bytes |
+	bytes := #(80 104 39 110 103 108 117 105 32 109 103 108 119 39 110 97 102 104 32 67 116 104 117 108 104 117 32 82 39 108 121 101 104 32 119 103 97 104 39 110 97 103 108 32 102 104 116 97 103 110) asByteArray.
+	self 
+		writeToFile: bytes 
+		withFileNameDo:[ :fileName |
+			self assert: (bytes = (GRPlatform current contentsOfFile: fileName binary: true)) ] 

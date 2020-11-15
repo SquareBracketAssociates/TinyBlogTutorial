@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-GemStone-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"name" ],
+	"name" : "GRLatin1GemStoneCodec",
+	"pools" : [
+		 ],
+	"super" : "GRCodec",
+	"type" : "normal" }

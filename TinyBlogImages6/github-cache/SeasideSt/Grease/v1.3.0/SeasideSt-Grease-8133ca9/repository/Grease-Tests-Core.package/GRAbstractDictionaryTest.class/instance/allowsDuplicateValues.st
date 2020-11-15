@@ -1,0 +1,3 @@
+configuration
+allowsDuplicateValues
+	^ true

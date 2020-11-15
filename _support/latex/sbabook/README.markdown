@@ -40,7 +40,7 @@ Run `kpsexpand '$TEXMFHOME'` for a suggestion.
 ## Requirements
 
 You need a pretty up-to-date and complete LaTeX distribution, because the class requires LuaLaTeX and some associated packages to compile.
-Just get a full install of the latest [TeXlive release][tl] and you should be good.
+Check the `texlive*.deps` files, or just get a full install of the latest [TeXlive release][tl] and you should be good.
 
 Fonts: the class uses [Gentium Book Basic][gentium], [Open Sans][], and [Fira mono][fira].
 Those are now distributed as part of TeXlive.

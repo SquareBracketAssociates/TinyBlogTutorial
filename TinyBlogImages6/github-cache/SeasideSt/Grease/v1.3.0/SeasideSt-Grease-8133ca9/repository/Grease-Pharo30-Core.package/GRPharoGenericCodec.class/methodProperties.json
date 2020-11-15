@@ -1,0 +1,16 @@
+{
+	"instance" : {
+		"converter" : "lr 7/25/2011 19:51",
+		"decoderFor:" : "lr 2/7/2009 12:52",
+		"url" : "lr 2/7/2009 12:36",
+		"encoderFor:" : "jf 9/30/2009 00:46",
+		"initializeWithName:" : "pmm 8/16/2010 11:52",
+		"name" : "lr 2/7/2009 10:16"
+	},
+	"class" : {
+		"codecs" : "pmm 8/16/2010 00:19",
+		"supportsEncoding:" : "pmm 6/28/2009 16:43",
+		"basicForEncoding:" : "pmm 6/28/2009 15:43",
+		"supportedEncodingNames" : "lr 7/25/2011 19:46"
+	}
+}

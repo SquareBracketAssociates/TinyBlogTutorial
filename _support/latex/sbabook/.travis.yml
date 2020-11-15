@@ -1,18 +1,27 @@
-sudo: required
-services:
-- docker
+version: "~> 1.0"
+env:
+  global:
+    - PATH=$HOME/texlive/bin/x86_64-linux:$PATH
+  jobs:
+    - TEXLIVE_RELEASE=rolling
+    - TEXLIVE_RELEASE=2018
 
-before_install:
-- docker pull dpollet/texlive:base
+install:
+  - ./ci/install-texlive
 
 script:
-- docker run --tty --rm --volume $PWD:/work dpollet/texlive:base latexmk
+  - latexmk
+
+after_failure:
+  - cat sbabook.log
 
 deploy:
-- provider: releases
-  api_key:
-    secure: 0VV/C2lRToLm/PzZd4tVWOGGVjgRi11nj4VRw/D93Y1XTy2IWoyctWg/02OpZ+vzmMjT9dk/V2ZyfsYZT/dTSVT2HVPW8n4HSlBDqHhVaEGEKEd2YxLw/V1yVehco16gAtaDAFCZITW2Kod9hiIRoRTcInkCyT4zKrco6v7XmSY=
-  skip_cleanup: true
-  file: sbabook.pdf
-  on:
-    tags: true
+  - provider: releases
+    edge: true
+    api_key:
+      secure: tOQFCGi5LjrbGVGh22mQmLZvo6aAjw17pj6Hd2mpcgaMGwjNG7gBbvODFfuyCZMorVBwTu5YBk2QSXY9lk0xhmSfZ5XdPAh6foC/vP+y8XZzZV/YsrFR0yltGp6CFL7QtxoTiK3h7VmlD2gM8pgThG3N68Dy/tKxuSEednOOjBI=
+    file: sbabook.pdf
+    on:
+      repo: cdlm/sbabook
+      tags: true
+      condition: $TEXLIVE_RELEASE = rolling

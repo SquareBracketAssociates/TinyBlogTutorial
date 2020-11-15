@@ -1,0 +1,3 @@
+private
+randomClass
+	^ Random

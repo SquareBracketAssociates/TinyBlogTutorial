@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-GemStone300-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"Latin1ToUtf8Encodings" ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GRUtf8CodecStream",
+	"pools" : [
+		 ],
+	"super" : "GRTextOrBinaryCodecStream",
+	"type" : "normal" }

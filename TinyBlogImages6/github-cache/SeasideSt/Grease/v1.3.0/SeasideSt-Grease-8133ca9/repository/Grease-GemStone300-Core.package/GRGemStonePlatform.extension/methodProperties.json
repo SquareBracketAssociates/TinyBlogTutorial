@@ -1,0 +1,9 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"gemstoneExceptionSelector" : "dkh 10/14/2011 17:11",
+		"generateHardBreak" : "dkh 10/14/2011 16:57",
+		"handlesAlmostOutOfStackException:" : "dkh 10/14/2011 17:18",
+		"handlesBreakpointException:" : "dkh 10/14/2011 17:18",
+		"handlesHaltException:" : "dkh 10/14/2011 17:18" } }

@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Pharo20-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "pmm 6/25/2012 20:22",
+	"instvars" : [
+		"converter" ],
+	"name" : "GRPharoConverterCodecStream",
+	"pools" : [
+		 ],
+	"super" : "GRCodecStream",
+	"type" : "normal" }

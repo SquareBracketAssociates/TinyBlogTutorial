@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Pharo40-Slime",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GRUsesMethodAnnotationsRule",
+	"pools" : [
+		 ],
+	"super" : "GRSlimeBlockLintRule",
+	"type" : "normal" }

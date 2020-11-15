@@ -1,0 +1,3 @@
+configuration
+excludedElement
+	^ $Q

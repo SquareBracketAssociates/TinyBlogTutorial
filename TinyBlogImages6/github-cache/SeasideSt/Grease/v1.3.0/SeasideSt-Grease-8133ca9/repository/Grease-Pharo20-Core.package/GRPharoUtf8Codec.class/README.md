@@ -1,0 +1,1 @@
+A WAUtf8Codec is a WACodec optimized for UTF-8.

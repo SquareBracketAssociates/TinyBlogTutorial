@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "GRError",
+	"category" : "Grease-Tests-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"foo"
+	],
+	"name" : "GRErrorStub",
+	"type" : "normal"
+}

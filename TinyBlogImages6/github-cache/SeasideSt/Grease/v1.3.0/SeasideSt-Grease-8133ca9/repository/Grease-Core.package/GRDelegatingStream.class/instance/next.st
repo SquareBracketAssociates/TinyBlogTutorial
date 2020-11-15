@@ -1,0 +1,3 @@
+streaming
+next
+	self subclassResponsibility

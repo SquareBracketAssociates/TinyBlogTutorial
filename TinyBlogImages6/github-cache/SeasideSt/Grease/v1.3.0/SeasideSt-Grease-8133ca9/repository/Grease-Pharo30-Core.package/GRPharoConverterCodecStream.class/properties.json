@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "pmm 6/25/2012 20:22",
+	"super" : "GRCodecStream",
+	"category" : "Grease-Pharo30-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"converter"
+	],
+	"name" : "GRPharoConverterCodecStream",
+	"type" : "normal"
+}

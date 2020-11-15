@@ -1,0 +1,1 @@
+The Inflector transforms words from singular to plural.

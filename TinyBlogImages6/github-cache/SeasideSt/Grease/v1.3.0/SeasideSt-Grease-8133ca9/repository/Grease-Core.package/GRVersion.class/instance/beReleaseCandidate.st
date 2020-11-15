@@ -1,0 +1,3 @@
+convenience
+beReleaseCandidate
+	self beReleaseCandidate: nil

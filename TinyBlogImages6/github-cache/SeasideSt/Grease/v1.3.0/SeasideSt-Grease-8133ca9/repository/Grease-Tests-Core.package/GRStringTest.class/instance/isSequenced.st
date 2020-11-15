@@ -1,0 +1,3 @@
+testing-ansi
+isSequenced
+	^ true

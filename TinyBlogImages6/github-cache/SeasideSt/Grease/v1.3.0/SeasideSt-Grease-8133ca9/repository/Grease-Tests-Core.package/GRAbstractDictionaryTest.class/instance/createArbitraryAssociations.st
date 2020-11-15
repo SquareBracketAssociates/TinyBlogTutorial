@@ -1,0 +1,3 @@
+configuration
+createArbitraryAssociations
+	self subclassResponsibility

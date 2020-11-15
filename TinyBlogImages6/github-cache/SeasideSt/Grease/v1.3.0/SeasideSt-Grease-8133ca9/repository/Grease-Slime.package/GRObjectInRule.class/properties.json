@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Slime",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "pmm 9/12/2009 10:37",
+	"instvars" : [
+		 ],
+	"name" : "GRObjectInRule",
+	"pools" : [
+		 ],
+	"super" : "GRSlimeTransformationRule",
+	"type" : "normal" }

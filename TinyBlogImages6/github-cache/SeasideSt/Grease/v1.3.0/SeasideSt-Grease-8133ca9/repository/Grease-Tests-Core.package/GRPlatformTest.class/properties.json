@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "pmm 8/19/2014 09:53",
+	"super" : "TestCase",
+	"category" : "Grease-Tests-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "GRPlatformTest",
+	"type" : "normal"
+}

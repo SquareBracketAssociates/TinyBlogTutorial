@@ -1,0 +1,15 @@
+{
+	"category" : "Grease-Pharo20-Core",
+	"classinstvars" : [
+		"mutex",
+		"generator" ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GRPharoRandomProvider",
+	"pools" : [
+		 ],
+	"super" : "GRObject",
+	"type" : "normal" }

@@ -1,0 +1,16 @@
+{
+	"instance" : {
+		"allowsDuplicateValues" : "jf 2/6/2010 04:22",
+		"isInitializable" : "jf 2/9/2010 11:29",
+		"emptyCollection" : "jf 2/6/2010 02:50",
+		"isSequenced" : "jf 2/6/2010 04:03",
+		"collectionClass" : "jf 2/6/2010 02:48",
+		"isUnique" : "jok 3/29/2010 13:03",
+		"testEndsWithSubCollection" : "pmm 9/1/2012 15:24",
+		"arbitraryCollection" : "jf 2/6/2010 02:49",
+		"isHomogeneous" : "jok 3/29/2010 13:22",
+		"testBeginsWithSubCollection" : "pmm 9/1/2012 15:24",
+		"isExtensible" : "jf 2/6/2010 03:35"
+	},
+	"class" : { }
+}

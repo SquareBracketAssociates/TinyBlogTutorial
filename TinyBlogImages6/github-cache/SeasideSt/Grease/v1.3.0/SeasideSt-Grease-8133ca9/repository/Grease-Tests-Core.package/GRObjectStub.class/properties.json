@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "GRObject",
+	"category" : "Grease-Tests-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"foo"
+	],
+	"name" : "GRObjectStub",
+	"type" : "normal"
+}

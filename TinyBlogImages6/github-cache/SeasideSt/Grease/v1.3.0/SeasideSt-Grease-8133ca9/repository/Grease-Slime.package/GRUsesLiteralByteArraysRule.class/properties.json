@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Slime",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GRUsesLiteralByteArraysRule",
+	"pools" : [
+		 ],
+	"super" : "GRSlimeParseTreeLintRule",
+	"type" : "normal" }

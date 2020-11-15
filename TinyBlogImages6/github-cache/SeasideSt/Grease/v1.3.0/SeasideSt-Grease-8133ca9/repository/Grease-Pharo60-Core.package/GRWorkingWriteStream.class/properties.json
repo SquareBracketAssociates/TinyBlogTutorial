@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "pmm 8/25/2011 18:30",
+	"super" : "WriteStream",
+	"category" : "Grease-Pharo60-Core",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "GRWorkingWriteStream",
+	"type" : "normal"
+}

@@ -1,0 +1,3 @@
+exceptions
+deprecationExceptionSet
+	^ ExceptionSet new

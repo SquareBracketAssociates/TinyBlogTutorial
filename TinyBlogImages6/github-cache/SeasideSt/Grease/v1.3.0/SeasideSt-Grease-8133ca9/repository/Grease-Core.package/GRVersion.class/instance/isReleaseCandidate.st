@@ -1,0 +1,3 @@
+testing
+isReleaseCandidate
+	^ stageLabel = #rc

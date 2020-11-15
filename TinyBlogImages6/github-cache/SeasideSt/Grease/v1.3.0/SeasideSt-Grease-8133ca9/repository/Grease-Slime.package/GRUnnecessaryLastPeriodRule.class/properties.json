@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Slime",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GRUnnecessaryLastPeriodRule",
+	"pools" : [
+		 ],
+	"super" : "GRSlimeBlockLintRule",
+	"type" : "normal" }

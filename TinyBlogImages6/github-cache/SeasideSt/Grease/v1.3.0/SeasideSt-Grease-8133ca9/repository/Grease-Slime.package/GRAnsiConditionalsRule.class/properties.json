@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Slime",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GRAnsiConditionalsRule",
+	"pools" : [
+		 ],
+	"super" : "GRSlimeTransformationRule",
+	"type" : "normal" }

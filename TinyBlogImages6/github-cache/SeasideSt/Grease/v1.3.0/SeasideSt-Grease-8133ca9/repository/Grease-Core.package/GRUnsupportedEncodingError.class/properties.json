@@ -1,0 +1,14 @@
+{
+	"category" : "Grease-Core-Text",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GRUnsupportedEncodingError",
+	"pools" : [
+		 ],
+	"super" : "GRError",
+	"type" : "normal" }

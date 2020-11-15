@@ -1,0 +1,3 @@
+exceptions
+openDebuggerOn: anError
+	self subclassResponsibility
