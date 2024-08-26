@@ -1,14 +1,14 @@
 ## Une interface REST pour TinyBlog
 
 
-Ce chapitre décrit comment doter notre application TinyBlog d'une interface REST \(REpresentational State Transfer\).
+Ce chapitre décrit comment doter notre application TinyBlog d'une interface REST (REpresentational State Transfer).
 Le code est placé dans un package `'TinyBlog-Rest'` car l'utilisation de REST est optionnelle.
 Les tests seront dans le package `'TinyBlog-Rest-Tests'`.
 
 ### Notions de base sur REST
 
 
-REST se base sur les verbes HTTP pour décrire l'accès aux ressources HTTP \(https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html\). Les principaux verbes ont la signification suivante:
+REST se base sur les verbes HTTP pour décrire l'accès aux ressources HTTP (https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html). Les principaux verbes ont la signification suivante:
 
 - GET pour lire une ressource,
 - POST pour créer une nouvelle ressource,
@@ -20,7 +20,7 @@ Les ressources sont définies à l'aide des URL qui pointent sur une entité. Le
 
 Une autre notion importante est le respect des formats de données acceptés par le client et par le serveur. Lorsqu'un client REST émet une requête vers un serveur REST, il précise dans l'en-tête de la requête HTTP la liste des types de données qu'il est capable de gérer. Le serveur REST se doit de répondre dans un format compréhensible par le client et si cela n'est pas possible, de préciser au client qu'il n'est pas capable de lui répondre.
 
-La réussite ou l'échec d'une opération est basée sur les codes de statut du protocole HTTP \(https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\). Par exemple, si une opération réussit, le serveur doit répondre un code 200 \(OK\). De même, si une ressource demandée par le client n'existe pas, il doit retourner un code 404 \(Not Found\). Il est très important de respecter la signification de ces codes de statut afin de mettre en place un dialogue compréhensible et normalisé entre le client et le serveur.
+La réussite ou l'échec d'une opération est basée sur les codes de statut du protocole HTTP (https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html). Par exemple, si une opération réussit, le serveur doit répondre un code 200 (OK). De même, si une ressource demandée par le client n'existe pas, il doit retourner un code 404 (Not Found). Il est très important de respecter la signification de ces codes de statut afin de mettre en place un dialogue compréhensible et normalisé entre le client et le serveur.
 
 ### Définir un filtre REST
 
@@ -74,7 +74,7 @@ A partir de maintenant, nous pouvons commencer à implémenter les différents s
 
 Le premier service proposé sera destiné à récupérer la liste des posts. Il s'agit d'une opération de lecture et elle utilisera donc le verbe GET du protocole HTTP. La réponse sera produite au format JSON. La méthode `listAll` est marquée comme étant un point d'entrée REST à l'aide des annotations `<get>` et `<produces:>`.
 
-Si le client interroge le serveur à l'aide de l'URL `http://localhost:8080/TinyBlog/listAll`, la méthode `listAll` est appelée. Celle-ci retourne les données selon le type MIME \(Multipurpose Internet Mail Extensions\) spécifié par l'annotation `<produces:>`.
+Si le client interroge le serveur à l'aide de l'URL `http://localhost:8080/TinyBlog/listAll`, la méthode `listAll` est appelée. Celle-ci retourne les données selon le type MIME (Multipurpose Internet Mail Extensions) spécifié par l'annotation `<produces:>`.
 
 ```
 TBRestfulFilter >> listAll
@@ -102,7 +102,7 @@ TBRestfulFilter >> listAll
 
 Maintenant que nous avons défini le point d'entrée, nous pouvons implémenter la partie métier du service `listAll`. C'est à dire le code chargé de construire la liste des posts contenus dans la base. Une représentation astucieuse d'un service peut être réalisée à l'aide des objets. Chaque service REST sera contenu dans un object distinct. Ceci facilitera grandement la maintenance et la compréhension du code.
 
-La méthode `listAll` ci-dessous fait maintenant appel au service adéquat, nommé TBRestServiceListAll. Il est nécessaire de transmettre le contexte d'exécution de Seaside à l'instance de cet objet. Ce contexte est l'ensemble des informations transmises par le client REST \(variables d'environnement HTTP ainsi que les flux d'entrée/sortie de Seaside\).
+La méthode `listAll` ci-dessous fait maintenant appel au service adéquat, nommé TBRestServiceListAll. Il est nécessaire de transmettre le contexte d'exécution de Seaside à l'instance de cet objet. Ce contexte est l'ensemble des informations transmises par le client REST (variables d'environnement HTTP ainsi que les flux d'entrée/sortie de Seaside).
 
 ```
 TBRestfulFilter >> listAll
@@ -162,7 +162,7 @@ TBRestService >> execute
 
 Tous les services REST de TinyBlog doivent être capables de retourner une réponse au client et de lui préciser le format des données utilisé. Vous devez donc ajouter une méthode pour faire cela. Il s'agit de la méthode `dataType:with:`. Le premier paramètre sera le type MIME utilisé et le second, contiendra les données transmises au client. 
 La méthode insère ces informations dans le flux de réponses fournit par Seaside. 
-La méthode `greaseString` appliquée sur le type de données permet d'obtenir une représentation du type MIME sous la forme d'une chaine de caractères \(par exemple: "application/json"\).
+La méthode `greaseString` appliquée sur le type de données permet d'obtenir une représentation du type MIME sous la forme d'une chaine de caractères (par exemple: "application/json").
 
 ```
 TBRestService >> dataType: aDataType with: aResultSet
@@ -338,7 +338,7 @@ Cette méthode permet la gestion des caractères spéciaux tels que l'espace ou 
 Si vous cherchez un post ayant pour titre "La reproduction des hippocampes", le service REST recevra en fait la chaîne de caractères "La%20reproduction%20des%20hippocampes" et une recherche avec celle ci ne fonctionnera pas car aucun titre de post ne coïncidera. 
 Il faut donc nettoyer la chaîne de caractères en remplaçant les caractères spéciaux avant de lancer la recherche.
 
-Un autre point important est la gestion des codes d'erreur HTTP. Lorsqu'un serveur HTTP répond à son client, il glisse dans l'en-tête de la réponse une valeur numérique qui fournit au client de précieuses informations sur le résultat attendu. Si la réponse contient le code 200, c'est que tout s'est correctement passé et qu'un résultat est fourni au client \(c'est d'ailleurs la valeur par défaut dans Seaside/Rest\). Mais parfois, un problème survient. Par exemple, la requête demande à accéder à une ressource qui n'existe pas. Dans ce cas, il est nécessaire de retourner un code 404 \(Not Found\) pour l'indiquer au client. Un code 500 va indiquer qu'une erreur d'exécution a été rencontrée par le service. Vous trouverez la liste exhaustive des codes d'erreur sur la page décrivant le protocole HTTP \(https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\). Il est très important de les gérer correctement tant au niveau de votre service REST qu'au sein de votre client REST car c'est ce qui va permettre à la couche cliente de réagir à bon escient en fonction du résultat du traitement exécuté par le serveur.
+Un autre point important est la gestion des codes d'erreur HTTP. Lorsqu'un serveur HTTP répond à son client, il glisse dans l'en-tête de la réponse une valeur numérique qui fournit au client de précieuses informations sur le résultat attendu. Si la réponse contient le code 200, c'est que tout s'est correctement passé et qu'un résultat est fourni au client (c'est d'ailleurs la valeur par défaut dans Seaside/Rest). Mais parfois, un problème survient. Par exemple, la requête demande à accéder à une ressource qui n'existe pas. Dans ce cas, il est nécessaire de retourner un code 404 (Not Found) pour l'indiquer au client. Un code 500 va indiquer qu'une erreur d'exécution a été rencontrée par le service. Vous trouverez la liste exhaustive des codes d'erreur sur la page décrivant le protocole HTTP (https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html). Il est très important de les gérer correctement tant au niveau de votre service REST qu'au sein de votre client REST car c'est ce qui va permettre à la couche cliente de réagir à bon escient en fonction du résultat du traitement exécuté par le serveur.
 
 Notre serveur web de recherche par titre est pratiquement terminé. Il nous reste maintenant à modifier le point d'entrée du service pour qu'il soit capable d'appeler le code métier associé.
 
@@ -435,7 +435,7 @@ TBRestfulFilter >> searchDateFrom: beginString to: endString
 ```
 
 
-A l'aide d'une URL telle que http://localhost:8080/TinyBlog/posts/search?begin=2017/1/1&end=2017/3/30, vous pouvez tester votre nouveau service REST \(bien évidemment, les dates doivent être adaptées en fonction du contenu de votre base de test\).
+A l'aide d'une URL telle que http://localhost:8080/TinyBlog/posts/search?begin=2017/1/1&end=2017/3/30, vous pouvez tester votre nouveau service REST (bien évidemment, les dates doivent être adaptées en fonction du contenu de votre base de test).
 
 ### Ajouter un post
 
@@ -462,7 +462,7 @@ TBRestService subclass: #TBRestServiceAddPost
 ```
 
 
-Seule la méthode `execute` doit être implémentée. Elle lit le flux de données et le parse à l'aide de la méthode de classe `fromString:` de l'objet `NeoJSONReader`. Les données sont stockées dans un dictionnaire contenu dans la variable local `post`. Il suffit ensuite d'instancier un `TBPost` et de le sauver dans la base de données. Par sécurité, l'ensemble de ce processus est réalisé au sein d'une exception afin d'intercepter un problème d'exécution qui pourrait rendre instable le serveur. La dernière opération consiste à renvoyer au client un résultat vide mais aussi et surtout un code HTTP 200 \(OK\) signalant que le post a bien été créé. En cas d'erreur, c'est le message d'erreur 400 \(BAD REQUEST\) qui est retourné.
+Seule la méthode `execute` doit être implémentée. Elle lit le flux de données et le parse à l'aide de la méthode de classe `fromString:` de l'objet `NeoJSONReader`. Les données sont stockées dans un dictionnaire contenu dans la variable local `post`. Il suffit ensuite d'instancier un `TBPost` et de le sauver dans la base de données. Par sécurité, l'ensemble de ce processus est réalisé au sein d'une exception afin d'intercepter un problème d'exécution qui pourrait rendre instable le serveur. La dernière opération consiste à renvoyer au client un résultat vide mais aussi et surtout un code HTTP 200 (OK) signalant que le post a bien été créé. En cas d'erreur, c'est le message d'erreur 400 (BAD REQUEST) qui est retourné.
 
 ```
 TBRestServiceAddPost >> execute
@@ -500,14 +500,14 @@ Au fil de ce chapitre, vous avez implémenté les principales briques d'une API 
 #### Modifier un post existant
 
 
-La modification d'un post existant peut facilement être réalisée. Il vous suffit d'implémenter un service REST utilisant le verbe HTTP `PUT` et d'encoder votre post avec la même structure que celle utilisée pour la création d'un post \(service `addPost`\). L'exercice consiste ici à implémenter correctement la gestion des codes d'erreurs HTTP. De nombreux cas sont possibles.
+La modification d'un post existant peut facilement être réalisée. Il vous suffit d'implémenter un service REST utilisant le verbe HTTP `PUT` et d'encoder votre post avec la même structure que celle utilisée pour la création d'un post (service `addPost`). L'exercice consiste ici à implémenter correctement la gestion des codes d'erreurs HTTP. De nombreux cas sont possibles.
 
-- 200 \(OK\) ou 201 \(CREATED\) si l'opération a réussi,
-- 204 \(NO CONTENT\) si la requête ne contient pas de données,
-- 304 \(NOT MODIFIED\) si aucun changement ne doit être appliqué \(le contenu du post est identique\),
-- 400 \(BAD REQUEST\) si les données transmises par le client sont incorrectes,
-- 404 \(NOT FOUND\) si le post devant être modifié n'existe pas,
-- 500 \(INTERNAL SERVER ERROR\) si un problème survient lors de la création du post dans la base de données.
+- 200 (OK) ou 201 (CREATED) si l'opération a réussi,
+- 204 (NO CONTENT) si la requête ne contient pas de données,
+- 304 (NOT MODIFIED) si aucun changement ne doit être appliqué (le contenu du post est identique),
+- 400 (BAD REQUEST) si les données transmises par le client sont incorrectes,
+- 404 (NOT FOUND) si le post devant être modifié n'existe pas,
+- 500 (INTERNAL SERVER ERROR) si un problème survient lors de la création du post dans la base de données.
 
 
 #### Supprimer un post

@@ -7,12 +7,12 @@ Pour l'administrateur du blog, il est utile de proposer des fonctionnalités d'e
 ### Exporter un article en PDF
 
 
-Le format PDF \(Portable Document Format\) a été créé par la société Adobe en 1992. C'est un langage de description de pages permettant de spécifier la mise en forme d'un document ainsi que son contenu. Il est particulièrement utile pour concevoir des documents électroniques, des eBooks et dans le cadre de l'impression puisqu'un document PDF conserve sa mise en forme lorsqu'il est imprimé. Vous allez justement mettre à profit cette propriété en ajoutant à TinyBlog la possibilité d'exporter un post sous la forme d'un fichier PDF.
+Le format PDF (Portable Document Format) a été créé par la société Adobe en 1992. C'est un langage de description de pages permettant de spécifier la mise en forme d'un document ainsi que son contenu. Il est particulièrement utile pour concevoir des documents électroniques, des eBooks et dans le cadre de l'impression puisqu'un document PDF conserve sa mise en forme lorsqu'il est imprimé. Vous allez justement mettre à profit cette propriété en ajoutant à TinyBlog la possibilité d'exporter un post sous la forme d'un fichier PDF.
 
 #### Artefact
 
 
-La construction d'un document PDF avec Pharo est grandement simplifiée à l'aide d'un framework nommé Artefact \([https://sites.google.com/site/artefactpdf/](https://sites.google.com/site/artefactpdf/)\). Pour l'installer, il vous suffit de le sélectionner dans le catalogue Pharo. 
+La construction d'un document PDF avec Pharo est grandement simplifiée à l'aide d'un framework nommé Artefact ([https://sites.google.com/site/artefactpdf/](https://sites.google.com/site/artefactpdf/)). Pour l'installer, il vous suffit de le sélectionner dans le catalogue Pharo. 
 
 #### Intégrer l'exportation dans la liste des posts
 
@@ -154,7 +154,7 @@ La figure *@pdfResult@* montre le résultat d'un export en PDF d'un bulletin.
 ### Exportation des posts au format CSV
 
 
-Vous allez poursuivre l'amélioration de TinyBlog en ajoutant une option dans la partie "Administration" de l'application. Celle ci doit permettre l'exportation de l'ensemble des billets du blog dans un fichier CSV. Ce format \(Comma-separated values\) est un format bien connu des utilisateurs de tableurs qui l'exploitent souvent pour importer ou exporter des données. Il s'agit d'un fichier texte dans lequel les données sont formatés et distinctes les unes des autres à l'aide d'un caractère séparateur qui est le plus souvent une virgule. Le fichier est donc composé de lignes et chacune d'entre elles contient un nombre identique de colonnes. Une ligne se termine par un caractère de fin de ligne \(CRLF\).
+Vous allez poursuivre l'amélioration de TinyBlog en ajoutant une option dans la partie "Administration" de l'application. Celle ci doit permettre l'exportation de l'ensemble des billets du blog dans un fichier CSV. Ce format (Comma-separated values) est un format bien connu des utilisateurs de tableurs qui l'exploitent souvent pour importer ou exporter des données. Il s'agit d'un fichier texte dans lequel les données sont formatés et distinctes les unes des autres à l'aide d'un caractère séparateur qui est le plus souvent une virgule. Le fichier est donc composé de lignes et chacune d'entre elles contient un nombre identique de colonnes. Une ligne se termine par un caractère de fin de ligne (CRLF).
 
 Pour gérer le format CSV dans Pharo, vous disposez du framework NeoCSV installable à l'aide du catalogue.
 
@@ -237,7 +237,7 @@ TBPostsCSVExport >> sendPostsToCSVFrom: aBlog to: anHTTPContext
 ```
 
 
-La partie importante de la méthode utilise NeoCSV pour insérer dans le flux de sortie chaque billet converti au format CSV. Le titre, la date de publication et le contenu du billet sont séparés par une virgule. Lorsque cela est necessaire \(titre et contenu\), NeoCSV utilise des guillemets pour indiquer que la donnée est une chaine de caractères. La méthode `nextPut:` permet d'insérer au début du fichier les noms des colonnes. La méthode `addObjectFields:` sélectionne les données ajoutées au fichier et récoltées à l'aide de la méthode `allBlogPosts`.
+La partie importante de la méthode utilise NeoCSV pour insérer dans le flux de sortie chaque billet converti au format CSV. Le titre, la date de publication et le contenu du billet sont séparés par une virgule. Lorsque cela est necessaire (titre et contenu), NeoCSV utilise des guillemets pour indiquer que la donnée est une chaine de caractères. La méthode `nextPut:` permet d'insérer au début du fichier les noms des colonnes. La méthode `addObjectFields:` sélectionne les données ajoutées au fichier et récoltées à l'aide de la méthode `allBlogPosts`.
 
 ```
 	outputStream nextPutAll: (String streamContents: [ :stream | 
@@ -252,7 +252,7 @@ La partie importante de la méthode utilise NeoCSV pour insérer dans le flux de
 ```
 
 
-Il ne vous reste plus qu'à transmettre les données au navigateur du poste client. Pour cela, il vous faut produire une réponse dans le contexte HTTP de la requête. Le type MIME \(text/csv\) et l'encodage \(UTF-8\) sont déclarés au navigateur. La méthode `attachmentWithFileName:` permet de spécifier un nom de fichier au navigateur.
+Il ne vous reste plus qu'à transmettre les données au navigateur du poste client. Pour cela, il vous faut produire une réponse dans le contexte HTTP de la requête. Le type MIME (text/csv) et l'encodage (UTF-8) sont déclarés au navigateur. La méthode `attachmentWithFileName:` permet de spécifier un nom de fichier au navigateur.
 
 ```
 	anHTTPContext respond: [:response | 
@@ -345,7 +345,7 @@ La message `enabledPrettyPrinting` modifie le comportement du générateur XML e
 Ceci facilite la lecture d'un fichier XML par un être humain. 
 Si le document généré est volumineux, ne pas utiliser cette option permet de réduire la taille des données.
 
-Vous pouvez maintenant formater les données en XML. La message `xml` permet d'insérer une en-tête au tout début des données. Chaque billet est placé au sein d'une balise `post` et l'ensemble des billets est stocké au sein de la balise `posts`. Pour celle ci, un espace de nommage `TinyBlog` est défini et pointe sur le domaine `pharo.org`. Chaque balise `post` est définie au sein du parcours de la collection retournée par la méthode `allBlogPosts`. Le titre est conservé tel quel, par contre la date est convertie au format anglosaxon \(year-month-day\). Notez le traitement particulier appliqué sur le texte du billet. Celui ci est encadré par une section `CDATA` afin de gérer correctement les caractères spéciaux pouvant s'y trouver \(retour à la ligne, lettres accentuées, etc.\).
+Vous pouvez maintenant formater les données en XML. La message `xml` permet d'insérer une en-tête au tout début des données. Chaque billet est placé au sein d'une balise `post` et l'ensemble des billets est stocké au sein de la balise `posts`. Pour celle ci, un espace de nommage `TinyBlog` est défini et pointe sur le domaine `pharo.org`. Chaque balise `post` est définie au sein du parcours de la collection retournée par la méthode `allBlogPosts`. Le titre est conservé tel quel, par contre la date est convertie au format anglosaxon (year-month-day). Notez le traitement particulier appliqué sur le texte du billet. Celui ci est encadré par une section `CDATA` afin de gérer correctement les caractères spéciaux pouvant s'y trouver (retour à la ligne, lettres accentuées, etc.).
 
 ```
 xml writeWith: [ :writer | 

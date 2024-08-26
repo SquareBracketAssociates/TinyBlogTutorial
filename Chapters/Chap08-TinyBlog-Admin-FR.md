@@ -18,13 +18,13 @@ La figure *@ApplicationAdmin@* montre un aperçu de l'architecture visée dans c
 ### Décrire les données métiers avec Magritte
 
 
-Magritte est une bibliothèque qui permet une fois les données décrites de générer diverses représentations ou opérations \(telles des requêtes\). 
+Magritte est une bibliothèque qui permet une fois les données décrites de générer diverses représentations ou opérations (telles des requêtes). 
 Couplé avec Seaside, Magritte permet de générer des formulaires et des rapports.  
-Le logiciel Quuve de la société Debris Publishing est un brillant exemple de la puissance de Magritte: tous les tableaux sont automatiquement générés \(voir [http://www.pharo.org/success](http://www.pharo.org/success)\). 
+Le logiciel Quuve de la société Debris Publishing est un brillant exemple de la puissance de Magritte: tous les tableaux sont automatiquement générés (voir [http://www.pharo.org/success](http://www.pharo.org/success)). 
 La validation des données est aussi définie au niveau de Magritte au lieu d'être dispersée dans le code de l'interface graphique. 
 Ce chapitre ne montre pas cet aspect.
 
-Un chapitre dans le livre sur Seaside \([http://book.seaside.st](http://book.seaside.st)\) est disponible sur Magritte ainsi qu'un tutoriel en cours d'écriture sur [https://github.com/SquareBracketAssociates/Magritte](https://github.com/SquareBracketAssociates/Magritte).
+Un chapitre dans le livre sur Seaside ([http://book.seaside.st](http://book.seaside.st)) est disponible sur Magritte ainsi qu'un tutoriel en cours d'écriture sur [https://github.com/SquareBracketAssociates/Magritte](https://github.com/SquareBracketAssociates/Magritte).
 
 Une description est un objet qui spécifie des informations sur des données de notre modèle comme son type, si une donnée est obligatoire, 
 si elle doit être triée, ou quelle est sa valeur par défaut.
@@ -130,7 +130,7 @@ Toutefois, nous pensons que distinguer le composant d'administration du rapport 
 
 
 La liste des posts est affichée à l'aide d'un rapport généré dynamiquement par le framework Magritte.
- Nous utilisons ce framework pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog \(liste des posts, création, édition et suppression d'un post\).
+ Nous utilisons ce framework pour réaliser les différentes fonctionnalités de la partie administration de TinyBlog (liste des posts, création, édition et suppression d'un post).
 
 Pour rester modulaire, nous allons créer un composant Seaside pour cette tâche. Le composant `TBPostsReport` étend la 
 classe `TBSMagritteReport` qui gére les rapports avec Bootstrap.
@@ -180,7 +180,7 @@ TBAdminComponent >> report: aReport
 
 
 Comme le rapport est un composant fils du composant admin nous n'oublions pas de redéfinir la méthode `children` comme suit.
-Notez que la collection contient à la fois les sous-composants définis dans la super-classe \(le composant en-tête\) et ceux dans la classe courante \(le composant rapport\).
+Notez que la collection contient à la fois les sous-composants définis dans la super-classe (le composant en-tête) et ceux dans la classe courante (le composant rapport).
 
 ```
 TBAdminComponent >> children
@@ -250,7 +250,7 @@ La figure *@RapportV1@* montre ce que vous devez obtenir dans votre navigateur.
 Le rapport généré est brut. Il n'y a pas de titres sur les colonnes et l'ordre d'affichage des colonnes n'est pas fixé.
 Celui-ci peut varier d'une instance à une autre. 
 Pour gérer cela, il suffit de modifier les descriptions Magritte pour chaque variable d'instance.
-Nous spécifions une priorité et un titre \(message `label:`\) comme suit : 
+Nous spécifions une priorité et un titre (message `label:`) comme suit : 
 
 ```
 TBPost >> descriptionTitle
@@ -315,8 +315,8 @@ Vous devez obtenir la situation telle que représentée par la figure *@adminRep
 ### Administration des bulletins
 
 
-Nous pouvons maintenant mettre en place un CRUD \(Create Read Update Delete\) permettant de gérer les bulletins.
-Pour cela, nous allons ajouter une colonne \(instance `MACommandColumn`\) au rapport qui regroupera les différentes opérations en utilisant `addCommandOn:`. 
+Nous pouvons maintenant mettre en place un CRUD (Create Read Update Delete) permettant de gérer les bulletins.
+Pour cela, nous allons ajouter une colonne (instance `MACommandColumn`) au rapport qui regroupera les différentes opérations en utilisant `addCommandOn:`. 
 Cette méthode permet de définir un lien qui déclenchera l'exécution d'une méthode de l'objet courant lorsqu'il sera cliqué grâce à un callback.
 
 Ceci se fait lors de la création du rapport. 
@@ -369,7 +369,7 @@ Par ailleurs, cette méthode est un peu longue et elle ne permet pas de separer 
 ### Gérer l'ajout d'un bulletin
 
 
-L'ajout \(add\) est dissocié des bulletins et se trouvera donc juste avant le rapport. 
+L'ajout (add) est dissocié des bulletins et se trouvera donc juste avant le rapport. 
 Etant donné qu'il fait partie du composant `TBPostsReport`, nous devons redéfinir la méthode `renderContentOn:` du composant `TBPostsReport` pour insérer le lien `add`.
 
 
@@ -390,9 +390,9 @@ Identifiez-vous à nouveau et vous devez obtenir la situation telle que représe
 ### Implémentation des actions CRUD
 
 
-A chaque action \(Create/Read/Update/Delete\) correspond une méthode de l'objet `TBPostsReport`. 
+A chaque action (Create/Read/Update/Delete) correspond une méthode de l'objet `TBPostsReport`. 
 Nous allons maintenant les implémenter. 
-Un formulaire personnalisé est construit en fonction de l'opération demandée \(il n'est pas utile par exemple d'avoir un bouton "Sauver" alors que l'utilisateur veut simplement lire le post\).
+Un formulaire personnalisé est construit en fonction de l'opération demandée (il n'est pas utile par exemple d'avoir un bouton "Sauver" alors que l'utilisateur veut simplement lire le post).
 
 ### Ajouter un bulletin
 
@@ -421,7 +421,7 @@ TBPostsReport >> addPost
 
 
  On voit une fois encore l'utilisation du message `call:` pour donner la main à un composant.
-Le lien pour ajouter un bulletin permet maintenant d'afficher un formulaire de création que nous rendrons plus présentable \(Voir figure *@AffichePostRaw@*\).
+Le lien pour ajouter un bulletin permet maintenant d'afficher un formulaire de création que nous rendrons plus présentable (Voir figure *@AffichePostRaw@*).
 
 
 ![Affichage rudimentaire d'un bulletin.](figures/AffichePostRaw.png width=75&label=AffichePostRaw)
@@ -628,4 +628,4 @@ Par exemple, le formulaire d'édition d'un post doit maintenant ressembler à ce
 Nous avons mis en place la partie administration de TinyBlog sous la forme d'un rapport des bulletins contenus dans le blog courant. 
 Nous avons également ajouté des liens permettant une gestion CRUD de chaque bulletin. 
 Nous avons réalisé tout cela en utilisant Magritte. 
-En effet, nous avons ajouté des descriptions sur les bulletins et généré des composants Seaside \(des formulaires\) à partir de ces descriptions.
+En effet, nous avons ajouté des descriptions sur les bulletins et généré des composants Seaside (des formulaires) à partir de ces descriptions.

@@ -88,7 +88,7 @@ Pour ajouter des élément dans le bas de page, vous allez utiliser certaines fo
 
 Le premier modèle doit afficher les principales technologies utilisées dans TinyBlog. Pour cela, définissez une méthode `renderPoweredByOn:` dans la classe `TBPostListComponent`. Un dictionaire contient les données qui sont insérées au sein du modèle. Celui-ci est défini par une chaîne de caractères dans laquelle les éléments devant être substitués sont encadrés par les caractères "\{{" et "\}}". 
 
-Par défaut, Mustache utilise les caractères spéciaux d'HTML pour assurer un rendu web optimal \(par exemple `<b>Pharo</b>` est transformé en `&lt;b&gt;Pharo&lt;/b&gt;`. Si vous ne voulez pas les utiliser, vous devez encadrer les éléments par les caractères `{{{` et `}}}`.
+Par défaut, Mustache utilise les caractères spéciaux d'HTML pour assurer un rendu web optimal (par exemple `<b>Pharo</b>` est transformé en `&lt;b&gt;Pharo&lt;/b&gt;`. Si vous ne voulez pas les utiliser, vous devez encadrer les éléments par les caractères `{{{` et `}}}`.
 
 ```
 TBPostListComponent >> renderPoweredByOn: html

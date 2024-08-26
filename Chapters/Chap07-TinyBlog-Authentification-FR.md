@@ -8,7 +8,7 @@ La figure *@ApplicationArchitectureAdminHeader@* montre un aperçu de l'architec
 ![Gérant l'authentification pour accéder à l'administration.](figures/ApplicationArchitectureAdminHeader.pdf width=75&label=ApplicationArchitectureAdminHeader)
 
 Nous commençons par mettre en place une première version permettant de naviguer entre la partie publique TinyBlog rendue par le composant
-gérant la liste des bulletins \(`TBPostsListComponent`\) et une première version de la partie d'administration du site comme sur la figure *@SimpleAdminLink@*.
+gérant la liste des bulletins (`TBPostsListComponent`) et une première version de la partie d'administration du site comme sur la figure *@SimpleAdminLink@*.
 Cela va nous permettre d'illustrer l'invocation de composant.
 
 Nous intègrerons ensuite un composant d'identification sous la forme d'une boîte modale.
@@ -16,7 +16,7 @@ Cela va nous permettre d'illustrer comment la saisie de champs utilise de maniè
 
 Enfin, nous montrerons aussi comment stocker l'utilisateur connecté dans la session courante.
 
-### Composant d'administration simple \(v1\)
+### Composant d'administration simple (v1)
 
 
 Définissons un composant d'administration très simple. Ce composant hérite de la classe `TBScreenComponent` comme mentionné dans un chapitre précédent et illustré dans la figure *@ApplicationArchitectureAdminHeader@*.
@@ -43,8 +43,8 @@ TBAdminComponent >> renderContentOn: html
 ### Ajout d'un bouton 'admin'
 
 
-Ajoutons maintenant un bouton dans l'en-tête du site \(composant `TBHeaderComponent`\) afin d'accéder à la partie administration du site comme sur la figure *@SimpleAdminLink@*.
-Pour cela, modifions les composants existants: `TBHeaderComponent` \(en-tête\) et `TBPostsListComponent` \(partie publique\).
+Ajoutons maintenant un bouton dans l'en-tête du site (composant `TBHeaderComponent`) afin d'accéder à la partie administration du site comme sur la figure *@SimpleAdminLink@*.
+Pour cela, modifions les composants existants: `TBHeaderComponent` (en-tête) et `TBPostsListComponent` (partie publique).
 
 ![Lien simple vers la partie administration.](figures/SimpleAdminLink.png width=100&label=SimpleAdminLink)
 
@@ -77,15 +77,15 @@ TBHeaderComponent >> renderSimpleAdminButtonOn: html
 ```
 
 
-Si vous rafraichissez votre navigateur, le bouton admin est bien présent mais il n'a aucun effet pour l'instant \(voir la figure *@withAdminView1@*\).
-Il faut définir un `callback:` sur ce bouton \(un bloc\) qui remplace le composant courant \(`TBPostsListComponent`\) par le composant d'administration \(`TBAdminComponent`\).
+Si vous rafraichissez votre navigateur, le bouton admin est bien présent mais il n'a aucun effet pour l'instant (voir la figure *@withAdminView1@*).
+Il faut définir un `callback:` sur ce bouton (un bloc) qui remplace le composant courant (`TBPostsListComponent`) par le composant d'administration (`TBAdminComponent`).
 
 ![Barre de navigation avec un button admin.](figures/withAdminView1.png width=80&label=withAdminView1)
 
 ### Revisons la barre de navigation
 
 
-Commençons par réviser la définition de `TBHeaderComponent` en lui ajoutant une variable d'instance `component` pour stocker et accéder au composant courant \(qui sera soit la liste de bulletins, soit le composant d'administration\). Ceci va nous permettre de pouvoir accéder au composant depuis la barre de navigation :
+Commençons par réviser la définition de `TBHeaderComponent` en lui ajoutant une variable d'instance `component` pour stocker et accéder au composant courant (qui sera soit la liste de bulletins, soit le composant d'administration). Ceci va nous permettre de pouvoir accéder au composant depuis la barre de navigation :
 
 ```
 WAComponent subclass: #TBHeaderComponent
@@ -127,7 +127,7 @@ TBScreenComponent >> createHeaderComponent
 Notez que la méthode `createHeaderComponent` est bien définie dans la superclasse
 `TBScreenComponent` car elle est applicable pour toutes ses sous-classes.
 
-Nous pouvons maintenant ajouter le callback \(message `callback:`\) sur le bouton :
+Nous pouvons maintenant ajouter le callback (message `callback:`) sur le bouton :
 
 ```
 TBHeaderComponent >> renderSimpleAdminButtonOn: html
@@ -216,7 +216,7 @@ Cliquez sur 'New Session' en bas à gauche de votre navigateur et ensuite sur le
 
 Si vous étudiez le code précédent, vous verrez que nous avons utilisé le mécanisme `call:`/`answer:` de Seaside pour mettre en place la navigation entre les composants `TBPostsListComponent` et `TBAdminComponent`.
 Le message `call:` remplace le composant courant par le composant passé en argument et lui donne le flot de calcul. Le message `answer:` retourne une valeur à cet appel et redonne le contrôle au composant appelant.
-Ce mécanisme puissant et élégant est expliqué dans la vidéo 1 de la semaine 5 du Mooc \([http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content\_5.html](http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_5.html)\).
+Ce mécanisme puissant et élégant est expliqué dans la vidéo 1 de la semaine 5 du Mooc ([http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content\_5.html](http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_5.html)).
 
 ### Composant fenêtre modale d'identification 
 
@@ -368,7 +368,7 @@ TBAuthentificationComponent >> renderPasswordFieldOn: html
 
 Deux boutons sont ajoutés en bas de la fenêtre modale.
 Le bouton `'Cancel'` qui permet de fermer la fenêtre modale grâce à son attribut 'data-dismiss' et le bouton `'SignIn'` associé à un bloc de callback qui envoie le message `validate`.
-La touche `enter` du clavier permet également d'activer le bouton `'SignIn'` car c'est le seul dont l'attribut 'type' a la valeur 'submit' \(ceci est réalisé par la méthode `tbsSubmitButton`\). 
+La touche `enter` du clavier permet également d'activer le bouton `'SignIn'` car c'est le seul dont l'attribut 'type' a la valeur 'submit' (ceci est réalisé par la méthode `tbsSubmitButton`). 
 
 
 ```
@@ -404,7 +404,7 @@ TBAuthentificationComponent >> validate
 ### Intégration du composant d'identification
 
 
-Pour intégrer notre composant d'identification, modifions le bouton 'Admin' de la barre d'en-tête \(`TBHeaderComponent`\) ainsi:
+Pour intégrer notre composant d'identification, modifions le bouton 'Admin' de la barre d'en-tête (`TBHeaderComponent`) ainsi:
 
 ```
 TBHeaderComponent >> renderButtonsOn: html
@@ -425,7 +425,7 @@ TBHeaderComponent >> renderModalLoginButtonOn: html
 ```
 
 
-La méthode `renderModalLoginButtonOn:` commence par intégrer le code du composant `TBAuthentificationComponent` dans la page web \(`render:`\). 
+La méthode `renderModalLoginButtonOn:` commence par intégrer le code du composant `TBAuthentificationComponent` dans la page web (`render:`). 
 Le composant étant instancié à chaque affichage, il n'a pas besoin d'être retourné par la méthode `children`.
 On ajoute également un bouton nommé 'Login' avec un pictogramme clé.
 Lorsque l'utilisateur clique sur ce bouton, la boîte modale ayant l'identifiant `myAuthDialog` est affichée.
@@ -778,7 +778,7 @@ TBHeaderComponent >> renderButtonsOn: html
 ```
 
 
-Vous pouvez tester dans votre navigateur en commençant une nouvelle session \(bouton 'New Session' en bas à gauche\).
+Vous pouvez tester dans votre navigateur en commençant une nouvelle session (bouton 'New Session' en bas à gauche).
 Une fois connecté, l'administrateur est ajouté en session.
 Remarquez que le bouton déconnexion ne fonctionne plus correctement car il n'invalide pas la session.
 

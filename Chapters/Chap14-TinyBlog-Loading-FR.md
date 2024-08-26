@@ -2,10 +2,10 @@
 
 @cha:loading
 
-Ce chapitre contient les expressions permettant de charger le code décrit dans chacun des chapitres. Ces expressions peuvent être exécutées dans n'importe quelle image Pharo 8.0 \(ou supérieure\).
-Néanmoins, utiliser l'image Pharo du MOOC \(cf. Pharo Launcher\) est généralement plus rapide car elle contient déjà de nombreuses dépendances comme : Seaside, Voyage, ...
+Ce chapitre contient les expressions permettant de charger le code décrit dans chacun des chapitres. Ces expressions peuvent être exécutées dans n'importe quelle image Pharo 8.0 (ou supérieure).
+Néanmoins, utiliser l'image Pharo du MOOC (cf. Pharo Launcher) est généralement plus rapide car elle contient déjà de nombreuses dépendances comme : Seaside, Voyage, ...
 
-Si vous commencez par le chapitre 4 par exemple, vous pouvez charger tout le code des chapitres précédents \(1, 2 et 3\) en suivant la procédure décrite dans la section 'Chapitre 4' ci-après.
+Si vous commencez par le chapitre 4 par exemple, vous pouvez charger tout le code des chapitres précédents (1, 2 et 3) en suivant la procédure décrite dans la section 'Chapitre 4' ci-après.
 
 Bien évidemment, nous vous conseillons de faire votre propre code mais cela vous permettra de ne pas rester bloqué le cas échéant.
 
@@ -24,7 +24,7 @@ Metacello new
 
 
 Après le chargement d'un package, il est recommandé d'exécuter les tests unitaires qu'il contient afin de vérifier le bon fonctionnement du code chargé.
-Pour cela, vous pouvez lancer l'outil TestRunner \(Tools menu > Test Runner\), chercher le package TinyBlog-Tests et lancer tous les tests unitaires de la classe `TBBlogTest` en cliquant sur le bouton "Run Selected". Tous les tests doivent être verts. Une alternative est de presser l'icone verte qui se situe à coté de la class `TBBlogTest`.
+Pour cela, vous pouvez lancer l'outil TestRunner (Tools menu > Test Runner), chercher le package TinyBlog-Tests et lancer tous les tests unitaires de la classe `TBBlogTest` en cliquant sur le bouton "Run Selected". Tous les tests doivent être verts. Une alternative est de presser l'icone verte qui se situe à coté de la class `TBBlogTest`.
 
 ### Chapitre 4 : Persistance des données de TinyBlog avec Voyage et Mongo
 
