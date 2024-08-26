@@ -7,8 +7,7 @@ Les tests seront dans le package `'TinyBlog-Rest-Tests'`.
 
 ### Notions de base sur REST
 
-
-REST se base sur les verbes HTTP pour décrire l'accès aux ressources HTTP (https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html). Les principaux verbes ont la signification suivante:
+REST se base sur les verbes HTTP pour décrire l'accès aux ressources HTTP [REST](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html). Les principaux verbes ont la signification suivante:
 
 - GET pour lire une ressource,
 - POST pour créer une nouvelle ressource,
@@ -20,7 +19,7 @@ Les ressources sont définies à l'aide des URL qui pointent sur une entité. Le
 
 Une autre notion importante est le respect des formats de données acceptés par le client et par le serveur. Lorsqu'un client REST émet une requête vers un serveur REST, il précise dans l'en-tête de la requête HTTP la liste des types de données qu'il est capable de gérer. Le serveur REST se doit de répondre dans un format compréhensible par le client et si cela n'est pas possible, de préciser au client qu'il n'est pas capable de lui répondre.
 
-La réussite ou l'échec d'une opération est basée sur les codes de statut du protocole HTTP (https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html). Par exemple, si une opération réussit, le serveur doit répondre un code 200 (OK). De même, si une ressource demandée par le client n'existe pas, il doit retourner un code 404 (Not Found). Il est très important de respecter la signification de ces codes de statut afin de mettre en place un dialogue compréhensible et normalisé entre le client et le serveur.
+La réussite ou l'échec d'une opération est basée sur les codes de statut du protocole HTTP [REST](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html). Par exemple, si une opération réussit, le serveur doit répondre un code 200 (OK). De même, si une ressource demandée par le client n'existe pas, il doit retourner un code 404 (Not Found). Il est très important de respecter la signification de ces codes de statut afin de mettre en place un dialogue compréhensible et normalisé entre le client et le serveur.
 
 ### Définir un filtre REST
 
@@ -338,7 +337,7 @@ Cette méthode permet la gestion des caractères spéciaux tels que l'espace ou 
 Si vous cherchez un post ayant pour titre "La reproduction des hippocampes", le service REST recevra en fait la chaîne de caractères "La%20reproduction%20des%20hippocampes" et une recherche avec celle ci ne fonctionnera pas car aucun titre de post ne coïncidera. 
 Il faut donc nettoyer la chaîne de caractères en remplaçant les caractères spéciaux avant de lancer la recherche.
 
-Un autre point important est la gestion des codes d'erreur HTTP. Lorsqu'un serveur HTTP répond à son client, il glisse dans l'en-tête de la réponse une valeur numérique qui fournit au client de précieuses informations sur le résultat attendu. Si la réponse contient le code 200, c'est que tout s'est correctement passé et qu'un résultat est fourni au client (c'est d'ailleurs la valeur par défaut dans Seaside/Rest). Mais parfois, un problème survient. Par exemple, la requête demande à accéder à une ressource qui n'existe pas. Dans ce cas, il est nécessaire de retourner un code 404 (Not Found) pour l'indiquer au client. Un code 500 va indiquer qu'une erreur d'exécution a été rencontrée par le service. Vous trouverez la liste exhaustive des codes d'erreur sur la page décrivant le protocole HTTP (https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html). Il est très important de les gérer correctement tant au niveau de votre service REST qu'au sein de votre client REST car c'est ce qui va permettre à la couche cliente de réagir à bon escient en fonction du résultat du traitement exécuté par le serveur.
+Un autre point important est la gestion des codes d'erreur HTTP. Lorsqu'un serveur HTTP répond à son client, il glisse dans l'en-tête de la réponse une valeur numérique qui fournit au client de précieuses informations sur le résultat attendu. Si la réponse contient le code 200, c'est que tout s'est correctement passé et qu'un résultat est fourni au client (c'est d'ailleurs la valeur par défaut dans Seaside/Rest). Mais parfois, un problème survient. Par exemple, la requête demande à accéder à une ressource qui n'existe pas. Dans ce cas, il est nécessaire de retourner un code 404 (Not Found) pour l'indiquer au client. Un code 500 va indiquer qu'une erreur d'exécution a été rencontrée par le service. Vous trouverez la liste exhaustive des codes d'erreur sur la page décrivant le protocole HTTP. Il est très important de les gérer correctement tant au niveau de votre service REST qu'au sein de votre client REST car c'est ce qui va permettre à la couche cliente de réagir à bon escient en fonction du résultat du traitement exécuté par le serveur.
 
 Notre serveur web de recherche par titre est pratiquement terminé. Il nous reste maintenant à modifier le point d'entrée du service pour qu'il soit capable d'appeler le code métier associé.
 
