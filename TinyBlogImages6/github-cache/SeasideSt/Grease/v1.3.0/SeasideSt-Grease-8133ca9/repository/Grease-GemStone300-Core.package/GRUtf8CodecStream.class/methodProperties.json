@@ -1,9 +1,0 @@
-{
-	"class" : {
-		"initialize" : "dkh 06/15/2015 10:48" },
-	"instance" : {
-		"crlf" : "dkh 11/06/2009 08:45",
-		"invalidUtf8" : "dkh 11/06/2009 08:45",
-		"next:" : "DaleHenrichs 08/27/2010 10:45",
-		"nextPut:" : "dkh 06/15/2015 10:44",
-		"nextPutAll:" : "dkh 06/15/2015 10:45" } }

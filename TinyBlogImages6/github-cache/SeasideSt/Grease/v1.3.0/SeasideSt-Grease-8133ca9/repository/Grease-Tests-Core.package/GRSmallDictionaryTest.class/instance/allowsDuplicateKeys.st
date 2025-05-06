@@ -1,3 +1,0 @@
-configuration
-allowsDuplicateKeys
-	^ false

@@ -1,1 +1,0 @@
-A GRPharoLatin1CodecStream is a WACodecStream optimized for ISO-8859-1 (direct byte to character mapping).

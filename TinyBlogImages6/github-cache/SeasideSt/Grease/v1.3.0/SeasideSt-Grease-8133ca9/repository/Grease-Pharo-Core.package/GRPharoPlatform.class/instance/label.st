@@ -1,3 +1,0 @@
-version info
-label
-	^ 'Pharo'

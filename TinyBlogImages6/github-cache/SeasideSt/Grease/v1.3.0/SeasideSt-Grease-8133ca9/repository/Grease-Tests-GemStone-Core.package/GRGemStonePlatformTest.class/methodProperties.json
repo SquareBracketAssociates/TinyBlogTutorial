@@ -1,8 +1,0 @@
-{
-	"class" : {
-		 },
-	"instance" : {
-		"testCompileIntoClassified" : "dkh 11/06/2009 09:41",
-		"testConvertToSmalltalkNewlines" : "DaleHenrichs 07/27/2010 12:03",
-		"testEncoderForUtf8Roundtrip" : "NorbertHartl 12/01/2010 19:17",
-		"testFullName" : "dkh 11/06/2009 08:50" } }
