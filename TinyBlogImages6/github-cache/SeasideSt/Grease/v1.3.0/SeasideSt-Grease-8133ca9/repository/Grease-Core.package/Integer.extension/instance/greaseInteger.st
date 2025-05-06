@@ -1,3 +1,0 @@
-*grease-core
-greaseInteger
-	^ self

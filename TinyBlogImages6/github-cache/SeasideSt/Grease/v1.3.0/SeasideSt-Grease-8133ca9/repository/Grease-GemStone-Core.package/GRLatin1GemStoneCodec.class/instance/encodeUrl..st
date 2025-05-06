@@ -1,3 +1,0 @@
-encoding
-encodeUrl: aString
-	^aString

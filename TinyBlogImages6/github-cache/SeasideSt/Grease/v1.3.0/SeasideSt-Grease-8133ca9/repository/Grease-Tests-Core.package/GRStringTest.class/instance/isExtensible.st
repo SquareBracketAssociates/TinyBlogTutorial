@@ -1,3 +1,0 @@
-testing-ansi
-isExtensible
-	^ false

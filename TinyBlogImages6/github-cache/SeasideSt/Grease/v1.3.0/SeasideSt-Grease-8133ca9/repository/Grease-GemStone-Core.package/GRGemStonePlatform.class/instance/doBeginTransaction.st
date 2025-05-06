@@ -1,4 +1,0 @@
-transactions
-doBeginTransaction
-
-	SystemBeginTransaction signal.

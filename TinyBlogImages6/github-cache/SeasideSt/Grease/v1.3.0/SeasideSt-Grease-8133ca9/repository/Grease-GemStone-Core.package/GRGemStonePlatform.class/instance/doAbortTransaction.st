@@ -1,4 +1,0 @@
-transactions
-doAbortTransaction
-
-	SystemAbortTransaction signal.

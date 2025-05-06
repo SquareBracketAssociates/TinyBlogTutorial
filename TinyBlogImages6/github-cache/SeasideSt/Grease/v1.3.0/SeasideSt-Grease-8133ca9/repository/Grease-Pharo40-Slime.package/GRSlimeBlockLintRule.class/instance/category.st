@@ -1,3 +1,0 @@
-accessing
-category
-	^ self group
