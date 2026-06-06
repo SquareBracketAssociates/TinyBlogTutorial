@@ -4,7 +4,7 @@
 
 %  full hash of full code 35785aaaf1284f1a472980f07522fc7d0d4743e6
 
-Dans ce chapitre nous étendons le modèle et ajoutons des tests. Notez qu'un bon développeur de méthodologies agiles tel que Test-Driven Development aurait commencé par écrire des tests. En plus, avec Pharo, nous aurions aussi codé dans le débuggeur pour être encore plus productif. Nous ne l'avons pas fait car le modèle est simpliste et expliquer comment coder dans le débuggeur demande plus de description textuelle. Vous pouvez voir cette pratique dans la vidéo du Mooc intitulée _Coding a Counter in the Debugger_ \([http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content\_26.html](http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_26.html)\) et lire le livre _Learning Object-Oriented Programming, Design with TDD in Pharo_ \([http://books.pharo.org](http://books.pharo.org)\).
+Dans ce chapitre nous étendons le modèle et ajoutons des tests. Notez qu'un bon développeur de méthodologies agiles tel que Test-Driven Development aurait commencé par écrire des tests. En plus, avec Pharo, nous aurions aussi codé dans le débuggeur pour être encore plus productif. Nous ne l'avons pas fait car le modèle est simpliste et expliquer comment coder dans le débuggeur demande plus de description textuelle. Vous pouvez voir cette pratique dans la vidéo du Mooc intitulée _Coding a Counter in the Debugger_ ([http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content\_26.html](http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content_26.html)) et lire le livre _Learning Object-Oriented Programming, Design with TDD in Pharo_ ([http://books.pharo.org](http://books.pharo.org)).
 
 Avant de commencer, reprenez votre code ou reportez-vous au dernier chapitre du livre pour charger le code du chapitre précédent.
 
@@ -13,9 +13,9 @@ Avant de commencer, reprenez votre code ou reportez-vous au dernier chapitre du 
 
 %  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Nous allons développer la classe `TBBlog` qui contient des bulletins \(posts\), en écrivant des tests puis en les implémentant \(voir la figure *@postBlogUML@*\).
+Nous allons développer la classe `TBBlog` qui contient des bulletins (posts), en écrivant des tests puis en les implémentant (voir la figure *@postBlogUML@*).
 
-![TBBlog une classe très simple.](figures/postBlogUML.pdf width=60&label=postBlogUML)
+![TBBlog une classe très simple. %width=60&label=postBlogUML](figures/postBlogUML.pdf)
 
 ```
 Object subclass: #TBBlog
@@ -80,9 +80,9 @@ TBBlog class >> initialize
 ### Tester les règles métiers
 
 
-Nous allons écrire des tests pour les règles métiers et ceci en mode TDD \(Test-Driven Development\) c'est-à-dire en développant les tests en premier puis en définissant les fonctionnalités jusqu'à ce que les tests passent.
+Nous allons écrire des tests pour les règles métiers et ceci en mode TDD (Test-Driven Development) c'est-à-dire en développant les tests en premier puis en définissant les fonctionnalités jusqu'à ce que les tests passent.
 
-Les tests unitaires sont regroupés dans une étiquette \(tag\) `TinyBlog-Tests` qui contient la classe `TBBlogTest` \(voir menu item "Add Tag..."\). Un tag est juste une étiquette qui permet de trier et grouper les classes à l'intérieur d'un package. Nous utilisons un tag ici pour ne pas avoir à gérer deux packages différents mais dans un projet réel nous définirions un \(ou plusieurs\) package séparé pour les tests.
+Les tests unitaires sont regroupés dans une étiquette (tag) `TinyBlog-Tests` qui contient la classe `TBBlogTest` (voir menu item "Add Tag..."). Un tag est juste une étiquette qui permet de trier et grouper les classes à l'intérieur d'un package. Nous utilisons un tag ici pour ne pas avoir à gérer deux packages différents mais dans un projet réel nous définirions un (ou plusieurs) package séparé pour les tests.
 
 ```
 TestCase subclass: #TBBlogTest
@@ -92,7 +92,7 @@ TestCase subclass: #TBBlogTest
 ```
 
 
-La méthode `setUp` permet d'initialiser le contexte des tests \(aussi appelé fixture\).
+La méthode `setUp` permet d'initialiser le contexte des tests (aussi appelé fixture).
 Elle est donc exécutée avant chaque test unitaire.
 Dans cet exemple, elle efface le contenu du blog, lui ajoute un post et en créé un autre qui n'est provisoirement pas enregistré. 
 Faites attention car nous devrons changer cette logique puisque dans le futur à chaque fois que vous exécuterez des tests, vous perdrez votre domaine. C'est un exemple de la sorte d'effets pernicieux qu'un Singleton introduit dans un système.
@@ -136,7 +136,7 @@ TBBlogTest >> testAddBlogPost
 ```
 
 
-Ce test ne passe pas \(n'est pas vert\) car nous n'avons pas défini les méthodes: `writeBlogPost:`,  `removeAllPosts` et `size`. 
+Ce test ne passe pas (n'est pas vert) car nous n'avons pas défini les méthodes: `writeBlogPost:`,  `removeAllPosts` et `size`. 
 Ajoutons-les.
 
 ```
@@ -182,11 +182,11 @@ TBBlogTest >> testRemoveAllBlogPosts
 ### Autres fonctionnalités
 
 
-Nous allons procéder en suivant une méthodologie dirigée par les tests \(Test Driven Development\). Nous définissons 
+Nous allons procéder en suivant une méthodologie dirigée par les tests (Test Driven Development). Nous définissons 
 un test, vérifions que le test ne passe pas. Puis nous définissons la méthode qui était ainsi spécifiée et nous vérifions 
 que le test passe.
 
-#### Obtenir l'ensemble des posts \(visibles et invisibles\)
+#### Obtenir l'ensemble des posts (visibles et invisibles)
 
 
 Ajoutons un nouveau test qui échoue :

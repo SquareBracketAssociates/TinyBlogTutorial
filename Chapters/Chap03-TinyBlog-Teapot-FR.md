@@ -2,8 +2,8 @@
 
 
 Ce chapitre optionnel peut être réalisé juste après le chapitre *@chapModelExtensionAndUnitTests@*.
-Il vous guide dans la réalisation d'une interface web pour TinyBlog en utilisant Teapot \([http://smalltalkhub.com/#!/\~zeroflag/Teapot](http://smalltalkhub.com/#!/~zeroflag/Teapot)\). 
-Teapot est un serveur REST au dessus de Zinc - Un chapitre plus complet est disponible dans le livre _Entreprise Pharo: a Web perspective_ \([http://books.pharo.org](http://books.pharo.org)\). Il est plus primitif que Seaside qui permet de générer des éléments graphiques. 
+Il vous guide dans la réalisation d'une interface web pour TinyBlog en utilisant Teapot ([http://smalltalkhub.com/#!/\~zeroflag/Teapot](http://smalltalkhub.com/#!/~zeroflag/Teapot)). 
+Teapot est un serveur REST au dessus de Zinc - Un chapitre plus complet est disponible dans le livre _Entreprise Pharo: a Web perspective_ ([http://books.pharo.org](http://books.pharo.org)). Il est plus primitif que Seaside qui permet de générer des éléments graphiques. 
 
 #### La classe TBTeapotWebApp
 
