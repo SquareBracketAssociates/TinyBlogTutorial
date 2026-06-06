@@ -1,3 +1,0 @@
-exceptions
-stackDepth
-	self subclassResponsibility

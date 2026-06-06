@@ -1,9 +1,0 @@
-{
-	"class" : {
-		 },
-	"instance" : {
-		"argumentCount" : "jgf 01/14/2009 14:59",
-		"fixCallbackTemps" : "DaleHenrichs 06/02/2010 15:22",
-		"ifCurtailed:" : "jgf 02/02/2009 15:31",
-		"tempVarRefs" : "jgf 12/15/2008 14:24",
-		"valueWithPossibleArguments:" : "dkh 09/14/2009 14:42" } }

@@ -1,1 +1,0 @@
-A delayed send that has none of the arguments defined in advance.

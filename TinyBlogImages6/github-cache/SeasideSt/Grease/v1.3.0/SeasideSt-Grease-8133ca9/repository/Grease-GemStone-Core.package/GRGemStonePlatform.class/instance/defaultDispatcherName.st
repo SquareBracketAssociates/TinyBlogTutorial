@@ -1,3 +1,0 @@
-dispatchers
-defaultDispatcherName
-	^'seaside'

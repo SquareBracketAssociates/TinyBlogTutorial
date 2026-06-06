@@ -1,8 +1,0 @@
-{
-	"class" : {
-		 },
-	"instance" : {
-		"initialize" : "lr 2/6/2010 10:15",
-		"negativePrinter:" : "lr 2/7/2008 13:28",
-		"positivePrinter:" : "lr 2/7/2008 13:28",
-		"print:on:" : "lr 2/7/2008 13:27" } }

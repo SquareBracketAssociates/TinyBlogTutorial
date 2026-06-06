@@ -1,4 +1,0 @@
-version info
-label
-
-	^'GemStone'

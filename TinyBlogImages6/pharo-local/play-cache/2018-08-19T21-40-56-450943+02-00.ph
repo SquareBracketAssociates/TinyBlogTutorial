@@ -1,1 +1,0 @@
-|admin|admin := TBBlog current administrator.admin login: 'luke'.admin password: 'thebrightside'.TBBlog current save

@@ -1,3 +1,0 @@
-testing
-isFinal
-	^ stageLabel isNil

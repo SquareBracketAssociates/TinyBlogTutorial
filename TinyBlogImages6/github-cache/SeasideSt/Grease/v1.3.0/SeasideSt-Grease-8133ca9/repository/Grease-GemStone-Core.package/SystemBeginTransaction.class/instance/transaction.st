@@ -1,4 +1,0 @@
-accessing
-transaction
-
-	^'Begin'

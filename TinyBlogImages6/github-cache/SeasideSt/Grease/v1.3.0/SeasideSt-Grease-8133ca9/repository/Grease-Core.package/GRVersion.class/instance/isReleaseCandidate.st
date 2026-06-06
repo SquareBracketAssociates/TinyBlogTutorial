@@ -1,3 +1,0 @@
-testing
-isReleaseCandidate
-	^ stageLabel = #rc

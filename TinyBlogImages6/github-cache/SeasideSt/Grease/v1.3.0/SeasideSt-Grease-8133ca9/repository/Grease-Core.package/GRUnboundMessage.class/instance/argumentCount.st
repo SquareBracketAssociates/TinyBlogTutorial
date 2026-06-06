@@ -1,3 +1,0 @@
-delegation
-argumentCount
-	^ selector numArgs

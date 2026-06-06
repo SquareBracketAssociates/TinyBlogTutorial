@@ -1,4 +1,0 @@
-registration
-current
-
-	^ Current

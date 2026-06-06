@@ -1,3 +1,0 @@
-configuration
-createArbitraryAssociations
-	self subclassResponsibility

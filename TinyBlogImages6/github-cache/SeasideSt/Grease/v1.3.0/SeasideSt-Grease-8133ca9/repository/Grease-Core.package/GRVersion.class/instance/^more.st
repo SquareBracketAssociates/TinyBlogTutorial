@@ -1,3 +1,0 @@
-comparing
-> otherVersion
-	^ otherVersion < self

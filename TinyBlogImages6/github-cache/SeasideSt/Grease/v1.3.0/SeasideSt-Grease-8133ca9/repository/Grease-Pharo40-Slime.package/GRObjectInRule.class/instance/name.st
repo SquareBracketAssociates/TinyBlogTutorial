@@ -1,3 +1,0 @@
-accessing
-name
-	^ 'Object>>#in:'

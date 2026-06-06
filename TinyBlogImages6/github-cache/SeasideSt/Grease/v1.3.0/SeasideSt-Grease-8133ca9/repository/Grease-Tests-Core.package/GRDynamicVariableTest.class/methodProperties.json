@@ -1,9 +1,0 @@
-{
-	"instance" : {
-		"testWithValue" : "MaxLeske 5/18/2017 07:42",
-		"testWithoutValue" : "MaxLeske 5/18/2017 07:42",
-		"testWithNestedValue" : "MaxLeske 5/18/2017 07:42",
-		"testAnswer" : "MaxLeske 5/18/2017 07:42"
-	},
-	"class" : { }
-}
